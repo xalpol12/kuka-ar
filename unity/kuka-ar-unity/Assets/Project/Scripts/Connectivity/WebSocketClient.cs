@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Connectivity.Parsing;
 using Connectivity.Parsing.OutputJson;
 using Newtonsoft.Json;
+using Project.Scripts.EventSystem;
 using UnityEngine;
 using WebSocketSharp;
 
@@ -9,9 +10,10 @@ namespace Connectivity
 {
     public class WebSocketClient : MonoBehaviour
     {
-        [SerializeField]
-        private GameObject trackedRobotHandler;
+        [SerializeField] private GameObject trackedRobotHandler;
+        [SerializeField] private GameObject testConnectionController;
         private WebSocket ws;
+        private ConnectionTestController controller;
         private static JsonSerializerSettings settings;
 
         private void Start()
@@ -28,8 +30,10 @@ namespace Connectivity
             var trackedRobotHandlerScript = 
                 trackedRobotHandler.GetComponent<TrackedRobotsHandler>();
 
-            ws = new WebSocket("ws://localhost:8080/kuka-variables");
+            controller = testConnectionController.GetComponent<ConnectionTestController>();
 
+            ws = new WebSocket("ws://192.168.18.20:9090/kuka-variables");
+            
             ws.OnMessage += (sender, e) =>
             {
                 var outputFrame = JsonConvert.DeserializeObject<OutputWithErrors>(e.Data, settings);
@@ -45,20 +49,17 @@ namespace Connectivity
                 return;
             }
 
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (controller.FirstRobotConnected)
             {
                 ws.Send("{ \"host\": \"192.168.1.50\", \"var\": \"BASE\" }");
-                Debug.Log("Connected to websocket for IP .50!");
             }
-            if (Input.GetKeyDown(KeyCode.KeypadEnter))
+            if (controller.SecondRobotConnected)
             {
                 ws.Send("{ \"host\": \"192.168.1.51\", \"var\": \"BASE\" }");
-                Debug.Log("Connected to websocket for IP .51!");
             }
-            if (Input.GetKeyDown(KeyCode.Backspace))
+            if (controller.ThirdRobotConnected)
             {
                 ws.Send("{ \"host\": \"192.168.1.52\", \"var\": \"BASE\" }");
-                Debug.Log("Connected to websocket for IP .52!");
             }
         }
 
