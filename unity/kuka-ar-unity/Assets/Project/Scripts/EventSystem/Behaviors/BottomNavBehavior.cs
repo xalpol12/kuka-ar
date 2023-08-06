@@ -1,13 +1,19 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BottomNavBehavior : MonoBehaviour
 {
     private BottomNavController bottomNav;
+    private GameObject constantPanel;
+    private GameObject overlayPanel;
     [SerializeField] private float pullMenuScreenMaxHeight = 0.34f;
     private Vector3 dockPosition;
     void Start()
     {
         bottomNav = GetComponent<BottomNavController>();
+        constantPanel = bottomNav.transform.Find("ConstantPanel").GetComponent<GameObject>();
+        overlayPanel = bottomNav.transform.Find("OverlayPanel").GetComponent<GameObject>();
+        
         dockPosition = bottomNav.transform.position;
     }
 
@@ -75,13 +81,13 @@ public class BottomNavBehavior : MonoBehaviour
     {
         if (bottomNav.transform.position.y > (Screen.height * pullMenuScreenMaxHeight + dockPosition.y) / 2)
         {
-            bottomNav.constantPanel.SetActive(false);
-            bottomNav.overlayPanel.SetActive(true);
+            constantPanel.SetActive(false);
+            overlayPanel.SetActive(true);
         }
         else
         {
-            bottomNav.constantPanel.SetActive(true);
-            bottomNav.overlayPanel.SetActive(false);
+            constantPanel.SetActive(true);
+            overlayPanel.SetActive(false);
         }
     }
 }

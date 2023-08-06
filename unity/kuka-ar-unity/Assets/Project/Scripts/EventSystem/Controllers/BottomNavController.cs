@@ -4,8 +4,6 @@ public class BottomNavController : MonoBehaviour
 {
     public int id;
     public GameObject bottomNavPanel;
-    public GameObject overlayPanel;
-    public GameObject constantPanel;
     internal bool IsSliderHold;
     internal int transformFactor;
 
