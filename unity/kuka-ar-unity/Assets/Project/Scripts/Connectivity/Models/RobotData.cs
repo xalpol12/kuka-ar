@@ -1,10 +1,10 @@
-using Connectivity.Models.KRLValues;
+using UnityEngine;
 
-namespace Connectivity.Models
+namespace Project.Scripts.Connectivity.Models
 {
     public struct RobotData {
-        public KRLInt CurrentInt { get; set; }
-        public KRLFrame CurrentFrame { get; set; }
-        public KRLJoints CurrentJoints { get; set; }
+        public string Name { get; set; }
+        public Vector3 PositionShift { get; set; }
+        public Vector3 RotationShift { get; set; }
     }
 }
