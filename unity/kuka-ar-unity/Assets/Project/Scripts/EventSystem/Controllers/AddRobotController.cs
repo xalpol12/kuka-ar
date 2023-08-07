@@ -24,6 +24,7 @@ public class AddRobotController : MonoBehaviour
         Request = new AddRobotRequest
         {
             IpAddress = null,
+            RobotCategory = null,
             RobotName = null
         };
 
