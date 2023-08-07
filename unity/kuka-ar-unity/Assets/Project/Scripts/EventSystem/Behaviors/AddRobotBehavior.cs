@@ -8,32 +8,32 @@ public class AddRobotBehavior : MonoBehaviour
     [SerializeField]
     private float pullAddMenuMaxHeight = 0.018f;
     private AddRobotController robotController;
-    private NewRobotValidator validator;
-    private InputValidation ipAddress;
-    private InputValidation robotName;
-    private AddRobotRequest request;
+    // private NewRobotValidator validator;
+    // private InputValidation ipAddress;
+    // private InputValidation robotName;
+    // private AddRobotRequest request;
     private Vector3 homePosition;
     private bool isDialogFullyOpen;
     void Start()
     {
         robotController = GetComponent<AddRobotController>();
-        validator = GetComponent<NewRobotValidator>();
+        // validator = GetComponent<NewRobotValidator>();
         
-        ipAddress = new InputValidation
-        {
-            InputField = robotController.addDialog.transform.Find("IpInput").GetComponent<TMP_InputField>(),
-            Image = robotController.addDialog.transform.Find("IpInput").GetComponent<Image>(),
-            Touched = false,
-            Valid = false,
-        };
-
-        robotName = new InputValidation
-        {
-            InputField = robotController.addDialog.transform.Find("NameInput").GetComponent<TMP_InputField>(),
-            Image = robotController.addDialog.transform.Find("NameInput").GetComponent<Image>(),
-            Touched = false,
-            Valid = false,
-        };
+        // ipAddress = new InputValidation
+        // {
+        //     InputField = robotController.addDialog.transform.Find("IpInput").GetComponent<TMP_InputField>(),
+        //     Image = robotController.addDialog.transform.Find("IpInput").GetComponent<Image>(),
+        //     Touched = false,
+        //     Valid = false,
+        // };
+        //
+        // robotName = new InputValidation
+        // {
+        //     InputField = robotController.addDialog.transform.Find("NameInput").GetComponent<TMP_InputField>(),
+        //     Image = robotController.addDialog.transform.Find("NameInput").GetComponent<Image>(),
+        //     Touched = false,
+        //     Valid = false,
+        // };
         
         homePosition = robotController.addDialog.transform.position;
         isDialogFullyOpen = false;
@@ -103,35 +103,35 @@ public class AddRobotBehavior : MonoBehaviour
 
     private void CollectUserInputData()
     {
-        if (!ipAddress.InputField.isFocused && ipAddress.Touched)
-        {
-            ipAddress = validator.IpAddressValidation(ipAddress);
-        }
-
-        if (!robotName.InputField.isFocused && robotName.Touched)
-        {
-            robotName = validator.NameValidation(robotName);
-        }
-
-        if (ipAddress.InputField.isFocused)
-        {
-            ipAddress.Touched = true;
-        }
-
-        if (robotName.InputField.isFocused)
-        {
-            robotName.Touched = true;
-        }
-
-        if (ipAddress.Valid && robotName.Valid)
-        {
-            robotController.Request = new AddRobotRequest
-            {
-                IpAddress = ipAddress.InputField.text,
-                RobotName = robotName.InputField.text
-            };
-            robotController.CanSend = true;
-        }
+        // if (!ipAddress.InputField.isFocused && ipAddress.Touched)
+        // {
+        //     ipAddress = validator.IpAddressValidation(ipAddress);
+        // }
+        //
+        // if (!robotName.InputField.isFocused && robotName.Touched)
+        // {
+        //     robotName = validator.NameValidation(robotName);
+        // }
+        //
+        // if (ipAddress.InputField.isFocused)
+        // {
+        //     ipAddress.Touched = true;
+        // }
+        //
+        // if (robotName.InputField.isFocused)
+        // {
+        //     robotName.Touched = true;
+        // }
+        //
+        // if (ipAddress.Valid && robotName.Valid)
+        // {
+        //     robotController.Request = new AddRobotRequest
+        //     {
+        //         IpAddress = ipAddress.InputField.text,
+        //         RobotName = robotName.InputField.text
+        //     };
+        //     robotController.CanSend = true;
+        // }
     }
     
     private void DragSlider()
