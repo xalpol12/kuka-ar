@@ -17,7 +17,11 @@ public class RobotStickerService {
     private final RobotStickerRepository stickerRepository;
 
     @Autowired
+<<<<<<< refs/remotes/origin/main
     RobotStickerService(RobotStickerRepository repository) {
+=======
+    RobotStickerService(RobotStickerRepository repository){
+>>>>>>> add testSocket and kukaComm
         this.stickerRepository = repository;
     }
 

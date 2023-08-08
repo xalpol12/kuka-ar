@@ -53,7 +53,11 @@ public class KukaClientService {
         connections.remove(ip);
     }
 
+<<<<<<< refs/remotes/origin/main
     public KRLVar getVariable(String hostIp, VarType var) {
+=======
+    public KRLVar getVariable(String hostIp, VarType var){
+>>>>>>> add testSocket and kukaComm
         return connections.get(hostIp).getVariable(var);
     }
 

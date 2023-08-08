@@ -15,7 +15,11 @@ public class KukaClientThread extends Thread {
         this.variables = new HashSet<>();
     }
 
+<<<<<<< refs/remotes/origin/main
     public void addVariable(KRLVar var) {
+=======
+    public void addVariable(KRLVar var){
+>>>>>>> add testSocket and kukaComm
         synchronized (this.variables) {
             variables.add(var);
         }

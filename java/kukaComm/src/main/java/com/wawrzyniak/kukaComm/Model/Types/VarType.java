@@ -14,10 +14,17 @@ public enum VarType {
     JOINTS("$AXIS_ACT");
 
     private final String value;
+<<<<<<< refs/remotes/origin/main
     VarType(String name) {
         value = name;
     }
     public ValuePair getValue() {
+=======
+    VarType(String name){
+        value = name;
+    }
+    public ValuePair getValue(){
+>>>>>>> add testSocket and kukaComm
         KRLValue type = switch (this) {
             case BASE, POSITION: {
                 yield new KRLFrame();

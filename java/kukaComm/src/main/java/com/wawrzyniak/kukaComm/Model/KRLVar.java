@@ -21,7 +21,11 @@ public class KRLVar {
     private Byte[] readRequest;
     private final Set<ExceptionMessagePair> readExceptions;
 
+<<<<<<< refs/remotes/origin/main
     public KRLVar(VarType var) {
+=======
+    public KRLVar(VarType var){
+>>>>>>> add testSocket and kukaComm
         this.name = var.getValue().name();
         this.value = var.getValue().type();
         this.id = IdProvider.getId();
@@ -29,18 +33,30 @@ public class KRLVar {
         readExceptions = new HashSet<>();
     }
 
+<<<<<<< refs/remotes/origin/main
     public void addReadException(Exception exception) {
+=======
+    public void addReadException(Exception exception){
+>>>>>>> add testSocket and kukaComm
         readExceptions.add(new ExceptionMessagePair(
                 exception.getClass().getSimpleName(),
                 exception.getMessage()
         ));
     }
 
+<<<<<<< refs/remotes/origin/main
     public void clearExceptions() {
         readExceptions.clear();
     }
 
     public boolean idCheck(int id) {
+=======
+    public void clearExceptions(){
+        readExceptions.clear();
+    }
+
+    public boolean idCheck(int id){
+>>>>>>> add testSocket and kukaComm
         return this.id == id;
     }
 
@@ -48,7 +64,11 @@ public class KRLVar {
         value.setValueFromString(read);
     }
 
+<<<<<<< refs/remotes/origin/main
     private void generateReadRequest() {
+=======
+    private void generateReadRequest(){
+>>>>>>> add testSocket and kukaComm
         List<Byte> body = generateReadBody();
         List<Byte> header = generateHeader(body.size());
         header.addAll(body);

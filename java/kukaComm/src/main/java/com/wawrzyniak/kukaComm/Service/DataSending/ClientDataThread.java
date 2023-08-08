@@ -10,7 +10,11 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.*;
 
+<<<<<<< refs/remotes/origin/main
 public class ClientDataThread extends Thread {
+=======
+public class ClientDataThread extends Thread{
+>>>>>>> add testSocket and kukaComm
 
     private final WebSocketSession session;
     private final Map<String, List<KRLVar>> variables;
@@ -22,7 +26,11 @@ public class ClientDataThread extends Thread {
         mapper = new ObjectMapper();
     }
 
+<<<<<<< refs/remotes/origin/main
     public Set<String> getObservedRobots() {
+=======
+    public Set<String> getObservedRobots(){
+>>>>>>> add testSocket and kukaComm
         return variables.keySet();
     }
 

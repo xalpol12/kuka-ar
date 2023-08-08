@@ -13,7 +13,11 @@ import java.util.Set;
 public class SessionManagerService {
     private final Map<WebSocketSession, ClientDataThread> threads;
 
+<<<<<<< refs/remotes/origin/main
     public SessionManagerService() {
+=======
+    public SessionManagerService(){
+>>>>>>> add testSocket and kukaComm
         threads = new HashMap<>();
     }
 

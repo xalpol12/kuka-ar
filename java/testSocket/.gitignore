@@ -1,3 +1,4 @@
+<<<<<<< refs/remotes/origin/main
 # This .gitignore file should be placed at the root of your Unity project directory
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
@@ -298,6 +299,8 @@ fabric.properties
 
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
+=======
+>>>>>>> add testSocket and kukaComm
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar

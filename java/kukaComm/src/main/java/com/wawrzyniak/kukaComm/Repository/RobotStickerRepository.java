@@ -15,7 +15,11 @@ public class RobotStickerRepository {
     private String location;
     private final FilenameFilter fileFilter;
 
+<<<<<<< refs/remotes/origin/main
     RobotStickerRepository() {
+=======
+    RobotStickerRepository(){
+>>>>>>> add testSocket and kukaComm
         fileFilter = new ImageFileFilter(".png", ".jpg");
     }
 
@@ -32,7 +36,11 @@ public class RobotStickerRepository {
 
         private final String[] exts;
 
+<<<<<<< refs/remotes/origin/main
         ImageFileFilter(String... extensions) {
+=======
+        ImageFileFilter(String... extensions){
+>>>>>>> add testSocket and kukaComm
             this.exts = extensions;
         }
 

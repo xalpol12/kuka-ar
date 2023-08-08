@@ -38,9 +38,15 @@ public class ConfiguredRobotService {
         return this.mapper.robotToDto(this.robotRepository.save(robotToUpdate));
     }
 
+<<<<<<< refs/remotes/origin/main
     public void deleteByIp(String ipAddress) {
         Optional<ConfiguredRobot> robotToDelete = robotRepository.findByIpAddress(ipAddress);
         if(robotToDelete.isEmpty()) {
+=======
+    public void deleteByIp(String ipAddress){
+        Optional<ConfiguredRobot> robotToDelete = robotRepository.findByIpAddress(ipAddress);
+        if(robotToDelete.isEmpty()){
+>>>>>>> add testSocket and kukaComm
             return;
         }
         robotRepository.delete(robotToDelete.get());
@@ -54,10 +60,18 @@ public class ConfiguredRobotService {
         return mapper.robotToDto(robot.get());
     }
 
+<<<<<<< refs/remotes/origin/main
     public List<ConfiguredRobotDTO> getAllConfiguredRobots() {
+=======
+    public List<ConfiguredRobotDTO> getAllConfiguredRobots(){
+>>>>>>> add testSocket and kukaComm
         List<ConfiguredRobot> robots = new ArrayList<>();
         Iterable<ConfiguredRobot> iterator = robotRepository.findAll();
         iterator.forEach(robots::add);
         return mapper.robotListToDto(robots);
     }
+<<<<<<< refs/remotes/origin/main
+=======
+
+>>>>>>> add testSocket and kukaComm
 }

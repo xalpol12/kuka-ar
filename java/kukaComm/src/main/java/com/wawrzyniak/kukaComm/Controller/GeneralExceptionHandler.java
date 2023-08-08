@@ -14,7 +14,11 @@ import java.io.IOException;
 public class GeneralExceptionHandler {
 
     @ExceptionHandler(value = IOException.class)
+<<<<<<< refs/remotes/origin/main
     public ResponseEntity<ExceptionMessagePair> robotModelReading(Exception e) {
+=======
+    public ResponseEntity<ExceptionMessagePair> robotModelReading(Exception e){
+>>>>>>> add testSocket and kukaComm
         ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
                 e.getClass().getSimpleName(),
                 e.getMessage());
@@ -23,7 +27,11 @@ public class GeneralExceptionHandler {
     }
 
     @ExceptionHandler(value = RobotNotConfiguredException.class)
+<<<<<<< refs/remotes/origin/main
     public ResponseEntity<ExceptionMessagePair> robotNorConfigured(Exception e) {
+=======
+    public ResponseEntity<ExceptionMessagePair> robotNorConfigured(Exception e){
+>>>>>>> add testSocket and kukaComm
         ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
                 e.getClass().getSimpleName(),
                 e.getMessage());
