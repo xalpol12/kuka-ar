@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Connectivity.Models.AggregationClasses;
 using Connectivity.Parsing.OutputJson;
 using Multithreading;
+using Project.Scripts.Utils;
 using UnityEngine;
 
 namespace Connectivity
@@ -26,6 +27,7 @@ namespace Connectivity
             {
                 var robotData = newData.Values[foundIp];
                 UpdateTrackedPoint(foundIp, robotData);
+                DebugLogger.Instance().AddLog(foundIp + " position updated");
             }
         }
 
