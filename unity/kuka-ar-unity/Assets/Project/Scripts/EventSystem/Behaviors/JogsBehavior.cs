@@ -3,14 +3,20 @@ using UnityEngine;
 public class JogsBehavior : MonoBehaviour
 {
     private JogsController jogsController;
+    private GameObject jogsValues;
+    private GameObject jogsDisplay;
     private Vector3 jogsHomePosition;
-    private const int Distance = 280;
+    private int distance;
     void Start()
     {
         jogsController = GetComponent<JogsController>();
-        jogsController.jogButton.SetActive(!jogsController.ShowJogs);
-        jogsController.jogsValues.SetActive(jogsController.ShowJogs);
-        jogsHomePosition = jogsController.jogButton.transform.position;
+        jogsValues = jogsController.jogs.GetComponent<RectTransform>().Find("JogsValues").gameObject;
+        jogsDisplay = jogsController.jogs.GetComponent<RectTransform>().Find("JogDisplay").gameObject;
+        
+        jogsDisplay.SetActive(!jogsController.ShowJogs);
+        jogsValues.SetActive(jogsController.ShowJogs);
+        jogsHomePosition = jogsDisplay.transform.position;
+        distance = (int)(Screen.height * 0.115f);
     }
     
     void Update()
@@ -28,41 +34,67 @@ public class JogsBehavior : MonoBehaviour
     private void HideJogs()
     {
         var toggleActive = false;
-        foreach (Transform child in jogsController.jogsValues.transform)
+        foreach (Transform child in jogsValues.transform)
         {
-            var translation = Vector3.up *
-                              (jogsController.transformFactor * (Time.deltaTime * child.GetSiblingIndex() * Distance));
-            var newPosition = child.position + translation;
-            if (newPosition.y > jogsHomePosition.y)
+            Vector3 translation;
+            if (child.name == "HideJogs")
             {
-                toggleActive = true;
-                break;
+                translation = Vector3.down * (jogsController.transformFactor * (Time.deltaTime * distance));
+                var newPosition = child.position + translation;
+                if (newPosition.y < jogsHomePosition.y)
+                {
+                    toggleActive = true;
+                    break;
+                }
             }
-
-            translation *= jogsController.transformFactor;
+            else
+            {
+                translation = Vector3.up * 
+                              (jogsController.transformFactor * (Time.deltaTime * 
+                                                                 (child.GetSiblingIndex() - 1) * distance));
+                var newPosition = child.position + translation;
+                if (newPosition.y - 10 > jogsHomePosition.y)
+                {
+                    break;
+                }  
+            }
+            
             child.Translate(translation);
         }
 
         if (toggleActive)
         {
-            jogsController.jogButton.SetActive(true);
-            jogsController.jogsValues.SetActive(false);
+            jogsDisplay.SetActive(true);
+            jogsValues.SetActive(false);
         }
         
     }
 
     private void ShowJogs()
     {
-        jogsController.jogButton.SetActive(false);
-        jogsController.jogsValues.SetActive(true);
-        foreach (Transform child in jogsController.jogsValues.transform)
+        jogsDisplay.SetActive(false);
+        jogsValues.SetActive(true);
+        foreach (Transform child in jogsValues.transform)
         {
-            var translation = Vector3.down *
-                              (jogsController.transformFactor * (Time.deltaTime * child.GetSiblingIndex() * Distance));
-            var newPosition = child.position + translation;
-            if (newPosition.y < jogsHomePosition.y - child.GetSiblingIndex() * Distance)
+            Vector3 translation;
+            if (child.name == "HideJogs")
             {
-                break;
+                translation = Vector3.up * (jogsController.transformFactor * (Time.deltaTime * distance));
+                var newPosition = child.position + translation;
+                if (newPosition.y > jogsHomePosition.y + distance)
+                {
+                    break;
+                }
+            }
+            else
+            {
+                translation = Vector3.down *
+                              (jogsController.transformFactor * (Time.deltaTime * (child.GetSiblingIndex() - 1) * distance));
+                var newPosition = child.position + translation;
+                if (newPosition.y < jogsHomePosition.y - (child.GetSiblingIndex() - 1) * distance)
+                {
+                    break;
+                }
             }
             
             child.Translate(translation);

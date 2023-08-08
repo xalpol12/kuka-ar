@@ -4,8 +4,7 @@ public class JogsController : MonoBehaviour
 {
     public int id;
     public float transformFactor;
-    public GameObject jogButton;
-    public GameObject jogsValues;
+    public GameObject jogs;
     internal bool ShowJogs;
     private int defaultTransformFactor;
     void Start()
