@@ -1,23 +1,20 @@
-using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.Connectivity.Temp;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class AddRobotBehavior : MonoBehaviour
 {
     [SerializeField]
     private float pullAddMenuMaxHeight = 0.018f;
-    
     private AddRobotController robotController;
-    private BottomNavController bottomNavController;
+    // private NewRobotValidator validator;
+    // private InputValidation ipAddress;
+    // private InputValidation robotName;
     private AddRobotRequest request;
-    private GameObject selectOptions;
     private Vector3 homePosition;
-    
     private bool isDialogFullyOpen;
     void Start()
     {
         robotController = GetComponent<AddRobotController>();
-        bottomNavController = FindObjectOfType<BottomNavController>();
         
         // ipAddress = new InputValidation
         // {
@@ -36,7 +33,6 @@ public class AddRobotBehavior : MonoBehaviour
         // };
         
         homePosition = robotController.addDialog.transform.position;
-        
         isDialogFullyOpen = false;
         
         robotController.addDialog.SetActive(robotController.ShowAddDialog);
@@ -50,20 +46,16 @@ public class AddRobotBehavior : MonoBehaviour
             {
                 DragSlider();
             }
-            
             ShowAddDialog();
-            
             if (isDialogFullyOpen)
             {
                 CollectUserInputData();
             }
-            
-            bottomNavController.IsDocked = false;
         }
         else
         {
+
             HideAddDialog();
-            bottomNavController.IsDocked = true;
         }
     }
 
