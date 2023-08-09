@@ -14,10 +14,10 @@ public enum VarType {
     JOINTS("$AXIS_ACT");
 
     private final String value;
-    VarType(String name){
+    VarType(String name) {
         value = name;
     }
-    public ValuePair getValue(){
+    public ValuePair getValue() {
         KRLValue type = switch (this) {
             case BASE, POSITION: {
                 yield new KRLFrame();

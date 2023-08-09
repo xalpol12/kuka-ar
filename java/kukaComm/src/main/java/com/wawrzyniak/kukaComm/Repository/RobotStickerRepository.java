@@ -15,7 +15,7 @@ public class RobotStickerRepository {
     private String location;
     private final FilenameFilter fileFilter;
 
-    RobotStickerRepository(){
+    RobotStickerRepository() {
         fileFilter = new ImageFileFilter(".png", ".jpg");
     }
 
@@ -32,7 +32,7 @@ public class RobotStickerRepository {
 
         private final String[] exts;
 
-        ImageFileFilter(String... extensions){
+        ImageFileFilter(String... extensions) {
             this.exts = extensions;
         }
 

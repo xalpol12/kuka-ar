@@ -17,7 +17,7 @@ public class RobotStickerService {
     private final RobotStickerRepository stickerRepository;
 
     @Autowired
-    RobotStickerService(RobotStickerRepository repository){
+    RobotStickerService(RobotStickerRepository repository) {
         this.stickerRepository = repository;
     }
 

@@ -15,7 +15,7 @@ public class KukaClientThread extends Thread {
         this.variables = new HashSet<>();
     }
 
-    public void addVariable(KRLVar var){
+    public void addVariable(KRLVar var) {
         synchronized (this.variables) {
             variables.add(var);
         }

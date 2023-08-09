@@ -21,7 +21,7 @@ public class KRLVar {
     private Byte[] readRequest;
     private final Set<ExceptionMessagePair> readExceptions;
 
-    public KRLVar(VarType var){
+    public KRLVar(VarType var) {
         this.name = var.getValue().name();
         this.value = var.getValue().type();
         this.id = IdProvider.getId();
@@ -29,18 +29,18 @@ public class KRLVar {
         readExceptions = new HashSet<>();
     }
 
-    public void addReadException(Exception exception){
+    public void addReadException(Exception exception) {
         readExceptions.add(new ExceptionMessagePair(
                 exception.getClass().getSimpleName(),
                 exception.getMessage()
         ));
     }
 
-    public void clearExceptions(){
+    public void clearExceptions() {
         readExceptions.clear();
     }
 
-    public boolean idCheck(int id){
+    public boolean idCheck(int id) {
         return this.id == id;
     }
 
@@ -48,7 +48,7 @@ public class KRLVar {
         value.setValueFromString(read);
     }
 
-    private void generateReadRequest(){
+    private void generateReadRequest() {
         List<Byte> body = generateReadBody();
         List<Byte> header = generateHeader(body.size());
         header.addAll(body);

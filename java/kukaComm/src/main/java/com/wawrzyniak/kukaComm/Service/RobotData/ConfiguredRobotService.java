@@ -38,9 +38,9 @@ public class ConfiguredRobotService {
         return this.mapper.robotToDto(this.robotRepository.save(robotToUpdate));
     }
 
-    public void deleteByIp(String ipAddress){
+    public void deleteByIp(String ipAddress) {
         Optional<ConfiguredRobot> robotToDelete = robotRepository.findByIpAddress(ipAddress);
-        if(robotToDelete.isEmpty()){
+        if(robotToDelete.isEmpty()) {
             return;
         }
         robotRepository.delete(robotToDelete.get());
@@ -54,11 +54,10 @@ public class ConfiguredRobotService {
         return mapper.robotToDto(robot.get());
     }
 
-    public List<ConfiguredRobotDTO> getAllConfiguredRobots(){
+    public List<ConfiguredRobotDTO> getAllConfiguredRobots() {
         List<ConfiguredRobot> robots = new ArrayList<>();
         Iterable<ConfiguredRobot> iterator = robotRepository.findAll();
         iterator.forEach(robots::add);
         return mapper.robotListToDto(robots);
     }
-
 }

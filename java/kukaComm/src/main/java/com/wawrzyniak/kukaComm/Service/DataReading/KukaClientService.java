@@ -53,7 +53,7 @@ public class KukaClientService {
         connections.remove(ip);
     }
 
-    public KRLVar getVariable(String hostIp, VarType var){
+    public KRLVar getVariable(String hostIp, VarType var) {
         return connections.get(hostIp).getVariable(var);
     }
 

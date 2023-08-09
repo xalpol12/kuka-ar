@@ -58,7 +58,7 @@ public class KukaClient extends Socket {
         return bytes[off] << 8 & 0xFF00 | bytes[off + 1] & 0xFF;
     }
 
-    public KRLVar getVariable(VarType var){
+    public KRLVar getVariable(VarType var) {
         return variables.get(var);
     }
 }

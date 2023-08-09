@@ -17,7 +17,7 @@ public class RobotModelService {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
-    public RobotModelService(RobotModelRepository repository){
+    public RobotModelService(RobotModelRepository repository) {
         robotRepository = repository;
     }
 

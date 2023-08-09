@@ -13,7 +13,7 @@ import java.util.Set;
 public class SessionManagerService {
     private final Map<WebSocketSession, ClientDataThread> threads;
 
-    public SessionManagerService(){
+    public SessionManagerService() {
         threads = new HashMap<>();
     }
 

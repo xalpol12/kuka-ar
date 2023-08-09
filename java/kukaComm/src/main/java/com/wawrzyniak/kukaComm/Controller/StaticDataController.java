@@ -6,7 +6,7 @@ import com.wawrzyniak.kukaComm.Model.ModelReading.RobotData;
 import com.wawrzyniak.kukaComm.Service.RobotData.ConfiguredRobotService;
 import com.wawrzyniak.kukaComm.Service.RobotData.RobotModelService;
 import com.wawrzyniak.kukaComm.Service.RobotData.RobotStickerService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -15,18 +15,12 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/kuka-variables/")
+@RequiredArgsConstructor
 public class StaticDataController {
 
     private final RobotModelService robotModel;
     private final RobotStickerService robotSticker;
     private final ConfiguredRobotService robotService;
-
-    @Autowired
-    StaticDataController(RobotModelService robotService, RobotStickerService robotSticker, ConfiguredRobotService robotService1){
-        this.robotModel = robotService;
-        this.robotSticker = robotSticker;
-        this.robotService = robotService1;
-    }
 
     @GetMapping("configured")
     public Map<String, Map<String, RobotData>> getAllRobots() throws IOException {
@@ -39,7 +33,7 @@ public class StaticDataController {
     }
 
     @GetMapping("robots")
-    public List<ConfiguredRobotDTO> getALLRobotsWithStickers(){
+    public List<ConfiguredRobotDTO> getALLRobotsWithStickers() {
         return robotService.getAllConfiguredRobots();
     }
     @GetMapping("robot/{ip}")
@@ -48,7 +42,7 @@ public class StaticDataController {
     }
 
     @PostMapping("add")
-    public ConfiguredRobotDTO addRobot(@RequestBody ConfiguredRobotDTO robotDTO){
+    public ConfiguredRobotDTO addRobot(@RequestBody ConfiguredRobotDTO robotDTO) {
         return robotService.save(robotDTO);
     }
     @PostMapping("update/{ip}")
@@ -57,10 +51,7 @@ public class StaticDataController {
     }
 
     @DeleteMapping("delete/{ip}")
-    public void deleteRobot(@PathVariable String ip){
+    public void deleteRobot(@PathVariable String ip) {
         robotService.deleteByIp(ip);
     }
-
-
-
 }
