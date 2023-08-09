@@ -16,10 +16,14 @@ public class RobotStickerRepository {
     private final FilenameFilter fileFilter;
 
 <<<<<<< refs/remotes/origin/main
+<<<<<<< refs/remotes/origin/main
     RobotStickerRepository() {
 =======
     RobotStickerRepository(){
 >>>>>>> add testSocket and kukaComm
+=======
+    RobotStickerRepository() {
+>>>>>>> add swagger docs, fix some whitespace issues
         fileFilter = new ImageFileFilter(".png", ".jpg");
     }
 
@@ -37,10 +41,14 @@ public class RobotStickerRepository {
         private final String[] exts;
 
 <<<<<<< refs/remotes/origin/main
+<<<<<<< refs/remotes/origin/main
         ImageFileFilter(String... extensions) {
 =======
         ImageFileFilter(String... extensions){
 >>>>>>> add testSocket and kukaComm
+=======
+        ImageFileFilter(String... extensions) {
+>>>>>>> add swagger docs, fix some whitespace issues
             this.exts = extensions;
         }
 

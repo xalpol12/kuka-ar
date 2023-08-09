@@ -54,10 +54,14 @@ public class KukaClientService {
     }
 
 <<<<<<< refs/remotes/origin/main
+<<<<<<< refs/remotes/origin/main
     public KRLVar getVariable(String hostIp, VarType var) {
 =======
     public KRLVar getVariable(String hostIp, VarType var){
 >>>>>>> add testSocket and kukaComm
+=======
+    public KRLVar getVariable(String hostIp, VarType var) {
+>>>>>>> add swagger docs, fix some whitespace issues
         return connections.get(hostIp).getVariable(var);
     }
 
