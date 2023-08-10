@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -8,9 +9,8 @@ namespace Project.Scripts.Utils
     public class DebugLogger : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI textField;
-        
-        private List<String> messages;
-        
+        private ConcurrentQueue<string> messages;
+
         private static DebugLogger instance = null;
 
         public static DebugLogger Instance()
@@ -40,17 +40,26 @@ namespace Project.Scripts.Utils
 
         private void Start()
         {
-            messages = new List<string>();
+            messages = new ConcurrentQueue<string>();
         }
 
         public void AddLog(String log)
         {
-            textField.text += "/n" + log;
+            messages.Enqueue(log);
         }
 
         public void ClearLogs()
         {
+            messages.Clear();
             textField.text = "Debugger: ";
+        }
+
+        private void Update()
+        {
+            while (messages.TryDequeue(out string message))
+            {
+                textField.text += message;
+            }
         }
 
         void OnDestroy()
