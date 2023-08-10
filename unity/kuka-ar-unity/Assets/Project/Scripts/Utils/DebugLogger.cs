@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -11,6 +10,32 @@ namespace Project.Scripts.Utils
         [SerializeField] private TextMeshProUGUI textField;
         private ConcurrentQueue<string> messages;
 
+        private void Start()
+        {
+            messages = new ConcurrentQueue<string>();
+        }
+
+        public void AddLog(String log)
+        {
+            messages.Enqueue(log);
+        }
+
+        public void ClearLogs()
+        {
+            messages.Clear();
+            textField.text = "--Debug field--";
+        }
+
+        private void Update()
+        {
+            if (messages.TryDequeue(out string message))
+            {
+                textField.text += message;
+            }
+        }
+        
+        #region Singleton logic
+        
         private static DebugLogger instance = null;
 
         public static DebugLogger Instance()
@@ -37,34 +62,12 @@ namespace Project.Scripts.Utils
                 DontDestroyOnLoad(gameObject);
             }
         }
-
-        private void Start()
-        {
-            messages = new ConcurrentQueue<string>();
-        }
-
-        public void AddLog(String log)
-        {
-            messages.Enqueue(log);
-        }
-
-        public void ClearLogs()
-        {
-            messages.Clear();
-            textField.text = "Debugger: ";
-        }
-
-        private void Update()
-        {
-            while (messages.TryDequeue(out string message))
-            {
-                textField.text += message;
-            }
-        }
-
+        
         void OnDestroy()
         {
             instance = null;
         }
+        
+        #endregion
     }
 }

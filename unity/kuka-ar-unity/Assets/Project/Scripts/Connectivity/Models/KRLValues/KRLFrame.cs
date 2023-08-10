@@ -1,7 +1,8 @@
+using Connectivity.Models.KRLValues;
 using Newtonsoft.Json;
 using UnityEngine;
 
-namespace Connectivity.Models.KRLValues
+namespace Project.Scripts.Connectivity.Models.KRLValues
 {
     public class KRLFrame : KRLValue
     {

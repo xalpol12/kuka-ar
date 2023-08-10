@@ -1,7 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Connectivity.Models.AggregationClasses;
 using Connectivity.Models.KRLValues;
 using Connectivity.Models.SimpleValues.Pairs;
+using Project.Scripts.Connectivity.Models.KRLValues;
+using Project.Scripts.Utils;
 using UnityEngine;
 
 namespace Connectivity
@@ -16,18 +19,28 @@ namespace Connectivity
             public const string Tcp = "$POS_ACT";
             public const string Joints = "$AXIS_ACT";
         }
-        private GameObject gameObject;
+        
+        private readonly GameObject gameObject;
         private HashSet<ExceptionMessagePair> FoundExceptions { get; }
         private KRLInt activeBase;
         private KRLInt activeTcp;
-        private KRLFrame baseOrientation;
         private KRLFrame tcpOrientation;
         private KRLJoints activeJoints;
 
-        public TrackedRobotModel(GameObject instantiatedObject)
+        private Queue<KRLFrame> orientationUpdates;
+        private readonly float threshold;
+        private KRLFrame lastEnqueued;
+
+        public TrackedRobotModel(GameObject instantiatedObject, float threshold)
         {
             gameObject = instantiatedObject;
             FoundExceptions = new HashSet<ExceptionMessagePair>();
+            orientationUpdates = new Queue<KRLFrame>();
+            this.threshold = threshold;
+            lastEnqueued = new KRLFrame
+            {
+                Position = Vector3.zero
+            };
         }
 
         public void UpdateTrackedRobotVariables(IReadOnlyDictionary<string, ValueWithError> data)
@@ -45,6 +58,7 @@ namespace Connectivity
                 }
             }
         }
+        
 
         private void UpdateRobotData(string key, KRLValue value)
         {
@@ -59,7 +73,7 @@ namespace Connectivity
                     activeTcp = (KRLInt)value;
                     break;
                 case ValueName.Base:
-                    baseOrientation = (KRLFrame)value;
+                    SetValueIfChanged((KRLFrame)value);
                     break;
                 case ValueName.Tcp:
                     tcpOrientation = (KRLFrame)value;
@@ -67,6 +81,19 @@ namespace Connectivity
                 case ValueName.Joints:
                     activeJoints = (KRLJoints)value;
                     break;
+            }
+        }
+        
+        // current value
+        // queue: <future values>
+        // dequeue: current value = queue.TryDequeue and update position of gameobject
+        // enqueue: if |new - last inserted| > threshold -> enqueue
+        private void SetValueIfChanged(KRLFrame update)
+        {
+            if (IsNewValueGreaterThanThreshold(update, lastEnqueued))
+            {
+                orientationUpdates.Enqueue(update);
+                lastEnqueued = update;
             }
         }
 
@@ -77,10 +104,21 @@ namespace Connectivity
 
         public void UpdateGameObjectOrientation()
         {
-            if (baseOrientation == null) return;
-            gameObject.transform.position = baseOrientation.Position;
-            gameObject.transform.rotation = Quaternion.Euler(baseOrientation.Rotation);
-            Debug.Log(baseOrientation.Position + baseOrientation.Rotation.ToString());
+            if (orientationUpdates.TryDequeue(out var update))
+            {
+                gameObject.transform.position = update.Position;
+                gameObject.transform.rotation = Quaternion.Euler(update.Rotation);
+                DebugLogger.Instance().AddLog(update.Position + update.Rotation.ToString());
+            }
+        }
+
+        private bool IsNewValueGreaterThanThreshold(KRLFrame newValue, KRLFrame oldValue)
+        {
+            Vector3 difference = newValue.Position - oldValue.Position;
+            
+            return Math.Abs(difference.x) > threshold ||
+                   Math.Abs(difference.y) > threshold ||
+                   Math.Abs(difference.z) > threshold;
         }
     }
 }
