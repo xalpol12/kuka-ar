@@ -11,6 +11,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 <<<<<<< refs/remotes/origin/main
+<<<<<<< refs/remotes/origin/main
 import java.util.logging.Logger;
 
 public class KukaCommController extends TextWebSocketHandler {
@@ -21,6 +22,14 @@ public class KukaCommController extends TextWebSocketHandler {
 public class KukaCommController extends TextWebSocketHandler {
 
 >>>>>>> add testSocket and kukaComm
+=======
+import java.util.logging.Logger;
+
+public class KukaCommController extends TextWebSocketHandler {
+
+    private static final Logger logger = Logger.getLogger(KukaCommController.class.getName());
+
+>>>>>>> add debug logging in websocket controller
     @Autowired
     SessionManagerService sessionService;
     @Autowired
@@ -32,10 +41,15 @@ public class KukaCommController extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) {
         sessionService.addSession(session);
 <<<<<<< refs/remotes/origin/main
+<<<<<<< refs/remotes/origin/main
 
         logger.info("New session started: " + session.getRemoteAddress().toString());
 =======
 >>>>>>> add testSocket and kukaComm
+=======
+
+        logger.info("New session started: " + session.getRemoteAddress().toString());
+>>>>>>> add debug logging in websocket controller
     }
 
     @Override
@@ -49,16 +63,26 @@ public class KukaCommController extends TextWebSocketHandler {
         logger.info("Created connection to variable: " + data.var().name() + " ip: " + data.host());
 =======
         sessionService.addVariable(session, data.host(), kukaService.getVariable(data.var()));
+<<<<<<< refs/remotes/origin/main
 >>>>>>> add testSocket and kukaComm
+=======
+
+        logger.info("Created connection to variable: " + data.var().name() + " ip: " + data.host());
+>>>>>>> add debug logging in websocket controller
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         sessionService.removeSession(session);
 <<<<<<< refs/remotes/origin/main
+<<<<<<< refs/remotes/origin/main
 
         logger.info("Session terminated: " + session.getRemoteAddress().toString() + " " + status.toString());
 =======
 >>>>>>> add testSocket and kukaComm
+=======
+
+        logger.info("Session terminated: " + session.getRemoteAddress().toString() + " " + status.toString());
+>>>>>>> add debug logging in websocket controller
     }
 }
