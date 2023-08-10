@@ -33,10 +33,12 @@ public class ExtendedAnchorCreationManager : MonoBehaviour
         robotData = new Dictionary<string, RobotData>();
         var pos = new Vector3(0, -0.1f, 0);
         var rot = Vector3.zero;
-        var robot = new RobotData();
-        robot.Name = "Kuka";
-        robot.PositionShift = pos;
-        robot.RotationShift = rot;
+        var robot = new RobotData
+        {
+            Name = "Kuka",
+            PositionShift = pos,
+            RotationShift = rot
+        };
         robotData.Add("192.168.1.50", robot);
     }
 
