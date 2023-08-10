@@ -59,13 +59,21 @@ namespace Connectivity
             }
         }
         
+        public void UpdateGameObjectOrientation()
+        {
+            if (orientationUpdates.TryDequeue(out var update))
+            {
+                gameObject.transform.position = update.Position;
+                gameObject.transform.rotation = Quaternion.Euler(update.Rotation);
+                DebugLogger.Instance().AddLog(update.Position + update.Rotation.ToString());
+            }
+        }
 
         private void UpdateRobotData(string key, KRLValue value)
         {
             switch (key)
             {
                 //TODO: Already updated flag to change value only if it was already used to translate a point,
-                //TODO: Threshold value to update a variable only if | new - old | > threshold
                 case ValueName.ActiveBase:
                     activeBase = (KRLInt)value;
                     break;
@@ -100,16 +108,6 @@ namespace Connectivity
         private void UpdateExceptions(HashSet<ExceptionMessagePair> exceptions)
         {
             FoundExceptions.UnionWith(exceptions);
-        }
-
-        public void UpdateGameObjectOrientation()
-        {
-            if (orientationUpdates.TryDequeue(out var update))
-            {
-                gameObject.transform.position = update.Position;
-                gameObject.transform.rotation = Quaternion.Euler(update.Rotation);
-                DebugLogger.Instance().AddLog(update.Position + update.Rotation.ToString());
-            }
         }
 
         private bool IsNewValueGreaterThanThreshold(KRLFrame newValue, KRLFrame oldValue)

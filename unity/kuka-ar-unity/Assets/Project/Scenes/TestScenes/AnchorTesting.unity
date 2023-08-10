@@ -779,9 +779,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cbe45ff0deec6c2429827054a821d585, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 2104061925}
-  positionShift: {x: 0, y: -0.1, z: 0}
-  rotationShift: {x: 0, y: 0, z: 0}
+  debugLog: {fileID: 2104061925}
 --- !u!114 &1372387131
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -796,8 +794,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_SerializedLibrary: {fileID: 11400000, guid: f978d23439ce60f45858ea48923266f9,
     type: 2}
-  m_MaxNumberOfMovingImages: 0
-  m_TrackedImagePrefab: {fileID: 0}
+  m_MaxNumberOfMovingImages: 2
+  m_TrackedImagePrefab: {fileID: 1273508384157506, guid: 22b5884c8772b654489e4ed1d6987802,
+    type: 3}
 --- !u!114 &1372387132
 MonoBehaviour:
   m_ObjectHideFlags: 0
