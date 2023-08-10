@@ -1,15 +1,15 @@
 package com.wawrzyniak.testsocket.Model.Value;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
+@NoArgsConstructor
 public class KRLInt extends JsonFormatter implements KRLValue {
 
     private Integer valueInt;

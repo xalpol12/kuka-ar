@@ -3,15 +3,15 @@ package com.wawrzyniak.testsocket.Model.Value;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wawrzyniak.testsocket.Exceptions.EmptyBaseOrToolException;
 import com.wawrzyniak.testsocket.Model.Records.Vector3;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Random;
 
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)
+@AllArgsConstructor
+@NoArgsConstructor
 public class KRLFrame extends JsonFormatter implements KRLValue {
     private Vector3 position;
     private Vector3 rotation;
