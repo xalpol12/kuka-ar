@@ -16,6 +16,7 @@ public class MenuEvents : MonoBehaviour
     public event Action<int> OnRobotSave;
     public event Action<int> OnDragAddNewRobot;
     public event Action<int> OnDropAddNewRobot;
+    public event Action<int> OnClickIpAddress; 
 
     public void BottomNavOnMove(int id)
     {
@@ -50,5 +51,10 @@ public class MenuEvents : MonoBehaviour
     public void OnDropRobotDialog(int obj)
     {
         OnDropAddNewRobot?.Invoke(obj);
+    }
+
+    public void OnClickIpAddressSelect(int id)
+    {
+        OnClickIpAddress?.Invoke(id);
     }
 }
