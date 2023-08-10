@@ -10,7 +10,6 @@ public class JogsController : MonoBehaviour
 
     void Start()
     {
-        
         ShowJogs = false;
         defaultTransformFactor = 10;
         ValueCheck();

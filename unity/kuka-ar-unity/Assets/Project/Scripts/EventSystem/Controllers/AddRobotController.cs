@@ -18,8 +18,8 @@ public class AddRobotController : MonoBehaviour
     void Start()
     {
         ShowAddDialog = false;
-        CanSend = false;
         ShowLoadingSpinner = false;
+        CanSend = false;
         TransformFactor = 3000;
         Request = new AddRobotRequest
         {
@@ -44,7 +44,6 @@ public class AddRobotController : MonoBehaviour
 
     private async void OnSave(int uid)
     {
-        Debug.Log("ID: " + id + "UID: " + uid);
         if (id == uid)
         {
             if (CanSend)

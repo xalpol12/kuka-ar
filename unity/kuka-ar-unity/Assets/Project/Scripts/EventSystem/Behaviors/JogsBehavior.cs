@@ -6,7 +6,9 @@ public class JogsBehavior : MonoBehaviour
     private BottomNavController bottomNavController;
     private GameObject jogsValues;
     private GameObject jogsDisplay;
+    
     private Vector3 jogsHomePosition;
+    
     private int distance;
     void Start()
     {
@@ -14,6 +16,7 @@ public class JogsBehavior : MonoBehaviour
         bottomNavController = FindObjectOfType<BottomNavController>();
         jogsValues = jogsController.jogs.GetComponent<RectTransform>().Find("JogsValues").gameObject;
         jogsDisplay = jogsController.jogs.GetComponent<RectTransform>().Find("JogDisplay").gameObject;
+        ;
         
         jogsDisplay.SetActive(!jogsController.ShowJogs);
         jogsValues.SetActive(jogsController.ShowJogs);

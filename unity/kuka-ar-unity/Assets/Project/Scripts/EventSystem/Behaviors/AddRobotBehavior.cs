@@ -9,6 +9,7 @@ public class AddRobotBehavior : MonoBehaviour
     private float pullAddMenuMaxHeight = 0.018f;
     private AddRobotController robotController;
     private BottomNavController bottomNavController;
+    private GameObject selectOptions;
     private AddRobotRequest request;
     private Vector3 homePosition;
     private bool isDialogFullyOpen;
@@ -34,6 +35,7 @@ public class AddRobotBehavior : MonoBehaviour
         // };
         
         homePosition = robotController.addDialog.transform.position;
+        
         isDialogFullyOpen = false;
         
         robotController.addDialog.SetActive(robotController.ShowAddDialog);
@@ -47,12 +49,14 @@ public class AddRobotBehavior : MonoBehaviour
             {
                 DragSlider();
             }
+            
             ShowAddDialog();
+            
             if (isDialogFullyOpen)
             {
                 CollectUserInputData();
             }
-
+            
             bottomNavController.IsDocked = false;
         }
         else
