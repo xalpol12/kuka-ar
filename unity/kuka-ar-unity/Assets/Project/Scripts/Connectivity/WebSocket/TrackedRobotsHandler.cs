@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Connectivity.Models.AggregationClasses;
 using Connectivity.Parsing.OutputJson;
-using Multithreading;
+using Project.Scripts.Multithreading;
 using Project.Scripts.Utils;
 using UnityEngine;
 
@@ -10,13 +10,16 @@ namespace Connectivity
     public class TrackedRobotsHandler : MonoBehaviour
     {
         public GameObject prefab;
-        private Dictionary<string, TrackedRobotModel> trackedPoints;
+        [Tooltip("Minimal difference between two update values to be registered [in meters]")]
+        [Range(0f, 5f)]
+        public float threshold = 0.01f;
+        private Dictionary<string, TrackedRobotModel> trackedRobots;
         private HashSet<string> enqueuedIps;
 
 
         void Start()
         {
-            trackedPoints = new Dictionary<string, TrackedRobotModel>();
+            trackedRobots = new Dictionary<string, TrackedRobotModel>();
             enqueuedIps = new HashSet<string>();
         }
 
@@ -27,13 +30,12 @@ namespace Connectivity
             {
                 var robotData = newData.Values[foundIp];
                 UpdateTrackedPoint(foundIp, robotData);
-                DebugLogger.Instance().AddLog(foundIp + " position updated");
             }
         }
 
         private void UpdateTrackedPoint(string entry, Dictionary<string, ValueWithError> robotData)
         {
-            if (trackedPoints.TryGetValue(entry, out var point))
+            if (trackedRobots.TryGetValue(entry, out var point))
             {
                 point.UpdateTrackedRobotVariables(robotData);
             }
@@ -43,10 +45,11 @@ namespace Connectivity
                 {
                     UnityMainThreadDispatcher.Instance().Enqueue(() =>
                     {
-                        trackedPoints.Add(entry, new TrackedRobotModel(
-                            Instantiate(prefab, Vector3.zero, Quaternion.identity)));
-                        Debug.Log($"Object for ip {entry} instantiated");
-                        trackedPoints[entry].UpdateTrackedRobotVariables(robotData);
+                        trackedRobots.Add(entry, new TrackedRobotModel(
+                            Instantiate(prefab, Vector3.zero, Quaternion.identity),
+                            threshold));
+                        DebugLogger.Instance().AddLog($"Object for ip {entry} instantiated");
+                        trackedRobots[entry].UpdateTrackedRobotVariables(robotData);
 
                         enqueuedIps.Remove(entry);
                     });
@@ -55,13 +58,12 @@ namespace Connectivity
                 }
             }
         }
-
-        // Update is called once per frame
+        
         void Update()
         {
-            foreach (var trackedPoint in trackedPoints.Values)
+            foreach (var trackedRobot in trackedRobots.Values)
             {
-                trackedPoint.UpdateGameObjectOrientation();
+                trackedRobot.UpdateGameObjectOrientation();
             }
         }
     }

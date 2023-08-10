@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Multithreading
+namespace Project.Scripts.Multithreading
 {
 	public class UnityMainThreadDispatcher : MonoBehaviour {
 
@@ -65,13 +65,13 @@ namespace Multithreading
 			return tcs.Task;
 		}
 
-	
 		IEnumerator ActionWrapper(Action a)
 		{
 			a();
 			yield return null;
 		}
-
+		
+		#region Singleton logic
 
 		private static UnityMainThreadDispatcher instance = null;
 
@@ -86,7 +86,7 @@ namespace Multithreading
 			{
 				throw new Exception (
 					"UnityMainThreadDispatcher could not find the UnityMainThreadDispatcher object. " +
-				                     "Please ensure you have added the MainThreadExecutor Prefab to your scene.");
+					"Please ensure you have added the MainThreadExecutor Prefab to your scene.");
 			}
 			return instance;
 		}
@@ -105,5 +105,7 @@ namespace Multithreading
 		{
 			instance = null;
 		}
+
+		#endregion
 	}
 }
