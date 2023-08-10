@@ -3,6 +3,7 @@ using UnityEngine;
 public class JogsBehavior : MonoBehaviour
 {
     private JogsController jogsController;
+    private BottomNavController bottomNavController;
     private GameObject jogsValues;
     private GameObject jogsDisplay;
     private Vector3 jogsHomePosition;
@@ -10,6 +11,7 @@ public class JogsBehavior : MonoBehaviour
     void Start()
     {
         jogsController = GetComponent<JogsController>();
+        bottomNavController = FindObjectOfType<BottomNavController>();
         jogsValues = jogsController.jogs.GetComponent<RectTransform>().Find("JogsValues").gameObject;
         jogsDisplay = jogsController.jogs.GetComponent<RectTransform>().Find("JogDisplay").gameObject;
         
@@ -21,7 +23,7 @@ public class JogsBehavior : MonoBehaviour
     
     void Update()
     {
-        if (jogsController.ShowJogs)
+        if (jogsController.ShowJogs && bottomNavController.IsDocked)
         {
             ShowJogs();
         }

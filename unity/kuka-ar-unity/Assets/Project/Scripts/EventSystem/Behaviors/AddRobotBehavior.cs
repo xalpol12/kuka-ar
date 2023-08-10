@@ -8,16 +8,14 @@ public class AddRobotBehavior : MonoBehaviour
     [SerializeField]
     private float pullAddMenuMaxHeight = 0.018f;
     private AddRobotController robotController;
-    // private NewRobotValidator validator;
-    // private InputValidation ipAddress;
-    // private InputValidation robotName;
-    // private AddRobotRequest request;
+    private BottomNavController bottomNavController;
+    private AddRobotRequest request;
     private Vector3 homePosition;
     private bool isDialogFullyOpen;
     void Start()
     {
         robotController = GetComponent<AddRobotController>();
-        // validator = GetComponent<NewRobotValidator>();
+        bottomNavController = FindObjectOfType<BottomNavController>();
         
         // ipAddress = new InputValidation
         // {
@@ -54,11 +52,13 @@ public class AddRobotBehavior : MonoBehaviour
             {
                 CollectUserInputData();
             }
+
+            bottomNavController.IsDocked = false;
         }
         else
         {
-
             HideAddDialog();
+            bottomNavController.IsDocked = true;
         }
     }
 

@@ -8,13 +8,16 @@ public class BottomNavBehavior : MonoBehaviour
     private GameObject overlayPanel;
     [SerializeField] private float pullMenuScreenMaxHeight = 0.34f;
     private Vector3 dockPosition;
+    private const int ErrorOffset = 25;
     void Start()
     {
         bottomNav = GetComponent<BottomNavController>();
-        constantPanel = bottomNav.transform.Find("ConstantPanel").GetComponent<Image>().gameObject;
-        overlayPanel = bottomNav.transform.Find("OverlayPanel").GetComponent<Image>().gameObject;
         
-        dockPosition = bottomNav.transform.position;
+        var bottomPanel = bottomNav.transform;
+        constantPanel = bottomPanel.Find("ConstantPanel").GetComponent<Image>().gameObject;
+        overlayPanel = bottomPanel.Find("OverlayPanel").GetComponent<Image>().gameObject;
+        
+        dockPosition = bottomPanel.position;
     }
 
     void Update()
@@ -28,6 +31,7 @@ public class BottomNavBehavior : MonoBehaviour
             AutoDestinationPull();
         }
         ConstantPanelVisibilityHandler();
+        JogsExpandHandler();
     }
 
     private Vector3 BottomMenuPositionHandler()
@@ -55,11 +59,11 @@ public class BottomNavBehavior : MonoBehaviour
             Vector3 translation;
             if (transform.position.y > (Screen.height * pullMenuScreenMaxHeight + dockPosition.y) / 2)
             {
-                translation = Vector3.up * (Time.deltaTime * bottomNav.transformFactor);
+                translation = Vector3.up * (Time.deltaTime * bottomNav.TransformFactor);
             }
             else
             {
-                translation = Vector3.down * (Time.deltaTime * bottomNav.transformFactor);
+                translation = Vector3.down * (Time.deltaTime * bottomNav.TransformFactor);
             }
             
             var newPosition = bottomNav.transform.position + translation;
@@ -89,5 +93,10 @@ public class BottomNavBehavior : MonoBehaviour
             constantPanel.SetActive(true);
             overlayPanel.SetActive(false);
         }
+    }
+
+    private void JogsExpandHandler()
+    {
+        bottomNav.IsDocked = bottomNav.transform.position.y - ErrorOffset <= dockPosition.y;
     }
 }

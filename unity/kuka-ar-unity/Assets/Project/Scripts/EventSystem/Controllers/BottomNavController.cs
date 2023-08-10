@@ -5,11 +5,12 @@ public class BottomNavController : MonoBehaviour
     public int id;
     public GameObject bottomNavPanel;
     internal bool IsSliderHold;
-    internal int transformFactor;
+    internal bool IsDocked;
+    internal int TransformFactor;
 
     void Start()
     {
-        transformFactor = 5000;
+        TransformFactor = 5000;
         IsSliderHold = false;
         
         MenuEvents.Event.OnPressConstantSelectorSlider += BottomNavOnMove;

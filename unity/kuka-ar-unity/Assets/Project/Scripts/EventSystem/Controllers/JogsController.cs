@@ -5,10 +5,12 @@ public class JogsController : MonoBehaviour
     public int id;
     public float transformFactor;
     public GameObject jogs;
-    internal bool ShowJogs;
     private int defaultTransformFactor;
+    internal bool ShowJogs;
+
     void Start()
     {
+        
         ShowJogs = false;
         defaultTransformFactor = 10;
         ValueCheck();
