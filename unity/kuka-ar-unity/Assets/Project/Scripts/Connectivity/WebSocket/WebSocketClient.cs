@@ -10,7 +10,7 @@ namespace Connectivity
 {
     public class WebSocketClient : MonoBehaviour
     {
-        [SerializeField] private string serverIpAddress = "192.168.18.20:8080/kuka-variables";
+        [SerializeField] private string serverIpAddress = "ws://192.168.18.20:8080/kuka-variables";
         [SerializeField] private GameObject trackedRobotsHandler;
         [SerializeField] private GameObject testConnectionController;
         private TrackedRobotsHandler trackedRobotsHandlerScript;
