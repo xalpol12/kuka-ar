@@ -152,6 +152,9 @@ fabric.properties
 **/.idea
 
 **/.idea
-*.jar
+
+# Ignore Java generated files in all directories
+**/*.class
+**/*.jar
 
 **/.idea
