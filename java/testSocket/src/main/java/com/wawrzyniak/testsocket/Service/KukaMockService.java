@@ -1,41 +1,42 @@
 package com.wawrzyniak.testsocket.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wawrzyniak.testsocket.Model.KRLVar;
 import com.wawrzyniak.testsocket.Model.Records.RobotData;
 import com.wawrzyniak.testsocket.Model.Types.RobotClasses;
 import com.wawrzyniak.testsocket.Model.Types.VarType;
+import com.wawrzyniak.testsocket.Model.Value.KRLValue;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.logging.Logger;
 
 @Service
 public class KukaMockService {
 
-    private KRLVar base;
-    private KRLVar baseNumber;
-    private KRLVar position;
-    private KRLVar joints;
-    private KRLVar toolNumber;
+    private final static Logger logger = Logger.getLogger(KukaMockService.class.getName());
 
-    public KukaMockService(){
-        base = new KRLVar(VarType.BASE);
-        baseNumber = new KRLVar(VarType.BASE_NUMBER);
-        position = new KRLVar(VarType.POSITION);
-        joints = new KRLVar(VarType.JOINTS);
-        toolNumber = new KRLVar(VarType.TOOL_NUMBER);
+    private Map<String, Map<VarType, KRLVar>> variables;
+    @Setter
+    @Getter
+    private boolean randomizing;
+
+    public KukaMockService() {
+        variables = new HashMap<>();
+        randomizing = false;
         randomize();
     }
 
-    public Map<String, Map<String, RobotData>> getAvailableRobots(){
+    public Map<String, Map<String, RobotData>> getAvailableRobots() {
         MockRobotListBuilder listBuilder = new MockRobotListBuilder();
         for (RobotClasses robot : RobotClasses.values()){
             Set<RobotData> robots = new HashSet<>();
             for (int i = 0; i < 3; i++){
                 robots.add(new RobotDataBuilder()
-                        .withName(robot.name() + "_" + String.valueOf(i))
+                        .withName(robot.name() + "_" + i)
                         .withPositionShift(i, i * 1.5, i * 2)
                         .withRotationShift(i, i*1.5, i*2)
                         .build());
@@ -46,32 +47,39 @@ public class KukaMockService {
     }
 
     @Scheduled(fixedDelay = 10000)
-    private void randomize(){
-        base.setRandomValues();
-        baseNumber.setRandomValues();
-        position.setRandomValues();
-        joints.setRandomValues();
-        toolNumber.setRandomValues();
+    private void scheduledRandomization() {
+        if(randomizing) {
+            randomize();
+        }
     }
 
-    public KRLVar getVariable(VarType var){
-        switch (var){
-            case BASE -> {
-                return base;
-            }
-            case POSITION -> {
-                return position;
-            }
-            case BASE_NUMBER -> {
-                return baseNumber;
-            }
-            case JOINTS -> {
-                return joints;
-            }
-            case TOOL_NUMBER -> {
-                return toolNumber;
+    public void randomize() {
+        Set<Map.Entry<String, Map<VarType, KRLVar>>> entries = variables.entrySet();
+        for(Map.Entry<String, Map<VarType, KRLVar>> vars : entries) {
+            for(KRLVar var : vars.getValue().values()){
+                var.setRandomValues();
             }
         }
-        return null;
+    }
+
+    public void addVariable(String hostIp, VarType var) {
+        if(!variables.containsKey(hostIp)) {
+            variables.put(hostIp, new HashMap<>());
+        }
+        if(!variables.get(hostIp).containsKey(var)){
+            variables.get(hostIp).put(var, new KRLVar(var));
+            variables.get(hostIp).get(var).setRandomValues();
+        }
+    }
+
+    public KRLVar getVariable(String host, VarType var) {
+        return variables.get(host).get(var);
+    }
+
+    public KRLValue setValue(String host, VarType var, KRLValue value) throws JsonProcessingException {
+        addVariable(host, var);
+        logger.info("Changed variable value " + host +
+                " " + var + " to " + value.toJsonString());
+        return variables.get(host).get(var).setValue(value);
     }
 }

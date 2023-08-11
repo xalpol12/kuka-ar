@@ -34,7 +34,8 @@ public class KukaCommController extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String request = message.getPayload();
         IpVariablePair data = mapper.readValue(request, IpVariablePair.class);
-        sessionService.addVariable(session, data.host(), kukaService.getVariable(data.var()));
+        kukaService.addVariable(data.host(), data.var());
+        sessionService.addVariable(session, data.host(), kukaService.getVariable(data.host(), data.var()));
 
         logger.info("Created connection to variable: " + data.var().name() + " ip: " + data.host());
     }

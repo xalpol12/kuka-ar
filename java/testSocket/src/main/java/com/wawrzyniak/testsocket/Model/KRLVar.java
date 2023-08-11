@@ -93,4 +93,9 @@ public class KRLVar {
     public void setRandomValues(){
         value.setRandomValues();
     }
+
+    public KRLValue setValue(KRLValue value){
+        this.value = value;
+        return this.value;
+    }
 }
