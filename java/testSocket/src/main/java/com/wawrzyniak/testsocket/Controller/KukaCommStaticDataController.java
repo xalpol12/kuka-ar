@@ -1,6 +1,7 @@
 package com.wawrzyniak.testsocket.Controller;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wawrzyniak.testsocket.Model.Records.RobotData;
 import com.wawrzyniak.testsocket.Model.Value.KRLValue;
 import com.wawrzyniak.testsocket.Model.ValueSetRequest;
@@ -42,7 +43,7 @@ public class KukaCommStaticDataController {
     }
 
     @PostMapping("set")
-    public KRLValue setValue(@RequestBody ValueSetRequest request){
+    public KRLValue setValue(@RequestBody ValueSetRequest request) throws JsonProcessingException {
         return kukaService.setValue(request.getHost(), request.getVar(), request.getValue());
     }
 
