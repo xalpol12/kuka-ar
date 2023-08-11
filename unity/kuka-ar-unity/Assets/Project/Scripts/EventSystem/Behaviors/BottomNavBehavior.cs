@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,7 +6,7 @@ public class BottomNavBehavior : MonoBehaviour
 {
     private BottomNavController bottomNav;
     private GameObject constantPanel;
-    private GameObject overlayPanel;
+    private GameObject scrollList;
     [SerializeField] private float pullMenuScreenMaxHeight = 0.34f;
     private Vector3 dockPosition;
     private const int ErrorOffset = 25;
@@ -15,7 +16,16 @@ public class BottomNavBehavior : MonoBehaviour
         
         var bottomPanel = bottomNav.transform;
         constantPanel = bottomPanel.Find("ConstantPanel").GetComponent<Image>().gameObject;
-        overlayPanel = bottomPanel.Find("OverlayPanel").GetComponent<Image>().gameObject;
+        scrollList = bottomPanel.Find("ViewCoordList").GetComponent<Image>().gameObject;
+
+        var grid = scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject;
+        var gridItem = grid.transform.Find("GridElement").GetComponent<Image>().gameObject;
+        for (int i = 0; i < 25; i++)
+        {
+            GameObject newGridItem = Instantiate(gridItem, grid.transform, false);
+            newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text = "Robot 000" + i;
+            newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text = "192.168.100." + i;
+        }
         
         dockPosition = bottomPanel.position;
     }
@@ -86,12 +96,12 @@ public class BottomNavBehavior : MonoBehaviour
         if (bottomNav.transform.position.y > (Screen.height * pullMenuScreenMaxHeight + dockPosition.y) / 2)
         {
             constantPanel.SetActive(false);
-            overlayPanel.SetActive(true);
+            scrollList.SetActive(true);
         }
         else
         {
             constantPanel.SetActive(true);
-            overlayPanel.SetActive(false);
+            scrollList.SetActive(false);
         }
     }
 
