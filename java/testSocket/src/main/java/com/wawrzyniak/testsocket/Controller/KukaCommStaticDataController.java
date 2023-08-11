@@ -2,13 +2,19 @@ package com.wawrzyniak.testsocket.Controller;
 
 
 <<<<<<< refs/remotes/origin/main
+<<<<<<< refs/remotes/origin/main
+=======
+>>>>>>> Feature/testsocket setting data (#2)
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wawrzyniak.testsocket.Model.Records.RobotData;
 import com.wawrzyniak.testsocket.Model.Value.KRLValue;
 import com.wawrzyniak.testsocket.Model.ValueSetRequest;
+<<<<<<< refs/remotes/origin/main
 =======
 import com.wawrzyniak.testsocket.Model.Records.RobotData;
 >>>>>>> add testSocket and kukaComm
+=======
+>>>>>>> Feature/testsocket setting data (#2)
 import com.wawrzyniak.testsocket.Service.ImageService;
 import com.wawrzyniak.testsocket.Service.KukaMockService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +47,9 @@ public class KukaCommStaticDataController {
     }
 
 <<<<<<< refs/remotes/origin/main
+<<<<<<< refs/remotes/origin/main
+=======
+>>>>>>> Feature/testsocket setting data (#2)
     @PostMapping("random")
     public boolean isRandomizing(@RequestBody boolean setRandomizing){
         kukaService.setRandomizing(setRandomizing);
@@ -52,6 +61,9 @@ public class KukaCommStaticDataController {
         return kukaService.setValue(request.getHost(), request.getVar(), request.getValue());
     }
 
+<<<<<<< refs/remotes/origin/main
 =======
 >>>>>>> add testSocket and kukaComm
+=======
+>>>>>>> Feature/testsocket setting data (#2)
 }

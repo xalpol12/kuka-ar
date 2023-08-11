@@ -151,6 +151,9 @@ fabric.properties
 
 **/.idea
 <<<<<<< refs/remotes/origin/main
+<<<<<<< refs/remotes/origin/main
+=======
+>>>>>>> Feature/testsocket setting data (#2)
 
 **/.idea
 
@@ -158,7 +161,11 @@ fabric.properties
 **/*.class
 **/*.jar
 
+<<<<<<< refs/remotes/origin/main
 **/.idea
 =======
 *.jar
 >>>>>>> add debug logging in websocket controller
+=======
+**/.idea
+>>>>>>> Feature/testsocket setting data (#2)

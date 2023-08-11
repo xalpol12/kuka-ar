@@ -57,6 +57,7 @@ public class KukaCommController extends TextWebSocketHandler {
         String request = message.getPayload();
         IpVariablePair data = mapper.readValue(request, IpVariablePair.class);
 <<<<<<< refs/remotes/origin/main
+<<<<<<< refs/remotes/origin/main
         kukaService.addVariable(data.host(), data.var());
         sessionService.addVariable(session, data.host(), kukaService.getVariable(data.host(), data.var()));
 
@@ -66,6 +67,10 @@ public class KukaCommController extends TextWebSocketHandler {
 <<<<<<< refs/remotes/origin/main
 >>>>>>> add testSocket and kukaComm
 =======
+=======
+        kukaService.addVariable(data.host(), data.var());
+        sessionService.addVariable(session, data.host(), kukaService.getVariable(data.host(), data.var()));
+>>>>>>> Feature/testsocket setting data (#2)
 
         logger.info("Created connection to variable: " + data.var().name() + " ip: " + data.host());
 >>>>>>> add debug logging in websocket controller
