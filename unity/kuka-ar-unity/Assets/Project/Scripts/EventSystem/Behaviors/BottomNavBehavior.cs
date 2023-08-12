@@ -13,32 +13,31 @@ public class BottomNavBehavior : MonoBehaviour
     void Start()
     {
         bottomNav = GetComponent<BottomNavController>();
-        
-        var bottomPanel = bottomNav.transform;
-        constantPanel = bottomPanel.Find("ConstantPanel").GetComponent<Image>().gameObject;
-        scrollList = bottomPanel.Find("ViewCoordList").GetComponent<RectTransform>().gameObject;
 
-        var grid = scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject;
-        var gridItem = grid.transform.Find("GridElement").GetComponent<Image>().gameObject;
-        for (var i = 0; i < 25; i++)
-        {
-            var newGridItem = Instantiate(gridItem, grid.transform, false);
-            newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text = "Robot 000" + i;
-            newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text = "192.168.100." + i;
-        }
+        var bottomPanel = bottomNav.transform;
+        scrollList = bottomPanel.Find("ViewCoordList").GetComponent<Image>().gameObject;
+        constantPanel = bottomPanel.Find("ConstantPanel").GetComponent<Image>().gameObject;
         
         dockPosition = bottomPanel.position;
     }
 
     void Update()
     {
+        
         if (bottomNav.IsSliderHold)
         {
             bottomNav.transform.position = BottomMenuPositionHandler();
         }
         else
         {
-            AutoDestinationPull();
+            if (bottomNav.IsAfterItemSelect)
+            {
+                CloseObservableRobotsList();
+            }
+            else
+            {
+                AutoDestinationPull();
+            }
         }
         ConstantPanelVisibilityHandler();
         JogsExpandHandler();
@@ -79,16 +78,30 @@ public class BottomNavBehavior : MonoBehaviour
             var newPosition = bottomNav.transform.position + translation;
             if (newPosition.y > Screen.height * pullMenuScreenMaxHeight)
             {
-                translation.y = 0;
+                translation = new Vector3();
             }
             
             if (newPosition.y < dockPosition.y)
             {
-                translation.y = 0;
+                translation = new Vector3();
             }
                     
             bottomNav.transform.Translate(translation);
         }
+    }
+
+    private void CloseObservableRobotsList()
+    {
+        var translation = Vector3.down * (Time.deltaTime * bottomNav.TransformFactor);
+        var newPosition = bottomNav.transform.position + translation;
+
+        if (newPosition.y < dockPosition.y)
+        {
+            translation = new Vector3();
+            bottomNav.IsAfterItemSelect = false;
+        }
+        
+        bottomNav.transform.Translate(translation);
     }
 
     private void ConstantPanelVisibilityHandler()
