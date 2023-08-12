@@ -6,11 +6,14 @@ using UnityEngine.XR.ARFoundation;
 [RequireComponent(typeof(ARTrackedImageManager))]
 public class ImageRecognizer : MonoBehaviour
 {
+    [SerializeField] private GameObject anchorManagerGameObject;
+    private AnchorManager anchorManager;
     private ARTrackedImageManager trackedImageManager;
     private Dictionary<string, ARTrackedImage> trackedImages;
 
     private void Awake()
     {
+        anchorManager = anchorManagerGameObject.GetComponent<AnchorManager>();
         trackedImageManager = gameObject.GetComponent<ARTrackedImageManager>();
     }
 
@@ -25,7 +28,7 @@ public class ImageRecognizer : MonoBehaviour
         foreach (var newImage in eventArgs.added)
         {
             trackedImages.Add(newImage.name, newImage);
-            DebugLogger.Instance().AddLog("Tracked image added: " + newImage.name);
+            StartCoroutine(anchorManager.CreateAnchor(newImage));
             DebugLogger.Instance().AddLog("Current tracked images count: " + trackedImages.Count);
             Debug.Log("Current tracked images count: " + trackedImages.Count);
         }
