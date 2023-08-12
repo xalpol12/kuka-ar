@@ -1,17 +1,19 @@
 using Project.Scripts.Connectivity.Temp;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 public class AddRobotBehavior : MonoBehaviour
 {
     [SerializeField]
     private float pullAddMenuMaxHeight = 0.018f;
+    
     private AddRobotController robotController;
     private BottomNavController bottomNavController;
-    private GameObject selectOptions;
     private AddRobotRequest request;
+    private GameObject selectOptions;
     private Vector3 homePosition;
+    
     private bool isDialogFullyOpen;
     void Start()
     {

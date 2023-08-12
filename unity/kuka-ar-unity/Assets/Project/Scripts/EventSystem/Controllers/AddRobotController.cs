@@ -15,6 +15,7 @@ public class AddRobotController : MonoBehaviour
     internal bool ShowLoadingSpinner;
     internal bool CanSend;
     internal bool IsSliderHold;
+    internal bool IsAddRobotPressed;
     void Start()
     {
         ShowAddDialog = false;

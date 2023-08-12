@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Action = Unity.Plastic.Antlr3.Runtime.Misc.Action;
 
 public class MenuEvents : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class MenuEvents : MonoBehaviour
     public event Action<int> OnRobotSave;
     public event Action<int> OnDragAddNewRobot;
     public event Action<int> OnDropAddNewRobot;
-    public event Action<int> OnClickIpAddress; 
+    public event Action<int> OnClickIpAddress;
 
     public void BottomNavOnMove(int id)
     {
