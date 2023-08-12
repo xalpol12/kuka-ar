@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Project.Scripts.Connectivity.Temp;
+using Project.Scripts.Connectivity.Models.AggregationClasses;
 using UnityEngine;
 using UnityEngine.Networking;
 

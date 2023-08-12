@@ -1,5 +1,4 @@
-using Project.Scripts.Connectivity.Temp;
-using TMPro;
+using Project.Scripts.Connectivity.Models.AggregationClasses;
 using UnityEngine;
 using UnityEngine.UIElements;
 

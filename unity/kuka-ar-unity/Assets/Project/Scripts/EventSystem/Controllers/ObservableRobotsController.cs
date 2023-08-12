@@ -8,7 +8,7 @@ public class ObservableRobotsController : MonoBehaviour
     {
         MenuEvents.Event.OnSelectFromList += SelectClickedRobot;
     }
-
+    // TODO REFACTOR THIS SECTION IN FREE TIME TO MAKE USE OF MVC STRATEGY
     private void SelectClickedRobot(int uid)
     {
         // if (id == uid)

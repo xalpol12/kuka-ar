@@ -8,29 +8,27 @@ public class ObservableRobotsBehavior : MonoBehaviour
 {
     private ObservableRobotsController observableRobotsController;
     private BottomNavController bottomNavController;
+    private SelectableStylingService stylingService;
     private GameObject scrollList;
     private List<GameObject> allGridItems;
     void Start()
     {
         observableRobotsController = GetComponent<ObservableRobotsController>();
         bottomNavController = FindObjectOfType<BottomNavController>();
+        stylingService = FindObjectOfType<SelectableStylingService>();
         scrollList = observableRobotsController.parentGrid;
         allGridItems = new List<GameObject>();
-        
-        var selectedSprite = Resources.Load<Sprite>("Fields/Selected");
-        var defaultSpite = Resources.Load<Sprite>("Gradients/GreyListBar");
-        
+
         var constantPanelRef = scrollList.transform.parent.GetComponent<Image>()
             .gameObject.transform.Find("ConstantPanel").GetComponent<Image>()
             .gameObject.transform;
-        
         var grid = scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject;
         var gridItem = grid.transform.Find("GridElement").GetComponent<Image>().gameObject;
         gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
         {
-            MarkAsUnselected(defaultSpite);
+            stylingService.MarkAsUnselected(allGridItems);
             OnSelectActions(constantPanelRef, "192.168.100.111", "Random robot name");
-            gridItem.transform.GetComponent<Image>().sprite = selectedSprite;
+            gridItem.transform.GetComponent<Image>().sprite = stylingService.selectedSprite;
         });
         allGridItems.Add(gridItem);
         
@@ -44,9 +42,9 @@ public class ObservableRobotsBehavior : MonoBehaviour
             
             newGridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
-                MarkAsUnselected(defaultSpite);
+                stylingService.MarkAsUnselected(allGridItems);
                 OnSelectActions(constantPanelRef, ipAddressText, robotName);
-                newGridItem.transform.GetComponent<Image>().sprite = selectedSprite;
+                newGridItem.transform.GetComponent<Image>().sprite = stylingService.selectedSprite;
             });
             allGridItems.Add(newGridItem);
         }
@@ -73,13 +71,5 @@ public class ObservableRobotsBehavior : MonoBehaviour
         panelRef.Find("CurrentRobotName").GetComponent<TMP_Text>().text = robotName;
         statusText.text = connection.ToString();
         bottomNavController.IsAfterItemSelect = true;
-    }
-
-    private void MarkAsUnselected(Sprite sprite)
-    {
-        foreach (var item in allGridItems)
-        {
-            item.transform.GetComponent<Image>().sprite = sprite;
-        }
     }
 }

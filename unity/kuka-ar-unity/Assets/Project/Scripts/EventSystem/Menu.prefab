@@ -568,6 +568,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6958787184740875758}
   - component: {fileID: 1996596659392375809}
+  - component: {fileID: 3259892349575130737}
   m_Layer: 0
   m_Name: MenuEventSystem
   m_TagString: Untagged
@@ -602,6 +603,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e831701142ba734f9418b8d5cd9f4db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &3259892349575130737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677312292653283659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7091350e79d07db429286a9f6a40045c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultSprite: {fileID: 0}
+  selectedSprite: {fileID: 0}
 --- !u!1 &980745955643466287
 GameObject:
   m_ObjectHideFlags: 0
@@ -4817,7 +4832,7 @@ GameObject:
   - component: {fileID: 3697924262109264881}
   - component: {fileID: 1092038924026737370}
   m_Layer: 5
-  m_Name: CatogoryLabel
+  m_Name: CategoryLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7761,7 +7776,6 @@ GameObject:
   - component: {fileID: 1827265922153392992}
   - component: {fileID: 2798096791247008669}
   - component: {fileID: 4201820504053185165}
-  - component: {fileID: 9109065925709053300}
   m_Layer: 5
   m_Name: AddNewRobotController
   m_TagString: Untagged
@@ -7818,20 +7832,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pullAddMenuMaxHeight: 0.018
---- !u!114 &9109065925709053300
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8708303037209388037}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8077da485f9f4644959b0a35f25eb89, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  valid: {fileID: 21300000, guid: 52a208bb46e934bb5aba0a4973595f80, type: 3}
-  invalid: {fileID: 21300000, guid: 3e972ade69f574d51bbbe1052ee3c14d, type: 3}
 --- !u!1 &8756864776075305229
 GameObject:
   m_ObjectHideFlags: 0

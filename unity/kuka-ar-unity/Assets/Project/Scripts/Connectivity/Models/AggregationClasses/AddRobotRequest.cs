@@ -1,5 +1,6 @@
-namespace Project.Scripts.Connectivity.Temp
+namespace Project.Scripts.Connectivity.Models.AggregationClasses
 {
+    // TODO RE
     public class AddRobotRequest
     {
         public string IpAddress { get; set; }
