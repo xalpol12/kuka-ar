@@ -7,14 +7,15 @@ public class IpSelectBehavior : MonoBehaviour
 {
     private IpSelectController selectController;
     private SelectableStylingService stylingService;
+    private HttpService httpService;
     private List<GameObject> allIpAddresses;
     private Vector3 selectIpHomePosition;
     private void Start()
     {
         selectController = GetComponent<IpSelectController>();
         stylingService = FindObjectOfType<SelectableStylingService>();
+        httpService = FindObjectOfType<HttpService>();
         allIpAddresses = new List<GameObject>();
-        
         InitListLogic();
 
         selectIpHomePosition = selectController.ipSelector.transform.position;

@@ -569,6 +569,7 @@ GameObject:
   - component: {fileID: 6958787184740875758}
   - component: {fileID: 1996596659392375809}
   - component: {fileID: 3259892349575130737}
+  - component: {fileID: 7110464958070187886}
   m_Layer: 0
   m_Name: MenuEventSystem
   m_TagString: Untagged
@@ -615,8 +616,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7091350e79d07db429286a9f6a40045c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  defaultSprite: {fileID: 0}
-  selectedSprite: {fileID: 0}
+  defaultSprite: {fileID: 21300000, guid: 26f276315ff26744983ae211a42a320f, type: 3}
+  selectedSprite: {fileID: 21300000, guid: f89913421dd08bb499e67da74c6cf5dd, type: 3}
+--- !u!114 &7110464958070187886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677312292653283659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e33229b17f27e754ea29e3b99b235461, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &980745955643466287
 GameObject:
   m_ObjectHideFlags: 0
