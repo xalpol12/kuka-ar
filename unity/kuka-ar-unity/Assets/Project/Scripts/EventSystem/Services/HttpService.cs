@@ -34,12 +34,6 @@ public class HttpService : MonoBehaviour
 
         MenuEvents.Event.OnClickReloadServerData += OnClickDataReload;
     }
-
-    public void ManualDataLoad()
-    {
-        GetConfigured();
-        GetStickers();
-    }
     
     private void OnClickDataReload(int uid)
     {
@@ -80,6 +74,17 @@ public class HttpService : MonoBehaviour
         var data = JsonConvert.DeserializeObject<Dictionary<string, byte[]>>(http.downloadHandler.text);
         
         Stickers = MapStickers(data);
+    }
+
+    public async void PostNewRobot(object body)
+    {
+        var http = CreateApiRequest("http://localhost:8080/kuka-variables/add", RequestType.POST, body);
+        var status = http.SendWebRequest();
+
+        while (!status.isDone)
+        {
+            await Task.Yield();
+        }
     }
 
     private UnityWebRequest CreateApiRequest(string path, RequestType type = RequestType.GET, object data = null)

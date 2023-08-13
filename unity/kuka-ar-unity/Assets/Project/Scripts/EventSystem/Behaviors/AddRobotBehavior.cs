@@ -9,7 +9,6 @@ public class AddRobotBehavior : MonoBehaviour
     
     private AddRobotController robotController;
     private JogsControlService service;
-    private AddRobotData data;
     private GameObject selectOptions;
     private Vector3 homePosition;
     
@@ -25,12 +24,6 @@ public class AddRobotBehavior : MonoBehaviour
         isDialogFullyOpen = false;
         fullyVisible = (int)(Screen.height * 0.0175);
         menuSwap = (int)(Screen.height * 0.25 * -1);
-        data = new AddRobotData
-        {
-            IpAddress = "",
-            RobotCategory = "",
-            RobotName = ""
-        };
         
         robotController.addDialog.SetActive(robotController.ShowAddDialog);
     }
@@ -89,17 +82,6 @@ public class AddRobotBehavior : MonoBehaviour
         if (newPose.y < -590)
         {
             robotController.bottomNav.SetActive(true);
-        }
-
-        if (!string.IsNullOrWhiteSpace(data.IpAddress) ||
-            !string.IsNullOrWhiteSpace(data.RobotCategory) ||
-            !string.IsNullOrWhiteSpace(data.RobotName))
-        {
-            robotController.CanSend = true;
-        }
-        else
-        {
-            robotController.CanSend = false;
         }
         
         isDialogFullyOpen = false;

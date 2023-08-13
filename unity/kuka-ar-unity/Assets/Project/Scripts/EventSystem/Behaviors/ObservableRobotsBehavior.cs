@@ -26,17 +26,17 @@ public class ObservableRobotsBehavior : MonoBehaviour
             .gameObject.transform.Find("ConstantPanel").GetComponent<Image>()
             .gameObject.transform;
         var http = observableRobotsController.HttpService;
-        // if (http.ConfiguredRobots.Count == 0 || http.Stickers.Count == 0)
-        // {
-        //     return;
-        // }
+        if (http.ConfiguredRobots.Count == 0 || http.Stickers.Count == 0)
+        {
+            return;
+        }
         var grid = scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject;
         var gridItem = grid.transform.Find("GridElement").GetComponent<Image>().gameObject;
         gridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
             http.ConfiguredRobots[0].RobotName;
         gridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
             http.ConfiguredRobots[0].IpAddress;
-        //gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[0];
+        gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[0];
 
         gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
         {
@@ -46,14 +46,21 @@ public class ObservableRobotsBehavior : MonoBehaviour
         });
         allGridItems.Add(gridItem);
 
-        for (var i = 1; i < observableRobotsController.HttpService.ConfiguredRobots.Count - 1; i++)
+        for (var i = 1; i < observableRobotsController.HttpService.ConfiguredRobots.Count + 1; i++)
         {
             var newGridItem = Instantiate(gridItem, grid.transform, false);
+            
+            if (i > observableRobotsController.HttpService.ConfiguredRobots.Count - 1)
+            {
+                newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text = "";
+                newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text = "";
+            }
+            
             newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
                 http.ConfiguredRobots[i].RobotName;
             newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
                 http.ConfiguredRobots[i].IpAddress;
-            //gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[i];
+            gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[i];
             
             newGridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
@@ -81,7 +88,11 @@ public class ObservableRobotsBehavior : MonoBehaviour
                 statusText.color = new Color(0.949f, 0.247f, 0.259f);
                 break;
         }
-        
+
+        if (index > observableRobotsController.HttpService.ConfiguredRobots.Count - 1)
+        {
+            index = observableRobotsController.HttpService.ConfiguredRobots.Count;
+        }
         panelRef.Find("CurrentIpAddress").GetComponent<TMP_Text>().text = 
             observableRobotsController.HttpService.ConfiguredRobots[index].IpAddress;
         panelRef.Find("CurrentRobotName").GetComponent<TMP_Text>().text =

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
@@ -10,21 +11,45 @@ public class IpSelectController : MonoBehaviour
     public GameObject ipSelector;
     internal SelectableStylingService StylingService;
     internal HttpService HttpService;
+    internal ButtonType ElementClicked;
+    internal ButtonType PrevElementClicked;
+    internal AddNewRobotService AddNewRobotService;
     internal bool ShowOptions;
     internal int TransformFactor;
+    
+    private const int GroupOffset = 1000;
     void Start()
     {
         HttpService = HttpService.Instance;
         StylingService = SelectableStylingService.Instance;
+        AddNewRobotService = AddNewRobotService.Instance;
         
         ShowOptions = false;
-        TransformFactor = 3000;
+        TransformFactor = 7500;
         
         MenuEvents.Event.OnClickIpAddress += OnClickSelectIpAddress;
     }
     
     private void OnClickSelectIpAddress(int uid)
     {
+        if (!ShowOptions)
+        {
+            PrevElementClicked = ElementClicked;
+            switch (uid % GroupOffset)
+            {
+                case 0:
+                    ElementClicked = ButtonType.IpAddress;
+                    break;
+                case 1:
+                    ElementClicked = ButtonType.Category;
+                    break;
+                case 2:
+                    ElementClicked = ButtonType.RobotName;
+                    break;
+            }
+        }
+
+        uid /= GroupOffset;
         if (id == uid)
         {
             ShowOptions = !ShowOptions;

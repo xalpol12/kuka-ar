@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -11,22 +12,27 @@ public class AddRobotController : MonoBehaviour
     public GameObject addDialog;
     internal int TransformFactor;
     internal bool ShowAddDialog;
-    internal AddRobotData Data;
-    internal bool ShowLoadingSpinner;
-    internal bool CanSend;
     internal bool IsSliderHold;
     internal bool IsAddRobotPressed;
+    private AddNewRobotService addNewRobotService;
+    private AddRobotData data;
+    private HttpService httpService;
+    private bool isValid;
+    private bool isFirst;
     void Start()
     {
         ShowAddDialog = false;
-        ShowLoadingSpinner = false;
-        CanSend = false;
+        isValid = false;
+        isFirst = true;
         TransformFactor = 3000;
-        Data = new AddRobotData
+        httpService = HttpService.Instance;
+        addNewRobotService = AddNewRobotService.Instance;
+        
+        data = new AddRobotData
         {
-            IpAddress = null,
-            RobotCategory = null,
-            RobotName = null
+            IpAddress = "IP Address",
+            RobotCategory = "Category",
+            RobotName = "Name"
         };
 
         MenuEvents.Event.OnClickAddNewRobot += OnClickDisplayDialog;
@@ -41,28 +47,51 @@ public class AddRobotController : MonoBehaviour
         {
             ShowAddDialog = !ShowAddDialog;
         }
+        
+        if (uid == 2000 && (isValid || isFirst))
+        {
+            ShowAddDialog = false;
+            addDialog.transform.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
+                .Find("Label").GetComponent<TMP_Text>().text = data.IpAddress;
+            addDialog.transform.Find("ChosenCategory").GetComponent<RectTransform>().gameObject
+                .transform
+                .Find("CategoryLabel").GetComponent<TMP_Text>().text = data.RobotCategory;
+            addDialog.transform.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
+                .Find("NameLabel").GetComponent<TMP_Text>().text = data.RobotName;
+            addNewRobotService.ResetSelectState = true;
+
+            if (isFirst)
+            {
+                isFirst = false;
+            }
+        }
     }
 
-    private async void OnSave(int uid)
+    private void OnSave(int uid)
     {
+        var content = new AddRobotData
+        {
+            IpAddress = addDialog.transform.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
+                .Find("Label").GetComponent<TMP_Text>().text,
+            RobotCategory = addDialog.transform.Find("ChosenCategory").GetComponent<RectTransform>().gameObject
+                .transform
+                .Find("CategoryLabel").GetComponent<TMP_Text>().text,
+            RobotName = addDialog.transform.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
+            .Find("NameLabel").GetComponent<TMP_Text>().text
+        };
+        
         if (id == uid)
         {
-            if (CanSend)
+            if (!string.IsNullOrWhiteSpace(content.IpAddress) && content.IpAddress != data.IpAddress &&
+                !string.IsNullOrWhiteSpace(content.RobotCategory) && content.RobotCategory != data.RobotCategory &&
+                !string.IsNullOrWhiteSpace(content.RobotName) && content.RobotName != data.RobotName)
             {
-                const string url = "http://localhost:8080/api/add";
-                var www = UnityWebRequest.PostWwwForm(url, JsonConvert.SerializeObject(Data));
-                
-                Debug.Log(JsonConvert.SerializeObject(Data));
-                www.SetRequestHeader("Content-Type", "application/json");
-                var send = www.SendWebRequest();
-                
-                while (!send.isDone)
-                {
-                    ShowLoadingSpinner = true;
-                    await Task.Yield();
-                }
-                ShowLoadingSpinner = false;
-                Debug.Log("DONE");
+                isValid = true;
+                httpService.PostNewRobot(data);
+            }
+            else
+            {
+                isValid = false;
             }
         }
     }
