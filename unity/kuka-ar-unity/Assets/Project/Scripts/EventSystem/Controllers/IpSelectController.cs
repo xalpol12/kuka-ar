@@ -8,19 +8,17 @@ public class IpSelectController : MonoBehaviour
 {
     public int id;
     public GameObject ipSelector;
-    internal AddRobotRequest Request;
+    internal SelectableStylingService StylingService;
+    internal HttpService HttpService;
     internal bool ShowOptions;
     internal int TransformFactor;
     void Start()
     {
+        HttpService = HttpService.Instance;
+        StylingService = SelectableStylingService.Instance;
+        
         ShowOptions = false;
         TransformFactor = 3000;
-        Request = new AddRobotRequest
-        {
-            IpAddress = "",
-            RobotName = "",
-            RobotCategory = "",
-        };
         
         MenuEvents.Event.OnClickIpAddress += OnClickSelectIpAddress;
     }

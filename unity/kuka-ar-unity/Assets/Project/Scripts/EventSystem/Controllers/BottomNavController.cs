@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class BottomNavController : MonoBehaviour
 {
+    public static BottomNavController Instance;
+    
     public int id;
     public GameObject bottomNavPanel;
     internal bool IsSliderHold;
     internal bool IsAfterItemSelect;
     internal bool IsCirclePressed;
     internal int TransformFactor;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {

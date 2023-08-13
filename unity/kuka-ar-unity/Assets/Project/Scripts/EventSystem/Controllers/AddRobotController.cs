@@ -11,7 +11,7 @@ public class AddRobotController : MonoBehaviour
     public GameObject addDialog;
     internal int TransformFactor;
     internal bool ShowAddDialog;
-    internal AddRobotRequest Request;
+    internal AddRobotData Data;
     internal bool ShowLoadingSpinner;
     internal bool CanSend;
     internal bool IsSliderHold;
@@ -22,7 +22,7 @@ public class AddRobotController : MonoBehaviour
         ShowLoadingSpinner = false;
         CanSend = false;
         TransformFactor = 3000;
-        Request = new AddRobotRequest
+        Data = new AddRobotData
         {
             IpAddress = null,
             RobotCategory = null,
@@ -50,9 +50,9 @@ public class AddRobotController : MonoBehaviour
             if (CanSend)
             {
                 const string url = "http://localhost:8080/api/add";
-                var www = UnityWebRequest.PostWwwForm(url, JsonConvert.SerializeObject(Request));
+                var www = UnityWebRequest.PostWwwForm(url, JsonConvert.SerializeObject(Data));
                 
-                Debug.Log(JsonConvert.SerializeObject(Request));
+                Debug.Log(JsonConvert.SerializeObject(Data));
                 www.SetRequestHeader("Content-Type", "application/json");
                 var send = www.SendWebRequest();
                 

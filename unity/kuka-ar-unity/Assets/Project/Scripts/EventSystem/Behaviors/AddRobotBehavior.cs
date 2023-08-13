@@ -9,7 +9,7 @@ public class AddRobotBehavior : MonoBehaviour
     
     private AddRobotController robotController;
     private JogsControlService service;
-    private AddRobotRequest request;
+    private AddRobotData data;
     private GameObject selectOptions;
     private Vector3 homePosition;
     
@@ -18,26 +18,19 @@ public class AddRobotBehavior : MonoBehaviour
     {
         robotController = GetComponent<AddRobotController>();
         service = FindObjectOfType<JogsControlService>();
-        
-        // ipAddress = new InputValidation
-        // {
-        //     InputField = robotController.addDialog.transform.Find("IpInput").GetComponent<TMP_InputField>(),
-        //     Image = robotController.addDialog.transform.Find("IpInput").GetComponent<Image>(),
-        //     Touched = false,
-        //     Valid = false,
-        // };
-        //
-        // robotName = new InputValidation
-        // {
-        //     InputField = robotController.addDialog.transform.Find("NameInput").GetComponent<TMP_InputField>(),
-        //     Image = robotController.addDialog.transform.Find("NameInput").GetComponent<Image>(),
-        //     Touched = false,
-        //     Valid = false,
-        // };
-        
+        selectOptions = robotController.addDialog.transform.Find("SelectOptions")
+            .GetComponent<RectTransform>().gameObject;
         homePosition = robotController.addDialog.transform.position;
         
         isDialogFullyOpen = false;
+        fullyVisible = (int)(Screen.height * 0.0175);
+        menuSwap = (int)(Screen.height * 0.25 * -1);
+        data = new AddRobotData
+        {
+            IpAddress = "",
+            RobotCategory = "",
+            RobotName = ""
+        };
         
         robotController.addDialog.SetActive(robotController.ShowAddDialog);
     }
@@ -52,12 +45,8 @@ public class AddRobotBehavior : MonoBehaviour
             }
             
             ShowAddDialog();
-            
-            if (isDialogFullyOpen)
-            {
-                CollectUserInputData();
-            }
-            
+
+            selectOptions.SetActive(isDialogFullyOpen);
             service.IsAddRobotDialogOpen = true;
         }
         else
@@ -101,42 +90,20 @@ public class AddRobotBehavior : MonoBehaviour
         {
             robotController.bottomNav.SetActive(true);
         }
+
+        if (!string.IsNullOrWhiteSpace(data.IpAddress) ||
+            !string.IsNullOrWhiteSpace(data.RobotCategory) ||
+            !string.IsNullOrWhiteSpace(data.RobotName))
+        {
+            robotController.CanSend = true;
+        }
+        else
+        {
+            robotController.CanSend = false;
+        }
         
         isDialogFullyOpen = false;
         robotController.addDialog.transform.Translate(translation);
-    }
-
-    private void CollectUserInputData()
-    {
-        // if (!ipAddress.InputField.isFocused && ipAddress.Touched)
-        // {
-        //     ipAddress = validator.IpAddressValidation(ipAddress);
-        // }
-        //
-        // if (!robotName.InputField.isFocused && robotName.Touched)
-        // {
-        //     robotName = validator.NameValidation(robotName);
-        // }
-        //
-        // if (ipAddress.InputField.isFocused)
-        // {
-        //     ipAddress.Touched = true;
-        // }
-        //
-        // if (robotName.InputField.isFocused)
-        // {
-        //     robotName.Touched = true;
-        // }
-        //
-        // if (ipAddress.Valid && robotName.Valid)
-        // {
-        //     robotController.Request = new AddRobotRequest
-        //     {
-        //         IpAddress = ipAddress.InputField.text,
-        //         RobotName = robotName.InputField.text
-        //     };
-        //     robotController.CanSend = true;
-        // }
     }
     
     private void DragSlider()

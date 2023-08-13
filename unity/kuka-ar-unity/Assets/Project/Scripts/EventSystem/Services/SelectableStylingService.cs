@@ -1,11 +1,19 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class SelectableStylingService : MonoBehaviour
 {
+    public static SelectableStylingService Instance;
+    
     public Sprite defaultSprite;
     public Sprite selectedSprite;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void Start()
     {

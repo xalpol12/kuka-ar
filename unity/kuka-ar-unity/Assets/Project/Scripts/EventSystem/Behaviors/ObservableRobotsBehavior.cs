@@ -8,54 +8,64 @@ using UnityEngine.UI;
 public class ObservableRobotsBehavior : MonoBehaviour
 {
     private ObservableRobotsController observableRobotsController;
-    private BottomNavController bottomNavController;
-    private SelectableStylingService stylingService;
-    private HttpService httpService;
     private GameObject scrollList;
     private List<GameObject> allGridItems;
     void Start()
     {
         observableRobotsController = GetComponent<ObservableRobotsController>();
-        bottomNavController = FindObjectOfType<BottomNavController>();
-        stylingService = FindObjectOfType<SelectableStylingService>();
-        httpService = FindObjectOfType<HttpService>();
+        
         scrollList = observableRobotsController.parentGrid;
         allGridItems = new List<GameObject>();
 
+        InitObservableRobots();
+    }
+
+    private void InitObservableRobots()
+    {
         var constantPanelRef = scrollList.transform.parent.GetComponent<Image>()
             .gameObject.transform.Find("ConstantPanel").GetComponent<Image>()
             .gameObject.transform;
+        var http = observableRobotsController.HttpService;
+        // if (http.ConfiguredRobots.Count == 0 || http.Stickers.Count == 0)
+        // {
+        //     return;
+        // }
         var grid = scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject;
         var gridItem = grid.transform.Find("GridElement").GetComponent<Image>().gameObject;
+        gridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
+            http.ConfiguredRobots[0].RobotName;
+        gridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
+            http.ConfiguredRobots[0].IpAddress;
+        //gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[0];
+
         gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
         {
-            stylingService.MarkAsUnselected(allGridItems);
-            FillRequest("192.168.100.111", "Random robot name");
-            OnSelectActions(constantPanelRef);
-            gridItem.transform.GetComponent<Image>().sprite = stylingService.selectedSprite;
+            observableRobotsController.StylingService.MarkAsUnselected(allGridItems);
+            OnSelectActions(constantPanelRef, gridItem.transform.GetSiblingIndex());
+            gridItem.transform.GetComponent<Image>().sprite = observableRobotsController.StylingService.selectedSprite;
         });
         allGridItems.Add(gridItem);
-        
-        for (var i = 0; i < 25; i++)
+
+        for (var i = 1; i < observableRobotsController.HttpService.ConfiguredRobots.Count - 1; i++)
         {
             var newGridItem = Instantiate(gridItem, grid.transform, false);
-            var ipAddressText = newGridItem.transform.Find("TemplateRobotName")
-                .GetComponent<TMP_Text>().text = "Robot 000" + i;
-            var robotName = newGridItem.transform.Find("TemplateRobotIp")
-                .GetComponent<TMP_Text>().text = "192.168.100." + i;
+            newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
+                http.ConfiguredRobots[i].RobotName;
+            newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
+                http.ConfiguredRobots[i].IpAddress;
+            //gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[i];
             
             newGridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
-                stylingService.MarkAsUnselected(allGridItems);
-                FillRequest(ipAddressText, robotName);
-                OnSelectActions(constantPanelRef);
-                newGridItem.transform.GetComponent<Image>().sprite = stylingService.selectedSprite;
+                observableRobotsController.StylingService.MarkAsUnselected(allGridItems);
+                OnSelectActions(constantPanelRef, newGridItem.transform.GetSiblingIndex());
+                newGridItem.transform.GetComponent<Image>().sprite = observableRobotsController.StylingService.selectedSprite;
             });
             allGridItems.Add(newGridItem);
         }
     }
 
-    private void OnSelectActions(Transform panelRef)
+    private void OnSelectActions(Transform panelRef, int index)
     {
         var connection = ConnectionStatus.Connecting;
         var statusText = panelRef.Find("ConnectionStatus").GetComponent<TMP_Text>();
@@ -72,16 +82,11 @@ public class ObservableRobotsBehavior : MonoBehaviour
                 break;
         }
         
-        panelRef.Find("CurrentIpAddress").GetComponent<TMP_Text>().text = observableRobotsController.Request.IpAddress;
-        panelRef.Find("CurrentRobotName").GetComponent<TMP_Text>().text = observableRobotsController.Request.RobotName;
+        panelRef.Find("CurrentIpAddress").GetComponent<TMP_Text>().text = 
+            observableRobotsController.HttpService.ConfiguredRobots[index].IpAddress;
+        panelRef.Find("CurrentRobotName").GetComponent<TMP_Text>().text =
+            observableRobotsController.HttpService.ConfiguredRobots[index].RobotName;
         statusText.text = connection.ToString();
-        bottomNavController.IsAfterItemSelect = true;
-    }
-
-    private void FillRequest(string ip, string robotName)
-    {
-        observableRobotsController.Request.IpAddress = ip;
-        observableRobotsController.Request.RobotName = robotName;
-        observableRobotsController.Request.RobotCategory = "KRL ULTRA";
+        observableRobotsController.BottomNavController.IsAfterItemSelect = true;
     }
 }

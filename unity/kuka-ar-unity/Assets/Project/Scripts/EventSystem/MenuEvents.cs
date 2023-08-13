@@ -19,7 +19,8 @@ public class MenuEvents : MonoBehaviour
     public event Action<int> OnClickIpAddress;
     public event Action<int> OnSelectFromList;
     public event Action<int> OnPointerPressCircle; 
-    public event Action<int> OnPointerPressedCircle; 
+    public event Action<int> OnPointerPressedCircle;
+    public event Action<int> OnClickReloadServerData;
 
     public void BottomNavOnMove(int id)
     {
@@ -74,5 +75,10 @@ public class MenuEvents : MonoBehaviour
     public void OnCirclePressed(int id)
     {
         OnPointerPressedCircle?.Invoke(id);
+    }
+
+    public void ReloadServerData(int id)
+    {
+        OnClickReloadServerData?.Invoke(id);
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using UnityEditor.PackageManager.Requests;
 using UnityEngine;
@@ -6,16 +7,15 @@ public class ObservableRobotsController : MonoBehaviour
 {
     public int id;
     public GameObject parentGrid;
-    internal AddRobotRequest Request;
+    internal HttpService HttpService;
+    internal BottomNavController BottomNavController;
+    internal SelectableStylingService StylingService;
     void Start()
     {
-        Request = new AddRobotRequest
-        {
-            IpAddress = "",
-            RobotName = "",
-            RobotCategory = "",
-        };
-        
+        HttpService = HttpService.Instance;
+        StylingService = SelectableStylingService.Instance;
+        BottomNavController = BottomNavController.Instance;
+
         MenuEvents.Event.OnSelectFromList += SelectClickedRobot;
     }
     // TODO REFACTOR THIS SECTION IN FREE TIME TO MAKE USE OF MVC STRATEGY

@@ -6,15 +6,11 @@ using UnityEngine.UI;
 public class IpSelectBehavior : MonoBehaviour
 {
     private IpSelectController selectController;
-    private SelectableStylingService stylingService;
-    private HttpService httpService;
     private List<GameObject> allIpAddresses;
     private Vector3 selectIpHomePosition;
     private void Start()
     {
         selectController = GetComponent<IpSelectController>();
-        stylingService = FindObjectOfType<SelectableStylingService>();
-        httpService = FindObjectOfType<HttpService>();
         allIpAddresses = new List<GameObject>();
         InitListLogic();
 
@@ -39,25 +35,29 @@ public class IpSelectBehavior : MonoBehaviour
         var ipList = selectController.ipSelector.transform.Find("IpAddressList").GetComponent<RectTransform>();
         var grid = ipList.transform.Find("IpAddressGrid").GetComponent<RectTransform>().gameObject;
         var gridItem = grid.transform.Find("IpAddressGridElement").GetComponent<RectTransform>().gameObject;
+        gridItem.transform.Find("RobotIp").GetComponent<TMP_Text>().text =
+            selectController.HttpService.ConfiguredRobots[0].IpAddress;
         gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
         {
-            stylingService.MarkAsUnselected(allIpAddresses);
-            FillRequest(gridItem.transform.Find("RobotIp").GetComponent<TMP_Text>().text);
-            OnIpSelect(parentComponent);
-            gridItem.transform.GetComponent<Image>().sprite = stylingService.selectedSprite;
+            selectController.StylingService.MarkAsUnselected(allIpAddresses);
+            OnIpSelect(parentComponent,0);
+            gridItem.transform.GetComponent<Image>().sprite = selectController.StylingService.selectedSprite;
         });
+        allIpAddresses.Add(gridItem);
         
-        for (var i = 0; i < 25; i++)
+        for (var i = 1; i < selectController.HttpService.ConfiguredRobots.Count - 1; i++)
         {
             var newIpAddress = Instantiate(gridItem, grid.transform, false);
-            var ip = newIpAddress.transform.Find("RobotIp").GetComponent<TMP_Text>().text = "192.168.168.1" + i;
+            newIpAddress.transform.Find("RobotIp").GetComponent<TMP_Text>().text =
+                selectController.HttpService.ConfiguredRobots[i].IpAddress;
             newIpAddress.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
-                stylingService.MarkAsUnselected(allIpAddresses);
-                FillRequest(ip);
-                OnIpSelect(parentComponent);
-                newIpAddress.transform.GetComponent<Image>().sprite = stylingService.selectedSprite;
+                selectController.StylingService.MarkAsUnselected(allIpAddresses);
+                OnIpSelect(parentComponent, newIpAddress.transform.GetSiblingIndex());
+                newIpAddress.transform.GetComponent<Image>().sprite = selectController.StylingService.selectedSprite;
             });
+            
+            allIpAddresses.Add(newIpAddress);
         }
     }
 
@@ -87,23 +87,15 @@ public class IpSelectBehavior : MonoBehaviour
         selectController.ipSelector.transform.Translate(translation);
     }
 
-    private void OnIpSelect(Transform parent)
+    private void OnIpSelect(Transform parent, int index)
     {
+        var http = selectController.HttpService.ConfiguredRobots[index];
+        
         parent.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
-            .Find("Label").GetComponent<TMP_Text>().text = selectController.Request.IpAddress;
+            .Find("Label").GetComponent<TMP_Text>().text = http.IpAddress;
         parent.Find("ChosenCategory").GetComponent<RectTransform>().gameObject.transform
-            .Find("CategoryLabel").GetComponent<TMP_Text>().text = selectController.Request.RobotCategory;
+            .Find("CategoryLabel").GetComponent<TMP_Text>().text = http.RobotCategory;
         parent.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
-            .Find("NameLabel").GetComponent<TMP_Text>().text = selectController.Request.RobotName;
-    }
-
-    private void FillRequest(string ip)
-    {
-        // TODO CALL TO BACKEND
-        var robotName = "KRL XXXYYY";
-        var category = "KRL C20";
-        selectController.Request.IpAddress = ip;
-        selectController.Request.RobotName = robotName;
-        selectController.Request.RobotCategory = category;
+            .Find("NameLabel").GetComponent<TMP_Text>().text = http.RobotName;
     }
 }
