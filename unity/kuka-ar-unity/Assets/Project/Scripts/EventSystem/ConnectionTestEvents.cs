@@ -1,4 +1,5 @@
 using System;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
 namespace Project.Scripts.EventSystem
@@ -12,9 +13,15 @@ namespace Project.Scripts.EventSystem
             Current = this;
         }
 
+        public event Action OnPressButtonConnectToServer;
         public event Action OnPressButtonConnectToFirstRobot;
         public event Action OnPressButtonConnectToSecondRobot;
         public event Action OnPressButtonConnectToThirdRobot;
+
+        public void StartConnectionToServer()
+        {
+            OnPressButtonConnectToServer?.Invoke();
+        }
 
         public void StartConnectionFirstRobot()
         {

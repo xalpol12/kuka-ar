@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Connectivity;
 using Connectivity.Parsing;
 using Connectivity.Parsing.OutputJson;
 using Newtonsoft.Json;
@@ -6,25 +9,14 @@ using Project.Scripts.Utils;
 using UnityEngine;
 using WebSocketSharp;
 
-namespace Connectivity
+namespace Project.Scripts.Connectivity.WebSocket
 {
     public class WebSocketClient : MonoBehaviour
     {
-        [SerializeField] private string serverIpAddress = "ws://192.168.18.20:8080/kuka-variables";
-        [SerializeField] private GameObject trackedRobotsHandler;
-        [SerializeField] private GameObject testConnectionController;
-        private TrackedRobotsHandler trackedRobotsHandlerScript;
-        private HashSet<string> openConnections; 
-        private WebSocket ws;
-        private ConnectionTestController controller;
+        [SerializeField] private TrackedRobotsHandler trackedRobotsHandlerScript;
+        private WebSocketSharp.WebSocket ws;
         private static JsonSerializerSettings settings;
-
-        private void Awake()
-        {
-            trackedRobotsHandlerScript = 
-                trackedRobotsHandler.GetComponent<TrackedRobotsHandler>();
-            controller = testConnectionController.GetComponent<ConnectionTestController>();
-        }
+        private ConcurrentQueue<string> messagesToSend;
 
         private void Start()
         {
@@ -36,53 +28,94 @@ namespace Connectivity
                     new KRLValueJsonConverter()
                 }
             };
-            openConnections = new HashSet<string>();
-            InitializeWebsocket();
+
+            messagesToSend = new ConcurrentQueue<string>();
         }
 
-        private void InitializeWebsocket()
+        public void ConnectToWebsocket(string serverAddress)
         {
-            ws = new WebSocket(serverIpAddress);
+            if (ws == null)
+            {
+                ws = new WebSocketSharp.WebSocket(serverAddress);
+            } 
+            else if (ws.IsAlive)
+            {
+                ws.CloseAsync();
+                ws = new WebSocketSharp.WebSocket(serverAddress);
+            }
 
             ws.OnMessage += (_, e) => OnWebsocketMessage(e);
             
             ws.Connect();
+
+            DebugLogger.Instance()
+                .AddLog(ws.IsAlive ? $"Connected to ws: {serverAddress} " : "Client couldn't connect to a server ");
+        }
+
+        public void SendToWebSocketServer(string message)
+        {
+            messagesToSend.Enqueue(message);
         }
 
         private void OnWebsocketMessage(MessageEventArgs e)
         {
             var outputFrame = JsonConvert.DeserializeObject<OutputWithErrors>(e.Data, settings);
             trackedRobotsHandlerScript.ReceivePackageFromWebsocket(outputFrame);
-            DebugLogger.Instance().AddLog("Received message ");
+            // DebugLogger.Instance().AddLog("Received message ");
         }
 
         private void Update()
         {
-            if (ws == null)
+            if (ws == null) return;
+            if (ws.IsAlive && messagesToSend.TryDequeue(out string message))
             {
-                return;
+                ws.Send(message);
             }
-
-            // if (controller.FirstRobotConnected && !openConnections.Contains(".50"))
-            // {
-            //     ws.Send("{ \"host\": \"192.168.1.50\", \"var\": \"BASE\" }");
-            //     openConnections.Add(".50");
-            // }
-            // if (controller.SecondRobotConnected && !openConnections.Contains(".51"))
-            // {
-            //     ws.Send("{ \"host\": \"192.168.1.51\", \"var\": \"BASE\" }");
-            //     openConnections.Add(".51");
-            // }
-            // if (controller.ThirdRobotConnected && !openConnections.Contains(".52"))
-            // {
-            //     ws.Send("{ \"host\": \"192.168.1.52\", \"var\": \"BASE\" }");
-            //     openConnections.Add(".52");
-            // }
         }
 
         private void OnApplicationQuit()
         {
-            ws.Close();
+            if (ws == null) return;
+            if (ws.IsAlive)
+            {
+                ws.Close();
+            }
         }
+
+        #region Singleton logic
+
+        private static WebSocketClient instance;
+
+        public static WebSocketClient Instance()
+        {
+            if (!Exists())
+            {
+                throw new Exception(
+                    "WebSocketClient could not find the WebSocketClient object." +
+                    "Please ensure you have added the WebSocketClient Prefab to your scene.");
+            }
+            return instance;
+        }
+
+        private static bool Exists()
+        {
+            return instance != null;
+        }
+
+        private void Awake()
+        {
+            if (instance == null)
+            {
+                instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            instance = null;
+        }
+
+        #endregion
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Connectivity;
 using Project.Scripts.Connectivity.Models;
 using Project.Scripts.Utils;
 using UnityEngine;
@@ -10,8 +11,11 @@ using UnityEngine.XR.ARSubsystems;
 public class AnchorManager : MonoBehaviour
 {
     private ARAnchorManager arAnchorManager;
+    [SerializeField] private TrackedRobotsHandler trackedRobotsHandler;
+    
     private Dictionary<string, ARAnchor> trackedAnchors;
     private Dictionary<string, RobotData> robotConfigData;
+    
     private void Awake()
     {
         arAnchorManager = gameObject.GetComponent<ARAnchorManager>();
@@ -42,8 +46,8 @@ public class AnchorManager : MonoBehaviour
     public IEnumerator CreateAnchor(ARTrackedImage foundImage)
     {
         DebugLogger.Instance().AddLog("Searching for reference points... ");
-        RobotData configData = robotConfigData[foundImage.referenceImage.name];
         #if !UNITY_EDITOR
+            RobotData configData = robotConfigData[foundImage.referenceImage.name];
             bool isCreated = false;
             while (!isCreated)
             {
@@ -54,6 +58,7 @@ public class AnchorManager : MonoBehaviour
                 Quaternion rotation = imageTransform.rotation * Quaternion.Euler(configData.RotationShift);
                 ARAnchor anchor = arAnchorManager.AddAnchor(new Pose(position, rotation)); //TODO: replace obsolete method
                 trackedAnchors.Add("192.168.1.50", anchor);
+                trackedRobotsHandler.InstantiateTrackedRobot("192.168.1.50", anchor.transform);
                 isCreated = true;
             }   
         #endif

@@ -39,6 +39,7 @@ namespace Connectivity
             {
                 point.UpdateTrackedRobotVariables(robotData);
             }
+            #if UNITY_EDITOR
             else
             {
                 if (!enqueuedIps.Contains(entry))
@@ -57,7 +58,29 @@ namespace Connectivity
                     enqueuedIps.Add(entry);
                 }
             }
+            #endif
         }
+
+        #if !UNITY_EDITOR
+        public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
+        {
+            if (!enqueuedIps.Contains(ipAddress))
+            {
+                UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                {
+                    trackedRobots.Add(ipAddress, new TrackedRobotModel(
+                        Instantiate(prefab, basePoint.position, basePoint.rotation),
+                        threshold));
+                    DebugLogger.Instance().AddLog($"Object for ip {ipAddress} instantiated");
+                    // trackedRobots[ipAddress].UpdateTrackedRobotVariables(robotData); //can't do rn, see if needed
+
+                    enqueuedIps.Remove(ipAddress);
+                });
+
+                enqueuedIps.Add(ipAddress);
+            }
+        }
+        #endif
         
         void Update()
         {

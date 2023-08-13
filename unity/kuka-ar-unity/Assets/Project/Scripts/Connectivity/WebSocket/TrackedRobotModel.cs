@@ -65,7 +65,8 @@ namespace Connectivity
             {
                 gameObject.transform.position = update.Position;
                 gameObject.transform.rotation = Quaternion.Euler(update.Rotation);
-                DebugLogger.Instance().AddLog(update.Position + update.Rotation.ToString());
+                DebugLogger.Instance().AddLog($"Pos: {update.Position.ToString()}, " +
+                                              $"rot: {update.Rotation.ToString()} ");
             }
         }
 
