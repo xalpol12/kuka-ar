@@ -26,6 +26,8 @@ public class AnchorManager : MonoBehaviour
         CreateMockData();
     }
 
+    //TODO: Implement downloading config data for each ip,
+    //if not found, default: Vector3.zero
     private void CreateMockData()
     {
         RobotData newRobotConfigData = new RobotData()
@@ -40,19 +42,22 @@ public class AnchorManager : MonoBehaviour
     public IEnumerator CreateAnchor(ARTrackedImage foundImage)
     {
         DebugLogger.Instance().AddLog("Searching for reference points... ");
-        RobotData configData = robotConfigData["192.168.1.50"]; //TODO: in the future: use image.referenceImage.name
-        bool isCreated = false;
-        while (!isCreated)
-        {
-            yield return null;
-            if (foundImage.trackingState != TrackingState.Tracking) continue;
-            Transform imageTransform = foundImage.transform;
-            Vector3 position = imageTransform.position + configData.PositionShift;
-            Quaternion rotation = imageTransform.rotation * Quaternion.Euler(configData.RotationShift);
-            ARAnchor anchor = arAnchorManager.AddAnchor(new Pose(position, rotation)); //TODO: replace obsolete method
-            trackedAnchors.Add("192.168.1.50", anchor);
-            isCreated = true;
-        }
+        RobotData configData = robotConfigData[foundImage.referenceImage.name];
+        #if !UNITY_EDITOR
+            bool isCreated = false;
+            while (!isCreated)
+            {
+                yield return null;
+                if (foundImage.trackingState != TrackingState.Tracking) continue;
+                Transform imageTransform = foundImage.transform;
+                Vector3 position = imageTransform.position + configData.PositionShift;
+                Quaternion rotation = imageTransform.rotation * Quaternion.Euler(configData.RotationShift);
+                ARAnchor anchor = arAnchorManager.AddAnchor(new Pose(position, rotation)); //TODO: replace obsolete method
+                trackedAnchors.Add("192.168.1.50", anchor);
+                isCreated = true;
+            }   
+        #endif
+        yield return null;
         DebugLogger.Instance().AddLog("Object placed ");
     }
 }
