@@ -4,26 +4,31 @@ using UnityEngine.UI;
 
 public class BottomNavBehavior : MonoBehaviour
 {
+    [SerializeField] private float pullMenuScreenMaxHeight = 0.34f;
+    
     private BottomNavController bottomNav;
+    private JogsControlService service;
     private GameObject constantPanel;
     private GameObject scrollList;
-    [SerializeField] private float pullMenuScreenMaxHeight = 0.34f;
+    private GameObject plusImage;
     private Vector3 dockPosition;
     private const int ErrorOffset = 25;
     void Start()
     {
         bottomNav = GetComponent<BottomNavController>();
-
+        service = FindObjectOfType<JogsControlService>();
+        
         var bottomPanel = bottomNav.transform;
         scrollList = bottomPanel.Find("ViewCoordList").GetComponent<Image>().gameObject;
         constantPanel = bottomPanel.Find("ConstantPanel").GetComponent<Image>().gameObject;
+        plusImage = constantPanel.transform.Find("AddButtonContainer").GetComponent<RectTransform>().gameObject
+            .transform.Find("AddButton").GetComponent<RectTransform>().gameObject;
         
         dockPosition = bottomPanel.position;
     }
 
     void Update()
     {
-        
         if (bottomNav.IsSliderHold)
         {
             bottomNav.transform.position = BottomMenuPositionHandler();
@@ -39,6 +44,9 @@ public class BottomNavBehavior : MonoBehaviour
                 AutoDestinationPull();
             }
         }
+        
+        plusImage.SetActive(!bottomNav.IsCirclePressed);
+        
         ConstantPanelVisibilityHandler();
         JogsExpandHandler();
     }
@@ -120,6 +128,6 @@ public class BottomNavBehavior : MonoBehaviour
 
     private void JogsExpandHandler()
     {
-        bottomNav.IsDocked = bottomNav.transform.position.y - ErrorOffset <= dockPosition.y;
+        service.IsBottomNavDocked = bottomNav.bottomNavPanel.transform.position.y - ErrorOffset <= dockPosition.y;
     }
 }

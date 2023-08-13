@@ -1,20 +1,23 @@
-using Project.Scripts.Connectivity.Temp;
+using Project.Scripts.Connectivity.Models.AggregationClasses;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class AddRobotBehavior : MonoBehaviour
 {
     [SerializeField]
     private float pullAddMenuMaxHeight = 0.018f;
+    
     private AddRobotController robotController;
-    // private NewRobotValidator validator;
-    // private InputValidation ipAddress;
-    // private InputValidation robotName;
+    private JogsControlService service;
     private AddRobotRequest request;
+    private GameObject selectOptions;
     private Vector3 homePosition;
+    
     private bool isDialogFullyOpen;
     void Start()
     {
         robotController = GetComponent<AddRobotController>();
+        service = FindObjectOfType<JogsControlService>();
         
         // ipAddress = new InputValidation
         // {
@@ -33,6 +36,7 @@ public class AddRobotBehavior : MonoBehaviour
         // };
         
         homePosition = robotController.addDialog.transform.position;
+        
         isDialogFullyOpen = false;
         
         robotController.addDialog.SetActive(robotController.ShowAddDialog);
@@ -46,16 +50,20 @@ public class AddRobotBehavior : MonoBehaviour
             {
                 DragSlider();
             }
+            
             ShowAddDialog();
+            
             if (isDialogFullyOpen)
             {
                 CollectUserInputData();
             }
+            
+            service.IsAddRobotDialogOpen = true;
         }
         else
         {
-
             HideAddDialog();
+            service.IsAddRobotDialogOpen = false;
         }
     }
 

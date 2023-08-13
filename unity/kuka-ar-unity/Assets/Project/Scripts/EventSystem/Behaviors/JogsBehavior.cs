@@ -3,7 +3,7 @@ using UnityEngine;
 public class JogsBehavior : MonoBehaviour
 {
     private JogsController jogsController;
-    private BottomNavController bottomNavController;
+    private JogsControlService service;
     private GameObject jogsValues;
     private GameObject jogsDisplay;
     
@@ -13,10 +13,9 @@ public class JogsBehavior : MonoBehaviour
     void Start()
     {
         jogsController = GetComponent<JogsController>();
-        bottomNavController = FindObjectOfType<BottomNavController>();
+        service = FindObjectOfType<JogsControlService>();
         jogsValues = jogsController.jogs.GetComponent<RectTransform>().Find("JogsValues").gameObject;
         jogsDisplay = jogsController.jogs.GetComponent<RectTransform>().Find("JogDisplay").gameObject;
-        ;
         
         jogsDisplay.SetActive(!jogsController.ShowJogs);
         jogsValues.SetActive(jogsController.ShowJogs);
@@ -26,7 +25,7 @@ public class JogsBehavior : MonoBehaviour
     
     void Update()
     {
-        if (jogsController.ShowJogs && bottomNavController.IsDocked)
+        if (jogsController.ShowJogs && service.IsBottomNavDocked && !service.IsAddRobotDialogOpen)
         {
             ShowJogs();
         }
