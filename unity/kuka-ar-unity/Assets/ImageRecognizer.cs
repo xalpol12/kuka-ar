@@ -26,8 +26,8 @@ public class ImageRecognizer : MonoBehaviour
     {
         foreach (var newImage in eventArgs.added)
         {
-            trackedImages.Add(newImage);
-            StartCoroutine(anchorManager.CreateAnchor(imageName, newImage));
+            trackedImages.Add(newImage.referenceImage.name, newImage);
+            StartCoroutine(anchorManager.CreateAnchor(newImage));
             DebugLogger.Instance().AddLog($"Current tracked images count: {trackedImages.Count.ToString()} ");
         }
     }
