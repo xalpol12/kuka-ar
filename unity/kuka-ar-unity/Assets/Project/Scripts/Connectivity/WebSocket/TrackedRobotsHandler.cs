@@ -71,7 +71,7 @@ namespace Connectivity
                     trackedRobots.Add(ipAddress, new TrackedRobotModel(
                         Instantiate(prefab, basePoint.position, basePoint.rotation),
                         threshold));
-                    DebugLogger.Instance().AddLog($"Object for ip {ipAddress} instantiated");
+                    DebugLogger.Instance().AddLog($"Object for ip {ipAddress} instantiated; ");
                     // trackedRobots[ipAddress].UpdateTrackedRobotVariables(robotData); //can't do rn, see if needed
 
                     enqueuedIps.Remove(ipAddress);

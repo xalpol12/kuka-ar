@@ -17,10 +17,12 @@ namespace Project.Scripts.EventSystem
             SecondRobotConnected = false;
             ThirdRobotConnected = false;
 
-            ConnectionTestEvents.Current.OnPressButtonConnectToServer += ConnectToWebSocketServer;
-            ConnectionTestEvents.Current.OnPressButtonConnectToFirstRobot += InitializeConnectionFirstRobot;
-            ConnectionTestEvents.Current.OnPressButtonConnectToSecondRobot += InitializeConnectionSecondRobot;
-            ConnectionTestEvents.Current.OnPressButtonConnectToThirdRobot += InitializeConnectionThirdRobot;
+            #if UNITY_EDITOR
+                ConnectionTestEvents.Current.OnPressButtonConnectToServer += ConnectToWebSocketServer;
+                ConnectionTestEvents.Current.OnPressButtonConnectToFirstRobot += InitializeConnectionFirstRobot;
+                ConnectionTestEvents.Current.OnPressButtonConnectToSecondRobot += InitializeConnectionSecondRobot;
+                ConnectionTestEvents.Current.OnPressButtonConnectToThirdRobot += InitializeConnectionThirdRobot;      
+            #endif  
         }
 
         private void ConnectToWebSocketServer()

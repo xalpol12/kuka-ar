@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Connectivity;
 using Project.Scripts.Connectivity.Models;
+using Project.Scripts.Connectivity.WebSocket;
 using Project.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -28,6 +29,7 @@ public class AnchorManager : MonoBehaviour
         
         //TODO: delete, debug purposes
         CreateMockData();
+        OpenWebSocketConnection();
     }
 
     //TODO: Implement downloading config data for each ip,
@@ -41,6 +43,11 @@ public class AnchorManager : MonoBehaviour
             RotationShift = Vector3.zero
         };
         robotConfigData.Add("192.168.1.50", newRobotConfigData);
+    }
+
+    private void OpenWebSocketConnection()
+    {
+        WebSocketClient.Instance().ConnectToWebsocket("ws://192.168.18.20:8080/kuka-variables");
     }
 
     public IEnumerator CreateAnchor(ARTrackedImage foundImage)
@@ -58,11 +65,17 @@ public class AnchorManager : MonoBehaviour
                 Quaternion rotation = imageTransform.rotation * Quaternion.Euler(configData.RotationShift);
                 ARAnchor anchor = arAnchorManager.AddAnchor(new Pose(position, rotation)); //TODO: replace obsolete method
                 trackedAnchors.Add("192.168.1.50", anchor);
+                WebSocketClient.Instance().SendToWebSocketServer(ComposeWebSocketServerRequest("192.168.1.50"));
                 trackedRobotsHandler.InstantiateTrackedRobot("192.168.1.50", anchor.transform);
                 isCreated = true;
             }   
         #endif
         yield return null;
-        DebugLogger.Instance().AddLog("Object placed ");
+        DebugLogger.Instance().AddLog("Object placed; ");
+    }
+
+    private string ComposeWebSocketServerRequest(string robotIp)
+    {
+        return $"{{ \"host\": \"{robotIp}\", \"var\": \"BASE\" }}";
     }
 }
