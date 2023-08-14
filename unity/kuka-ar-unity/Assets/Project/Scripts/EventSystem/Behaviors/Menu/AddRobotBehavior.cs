@@ -1,6 +1,4 @@
-using Project.Scripts.Connectivity.Models.AggregationClasses;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class AddRobotBehavior : MonoBehaviour
 {

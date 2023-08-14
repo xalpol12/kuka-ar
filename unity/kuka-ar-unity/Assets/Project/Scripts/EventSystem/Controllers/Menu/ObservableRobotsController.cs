@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using Project.Scripts.Connectivity.Models.AggregationClasses;
-using UnityEditor.PackageManager.Requests;
 using UnityEngine;
 
 public class ObservableRobotsController : MonoBehaviour

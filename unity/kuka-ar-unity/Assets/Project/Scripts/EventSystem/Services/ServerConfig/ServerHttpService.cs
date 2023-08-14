@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ServerConfigEvents : MonoBehaviour
+public class ServerHttpService : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

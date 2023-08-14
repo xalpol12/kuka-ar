@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.EventSystem.Enums;
 using TMPro;
 using UnityEngine;
