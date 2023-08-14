@@ -29,7 +29,7 @@ namespace Project.Scripts.EventSystem
         {
             if (ClientConnected) return;
             ClientConnected = true;
-            // WebSocketClient.Instance().ConnectToWebsocket("ws://192.168.18.20:8080/kuka-variables");
+            WebSocketClient.Instance().ConnectToWebsocket("ws://192.168.18.20:8080/kuka-variables");
         }
         
         private void InitializeConnectionFirstRobot()

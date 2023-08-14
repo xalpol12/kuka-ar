@@ -6,6 +6,7 @@ using Project.Scripts.Connectivity.WebSocket;
 using Project.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 
 namespace Project.Scripts.AnchorSystem
 {
@@ -64,10 +65,18 @@ namespace Project.Scripts.AnchorSystem
                 Transform imageTransform = foundImage.transform;
                 Vector3 position = imageTransform.position + configData.PositionShift;
                 Quaternion rotation = imageTransform.rotation * Quaternion.Euler(configData.RotationShift);
+                
                 ARAnchor anchor = arAnchorManager.AddAnchor(new Pose(position, rotation)); //TODO: replace obsolete method
+                DebugLogger.Instance().AddLog("AddAnchor method called; ");
+                
                 trackedAnchors.Add("192.168.1.50", anchor);
+                
                 WebSocketClient.Instance().SendToWebSocketServer(ComposeWebSocketServerRequest("192.168.1.50"));
+                DebugLogger.Instance().AddLog("SendToWebSocketServer method called; ");
+                
                 trackedRobotsHandler.InstantiateTrackedRobot("192.168.1.50", anchor.transform);
+                DebugLogger.Instance().AddLog("InstantiateTrackedRobot method called; ");
+                
                 isCreated = true;
             }   
 #endif

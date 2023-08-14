@@ -18,6 +18,8 @@ namespace Project.Scripts.Connectivity.WebSocket
         private static JsonSerializerSettings settings;
         private ConcurrentQueue<string> messagesToSend;
 
+        private bool isFirstMessageReceived = false;
+
         private void Start()
         {
             settings = new()
@@ -61,7 +63,13 @@ namespace Project.Scripts.Connectivity.WebSocket
         {
             var outputFrame = JsonConvert.DeserializeObject<OutputWithErrors>(e.Data, settings);
             trackedRobotsHandlerScript.ReceivePackageFromWebsocket(outputFrame);
-            // DebugLogger.Instance().AddLog("Received message ");
+            
+            //TODO: temporary debug
+            if (!isFirstMessageReceived)
+            {
+                DebugLogger.Instance().AddLog("Received message; ");
+                isFirstMessageReceived = true;
+            }
         }
 
         private void Update()
