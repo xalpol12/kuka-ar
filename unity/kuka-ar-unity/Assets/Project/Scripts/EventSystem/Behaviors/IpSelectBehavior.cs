@@ -59,7 +59,7 @@ public class IpSelectBehavior : MonoBehaviour
         {
             selectController.StylingService.MarkAsUnselected(allIpAddresses);
             OnIpSelect(parentComponent,0);
-            gridItem.transform.GetComponent<Image>().sprite = selectController.StylingService.selectedSprite;
+            gridItem.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
         });
         allIpAddresses.Add(gridItem);
         
@@ -80,7 +80,7 @@ public class IpSelectBehavior : MonoBehaviour
             {
                 selectController.StylingService.MarkAsUnselected(allIpAddresses);
                 OnIpSelect(parentComponent, newIpAddress.transform.GetSiblingIndex());
-                newIpAddress.transform.GetComponent<Image>().sprite = selectController.StylingService.selectedSprite;
+                newIpAddress.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
             });
             
             allIpAddresses.Add(newIpAddress);
@@ -159,7 +159,7 @@ public class IpSelectBehavior : MonoBehaviour
                 currentText == parentComponent.Find("RobotName").GetComponent<RectTransform>()
                     .gameObject.transform.Find("NameLabel").GetComponent<TMP_Text>().text)
             {
-                item.transform.GetComponent<Image>().sprite = selectController.StylingService.selectedSprite;
+                item.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
             }
             if (selectController.ElementClicked == ButtonType.Category &&
                 index > selectController.HttpService.CategoryNames.Count - 1)

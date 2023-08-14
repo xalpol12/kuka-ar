@@ -7,8 +7,10 @@ public class SelectableStylingService : MonoBehaviour
 {
     public static SelectableStylingService Instance;
     
-    public Sprite defaultSprite;
-    public Sprite selectedSprite;
+    internal Sprite DefaultSprite;
+    internal Sprite SelectedSprite;
+    internal Sprite DefaultAddIcon;
+    internal Sprite PressedAddIcon;
 
     private void Awake()
     {
@@ -17,15 +19,17 @@ public class SelectableStylingService : MonoBehaviour
 
     private void Start()
     {
-        defaultSprite = Resources.Load<Sprite>("Gradients/GreyListBar");
-        selectedSprite = Resources.Load<Sprite>("Fields/Selected");
+        DefaultSprite = Resources.Load<Sprite>("Gradients/GreyListBar");
+        SelectedSprite = Resources.Load<Sprite>("Fields/Selected");
+        DefaultAddIcon = Resources.Load<Sprite>("Icons/circle");
+        PressedAddIcon = Resources.Load<Sprite>("Icons/circlePress");
     }
 
     public void MarkAsUnselected(List<GameObject> allGridItems)
     {
         foreach (var item in allGridItems)
         {
-            item.transform.GetComponent<Image>().sprite = defaultSprite;
+            item.transform.GetComponent<Image>().sprite = DefaultSprite;
         }
     }
 }

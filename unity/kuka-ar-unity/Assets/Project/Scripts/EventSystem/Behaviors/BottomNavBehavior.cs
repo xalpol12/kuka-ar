@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,6 +10,7 @@ public class BottomNavBehavior : MonoBehaviour
     private GameObject constantPanel;
     private GameObject scrollList;
     private GameObject plusImage;
+    private Image circleImage;
     private Vector3 dockPosition;
     private const int ErrorOffset = 25;
     void Start()
@@ -23,7 +23,8 @@ public class BottomNavBehavior : MonoBehaviour
         constantPanel = bottomPanel.Find("ConstantPanel").GetComponent<Image>().gameObject;
         plusImage = constantPanel.transform.Find("AddButtonContainer").GetComponent<RectTransform>().gameObject
             .transform.Find("AddButton").GetComponent<RectTransform>().gameObject;
-        
+        circleImage = constantPanel.transform.Find("AddButtonContainer").GetComponent<RectTransform>().gameObject
+            .transform.Find("AddButtonCircle").GetComponent<Image>();
         dockPosition = bottomPanel.position;
     }
 
@@ -44,9 +45,8 @@ public class BottomNavBehavior : MonoBehaviour
                 AutoDestinationPull();
             }
         }
-        
-        plusImage.SetActive(!bottomNav.IsCirclePressed);
-        
+
+        AddNewRobotAnimation();
         ConstantPanelVisibilityHandler();
         JogsExpandHandler();
     }
@@ -129,5 +129,12 @@ public class BottomNavBehavior : MonoBehaviour
     private void JogsExpandHandler()
     {
         service.IsBottomNavDocked = bottomNav.bottomNavPanel.transform.position.y - ErrorOffset <= dockPosition.y;
+    }
+
+    private void AddNewRobotAnimation()
+    {
+        plusImage.SetActive(!bottomNav.IsCirclePressed);
+        circleImage.sprite = bottomNav.IsCirclePressed ?
+            bottomNav.stylingService.PressedAddIcon : bottomNav.stylingService.DefaultAddIcon;
     }
 }

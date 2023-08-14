@@ -8,6 +8,7 @@ public class BottomNavController : MonoBehaviour
     
     public int id;
     public GameObject bottomNavPanel;
+    internal SelectableStylingService stylingService;
     internal bool IsSliderHold;
     internal bool IsAfterItemSelect;
     internal bool IsCirclePressed;
@@ -20,11 +21,13 @@ public class BottomNavController : MonoBehaviour
 
     void Start()
     {
+        stylingService = SelectableStylingService.Instance;
+        
         TransformFactor = 5000;
         IsSliderHold = false;
         IsCirclePressed = false;
         IsAfterItemSelect = false;
-
+        
         MenuEvents.Event.OnPressConstantSelectorSlider += BottomNavOnMove;
         MenuEvents.Event.OnReleaseConstantSelectorSlider += BottomNavToDockPosition;
         MenuEvents.Event.OnPointerPressCircle += CirclePress;
