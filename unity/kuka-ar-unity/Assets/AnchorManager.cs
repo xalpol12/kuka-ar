@@ -70,7 +70,9 @@ public class AnchorManager : MonoBehaviour
                 isCreated = true;
             }   
         #endif
-        yield return null;
+        #if UNITY_EDITOR
+            yield return null;
+        #endif
         DebugLogger.Instance().AddLog("Object placed; ");
     }
 
