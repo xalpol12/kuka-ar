@@ -31,7 +31,6 @@ namespace Project.Scripts.AnchorSystem
         
             //TODO: delete, debug purposes
             CreateMockData();
-            OpenWebSocketConnection();
         }
 
         //TODO: Implement downloading config data for each ip,
@@ -47,14 +46,9 @@ namespace Project.Scripts.AnchorSystem
             robotConfigData.Add("192.168.1.50", newRobotConfigData);
         }
 
-        private void OpenWebSocketConnection()
-        {
-            WebSocketClient.Instance().ConnectToWebsocket("ws://192.168.18.20:8080/kuka-variables");
-        }
-
         public IEnumerator CreateAnchor(ARTrackedImage foundImage)
         {
-            DebugLogger.Instance().AddLog("Searching for reference points... ");
+            DebugLogger.Instance().AddLog("Searching for reference points...; ");
 #if !UNITY_EDITOR
             RobotData configData = robotConfigData[foundImage.referenceImage.name];
             bool isCreated = false;

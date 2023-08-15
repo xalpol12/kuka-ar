@@ -49,7 +49,7 @@ namespace Connectivity
                         trackedRobots.Add(entry, new TrackedRobotModel(
                             Instantiate(prefab, Vector3.zero, Quaternion.identity),
                             threshold));
-                        DebugLogger.Instance().AddLog($"Object for ip {entry} instantiated");
+                        DebugLogger.Instance().AddLog($"Object for ip {entry} instantiated; ");
                         trackedRobots[entry].UpdateTrackedRobotVariables(robotData);
 
                         enqueuedIps.Remove(entry);
