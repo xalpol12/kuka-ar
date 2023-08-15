@@ -1,3 +1,4 @@
+using System;
 using Project.Scripts.Connectivity.Enums;
 using UnityEngine;
 
@@ -14,7 +15,8 @@ public class IpSelectController : MonoBehaviour
     internal int TransformFactor;
     
     private const int GroupOffset = 1000;
-    void Start()
+
+    private void Start()
     {
         HttpService = HttpService.Instance;
         StylingService = SelectableStylingService.Instance;

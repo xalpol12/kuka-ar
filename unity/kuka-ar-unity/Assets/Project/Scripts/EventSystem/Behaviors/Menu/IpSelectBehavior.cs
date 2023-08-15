@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
@@ -18,6 +19,18 @@ public class IpSelectBehavior : MonoBehaviour
         InitListLogic();
 
         selectIpHomePosition = selectController.ipSelector.transform.position;
+        selectController.ipSelector.transform.Find("IpAddressList").GetComponent<RectTransform>()
+            .transform.Find("IpAddressGrid").GetComponent<RectTransform>().gameObject
+            .transform.Find("ServerError").GetComponent<RectTransform>().gameObject
+            .transform.Find("TryAgain").GetComponent<Button>().onClick.AddListener(() =>
+            {
+                selectController.HttpService.OnClickDataReload(4);
+                if (selectController.HttpService.ConfiguredRobots.Count > 0)
+                {
+                    ServerFailure(false);
+                    InitListLogic();
+                }
+            });
     }
 
     private void Update()
@@ -36,8 +49,6 @@ public class IpSelectBehavior : MonoBehaviour
         {
             HideIpSelectDialog();
         }
-
-        
     }
 
     private void InitListLogic()
@@ -49,6 +60,7 @@ public class IpSelectBehavior : MonoBehaviour
 
         if (selectController.HttpService.ConfiguredRobots.Count == 0)
         {
+            ServerFailure(true);
             return;
         }
         
@@ -199,5 +211,16 @@ public class IpSelectBehavior : MonoBehaviour
                 item.transform.Find("RobotIp").GetComponent<TMP_Text>().text = temp;
             }
         }
+    }
+
+    private void ServerFailure(bool state)
+    {
+        var view = selectController.ipSelector.transform.Find("IpAddressList").GetComponent<RectTransform>()
+            .transform.Find("IpAddressGrid").GetComponent<RectTransform>().gameObject;
+        view.transform.Find("IpAddressGridElement").GetComponent<RectTransform>().gameObject.SetActive(!state);
+        selectController.ipSelector.transform.parent.transform.gameObject
+                .transform.Find("Button").GetComponent<Button>().gameObject
+                .transform.Find("SaveCloseButton").GetComponent<TMP_Text>().text = state ? "Close" : "Save";
+        view.transform.Find("ServerError").GetComponent<RectTransform>().gameObject.SetActive(state);
     }
 }

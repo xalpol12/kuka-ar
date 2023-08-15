@@ -20,14 +20,14 @@ public class UiController : MonoBehaviour
     {
         validationService = IpValidationService.Instance;
         
-        // ServerConfigAnim = AnimationStates.FadeIn;
+        ServerConfigAnim = AnimationStates.FadeIn;
         MenuAnim = AnimationStates.StandBy;
         MoreOptionsAnim = AnimationStates.StandBy;
         NextAnim = new List<string>();
         
-        menuUi.SetActive(true);
+        menuUi.SetActive(false);
         moreOptions.SetActive(false);
-        serverConfig.SetActive(false);
+        serverConfig.SetActive(true);
         
         MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
         ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;
@@ -48,7 +48,6 @@ public class UiController : MonoBehaviour
         
         if (id == uid && validationService.ValidationResult)
         {
-            // Anim state trigger error in validation
             ServerConfigAnim = AnimationStates.FadeOut;
             NextAnim.Add("MenuIn");
         }

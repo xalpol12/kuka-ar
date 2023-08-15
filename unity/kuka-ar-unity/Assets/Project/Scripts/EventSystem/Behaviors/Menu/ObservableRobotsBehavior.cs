@@ -24,9 +24,9 @@ public class ObservableRobotsBehavior : MonoBehaviour
         scrollList.transform.parent.Find("ServerError").GetComponent<Image>().transform.Find("TryAgain")
             .GetComponent<Button>().onClick.AddListener(() =>
             {
+                observableRobotsController.HttpService.OnClickDataReload(4);
                 if (observableRobotsController.HttpService.ConfiguredRobots.Count > 0)
                 {
-                    observableRobotsController.HttpService.OnClickDataReload(4);
                     ConnectionFailed(false);
                     InitObservableRobots();
                 }

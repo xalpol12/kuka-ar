@@ -82,7 +82,7 @@ public class UiBehavior : MonoBehaviour
                 break;
             case "ServerConfigScreen":
                 controller.ServerConfigAnim = AnimationStates.StandBy;
-                // controller.serverConfig.SetActive(active);
+                controller.serverConfig.SetActive(active);
                 break;
             case "MoreOptions":
                 controller.MoreOptionsAnim = AnimationStates.StandBy;
