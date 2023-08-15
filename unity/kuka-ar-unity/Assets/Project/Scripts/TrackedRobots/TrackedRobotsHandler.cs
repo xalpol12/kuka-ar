@@ -39,7 +39,7 @@ namespace Connectivity
             {
                 point.UpdateTrackedRobotVariables(robotData);
             }
-            #if UNITY_EDITOR
+            #if UNITY_EDITOR || UNITY_STANDALONE_WIN
             else
             {
                 if (!enqueuedIps.Contains(entry))
@@ -61,7 +61,7 @@ namespace Connectivity
             #endif
         }
 
-        #if !UNITY_EDITOR
+        #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
         public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
         {
             if (!enqueuedIps.Contains(ipAddress))

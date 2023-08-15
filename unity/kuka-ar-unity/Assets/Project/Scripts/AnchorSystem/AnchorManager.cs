@@ -49,7 +49,7 @@ namespace Project.Scripts.AnchorSystem
         public IEnumerator CreateAnchor(ARTrackedImage foundImage)
         {
             DebugLogger.Instance().AddLog("Searching for reference points...; ");
-#if !UNITY_EDITOR
+#if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
             RobotData configData = robotConfigData[foundImage.referenceImage.name];
             bool isCreated = false;
             while (!isCreated)
@@ -74,7 +74,7 @@ namespace Project.Scripts.AnchorSystem
                 isCreated = true;
             }   
 #endif
-#if UNITY_EDITOR
+#if UNITY_EDITOR || UNITY_STANDALONE_WIN
             yield return null;
 #endif
             DebugLogger.Instance().AddLog("Object placed; ");

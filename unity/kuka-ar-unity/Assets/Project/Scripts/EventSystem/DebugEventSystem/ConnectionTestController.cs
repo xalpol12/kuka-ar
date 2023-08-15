@@ -19,7 +19,7 @@ namespace Project.Scripts.EventSystem.DebugEventSystem
             
             ConnectionTestEvents.Current.OnPressButtonConnectToServer += ConnectToWebSocketServer;
             
-            #if UNITY_EDITOR
+            #if UNITY_EDITOR || UNITY_STANDALONE_WIN
                 ConnectionTestEvents.Current.OnPressButtonConnectToFirstRobot += InitializeConnectionFirstRobot;
                 ConnectionTestEvents.Current.OnPressButtonConnectToSecondRobot += InitializeConnectionSecondRobot;
                 ConnectionTestEvents.Current.OnPressButtonConnectToThirdRobot += InitializeConnectionThirdRobot;      

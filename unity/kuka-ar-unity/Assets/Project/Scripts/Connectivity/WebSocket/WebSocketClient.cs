@@ -36,6 +36,7 @@ namespace Project.Scripts.Connectivity.WebSocket
 
         public async void ConnectToWebsocket(string serverAddress)
         {
+            
             if (ws == null)
             {
                 ws = new NativeWebSocket.WebSocket(serverAddress);
@@ -84,9 +85,8 @@ namespace Project.Scripts.Connectivity.WebSocket
             {
                 ws.SendText(message);
             }
-            // #if UNITY_EDITOR
-                ws.DispatchMessageQueue();
-            //#endif
+
+            ws.DispatchMessageQueue();
         }
 
         private void OnApplicationQuit()
