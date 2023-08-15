@@ -24,6 +24,7 @@ public class IpValidationService : MonoBehaviour
         var match = Regex.Match(validation,
             @"^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$",
             RegexOptions.Singleline);
+        
         ValidationResult = match.Success;
         
         return match.Success ? valid : invalid;

@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using System.Collections;
 using UnityEngine;
 
 public class ServerHttpService : MonoBehaviour
@@ -10,16 +10,14 @@ public class ServerHttpService : MonoBehaviour
         Instance = this;
     }
     
-    internal async void PingOperation(string ip)
+    internal IEnumerator PingOperation(string ip)
     {
         var ping = new Ping(ip);
-
         while (!ping.isDone)
         {
-            PingResponse = false;
-            await Task.Yield();
+            yield return new WaitForSeconds(0.05f);
         }
 
-        PingResponse = true;
+        PingResponse = ping.isDone;
     }
 }

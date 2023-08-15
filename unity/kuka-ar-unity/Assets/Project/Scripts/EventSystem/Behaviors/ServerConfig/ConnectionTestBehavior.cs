@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class ConnectionTestBehavior : MonoBehaviour
 {
-    // Start is called before the first frame update
+    private ConnectionTestController controller;
+    
     void Start()
     {
-        
+        controller = GetComponent<ConnectionTestController>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         
