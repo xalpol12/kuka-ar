@@ -1,13 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using Connectivity.Parsing;
 using Connectivity.Parsing.OutputJson;
 using Newtonsoft.Json;
-using Project.Scripts.EventSystem;
 using Project.Scripts.Utils;
 using UnityEngine;
-using UnityEngine.Serialization;
 using WebSocketSharp;
 
 namespace Connectivity
@@ -67,21 +63,21 @@ namespace Connectivity
                 return;
             }
 
-            if (controller.FirstRobotConnected && !openConnections.Contains(".50"))
-            {
-                ws.Send("{ \"host\": \"192.168.1.50\", \"var\": \"BASE\" }");
-                openConnections.Add(".50");
-            }
-            if (controller.SecondRobotConnected && !openConnections.Contains(".51"))
-            {
-                ws.Send("{ \"host\": \"192.168.1.51\", \"var\": \"BASE\" }");
-                openConnections.Add(".51");
-            }
-            if (controller.ThirdRobotConnected && !openConnections.Contains(".52"))
-            {
-                ws.Send("{ \"host\": \"192.168.1.52\", \"var\": \"BASE\" }");
-                openConnections.Add(".52");
-            }
+            // if (controller.FirstRobotConnected && !openConnections.Contains(".50"))
+            // {
+            //     ws.Send("{ \"host\": \"192.168.1.50\", \"var\": \"BASE\" }");
+            //     openConnections.Add(".50");
+            // }
+            // if (controller.SecondRobotConnected && !openConnections.Contains(".51"))
+            // {
+            //     ws.Send("{ \"host\": \"192.168.1.51\", \"var\": \"BASE\" }");
+            //     openConnections.Add(".51");
+            // }
+            // if (controller.ThirdRobotConnected && !openConnections.Contains(".52"))
+            // {
+            //     ws.Send("{ \"host\": \"192.168.1.52\", \"var\": \"BASE\" }");
+            //     openConnections.Add(".52");
+            // }
         }
 
         private void OnApplicationQuit()

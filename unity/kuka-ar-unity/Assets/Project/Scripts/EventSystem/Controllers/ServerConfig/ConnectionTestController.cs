@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ConfigScreenBehavior : MonoBehaviour
+public class ConnectionTestController : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

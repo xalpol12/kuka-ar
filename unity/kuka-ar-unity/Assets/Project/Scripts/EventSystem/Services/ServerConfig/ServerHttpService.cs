@@ -1,16 +1,25 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class ServerHttpService : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static ServerHttpService Instance;
+    internal bool PingResponse;
+    private void Awake()
     {
-        
+        Instance = this;
     }
-
-    // Update is called once per frame
-    void Update()
+    
+    internal async void PingOperation(string ip)
     {
-        
+        var ping = new Ping(ip);
+
+        while (!ping.isDone)
+        {
+            PingResponse = false;
+            await Task.Yield();
+        }
+
+        PingResponse = true;
     }
 }

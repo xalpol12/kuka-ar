@@ -1,16 +1,19 @@
+using System;
 using UnityEngine;
 
 public class ServerConfigEvents : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static ServerConfigEvents Events;
+
+    private void Awake()
     {
-        
+        Events = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    public event Action<int> OnClickPingServer;
+
+    public void ServerPing(int id)
     {
-        
+        OnClickPingServer?.Invoke(id);
     }
 }

@@ -1725,7 +1725,7 @@ PrefabInstance:
     - target: {fileID: 7456349832004995539, guid: 31cdb5f2baf0fb544af05580a8382134,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1798,7 +1798,7 @@ PrefabInstance:
     - target: {fileID: 3319710949208262597, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3335526553089609281, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
@@ -1981,7 +1981,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1892031649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1994,6 +1994,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95c98ea7189f9574c9d782e687a319a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  id: 5
   menuUi: {fileID: 337730212}
   moreOptions: {fileID: 596074375}
   serverConfig: {fileID: 2130753306}
