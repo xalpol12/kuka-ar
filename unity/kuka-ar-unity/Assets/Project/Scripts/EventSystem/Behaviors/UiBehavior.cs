@@ -65,7 +65,7 @@ public class UiBehavior : MonoBehaviour
         if (newAlpha < 0)
         {
             newAlpha = 0;
-            MakeStandBy(group.gameObject.transform.parent.name);
+            MakeStandBy(group.gameObject.transform.parent.name, false);
             AnimQueryResolver();
         }
 
@@ -82,7 +82,7 @@ public class UiBehavior : MonoBehaviour
                 break;
             case "ServerConfigScreen":
                 controller.ServerConfigAnim = AnimationStates.StandBy;
-                controller.serverConfig.SetActive(active);
+                // controller.serverConfig.SetActive(active);
                 break;
             case "MoreOptions":
                 controller.MoreOptionsAnim = AnimationStates.StandBy;

@@ -20,14 +20,14 @@ public class UiController : MonoBehaviour
     {
         validationService = IpValidationService.Instance;
         
-        ServerConfigAnim = AnimationStates.FadeIn;
+        // ServerConfigAnim = AnimationStates.FadeIn;
         MenuAnim = AnimationStates.StandBy;
         MoreOptionsAnim = AnimationStates.StandBy;
         NextAnim = new List<string>();
         
-        menuUi.SetActive(false);
+        menuUi.SetActive(true);
         moreOptions.SetActive(false);
-        serverConfig.SetActive(true);
+        serverConfig.SetActive(false);
         
         MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
         ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;

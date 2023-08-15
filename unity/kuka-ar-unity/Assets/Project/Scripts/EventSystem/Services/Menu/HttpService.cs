@@ -15,7 +15,7 @@ public class HttpService : MonoBehaviour
     internal List<AddRobotData> ConfiguredRobots;
     internal List<Sprite> Stickers;
     internal List<string> CategoryNames;
-
+    
     private void Awake()
     {
         Instance = this;
@@ -33,7 +33,7 @@ public class HttpService : MonoBehaviour
         MenuEvents.Event.OnClickReloadServerData += OnClickDataReload;
     }
     
-    private void OnClickDataReload(int uid)
+    public void OnClickDataReload(int uid)
     {
         if (id == uid)
         {
@@ -55,8 +55,8 @@ public class HttpService : MonoBehaviour
         var data = JsonConvert
             .DeserializeObject<Dictionary<string, Dictionary<string, RobotData>>>(http.downloadHandler.text);
         
-        ConfiguredRobots = MapConfiguredResponse(data);
-        CategoryNames = MapUniqueCategoryNames();
+        ConfiguredRobots = data != null ? MapConfiguredResponse(data) : new List<AddRobotData>();
+        CategoryNames = ConfiguredRobots.Count > 0 ? MapUniqueCategoryNames() : new List<string>();
     }
 
     private async void GetStickers()
@@ -71,7 +71,7 @@ public class HttpService : MonoBehaviour
         
         var data = JsonConvert.DeserializeObject<Dictionary<string, byte[]>>(http.downloadHandler.text);
         
-        Stickers = MapStickers(data);
+        Stickers = data != null ? MapStickers(data) : new List<Sprite>();
     }
 
     public async void PostNewRobot(object body)
@@ -103,6 +103,7 @@ public class HttpService : MonoBehaviour
 
     private List<AddRobotData> MapConfiguredResponse(Dictionary<string, Dictionary<string, RobotData>> response)
     {
+        
         var list = new List<AddRobotData>();
         var i = 0;
         foreach (var group in response)
