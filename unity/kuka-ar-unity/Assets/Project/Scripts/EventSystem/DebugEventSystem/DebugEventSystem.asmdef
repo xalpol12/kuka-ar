@@ -1,11 +1,8 @@
 {
-    "name": "AnchorSystem",
+    "name": "DebugEventSystem",
     "rootNamespace": "",
     "references": [
-        "Scripts",
-        "Unity.XR.ARFoundation",
-        "Unity.XR.ARSubsystems",
-        "WebSocket"
+        "GUID:378bd5616a56dad4f91ebfcbec2194c0"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

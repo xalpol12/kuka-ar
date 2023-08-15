@@ -4,21 +4,21 @@ using System.Collections.Generic;
 using Connectivity;
 using Connectivity.Parsing;
 using Connectivity.Parsing.OutputJson;
+using NativeWebSocket;
 using Newtonsoft.Json;
 using Project.Scripts.Utils;
 using UnityEngine;
-using WebSocketSharp;
 
 namespace Project.Scripts.Connectivity.WebSocket
 {
     public class WebSocketClient : MonoBehaviour
     {
         [SerializeField] private TrackedRobotsHandler trackedRobotsHandlerScript;
-        private WebSocketSharp.WebSocket ws;
+        private NativeWebSocket.WebSocket ws;
         private static JsonSerializerSettings settings;
         private ConcurrentQueue<string> messagesToSend;
 
-        private bool isFirstMessageReceived = false;
+        private bool isFirstMessageReceived;
 
         private void Start()
         {
@@ -34,24 +34,27 @@ namespace Project.Scripts.Connectivity.WebSocket
             messagesToSend = new ConcurrentQueue<string>();
         }
 
-        public void ConnectToWebsocket(string serverAddress)
+        public async void ConnectToWebsocket(string serverAddress)
         {
             if (ws == null)
             {
-                ws = new WebSocketSharp.WebSocket(serverAddress);
+                ws = new NativeWebSocket.WebSocket(serverAddress);
             } 
-            else if (ws.IsAlive)
+            else if (ws.State == WebSocketState.Open)
             {
-                ws.CloseAsync();
-                ws = new WebSocketSharp.WebSocket(serverAddress);
+                await ws.Close();
+                ws = new NativeWebSocket.WebSocket(serverAddress);
             }
 
-            ws.OnMessage += (_, e) => OnWebsocketMessage(e);
-            
-            ws.Connect();
+            ws.OnMessage += OnWebsocketMessage;
+            DebugLogger.Instance().AddLog("OnWebsocketMessage subscribed; ");
+            ws.OnOpen += () => 
+                DebugLogger.Instance().AddLog($"Connected to ws: {serverAddress}; ");
+            ws.OnError += (e) =>
+                DebugLogger.Instance().AddLog($"Ws error code {e}; ");
 
-            DebugLogger.Instance()
-                .AddLog(ws.IsAlive ? $"Connected to ws: {serverAddress} " : "Client couldn't connect to a server ");
+            DebugLogger.Instance().AddLog("Await ws.Connect(); ");
+            await ws.Connect();
         }
 
         public void SendToWebSocketServer(string message)
@@ -59,9 +62,10 @@ namespace Project.Scripts.Connectivity.WebSocket
             messagesToSend.Enqueue(message);
         }
 
-        private void OnWebsocketMessage(MessageEventArgs e)
+        private void OnWebsocketMessage(byte[] bytes)
         {
-            var outputFrame = JsonConvert.DeserializeObject<OutputWithErrors>(e.Data, settings);
+            String message = System.Text.Encoding.UTF8.GetString(bytes);
+            var outputFrame = JsonConvert.DeserializeObject<OutputWithErrors>(message, settings);
             trackedRobotsHandlerScript.ReceivePackageFromWebsocket(outputFrame);
             
             //TODO: temporary debug
@@ -75,16 +79,20 @@ namespace Project.Scripts.Connectivity.WebSocket
         private void Update()
         {
             if (ws == null) return;
-            if (ws.IsAlive && messagesToSend.TryDequeue(out string message))
+            if (ws.State == WebSocketState.Open && 
+                messagesToSend.TryDequeue(out string message))
             {
-                ws.Send(message);
+                ws.SendText(message);
             }
+            // #if UNITY_EDITOR
+                ws.DispatchMessageQueue();
+            //#endif
         }
 
         private void OnApplicationQuit()
         {
             if (ws == null) return;
-            if (ws.IsAlive)
+            if (ws.State == WebSocketState.Open)
             {
                 ws.Close();
             }

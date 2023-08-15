@@ -1,7 +1,7 @@
 using Project.Scripts.Connectivity.WebSocket;
 using UnityEngine;
 
-namespace Project.Scripts.EventSystem
+namespace Project.Scripts.EventSystem.DebugEventSystem
 {
     public class ConnectionTestController : MonoBehaviour
     {
