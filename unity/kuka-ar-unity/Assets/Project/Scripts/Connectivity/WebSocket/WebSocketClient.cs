@@ -66,8 +66,16 @@ namespace Project.Scripts.Connectivity.WebSocket
         private void OnWebsocketMessage(byte[] bytes)
         {
             String message = System.Text.Encoding.UTF8.GetString(bytes);
-            var outputFrame = JsonConvert.DeserializeObject<OutputWithErrors>(message, settings);
-            trackedRobotsHandlerScript.ReceivePackageFromWebsocket(outputFrame);
+            Debug.Log(message);
+            try
+            {
+                var outputFrame = JsonConvert.DeserializeObject<OutputWithErrors>(message, settings);
+                trackedRobotsHandlerScript.ReceivePackageFromWebsocket(outputFrame);
+            }
+            catch (ArgumentNullException e)
+            {
+                Debug.Log(e.StackTrace);
+            }
             
             //TODO: temporary debug
             if (!isFirstMessageReceived)
