@@ -11,5 +11,7 @@ public class ObservableRobotsController : MonoBehaviour
         HttpService = HttpService.Instance;
         StylingService = SelectableStylingService.Instance;
         BottomNavController = BottomNavController.Instance;
+        
+        HttpService.OnClickDataReload(4);
     }
 }

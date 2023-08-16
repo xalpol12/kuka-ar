@@ -27,7 +27,7 @@ public class AddRobotController : MonoBehaviour
             RobotCategory = "Category",
             RobotName = "Name"
         };
-
+        
         MenuEvents.Event.OnClickAddNewRobot += OnClickDisplayDialog;
         MenuEvents.Event.OnRobotSave += OnSave;
         MenuEvents.Event.OnDragAddNewRobot += GrabSlider;
@@ -39,6 +39,7 @@ public class AddRobotController : MonoBehaviour
         if (id == uid)
         {
             ShowAddDialog = true;
+            httpService.OnClickDataReload(4);
         }
     }
 
@@ -64,6 +65,7 @@ public class AddRobotController : MonoBehaviour
                 ShowAddDialog = false;
                 addNewRobotService.ResetSelectState = true;
                 httpService.PostNewRobot(data);
+                httpService.OnClickDataReload(4);
             }
         }
     }
