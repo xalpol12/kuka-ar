@@ -3,7 +3,7 @@ using Connectivity.Models.AggregationClasses;
 using Connectivity.Models.SimpleValues.Pairs;
 using Newtonsoft.Json;
 
-namespace Connectivity.Parsing.OutputJson
+namespace Project.Scripts.Connectivity.Parsing.OutputJson
 {
     public struct OutputWithErrors {
         

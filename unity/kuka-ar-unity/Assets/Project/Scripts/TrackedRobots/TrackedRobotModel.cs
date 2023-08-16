@@ -1,13 +1,12 @@
 using System;
 using System.Collections.Generic;
 using Connectivity.Models.AggregationClasses;
-using Connectivity.Models.KRLValues;
 using Connectivity.Models.SimpleValues.Pairs;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Utils;
 using UnityEngine;
 
-namespace Connectivity
+namespace Project.Scripts.TrackedRobots
 {
     public class TrackedRobotModel
     {

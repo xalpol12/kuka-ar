@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace Connectivity.Models.KRLValues
+namespace Project.Scripts.Connectivity.Models.KRLValues
 {
     public class KRLJoints : KRLValue
     {

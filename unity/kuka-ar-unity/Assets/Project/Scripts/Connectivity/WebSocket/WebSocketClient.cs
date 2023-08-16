@@ -2,10 +2,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Connectivity;
-using Connectivity.Parsing;
-using Connectivity.Parsing.OutputJson;
 using NativeWebSocket;
 using Newtonsoft.Json;
+using Project.Scripts.Connectivity.Parsing;
+using Project.Scripts.Connectivity.Parsing.OutputJson;
 using Project.Scripts.Utils;
 using UnityEngine;
 
@@ -69,6 +69,7 @@ namespace Project.Scripts.Connectivity.WebSocket
             Debug.Log(message);
             try
             {
+                var variable = new OutputWithErrors();
                 var outputFrame = JsonConvert.DeserializeObject<OutputWithErrors>(message, settings);
                 trackedRobotsHandlerScript.ReceivePackageFromWebsocket(outputFrame);
             }
@@ -93,7 +94,7 @@ namespace Project.Scripts.Connectivity.WebSocket
             {
                 ws.SendText(message);
             }
-
+            
             ws.DispatchMessageQueue();
         }
 
