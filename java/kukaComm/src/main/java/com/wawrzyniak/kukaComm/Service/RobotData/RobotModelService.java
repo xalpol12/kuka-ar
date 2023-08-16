@@ -17,7 +17,15 @@ public class RobotModelService {
     private final ObjectMapper mapper = new ObjectMapper();
 
     @Autowired
+<<<<<<< refs/remotes/origin/main
+<<<<<<< refs/remotes/origin/main
     public RobotModelService(RobotModelRepository repository) {
+=======
+    public RobotModelService(RobotModelRepository repository){
+>>>>>>> add testSocket and kukaComm
+=======
+    public RobotModelService(RobotModelRepository repository) {
+>>>>>>> add swagger docs, fix some whitespace issues
         robotRepository = repository;
     }
 
