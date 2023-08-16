@@ -23,7 +23,6 @@ public class ConnectionTestController : MonoBehaviour
         validationService.IpAddressValidation(ip);
         if (validationService.ValidationResult)
         {
-            Debug.Log(ip);
             StartCoroutine(httpService.PingOperation(ip));
         }
     }
