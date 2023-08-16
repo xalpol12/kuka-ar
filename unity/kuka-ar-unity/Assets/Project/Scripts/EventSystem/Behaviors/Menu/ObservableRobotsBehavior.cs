@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Project.Scripts.EventSystem.Enums;
 using TMPro;
 using UnityEngine;
@@ -70,12 +71,14 @@ public class ObservableRobotsBehavior : MonoBehaviour
         });
         allGridItems.Add(gridItem);
 
-        for (var i = 1; i < observableRobotsController.HttpService.ConfiguredRobots.Count + 1; i++)
+        for (var i = 1; i < observableRobotsController.HttpService.ConfiguredRobots.Count + 2; i++)
         {
             var newGridItem = Instantiate(gridItem, grid.transform, false);
 
             if (i > observableRobotsController.HttpService.ConfiguredRobots.Count - 1)
             {
+                newGridItem.transform.GetComponent<Image>().color = Color.clear;
+                newGridItem.transform.Find("TemplateImg").GetComponent<Image>().color = Color.clear;
                 newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text = "";
                 newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text = "";
             }
@@ -85,14 +88,17 @@ public class ObservableRobotsBehavior : MonoBehaviour
                                 http.ConfiguredRobots[i].RobotName;
                 newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
                                 http.ConfiguredRobots[i].IpAddress;
-                gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[i];
-                            
-                            
+                gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[i - 1];
             }
 
             newGridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
                 observableRobotsController.StylingService.MarkAsUnselected(allGridItems);
+                if (gridItem.transform.GetSiblingIndex() >
+                    observableRobotsController.HttpService.ConfiguredRobots.Count + 1)
+                {
+                    return;
+                }
                 OnSelectActions(constantPanelRef, newGridItem.transform.GetSiblingIndex());
                 newGridItem.transform.GetComponent<Image>().sprite = observableRobotsController.StylingService.SelectedSprite;
             });
