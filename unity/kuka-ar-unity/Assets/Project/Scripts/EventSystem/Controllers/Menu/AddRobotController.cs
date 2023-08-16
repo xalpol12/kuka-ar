@@ -14,13 +14,9 @@ public class AddRobotController : MonoBehaviour
     private AddNewRobotService addNewRobotService;
     private AddRobotData data;
     private HttpService httpService;
-    private bool isValid;
-    private bool isFirst;
     void Start()
     {
         ShowAddDialog = false;
-        isValid = false;
-        isFirst = true;
         TransformFactor = 3000;
         httpService = HttpService.Instance;
         addNewRobotService = AddNewRobotService.Instance;
@@ -42,25 +38,7 @@ public class AddRobotController : MonoBehaviour
     {
         if (id == uid)
         {
-            ShowAddDialog = !ShowAddDialog;
-        }
-        
-        if (uid == 2000 && (isValid || isFirst))
-        {
-            ShowAddDialog = false;
-            addDialog.transform.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
-                .Find("Label").GetComponent<TMP_Text>().text = data.IpAddress;
-            addDialog.transform.Find("ChosenCategory").GetComponent<RectTransform>().gameObject
-                .transform
-                .Find("CategoryLabel").GetComponent<TMP_Text>().text = data.RobotCategory;
-            addDialog.transform.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
-                .Find("NameLabel").GetComponent<TMP_Text>().text = data.RobotName;
-            addNewRobotService.ResetSelectState = true;
-
-            if (isFirst)
-            {
-                isFirst = false;
-            }
+            ShowAddDialog = true;
         }
     }
 
@@ -83,12 +61,9 @@ public class AddRobotController : MonoBehaviour
                 !string.IsNullOrWhiteSpace(content.RobotCategory) && content.RobotCategory != data.RobotCategory &&
                 !string.IsNullOrWhiteSpace(content.RobotName) && content.RobotName != data.RobotName)
             {
-                isValid = true;
+                ShowAddDialog = false;
+                addNewRobotService.ResetSelectState = true;
                 httpService.PostNewRobot(data);
-            }
-            else
-            {
-                isValid = false;
             }
         }
     }

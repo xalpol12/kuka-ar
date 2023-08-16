@@ -74,12 +74,12 @@ public class IpSelectBehavior : MonoBehaviour
         });
         allIpAddresses.Add(gridItem);
         
-        for (var i = 1; i < selectController.HttpService.ConfiguredRobots.Count + 1; i++)
+        for (var i = 1; i < selectController.HttpService.ConfiguredRobots.Count + 2; i++)
         {
             var newIpAddress = Instantiate(gridItem, grid.transform, false);
             if (i > selectController.HttpService.ConfiguredRobots.Count - 1)
             {
-                newIpAddress.transform.Find("RobotIp").GetComponent<TMP_Text>().text = "";
+                newIpAddress.transform.GetComponent<Image>().color = Color.clear;
             }
             else
             {
@@ -90,7 +90,7 @@ public class IpSelectBehavior : MonoBehaviour
             newIpAddress.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
                 selectController.StylingService.MarkAsUnselected(allIpAddresses);
-                OnIpSelect(parentComponent, newIpAddress.transform.GetSiblingIndex());
+                OnIpSelect(parentComponent, newIpAddress.transform.GetSiblingIndex() - 1);
                 newIpAddress.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
             });
             
