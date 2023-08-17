@@ -1,6 +1,6 @@
 using System;
 
-namespace Connectivity.Models.SimpleValues.Pairs
+namespace Project.Scripts.Connectivity.Models.SimpleValues.Pairs
 {
     public struct ExceptionMessagePair
     {

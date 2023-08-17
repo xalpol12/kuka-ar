@@ -1,3 +1,4 @@
+using Project.Scripts.EventSystem;
 using UnityEngine;
 
 public class BottomNavController : MonoBehaviour

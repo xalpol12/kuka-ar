@@ -18,8 +18,6 @@ namespace Project.Scripts.Connectivity.WebSocket
         private static JsonSerializerSettings settings;
         private ConcurrentQueue<string> messagesToSend;
 
-        private bool isFirstMessageReceived;
-
         private void Start()
         {
             settings = new()
@@ -36,7 +34,6 @@ namespace Project.Scripts.Connectivity.WebSocket
 
         public async void ConnectToWebsocket(string serverAddress)
         {
-            
             if (ws == null)
             {
                 ws = new NativeWebSocket.WebSocket(serverAddress);
@@ -48,7 +45,7 @@ namespace Project.Scripts.Connectivity.WebSocket
             }
 
             ws.OnMessage += OnWebsocketMessage;
-            DebugLogger.Instance().AddLog("OnWebsocketMessage subscribed; ");
+
             ws.OnOpen += () => 
                 DebugLogger.Instance().AddLog($"Connected to ws: {serverAddress}; ");
             ws.OnError += (e) =>
@@ -66,24 +63,8 @@ namespace Project.Scripts.Connectivity.WebSocket
         private void OnWebsocketMessage(byte[] bytes)
         {
             String message = System.Text.Encoding.UTF8.GetString(bytes);
-            Debug.Log(message);
-            try
-            {
-                var variable = new OutputWithErrors();
-                var outputFrame = JsonConvert.DeserializeObject<OutputWithErrors>(message, settings);
-                trackedRobotsHandlerScript.ReceivePackageFromWebsocket(outputFrame);
-            }
-            catch (ArgumentNullException e)
-            {
-                Debug.Log(e.StackTrace);
-            }
-            
-            //TODO: temporary debug
-            if (!isFirstMessageReceived)
-            {
-                DebugLogger.Instance().AddLog("Received message; ");
-                isFirstMessageReceived = true;
-            }
+            var outputFrame = JsonConvert.DeserializeObject<OutputWithErrors>(message, settings);
+            trackedRobotsHandlerScript.ReceivePackageFromWebsocket(outputFrame);
         }
 
         private void Update()

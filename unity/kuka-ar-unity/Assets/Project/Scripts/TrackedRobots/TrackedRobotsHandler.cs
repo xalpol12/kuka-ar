@@ -62,7 +62,7 @@ namespace Connectivity
             #endif
         }
 
-        #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
+        #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN //called from AnchorManager
         public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
         {
             if (!enqueuedIps.Contains(ipAddress))
@@ -73,7 +73,6 @@ namespace Connectivity
                         Instantiate(prefab, basePoint.position, basePoint.rotation),
                         threshold));
                     DebugLogger.Instance().AddLog($"Object for ip {ipAddress} instantiated; ");
-                    // trackedRobots[ipAddress].UpdateTrackedRobotVariables(robotData); //can't do rn, see if needed
 
                     enqueuedIps.Remove(ipAddress);
                 });

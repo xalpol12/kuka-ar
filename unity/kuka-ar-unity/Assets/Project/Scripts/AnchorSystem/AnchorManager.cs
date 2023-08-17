@@ -29,7 +29,7 @@ namespace Project.Scripts.AnchorSystem
             trackedAnchors = new Dictionary<string, ARAnchor>();
             robotConfigData = new Dictionary<string, RobotData>();
         
-            //TODO: delete, debug purposes
+            //TODO: delete later, debug purposes
             CreateMockData();
         }
 
@@ -46,43 +46,50 @@ namespace Project.Scripts.AnchorSystem
             robotConfigData.Add("192.168.1.50", newRobotConfigData);
         }
 
-        public IEnumerator CreateAnchor(ARTrackedImage foundImage)
+        public IEnumerator StartNewAnchorTracking(ARTrackedImage foundImage)
         {
             DebugLogger.Instance().AddLog("Searching for reference points...; ");
-#if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
-            RobotData configData = robotConfigData[foundImage.referenceImage.name];
+            
+            #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
+            var imageTransform = foundImage.transform;
+            var robotIp = foundImage.referenceImage.name;
+            var configData = robotConfigData[robotIp];
+            
             bool isCreated = false;
             while (!isCreated)
             {
                 yield return null;
                 if (foundImage.trackingState != TrackingState.Tracking) continue;
-                Transform imageTransform = foundImage.transform;
-                Vector3 position = imageTransform.position + configData.PositionShift;
-                Quaternion rotation = imageTransform.rotation * Quaternion.Euler(configData.RotationShift);
+
+                var anchor = PlaceNewAnchor(imageTransform, configData);
+                trackedAnchors.Add(robotIp, anchor);
                 
-                ARAnchor anchor = arAnchorManager.AddAnchor(new Pose(position, rotation)); //TODO: replace obsolete method
-                DebugLogger.Instance().AddLog("AddAnchor method called; ");
+                WebSocketClient.Instance().SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp));
                 
-                trackedAnchors.Add("192.168.1.50", anchor);
-                
-                WebSocketClient.Instance().SendToWebSocketServer(ComposeWebSocketServerRequest("192.168.1.50"));
-                DebugLogger.Instance().AddLog("SendToWebSocketServer method called; ");
-                
-                trackedRobotsHandler.InstantiateTrackedRobot("192.168.1.50", anchor.transform);
-                DebugLogger.Instance().AddLog("InstantiateTrackedRobot method called; ");
+                trackedRobotsHandler.InstantiateTrackedRobot(robotIp, anchor.transform);
                 
                 isCreated = true;
             }   
-#endif
-#if UNITY_EDITOR || UNITY_STANDALONE_WIN
+            #endif
+
+            #if UNITY_EDITOR || UNITY_STANDALONE_WIN
             yield return null;
-#endif
+            #endif
+            
             DebugLogger.Instance().AddLog("Object placed; ");
         }
 
-        private string ComposeWebSocketServerRequest(string robotIp)
+        private ARAnchor PlaceNewAnchor(Transform imageTransform, RobotData configData)
         {
-            return $"{{ \"host\": \"{robotIp}\", \"var\": \"BASE\" }}";
+            Vector3 position = imageTransform.position + configData.PositionShift;
+            Quaternion rotation = imageTransform.rotation * Quaternion.Euler(configData.RotationShift);
+                
+            return arAnchorManager.AddAnchor(new Pose(position, rotation)); //TODO: replace obsolete method
+        }
+
+        private static string ComposeWebSocketServerRequest(string robotIp)
+        {
+            return $"{{ \"host\": \"{robotIp}\", \"var\": \"BASE\" }}"; //TODO: add joints request
         }
     }
 }

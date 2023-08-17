@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using Connectivity.Models.AggregationClasses;
-using Connectivity.Models.SimpleValues.Pairs;
 using Project.Scripts.Connectivity.Models.KRLValues;
+using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 using Project.Scripts.Utils;
 using UnityEngine;
 
@@ -73,7 +73,6 @@ namespace Project.Scripts.TrackedRobots
         {
             switch (key)
             {
-                //TODO: Already updated flag to change value only if it was already used to translate a point,
                 case ValueName.ActiveBase:
                     activeBase = (KRLInt)value;
                     break;
@@ -92,10 +91,6 @@ namespace Project.Scripts.TrackedRobots
             }
         }
         
-        // current value
-        // queue: <future values>
-        // dequeue: current value = queue.TryDequeue and update position of gameobject
-        // enqueue: if |new - last inserted| > threshold -> enqueue
         private void SetValueIfChanged(KRLFrame update)
         {
             if (IsNewValueGreaterThanThreshold(update, lastEnqueued))

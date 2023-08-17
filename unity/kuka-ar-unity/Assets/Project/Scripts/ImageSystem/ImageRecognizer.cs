@@ -30,7 +30,7 @@ namespace Project.Scripts.ImageSystem
             foreach (var newImage in eventArgs.added)
             {
                 trackedImages.Add(newImage.referenceImage.name, newImage);
-                StartCoroutine(anchorManager.CreateAnchor(newImage));
+                StartCoroutine(anchorManager.StartNewAnchorTracking(newImage));
                 DebugLogger.Instance().AddLog($"Current tracked images count: {trackedImages.Count.ToString()}; ");
             }
         }
