@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Threading.Tasks;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,13 +30,20 @@ public class ServerHttpService : MonoBehaviour
     internal IEnumerator PingOperation(string ip)
     {
         var ping = new Ping(ip);
+        var time = 0;
         while (!ping.isDone)
         {
+            if (time > timeout)
+            {
+                break;
+            }
+
+            time -= ping.time;
             SwapCloud(ConnectionStatus.Connecting);
             yield return new WaitForSeconds(0.05f);
         }
         
-        SwapCloud(ping.time > timeout ? ConnectionStatus.Disconnected : ConnectionStatus.Connected);
+        SwapCloud(time > timeout ? ConnectionStatus.Disconnected : ConnectionStatus.Connected);
     }
 
     private void SwapCloud(ConnectionStatus pingStatus)
