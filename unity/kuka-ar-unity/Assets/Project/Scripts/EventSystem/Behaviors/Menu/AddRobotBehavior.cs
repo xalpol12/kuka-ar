@@ -4,7 +4,8 @@ public class AddRobotBehavior : MonoBehaviour
 {
     [SerializeField]
     private float pullAddMenuMaxHeight = 0.018f;
-    
+
+    [SerializeField] private float errorMargin = 0.05f;
     private AddRobotController robotController;
     private JogsControlService service;
     private GameObject selectOptions;
@@ -18,10 +19,9 @@ public class AddRobotBehavior : MonoBehaviour
         selectOptions = robotController.addDialog.transform.Find("SelectOptions")
             .GetComponent<RectTransform>().gameObject;
         homePosition = robotController.addDialog.transform.position;
+        Debug.Log("home Y " + homePosition.y);
         
         isDialogFullyOpen = false;
-        //fullyVisible = (int)(Screen.height * 0.0175);
-        //menuSwap = (int)(Screen.height * 0.25 * -1);
         
         robotController.addDialog.SetActive(robotController.ShowAddDialog);
     }
@@ -54,13 +54,13 @@ public class AddRobotBehavior : MonoBehaviour
         var translation = Vector3.up * (Time.deltaTime * robotController.TransformFactor);
         var newPose = robotController.addDialog.transform.position + translation;
 
-        if (newPose.y > 40)
+        if (newPose.y > Screen.width * errorMargin)
         {
             translation = new Vector3();
             isDialogFullyOpen = true;
         }
 
-        if (newPose.y > -590)
+        if (newPose.y > homePosition.y / 2)
         {
             robotController.bottomNav.SetActive(false);
         }
@@ -71,13 +71,13 @@ public class AddRobotBehavior : MonoBehaviour
     {
         var translation = Vector3.down * (Time.deltaTime * robotController.TransformFactor);
         var newPose = robotController.addDialog.transform.position + translation;
-
+        
         if (newPose.y < homePosition.y)
         {
             translation = new Vector3();
         }
 
-        if (newPose.y < -590)
+        if (newPose.y < homePosition.y / 2 )
         {
             robotController.bottomNav.SetActive(true);
         }
@@ -98,7 +98,7 @@ public class AddRobotBehavior : MonoBehaviour
 
         if (menuPosition.y < homePosition.y * 0.8f)
         {
-            menuPosition.y = homePosition.y * 0.8f;
+            menuPosition.y = homePosition.y * 0.83f;
             robotController.ShowAddDialog = false;
         }
         robotController.addDialog.transform.position = menuPosition;

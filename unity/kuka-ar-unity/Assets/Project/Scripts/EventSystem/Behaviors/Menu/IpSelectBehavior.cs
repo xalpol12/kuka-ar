@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
@@ -69,7 +68,7 @@ public class IpSelectBehavior : MonoBehaviour
         gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
         {
             selectController.StylingService.MarkAsUnselected(allIpAddresses);
-            OnIpSelect(parentComponent,0);
+            OnIpSelect(parentComponent,gridItem.transform.GetSiblingIndex());
             gridItem.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
         });
         allIpAddresses.Add(gridItem);
@@ -90,7 +89,11 @@ public class IpSelectBehavior : MonoBehaviour
             newIpAddress.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
                 selectController.StylingService.MarkAsUnselected(allIpAddresses);
-                OnIpSelect(parentComponent, newIpAddress.transform.GetSiblingIndex() - 1);
+                if (gridItem.transform.GetSiblingIndex() > selectController.HttpService.ConfiguredRobots.Count + 1)
+                {
+                    return;
+                }
+                OnIpSelect(parentComponent, newIpAddress.transform.GetSiblingIndex()); // - 1 
                 newIpAddress.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
             });
             
