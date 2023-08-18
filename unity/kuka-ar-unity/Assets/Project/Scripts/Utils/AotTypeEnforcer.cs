@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using Connectivity.Models.AggregationClasses;
 using Newtonsoft.Json.Utilities;
+using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 using UnityEngine;
 

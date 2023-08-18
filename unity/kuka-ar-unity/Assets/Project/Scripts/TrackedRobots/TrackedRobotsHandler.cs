@@ -1,19 +1,21 @@
 using System.Collections.Generic;
-using Connectivity.Models.AggregationClasses;
+using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Parsing.OutputJson;
 using Project.Scripts.Multithreading;
-using Project.Scripts.TrackedRobots;
 using Project.Scripts.Utils;
 using UnityEngine;
 
-namespace Connectivity
+namespace Project.Scripts.TrackedRobots
 {
     public class TrackedRobotsHandler : MonoBehaviour
     {
         public GameObject prefab;
-        [Tooltip("Minimal difference between two update values to be registered [in meters]")]
+        [Tooltip("Minimal difference between two position update values to be registered [in meters]")]
         [Range(0f, 5f)]
-        public float threshold = 0.01f;
+        public float positionThreshold = 0.01f;
+        [Tooltip("Minimal difference between two rotation update values to be registered [in degrees]")]
+        [Range(0f, 360f)]
+        public float rotationThreshold = 1f;
         private Dictionary<string, TrackedRobotModel> trackedRobots;
         private HashSet<string> enqueuedIps;
 
@@ -49,7 +51,8 @@ namespace Connectivity
                     {
                         trackedRobots.Add(entry, new TrackedRobotModel(
                             Instantiate(prefab, Vector3.zero, Quaternion.identity),
-                            threshold));
+                            positionThreshold,
+                            rotationThreshold));
                         DebugLogger.Instance().AddLog($"Object for ip {entry} instantiated; ");
                         trackedRobots[entry].UpdateTrackedRobotVariables(robotData);
 

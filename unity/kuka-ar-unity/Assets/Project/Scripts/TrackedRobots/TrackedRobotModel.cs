@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Connectivity.Models.AggregationClasses;
+using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 using Project.Scripts.Utils;
@@ -20,22 +20,25 @@ namespace Project.Scripts.TrackedRobots
         }
         
         private readonly GameObject gameObject;
-        private HashSet<ExceptionMessagePair> FoundExceptions { get; }
+        private HashSet<ExceptionMessagePair> foundExceptions { get; }
         private KRLInt activeBase;
         private KRLInt activeTcp;
         private KRLFrame tcpOrientation;
         private KRLJoints activeJoints;
 
         private Queue<KRLFrame> orientationUpdates;
-        private readonly float threshold;
+        private readonly float positionThreshold;
+        private readonly float rotationThreshold;
         private KRLFrame lastEnqueued;
 
-        public TrackedRobotModel(GameObject instantiatedObject, float threshold)
+        public TrackedRobotModel(GameObject instantiatedObject, float positionThreshold, float rotationThreshold)
         {
             gameObject = instantiatedObject;
-            FoundExceptions = new HashSet<ExceptionMessagePair>();
+            this.positionThreshold = positionThreshold;
+            this.rotationThreshold = rotationThreshold;
+            
+            foundExceptions = new HashSet<ExceptionMessagePair>();
             orientationUpdates = new Queue<KRLFrame>();
-            this.threshold = threshold;
             lastEnqueued = new KRLFrame
             {
                 Position = Vector3.zero
@@ -93,7 +96,8 @@ namespace Project.Scripts.TrackedRobots
         
         private void SetValueIfChanged(KRLFrame update)
         {
-            if (IsNewValueGreaterThanThreshold(update, lastEnqueued))
+            if (IsNewValueGreaterThanPositionThreshold(update, lastEnqueued) || 
+                IsNewValueGreaterThanRotationThreshold(update, lastEnqueued))
             {
                 orientationUpdates.Enqueue(update);
                 lastEnqueued = update;
@@ -102,16 +106,25 @@ namespace Project.Scripts.TrackedRobots
 
         private void UpdateExceptions(HashSet<ExceptionMessagePair> exceptions)
         {
-            FoundExceptions.UnionWith(exceptions);
+            foundExceptions.UnionWith(exceptions);
         }
 
-        private bool IsNewValueGreaterThanThreshold(KRLFrame newValue, KRLFrame oldValue)
+        private bool IsNewValueGreaterThanPositionThreshold(KRLFrame newValue, KRLFrame oldValue)
         {
             Vector3 difference = newValue.Position - oldValue.Position;
 
-            return Math.Abs(difference.x) > threshold ||
-                   Math.Abs(difference.y) > threshold ||
-                   Math.Abs(difference.z) > threshold;
+            return Math.Abs(difference.x) > positionThreshold ||
+                   Math.Abs(difference.y) > positionThreshold ||
+                   Math.Abs(difference.z) > positionThreshold;
+        }
+
+        private bool IsNewValueGreaterThanRotationThreshold(KRLFrame newValue, KRLFrame oldValue)
+        {
+            Vector3 difference = newValue.Rotation - oldValue.Rotation;
+
+            return Math.Abs(difference.x) > rotationThreshold ||
+                   Math.Abs(difference.y) > rotationThreshold ||
+                   Math.Abs(difference.z) > rotationThreshold;
         }
     }
 }

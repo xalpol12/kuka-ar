@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 
-namespace Connectivity.Models.AggregationClasses
+namespace Project.Scripts.Connectivity.Models.AggregationClasses
 {
     public struct ValueWithError
     {
