@@ -2017,6 +2017,11 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5846320599756609692, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5874885314834502293, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_text
