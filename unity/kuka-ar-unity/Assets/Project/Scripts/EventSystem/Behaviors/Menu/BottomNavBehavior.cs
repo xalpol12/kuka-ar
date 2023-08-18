@@ -91,7 +91,8 @@ public class BottomNavBehavior : MonoBehaviour
             
             if (newPosition.y < dockPosition.y)
             {
-                translation = new Vector3();
+                bottomNav.transform.position = dockPosition;
+                return;
             }
                     
             bottomNav.transform.Translate(translation);

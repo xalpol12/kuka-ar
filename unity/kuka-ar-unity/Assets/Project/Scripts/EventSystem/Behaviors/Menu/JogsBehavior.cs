@@ -20,7 +20,9 @@ public class JogsBehavior : MonoBehaviour
         jogsDisplay.SetActive(!jogsController.ShowJogs);
         jogsValues.SetActive(jogsController.ShowJogs);
         jogsHomePosition = jogsDisplay.transform.position;
-        distance = (int)(Screen.height * 0.115f);
+
+        var frameRateError = FrameRateController.frameRate.targetFrameRate / 2;
+        distance = (int)((Screen.height * 0.115f) + frameRateError);
     }
     
     void Update()
