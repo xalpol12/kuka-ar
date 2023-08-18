@@ -19,7 +19,6 @@ public class AddRobotBehavior : MonoBehaviour
         selectOptions = robotController.addDialog.transform.Find("SelectOptions")
             .GetComponent<RectTransform>().gameObject;
         homePosition = robotController.addDialog.transform.position;
-        Debug.Log("home Y " + homePosition.y);
         
         isDialogFullyOpen = false;
         
