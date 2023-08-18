@@ -78,15 +78,15 @@ public class UiBehavior : MonoBehaviour
         {
             case "Menu":
                 controller.MenuAnim = AnimationStates.StandBy;
-                controller.menuUi.SetActive(active);
+                // controller.menuUi.SetActive(active);
                 break;
             case "ServerConfigScreen":
                 controller.ServerConfigAnim = AnimationStates.StandBy;
-                controller.serverConfig.SetActive(active);
+                // controller.serverConfig.SetActive(active);
                 break;
             case "MoreOptions":
                 controller.MoreOptionsAnim = AnimationStates.StandBy;
-                controller.moreOptions.SetActive(active);
+                // controller.moreOptions.SetActive(active);
                 break;
         }
     }

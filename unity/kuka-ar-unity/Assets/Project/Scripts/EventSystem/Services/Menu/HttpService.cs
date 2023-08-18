@@ -57,6 +57,7 @@ public class HttpService : MonoBehaviour
         
         ConfiguredRobots = data != null ? MapConfiguredResponse(data) : new List<AddRobotData>();
         CategoryNames = ConfiguredRobots.Count > 0 ? MapUniqueCategoryNames() : new List<string>();
+        Debug.Log("Robots no: " + ConfiguredRobots.Count);
     }
 
     private async void GetStickers()
