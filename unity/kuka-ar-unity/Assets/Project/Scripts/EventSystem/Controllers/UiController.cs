@@ -25,9 +25,9 @@ public class UiController : MonoBehaviour
         MoreOptionsAnim = AnimationStates.StandBy;
         NextAnim = new List<string>();
         
-        menuUi.SetActive(false);
+        menuUi.SetActive(true);
         moreOptions.SetActive(false);
-        serverConfig.SetActive(true);
+        serverConfig.SetActive(false);
         
         MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
         ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;
