@@ -108,7 +108,7 @@ namespace Project.Scripts.TrackedRobots
         private bool IsNewValueGreaterThanThreshold(KRLFrame newValue, KRLFrame oldValue)
         {
             Vector3 difference = newValue.Position - oldValue.Position;
-            
+
             return Math.Abs(difference.x) > threshold ||
                    Math.Abs(difference.y) > threshold ||
                    Math.Abs(difference.z) > threshold;
