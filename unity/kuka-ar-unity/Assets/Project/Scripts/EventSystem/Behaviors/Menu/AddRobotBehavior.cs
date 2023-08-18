@@ -14,10 +14,9 @@ public class AddRobotBehavior : MonoBehaviour
     void Start()
     {
         robotController = GetComponent<AddRobotController>();
-        service = JogsControlService.Instance;
+        service = FindObjectOfType<JogsControlService>();
         selectOptions = robotController.addDialog.transform.Find("SelectOptions")
             .GetComponent<RectTransform>().gameObject;
-        
         homePosition = robotController.addDialog.transform.position;
         
         isDialogFullyOpen = false;
