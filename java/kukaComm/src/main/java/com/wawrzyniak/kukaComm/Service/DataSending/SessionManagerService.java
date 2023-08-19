@@ -13,15 +13,7 @@ import java.util.Set;
 public class SessionManagerService {
     private final Map<WebSocketSession, ClientDataThread> threads;
 
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
     public SessionManagerService() {
-=======
-    public SessionManagerService(){
->>>>>>> add testSocket and kukaComm
-=======
-    public SessionManagerService() {
->>>>>>> add swagger docs, fix some whitespace issues
         threads = new HashMap<>();
     }
 

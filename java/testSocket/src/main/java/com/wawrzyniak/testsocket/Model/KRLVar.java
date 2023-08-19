@@ -93,18 +93,9 @@ public class KRLVar {
     public void setRandomValues(){
         value.setRandomValues();
     }
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
-=======
->>>>>>> Feature/testsocket setting data (#2)
-
+    
     public KRLValue setValue(KRLValue value){
         this.value = value;
         return this.value;
     }
-<<<<<<< refs/remotes/origin/main
-=======
->>>>>>> add testSocket and kukaComm
-=======
->>>>>>> Feature/testsocket setting data (#2)
 }

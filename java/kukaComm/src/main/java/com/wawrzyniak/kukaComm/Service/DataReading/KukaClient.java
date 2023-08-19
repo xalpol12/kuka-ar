@@ -58,15 +58,7 @@ public class KukaClient extends Socket {
         return bytes[off] << 8 & 0xFF00 | bytes[off + 1] & 0xFF;
     }
 
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
     public KRLVar getVariable(VarType var) {
-=======
-    public KRLVar getVariable(VarType var){
->>>>>>> add testSocket and kukaComm
-=======
-    public KRLVar getVariable(VarType var) {
->>>>>>> add swagger docs, fix some whitespace issues
         return variables.get(var);
     }
 }
