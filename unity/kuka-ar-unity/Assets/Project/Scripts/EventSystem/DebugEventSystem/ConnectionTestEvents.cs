@@ -1,8 +1,7 @@
 using System;
-using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 
-namespace Project.Scripts.EventSystem
+namespace Project.Scripts.EventSystem.DebugEventSystem
 {
     public class ConnectionTestEvents : MonoBehaviour
     {

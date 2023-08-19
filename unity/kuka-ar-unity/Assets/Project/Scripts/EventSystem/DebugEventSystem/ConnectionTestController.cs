@@ -1,5 +1,6 @@
 using Project.Scripts.Connectivity.WebSocket;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Project.Scripts.EventSystem.DebugEventSystem
 {
@@ -18,12 +19,15 @@ namespace Project.Scripts.EventSystem.DebugEventSystem
             ThirdRobotConnected = false;
             
             ConnectionTestEvents.Current.OnPressButtonConnectToServer += ConnectToWebSocketServer;
+            ConnectionTestEvents.Current.OnPressButtonConnectToFirstRobot += InitializeConnectionFirstRobot;
+            ConnectionTestEvents.Current.OnPressButtonConnectToSecondRobot += InitializeConnectionSecondRobot;
+            ConnectionTestEvents.Current.OnPressButtonConnectToThirdRobot += InitializeConnectionThirdRobot; 
             
-            #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-                ConnectionTestEvents.Current.OnPressButtonConnectToFirstRobot += InitializeConnectionFirstRobot;
-                ConnectionTestEvents.Current.OnPressButtonConnectToSecondRobot += InitializeConnectionSecondRobot;
-                ConnectionTestEvents.Current.OnPressButtonConnectToThirdRobot += InitializeConnectionThirdRobot;      
-            #endif  
+            #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
+                GameObject.Find("IP50Connect").GetComponent<Button>().gameObject.SetActive(false);
+                GameObject.Find("IP51Connect").GetComponent<Button>().gameObject.SetActive(false);
+                GameObject.Find("IP52Connect").GetComponent<Button>().gameObject.SetActive(false);
+            #endif
         }
 
         private void ConnectToWebSocketServer()

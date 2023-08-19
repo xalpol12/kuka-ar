@@ -20,9 +20,7 @@ public class AddRobotBehavior : MonoBehaviour
         homePosition = robotController.addDialog.transform.position;
         
         isDialogFullyOpen = false;
-        fullyVisible = (int)(Screen.height * 0.0175);
-        menuSwap = (int)(Screen.height * 0.25 * -1);
-        
+
         robotController.addDialog.SetActive(robotController.ShowAddDialog);
     }
     
