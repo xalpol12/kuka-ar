@@ -48,7 +48,7 @@ public class UiBehavior : MonoBehaviour
 
     private void FadeIn(CanvasGroup group)
     {
-        var newAlpha = group.alpha + (Time.deltaTime * controller.AnimSpeed);
+        var newAlpha = group.alpha + (Time.deltaTime * controller.animSpeed);
         if (newAlpha > 1)
         {
             newAlpha = 1;
@@ -61,7 +61,7 @@ public class UiBehavior : MonoBehaviour
 
     private void FadeOut(CanvasGroup group)
     {
-        var newAlpha = group.alpha - (Time.deltaTime * controller.AnimSpeed);
+        var newAlpha = group.alpha - (Time.deltaTime * controller.animSpeed);
         if (newAlpha < 0)
         {
             newAlpha = 0;

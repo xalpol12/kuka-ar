@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Project.Scripts.Connectivity.Models.KRLValues;
 
+
 namespace Project.Scripts.Connectivity.Parsing
 {
     public class KRLValueJsonConverter : JsonConverter<KRLValue>

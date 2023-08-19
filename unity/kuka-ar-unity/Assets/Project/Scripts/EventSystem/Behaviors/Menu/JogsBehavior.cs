@@ -3,7 +3,6 @@ using UnityEngine;
 public class JogsBehavior : MonoBehaviour
 {
     private JogsController jogsController;
-    private JogsControlService service;
     private GameObject jogsValues;
     private GameObject jogsDisplay;
     
@@ -13,19 +12,21 @@ public class JogsBehavior : MonoBehaviour
     void Start()
     {
         jogsController = GetComponent<JogsController>();
-        service = FindObjectOfType<JogsControlService>();
         jogsValues = jogsController.jogs.GetComponent<RectTransform>().Find("JogsValues").gameObject;
         jogsDisplay = jogsController.jogs.GetComponent<RectTransform>().Find("JogDisplay").gameObject;
         
         jogsDisplay.SetActive(!jogsController.ShowJogs);
         jogsValues.SetActive(jogsController.ShowJogs);
         jogsHomePosition = jogsDisplay.transform.position;
-        distance = (int)(Screen.height * 0.115f);
+        
+        distance = (int)((Screen.height * 0.115f) + PositioningService.Instance.PositioningError);
     }
     
     void Update()
     {
-        if (jogsController.ShowJogs && service.IsBottomNavDocked && !service.IsAddRobotDialogOpen)
+        if (jogsController.ShowJogs &&
+            jogsController.Service.IsBottomNavDocked &&
+            !jogsController.Service.IsAddRobotDialogOpen)
         {
             ShowJogs();
         }

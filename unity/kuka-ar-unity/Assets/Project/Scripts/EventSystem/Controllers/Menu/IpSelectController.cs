@@ -1,4 +1,3 @@
-using System;
 using Project.Scripts.Connectivity.Enums;
 using UnityEngine;
 
@@ -11,6 +10,7 @@ public class IpSelectController : MonoBehaviour
     internal ButtonType ElementClicked;
     internal ButtonType PrevElementClicked;
     internal AddNewRobotService AddNewRobotService;
+    internal PositioningService PositioningService;
     internal bool ShowOptions;
     internal int TransformFactor;
     
@@ -21,6 +21,7 @@ public class IpSelectController : MonoBehaviour
         HttpService = HttpService.Instance;
         StylingService = SelectableStylingService.Instance;
         AddNewRobotService = AddNewRobotService.Instance;
+        PositioningService = PositioningService.Instance;
         
         ShowOptions = false;
         TransformFactor = 7500;

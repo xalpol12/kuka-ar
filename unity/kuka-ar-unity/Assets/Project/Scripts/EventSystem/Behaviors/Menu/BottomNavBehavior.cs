@@ -16,7 +16,7 @@ public class BottomNavBehavior : MonoBehaviour
     void Start()
     {
         bottomNav = GetComponent<BottomNavController>();
-        service = FindObjectOfType<JogsControlService>();
+        service = JogsControlService.Instance;
         
         var bottomPanel = bottomNav.transform;
         scrollList = bottomPanel.Find("ViewCoordList").GetComponent<Image>().gameObject;
@@ -25,6 +25,7 @@ public class BottomNavBehavior : MonoBehaviour
             .transform.Find("AddButton").GetComponent<RectTransform>().gameObject;
         circleImage = constantPanel.transform.Find("AddButtonContainer").GetComponent<RectTransform>().gameObject
             .transform.Find("AddButtonCircle").GetComponent<Image>();
+        
         dockPosition = bottomPanel.position;
     }
 
@@ -91,7 +92,8 @@ public class BottomNavBehavior : MonoBehaviour
             
             if (newPosition.y < dockPosition.y)
             {
-                translation = new Vector3();
+                bottomNav.transform.position = dockPosition;
+                return;
             }
                     
             bottomNav.transform.Translate(translation);
@@ -135,6 +137,6 @@ public class BottomNavBehavior : MonoBehaviour
     {
         plusImage.SetActive(!bottomNav.IsCirclePressed);
         circleImage.sprite = bottomNav.IsCirclePressed ?
-            bottomNav.stylingService.PressedAddIcon : bottomNav.stylingService.DefaultAddIcon;
+            bottomNav.StylingService.PressedAddIcon : bottomNav.StylingService.DefaultAddIcon;
     }
 }
