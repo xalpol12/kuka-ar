@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using Unity.Plastic.Newtonsoft.Json;
 
 namespace Project.Scripts.Connectivity.Models.KRLValues
 {

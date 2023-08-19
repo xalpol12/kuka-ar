@@ -1,8 +1,8 @@
 using System;
 using System.IO;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Project.Scripts.Connectivity.Models.KRLValues;
+using Unity.Plastic.Newtonsoft.Json;
+using Unity.Plastic.Newtonsoft.Json.Linq;
 
 namespace Project.Scripts.Connectivity.Parsing
 {
