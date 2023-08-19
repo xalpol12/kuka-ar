@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using Connectivity.Models.AggregationClasses;
-using Connectivity.Models.SimpleValues.Pairs;
 using Newtonsoft.Json;
+using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 
-namespace Connectivity.Parsing.OutputJson
+namespace Project.Scripts.Connectivity.Parsing.OutputJson
 {
     public struct OutputWithErrors {
         

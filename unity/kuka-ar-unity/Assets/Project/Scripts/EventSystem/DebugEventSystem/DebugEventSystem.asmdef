@@ -1,0 +1,16 @@
+{
+    "name": "DebugEventSystem",
+    "rootNamespace": "",
+    "references": [
+        "GUID:378bd5616a56dad4f91ebfcbec2194c0"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

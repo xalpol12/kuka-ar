@@ -35,5 +35,5 @@ MonoBehaviour:
       m_GuidHigh: 4143232447317295274
     m_Size: {x: 0.1, y: 0.1}
     m_SpecifySize: 1
-    m_Name: qr-code-ref-image
-    m_Texture: {fileID: 0}
+    m_Name: 192.168.1.50
+    m_Texture: {fileID: 2800000, guid: a6fd8503774c0402aa403884f5b77f39, type: 3}

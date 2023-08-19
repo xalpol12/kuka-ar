@@ -1,0 +1,17 @@
+{
+    "name": "WebSocket",
+    "rootNamespace": "",
+    "references": [
+        "GUID:ad47d37b55b3cfa4ba4960d7128606d5",
+        "GUID:04376767bc1f3b428aefa3d20743e819"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
