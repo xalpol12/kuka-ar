@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class UiController : MonoBehaviour
 {
@@ -8,7 +9,7 @@ public class UiController : MonoBehaviour
     public GameObject menuUi;
     public GameObject moreOptions;
     public GameObject serverConfig;
-    public float AnimSpeed;
+    public float animSpeed;
     internal AnimationStates ServerConfigAnim;
     internal AnimationStates MenuAnim;
     internal AnimationStates MoreOptionsAnim;
@@ -25,9 +26,9 @@ public class UiController : MonoBehaviour
         MoreOptionsAnim = AnimationStates.StandBy;
         NextAnim = new List<string>();
         
-        menuUi.SetActive(true);
+        menuUi.SetActive(false);
         moreOptions.SetActive(false);
-        serverConfig.SetActive(false);
+        serverConfig.SetActive(true);
         
         MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
         ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;

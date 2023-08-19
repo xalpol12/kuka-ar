@@ -48,7 +48,7 @@ public class UiBehavior : MonoBehaviour
 
     private void FadeIn(CanvasGroup group)
     {
-        var newAlpha = group.alpha + (Time.deltaTime * controller.AnimSpeed);
+        var newAlpha = group.alpha + (Time.deltaTime * controller.animSpeed);
         if (newAlpha > 1)
         {
             newAlpha = 1;
@@ -61,7 +61,7 @@ public class UiBehavior : MonoBehaviour
 
     private void FadeOut(CanvasGroup group)
     {
-        var newAlpha = group.alpha - (Time.deltaTime * controller.AnimSpeed);
+        var newAlpha = group.alpha - (Time.deltaTime * controller.animSpeed);
         if (newAlpha < 0)
         {
             newAlpha = 0;
@@ -78,15 +78,15 @@ public class UiBehavior : MonoBehaviour
         {
             case "Menu":
                 controller.MenuAnim = AnimationStates.StandBy;
-                // controller.menuUi.SetActive(active);
+                controller.menuUi.SetActive(active);
                 break;
             case "ServerConfigScreen":
                 controller.ServerConfigAnim = AnimationStates.StandBy;
-                // controller.serverConfig.SetActive(active);
+                controller.serverConfig.SetActive(active);
                 break;
             case "MoreOptions":
                 controller.MoreOptionsAnim = AnimationStates.StandBy;
-                // controller.moreOptions.SetActive(active);
+                controller.moreOptions.SetActive(active);
                 break;
         }
     }
