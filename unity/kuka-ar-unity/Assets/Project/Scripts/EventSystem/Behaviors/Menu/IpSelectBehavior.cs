@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Extensions;
 using TMPro;
 using UnityEngine;
@@ -11,10 +12,13 @@ public class IpSelectBehavior : MonoBehaviour
     private IpSelectController selectController;
     private List<GameObject> allIpAddresses;
     private Vector3 selectIpHomePosition;
+    private AnimationStates state;
     private void Start()
     {
         selectController = GetComponent<IpSelectController>();
         allIpAddresses = new List<GameObject>();
+        state = AnimationStates.FadeIn;
+        
         InitListLogic();
 
         selectIpHomePosition = selectController.ipSelector.transform.position;
@@ -105,10 +109,17 @@ public class IpSelectBehavior : MonoBehaviour
     {
         var translation = Vector3.right * (Time.deltaTime * selectController.TransformFactor);
         var newPose = selectController.ipSelector.transform.position + translation;
-
-        if (newPose.x > selectIpHomePosition.x + 1165)
+        
+        if (newPose.x > selectController.PositioningService.BestFitPosition.x)
         {
-            translation = new Vector3();
+            if (state == AnimationStates.FadeIn)
+            {
+                var finalPose = new Vector3(selectController.PositioningService.BestFitPosition.x, newPose.y);
+                
+                selectController.ipSelector.transform.position = finalPose;
+                state = AnimationStates.StandBy;
+            }
+            return;
         }
         
         selectController.ipSelector.transform.Translate(translation);
@@ -118,7 +129,7 @@ public class IpSelectBehavior : MonoBehaviour
     {
         var translation = Vector3.left * (Time.deltaTime * selectController.TransformFactor);
         var newPose = selectController.ipSelector.transform.position + translation;
-
+        
         if (newPose.x < selectIpHomePosition.x)
         {
             translation = new Vector3();

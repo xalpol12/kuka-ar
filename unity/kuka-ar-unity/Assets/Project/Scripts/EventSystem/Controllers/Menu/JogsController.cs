@@ -6,12 +6,17 @@ public class JogsController : MonoBehaviour
     public float transformFactor;
     public GameObject jogs;
     private int defaultTransformFactor;
+    internal JogsControlService Service;
     internal bool ShowJogs;
 
     void Start()
     {
+        Service = JogsControlService.Instance;
+        
+        
         ShowJogs = false;
         defaultTransformFactor = 10;
+        
         ValueCheck();
         
         MenuEvents.Event.OnClickJog += OnClickJog;
