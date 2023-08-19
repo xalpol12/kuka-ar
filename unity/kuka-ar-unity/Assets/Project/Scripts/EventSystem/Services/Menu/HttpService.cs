@@ -29,7 +29,7 @@ public class HttpService : MonoBehaviour
         
         GetConfigured();
         GetStickers();
-
+        
         MenuEvents.Event.OnClickReloadServerData += OnClickDataReload;
     }
     

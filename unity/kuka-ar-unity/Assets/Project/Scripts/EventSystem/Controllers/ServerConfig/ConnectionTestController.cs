@@ -19,8 +19,11 @@ public class ConnectionTestController : MonoBehaviour
 
     private void TestConnection()
     {
-        var ip = connectionTestComponent.transform.parent.Find("IpInputBox").GetComponent<TMP_InputField>().text;
-        validationService.IpAddressValidation(ip);
+        var parent = connectionTestComponent.transform.parent;
+        var ip = parent.Find("IpInputBox").GetComponent<TMP_InputField>().text;
+        parent.Find("IpInputBox").GetComponent<Image>().sprite =
+            validationService.IpAddressValidation(ip);
+        
         if (validationService.ValidationResult)
         {
             StartCoroutine(httpService.PingOperation(ip));
