@@ -38,21 +38,9 @@ public class ConfiguredRobotService {
         return this.mapper.robotToDto(this.robotRepository.save(robotToUpdate));
     }
 
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
     public void deleteByIp(String ipAddress) {
         Optional<ConfiguredRobot> robotToDelete = robotRepository.findByIpAddress(ipAddress);
         if(robotToDelete.isEmpty()) {
-=======
-    public void deleteByIp(String ipAddress){
-        Optional<ConfiguredRobot> robotToDelete = robotRepository.findByIpAddress(ipAddress);
-        if(robotToDelete.isEmpty()){
->>>>>>> add testSocket and kukaComm
-=======
-    public void deleteByIp(String ipAddress) {
-        Optional<ConfiguredRobot> robotToDelete = robotRepository.findByIpAddress(ipAddress);
-        if(robotToDelete.isEmpty()) {
->>>>>>> add swagger docs, fix some whitespace issues
             return;
         }
         robotRepository.delete(robotToDelete.get());
@@ -66,25 +54,10 @@ public class ConfiguredRobotService {
         return mapper.robotToDto(robot.get());
     }
 
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
     public List<ConfiguredRobotDTO> getAllConfiguredRobots() {
-=======
-    public List<ConfiguredRobotDTO> getAllConfiguredRobots(){
->>>>>>> add testSocket and kukaComm
-=======
-    public List<ConfiguredRobotDTO> getAllConfiguredRobots() {
->>>>>>> add swagger docs, fix some whitespace issues
         List<ConfiguredRobot> robots = new ArrayList<>();
         Iterable<ConfiguredRobot> iterator = robotRepository.findAll();
         iterator.forEach(robots::add);
         return mapper.robotListToDto(robots);
     }
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
-=======
-
->>>>>>> add testSocket and kukaComm
-=======
->>>>>>> add swagger docs, fix some whitespace issues
 }

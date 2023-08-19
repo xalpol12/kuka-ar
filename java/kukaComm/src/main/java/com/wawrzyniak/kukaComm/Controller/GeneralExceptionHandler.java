@@ -14,15 +14,7 @@ import java.io.IOException;
 public class GeneralExceptionHandler {
 
     @ExceptionHandler(value = IOException.class)
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
     public ResponseEntity<ExceptionMessagePair> robotModelReading(Exception e) {
-=======
-    public ResponseEntity<ExceptionMessagePair> robotModelReading(Exception e){
->>>>>>> add testSocket and kukaComm
-=======
-    public ResponseEntity<ExceptionMessagePair> robotModelReading(Exception e) {
->>>>>>> add swagger docs, fix some whitespace issues
         ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
                 e.getClass().getSimpleName(),
                 e.getMessage());
@@ -31,15 +23,7 @@ public class GeneralExceptionHandler {
     }
 
     @ExceptionHandler(value = RobotNotConfiguredException.class)
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
     public ResponseEntity<ExceptionMessagePair> robotNorConfigured(Exception e) {
-=======
-    public ResponseEntity<ExceptionMessagePair> robotNorConfigured(Exception e){
->>>>>>> add testSocket and kukaComm
-=======
-    public ResponseEntity<ExceptionMessagePair> robotNorConfigured(Exception e) {
->>>>>>> add swagger docs, fix some whitespace issues
         ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
                 e.getClass().getSimpleName(),
                 e.getMessage());

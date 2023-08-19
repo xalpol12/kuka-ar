@@ -10,15 +10,7 @@ import org.springframework.web.socket.WebSocketSession;
 
 import java.util.*;
 
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
 public class ClientDataThread extends Thread {
-=======
-public class ClientDataThread extends Thread{
->>>>>>> add testSocket and kukaComm
-=======
-public class ClientDataThread extends Thread {
->>>>>>> add swagger docs, fix some whitespace issues
 
     private final WebSocketSession session;
     private final Map<String, List<KRLVar>> variables;
@@ -30,15 +22,7 @@ public class ClientDataThread extends Thread {
         mapper = new ObjectMapper();
     }
 
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
     public Set<String> getObservedRobots() {
-=======
-    public Set<String> getObservedRobots(){
->>>>>>> add testSocket and kukaComm
-=======
-    public Set<String> getObservedRobots() {
->>>>>>> add swagger docs, fix some whitespace issues
         return variables.keySet();
     }
 

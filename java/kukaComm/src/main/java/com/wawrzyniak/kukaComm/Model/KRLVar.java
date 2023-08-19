@@ -21,15 +21,7 @@ public class KRLVar {
     private Byte[] readRequest;
     private final Set<ExceptionMessagePair> readExceptions;
 
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
     public KRLVar(VarType var) {
-=======
-    public KRLVar(VarType var){
->>>>>>> add testSocket and kukaComm
-=======
-    public KRLVar(VarType var) {
->>>>>>> add swagger docs, fix some whitespace issues
         this.name = var.getValue().name();
         this.value = var.getValue().type();
         this.id = IdProvider.getId();
@@ -37,42 +29,18 @@ public class KRLVar {
         readExceptions = new HashSet<>();
     }
 
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
     public void addReadException(Exception exception) {
-=======
-    public void addReadException(Exception exception){
->>>>>>> add testSocket and kukaComm
-=======
-    public void addReadException(Exception exception) {
->>>>>>> add swagger docs, fix some whitespace issues
         readExceptions.add(new ExceptionMessagePair(
                 exception.getClass().getSimpleName(),
                 exception.getMessage()
         ));
     }
 
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
     public void clearExceptions() {
         readExceptions.clear();
     }
 
     public boolean idCheck(int id) {
-=======
-    public void clearExceptions(){
-        readExceptions.clear();
-    }
-
-    public boolean idCheck(int id){
->>>>>>> add testSocket and kukaComm
-=======
-    public void clearExceptions() {
-        readExceptions.clear();
-    }
-
-    public boolean idCheck(int id) {
->>>>>>> add swagger docs, fix some whitespace issues
         return this.id == id;
     }
 
@@ -80,15 +48,7 @@ public class KRLVar {
         value.setValueFromString(read);
     }
 
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
     private void generateReadRequest() {
-=======
-    private void generateReadRequest(){
->>>>>>> add testSocket and kukaComm
-=======
-    private void generateReadRequest() {
->>>>>>> add swagger docs, fix some whitespace issues
         List<Byte> body = generateReadBody();
         List<Byte> header = generateHeader(body.size());
         header.addAll(body);
