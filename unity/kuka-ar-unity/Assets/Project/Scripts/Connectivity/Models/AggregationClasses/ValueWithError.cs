@@ -1,7 +1,7 @@
 using System.Collections.Generic;
+using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
-using Unity.Plastic.Newtonsoft.Json;
 
 namespace Project.Scripts.Connectivity.Models.AggregationClasses
 {
