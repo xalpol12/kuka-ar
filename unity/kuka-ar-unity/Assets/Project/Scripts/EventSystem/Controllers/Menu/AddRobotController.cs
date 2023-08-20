@@ -7,6 +7,7 @@ public class AddRobotController : MonoBehaviour
     public int id;
     public GameObject bottomNav;
     public GameObject addDialog;
+    [SerializeField] private GameObject saveButton;
     internal int TransformFactor;
     internal bool ShowAddDialog;
     internal bool IsSliderHold;
@@ -58,6 +59,11 @@ public class AddRobotController : MonoBehaviour
         
         if (id == uid)
         {
+            if (saveButton.GetComponent<TMP_Text>().text == "Close")
+            {
+                ShowAddDialog = false;
+                return;
+            }
             if (!string.IsNullOrWhiteSpace(content.IpAddress) && content.IpAddress != data.IpAddress &&
                 !string.IsNullOrWhiteSpace(content.RobotCategory) && content.RobotCategory != data.RobotCategory &&
                 !string.IsNullOrWhiteSpace(content.RobotName) && content.RobotName != data.RobotName)

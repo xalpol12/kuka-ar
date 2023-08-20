@@ -4,12 +4,14 @@ using UnityEngine.UI;
 
 public class SaveController : MonoBehaviour
 {
-    public GameObject ipInputField;
+    [SerializeField] private GameObject ipInputField;
     private IpValidationService validationService;
+    private HttpService httpService;
     private Sprite cloudIcon;
     void Start()
     {
         validationService = IpValidationService.Instance;
+        httpService = HttpService.Instance;
         cloudIcon = Resources.Load<Sprite>("Icons/cloudIcon");
         
         var inputTextBox = ipInputField.GetComponent<TMP_InputField>();
@@ -44,6 +46,12 @@ public class SaveController : MonoBehaviour
     private void UpdateState(string arg)
     {
         validationService.IpAddressValidation(ipInputField.GetComponent<TMP_InputField>().text);
+
+        if (validationService.ValidationResult)
+        {
+            httpService.ConfiguredIp = ipInputField.GetComponent<TMP_InputField>().text;
+        }
+        httpService.OnClickDataReload(4);
     }
 
     private void ClearPlaceholder(string arg)

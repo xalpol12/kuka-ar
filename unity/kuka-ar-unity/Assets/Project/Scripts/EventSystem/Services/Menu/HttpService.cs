@@ -12,7 +12,9 @@ public class HttpService : MonoBehaviour
 {
     public int id;
     public static HttpService Instance;
+    internal string ConfiguredIp;
     internal List<AddRobotData> ConfiguredRobots;
+    internal List<AddRobotData> Robots;
     internal List<Sprite> Stickers;
     internal List<string> CategoryNames;
     
@@ -23,7 +25,9 @@ public class HttpService : MonoBehaviour
 
     private void Start()
     {
+        ConfiguredIp = "127.0.0.1";
         ConfiguredRobots = new List<AddRobotData>();
+        Robots = new List<AddRobotData>();
         Stickers = new List<Sprite>();
         CategoryNames = new List<string>();
         
@@ -38,13 +42,14 @@ public class HttpService : MonoBehaviour
         if (id == uid)
         {
             GetConfigured();
+            GetRobots();
             GetStickers();
         }
     }
 
     private async void GetConfigured()
     {
-        var http = CreateApiRequest("http://localhost:8080/kuka-variables/configured");
+        var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/configured");
         var status = http.SendWebRequest();
         
         while (!status.isDone)
@@ -59,9 +64,24 @@ public class HttpService : MonoBehaviour
         CategoryNames = ConfiguredRobots.Count > 0 ? MapUniqueCategoryNames() : new List<string>();
     }
 
+    private async void GetRobots()
+    {
+        var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/robots");
+        var status = http.SendWebRequest();
+
+        while (!status.isDone)
+        {
+            await Task.Yield();
+        }
+
+        var data = JsonConvert.DeserializeObject<List<AddRobotData>>(http.downloadHandler.text);
+
+        Robots = data ?? new List<AddRobotData>();
+    }
+
     private async void GetStickers()
     {
-        var http = CreateApiRequest("http://localhost:8080/kuka-variables/stickers");
+        var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/stickers");
         var status = http.SendWebRequest();
         
         while (!status.isDone)
@@ -76,7 +96,7 @@ public class HttpService : MonoBehaviour
 
     public async void PostNewRobot(object body)
     {
-        var http = CreateApiRequest("http://localhost:8080/kuka-variables/add", RequestType.POST, body);
+        var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/add", RequestType.POST, body);
         var status = http.SendWebRequest();
 
         while (!status.isDone)
@@ -114,7 +134,7 @@ public class HttpService : MonoBehaviour
                 {
                     RobotName = entry.Value.Name,
                     RobotCategory = group.Key,
-                    IpAddress = "192.168.100." + i,
+                    IpAddress = "FAKE 192.168.100." + i,
                 };
                 list.Add(robot);
                 i++;
