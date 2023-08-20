@@ -9,15 +9,4 @@ public class PositioningService : MonoBehaviour
     {
         Instance = this;
     }
-    
-    void Start()
-    {
-        
-    }
-
-    
-    void Update()
-    {
-        
-    }
 }
