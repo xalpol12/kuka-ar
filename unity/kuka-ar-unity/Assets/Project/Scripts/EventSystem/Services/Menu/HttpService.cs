@@ -32,8 +32,8 @@ public class HttpService : MonoBehaviour
         CategoryNames = new List<string>();
         
         GetConfigured();
+        GetRobots();
         GetStickers();
-        
         MenuEvents.Event.OnClickReloadServerData += OnClickDataReload;
     }
     
@@ -73,10 +73,12 @@ public class HttpService : MonoBehaviour
         {
             await Task.Yield();
         }
+        // TODO
+        //  -> REMOVE THIS WILD MOCK UP
+        // var data = JsonConvert.DeserializeObject<List<AddRobotData>>(http.downloadHandler.text);
 
-        var data = JsonConvert.DeserializeObject<List<AddRobotData>>(http.downloadHandler.text);
-
-        Robots = data ?? new List<AddRobotData>();
+        // Robots = data ?? new List<AddRobotData>();
+        Robots = ConfiguredRobots;
     }
 
     private async void GetStickers()

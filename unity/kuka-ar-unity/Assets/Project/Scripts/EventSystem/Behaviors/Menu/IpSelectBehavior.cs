@@ -97,7 +97,7 @@ public class IpSelectBehavior : MonoBehaviour
                 {
                     return;
                 }
-                OnIpSelect(parentComponent, newIpAddress.transform.GetSiblingIndex()); // - 1 
+                OnIpSelect(parentComponent, newIpAddress.transform.GetSiblingIndex() - 1);
                 newIpAddress.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
             });
             
