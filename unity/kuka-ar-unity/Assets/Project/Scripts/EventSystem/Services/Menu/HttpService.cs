@@ -77,12 +77,10 @@ namespace Project.Scripts.EventSystem.Services.Menu
             {
                 await Task.Yield();
             }
-            // TODO
-            //  -> REMOVE THIS WILD MOCK UP
-            // var data = JsonConvert.DeserializeObject<List<AddRobotData>>(http.downloadHandler.text);
 
-            // Robots = data ?? new List<AddRobotData>();
-            Robots = ConfiguredRobots;
+            var data = JsonConvert.DeserializeObject<List<AddRobotData>>(http.downloadHandler.text);
+
+            Robots = data ?? new List<AddRobotData>();
         }
 
         private async void GetStickers()

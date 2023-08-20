@@ -21,7 +21,7 @@ namespace Project.Scripts.EventSystem.Controllers
         internal AnimationStates MenuAnim;
         internal AnimationStates MoreOptionsAnim;
         internal AnimationStates FocusModeAnim;
-        internal List<string> NextAnim;
+        internal List<AnimationFilter> NextAnim;
         private IpValidationService validationService;
 
         [SerializeField] private GameObject abortServerConfigArrow;
@@ -41,7 +41,7 @@ namespace Project.Scripts.EventSystem.Controllers
             MoreOptionsAnim = AnimationStates.StandBy;
             FocusModeAnim = AnimationStates.StandBy;
 
-            NextAnim = new List<string>();
+            NextAnim = new List<AnimationFilter>();
             selectedMode = focusModeToggle.GetComponent<Toggle>();
             if (PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun)
             {
@@ -74,7 +74,7 @@ namespace Project.Scripts.EventSystem.Controllers
             if (id == uid)
             {
                 MenuAnim = AnimationStates.FadeOut;
-                NextAnim.Add("MoreOptionsIn");
+                NextAnim.Add(AnimationFilter.MoreOptionsIn);
             }
         }
 
@@ -83,7 +83,7 @@ namespace Project.Scripts.EventSystem.Controllers
             if (id == uid && validationService.ValidationResult)
             {
                 ServerConfigAnim = AnimationStates.FadeOut;
-                NextAnim.Add("MenuIn");
+                NextAnim.Add(AnimationFilter.MenuIn);
                 PlayerPrefs.SetInt("firstRun", 1);
                 PlayerPrefs.SetString("serverIp", HttpService.Instance.ConfiguredIp);
             }
@@ -96,11 +96,11 @@ namespace Project.Scripts.EventSystem.Controllers
                 MoreOptionsAnim = AnimationStates.FadeOut;
                 if (selectedMode.isOn)
                 {
-                    NextAnim.Add("FocusModeIn");
+                    NextAnim.Add(AnimationFilter.FocusModeIn);
                 }
                 else
                 {
-                    NextAnim.Add("MenuIn");
+                    NextAnim.Add(AnimationFilter.MenuIn);
                 }
             }
         }
@@ -110,7 +110,7 @@ namespace Project.Scripts.EventSystem.Controllers
             if (id == uid)
             {
                 MoreOptionsAnim = AnimationStates.FadeOut;
-                NextAnim.Add("ServerConfigScreenIn");
+                NextAnim.Add(AnimationFilter.ServerConfigScreenIn);
                 abortServerConfigArrow.SetActive(true);
             }
         }
@@ -128,7 +128,7 @@ namespace Project.Scripts.EventSystem.Controllers
             if (id == uid)
             {
                 ServerConfigAnim = AnimationStates.FadeOut;
-                NextAnim.Add("MenuIn");
+                NextAnim.Add(AnimationFilter.MenuIn);
             }
         }
 
@@ -137,7 +137,7 @@ namespace Project.Scripts.EventSystem.Controllers
             if (id == uid)
             {
                 FocusModeAnim = AnimationStates.FadeOut;
-                NextAnim.Add("MoreOptionsIn");
+                NextAnim.Add(AnimationFilter.MoreOptionsIn);
             }
         }
     }
