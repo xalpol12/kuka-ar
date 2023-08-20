@@ -12,11 +12,23 @@ namespace Project.Scripts.EventSystem.Events
             Events = this;
         }
 
-        public event Action<int> onClickBack;
+        public event Action<int> OnClickBack;
+        public event Action<int> OnClickDisplayServer;
+        public event Action<int> OnClickDisplayBrowser;
 
         public void BackToMenu(int id)
         {
-            onClickBack?.Invoke(id);
+            OnClickBack?.Invoke(id);
+        }
+
+        public void DisplayServerConfigurationWindow(int id)
+        {
+            OnClickDisplayServer?.Invoke(id);
+        }
+
+        public void DisplayIssueWebPage(int id)
+        {
+            OnClickDisplayBrowser?.Invoke(id);
         }
     }
 }

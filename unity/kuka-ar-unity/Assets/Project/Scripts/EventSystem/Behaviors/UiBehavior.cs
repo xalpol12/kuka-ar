@@ -10,6 +10,8 @@ namespace Project.Scripts.EventSystem.Behaviors
         private CanvasGroup serverCanvasGroup;
         private CanvasGroup menuCanvasGroup;
         private CanvasGroup moreOptionsCanvasGroup;
+        private CanvasGroup webViewCanvasGroup;
+        private GameObject serverBackArrow;
         void Start()
         {
             controller = GetComponent<UiController>();
@@ -17,6 +19,7 @@ namespace Project.Scripts.EventSystem.Behaviors
             serverCanvasGroup = controller.serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>();
             menuCanvasGroup = controller.menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>();
             moreOptionsCanvasGroup = controller.moreOptions.transform.Find("Canvas").GetComponent<CanvasGroup>();
+            webViewCanvasGroup = controller.webView.transform.Find("Canvas").GetComponent<CanvasGroup>();
         }
 
         void Update()
@@ -29,7 +32,7 @@ namespace Project.Scripts.EventSystem.Behaviors
             {
                 FadeOut(serverCanvasGroup);
             }
-        
+
             if (controller.MenuAnim == AnimationStates.FadeIn)
             {
                 FadeIn(menuCanvasGroup);
@@ -38,7 +41,7 @@ namespace Project.Scripts.EventSystem.Behaviors
             {
                 FadeOut(menuCanvasGroup);
             }
-        
+
             if (controller.MoreOptionsAnim == AnimationStates.FadeIn)
             {
                 FadeIn(moreOptionsCanvasGroup);
@@ -46,6 +49,15 @@ namespace Project.Scripts.EventSystem.Behaviors
             else if(controller.MoreOptionsAnim == AnimationStates.FadeOut)
             {
                 FadeOut(moreOptionsCanvasGroup);
+            }
+
+            if (controller.WebViewAnim == AnimationStates.FadeIn)
+            {
+                FadeIn(webViewCanvasGroup);
+            }
+            else if (controller.WebViewAnim == AnimationStates.FadeOut)
+            {
+                FadeOut(webViewCanvasGroup);
             }
         }
 
@@ -91,6 +103,10 @@ namespace Project.Scripts.EventSystem.Behaviors
                     controller.MoreOptionsAnim = AnimationStates.StandBy;
                     controller.moreOptions.SetActive(active);
                     break;
+                case "WebView":
+                    controller.WebViewAnim = AnimationStates.StandBy;
+                    controller.webView.SetActive(active);
+                    break;
             }
         }
 
@@ -112,7 +128,11 @@ namespace Project.Scripts.EventSystem.Behaviors
                             break;
                         case "MoreOptionsIn":
                             controller.moreOptions.SetActive(true);
-                            controller.MoreOptionsAnim = AnimationStates.FadeIn;                 
+                            controller.MoreOptionsAnim = AnimationStates.FadeIn;
+                            break;
+                        case "WebViewIn":
+                            controller.webView.SetActive(true);
+                            controller.WebViewAnim = AnimationStates.FadeIn;
                             break;
                         case "Menu":
                             controller.MenuAnim = AnimationStates.FadeOut;
@@ -121,7 +141,10 @@ namespace Project.Scripts.EventSystem.Behaviors
                             controller.ServerConfigAnim = AnimationStates.FadeOut;
                             break;
                         case "MoreOptions":
-                            controller.MoreOptionsAnim = AnimationStates.FadeOut;                 
+                            controller.MoreOptionsAnim = AnimationStates.FadeOut;
+                            break;
+                        case "WebView":
+                            controller.WebViewAnim = AnimationStates.FadeOut;
                             break;
                     }
                 }
@@ -131,3 +154,4 @@ namespace Project.Scripts.EventSystem.Behaviors
         }
     }
 }
+

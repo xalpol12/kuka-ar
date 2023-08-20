@@ -14,6 +14,7 @@ namespace Project.Scripts.EventSystem.Events
 
         public event Action<int> OnClickPingServer;
         public event Action<int> OnClickSaveServerConfig;
+        public event Action<int> OnClickBackToMenu;
 
         public void ServerPing(int id)
         {
@@ -23,6 +24,11 @@ namespace Project.Scripts.EventSystem.Events
         public void SaveServerConfig(int id)
         {
             OnClickSaveServerConfig?.Invoke(id);
+        }
+
+        public void BackToMenu(int id)
+        {
+            OnClickBackToMenu?.Invoke(id);
         }
     }
 }
