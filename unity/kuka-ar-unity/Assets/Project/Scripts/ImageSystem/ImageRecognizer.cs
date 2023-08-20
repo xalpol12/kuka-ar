@@ -3,7 +3,6 @@ using Project.Scripts.AnchorSystem;
 using Project.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
-using UnityEngine.XR.ARSubsystems;
 
 namespace Project.Scripts.ImageSystem
 {
@@ -23,19 +22,7 @@ namespace Project.Scripts.ImageSystem
         private void Start()
         {
             trackedImages = new Dictionary<string, ARTrackedImage>();
-            
-            ConfigureMutableLibrary();
-            
             imageManager.trackedImagesChanged += OnChange;
-        }
-
-        private void ConfigureMutableLibrary()
-        {
-            var constantImageLib = imageManager.GetComponent<XRReferenceImageLibrary>();
-            imageManager.referenceLibrary = imageManager.CreateRuntimeLibrary(constantImageLib);
-            imageManager.requestedMaxNumberOfMovingImages = 5; //TODO: change later
-            imageManager.trackedImagePrefab = imageManager.GetComponent<GameObject>(); //TODO: check if prefab works
-            imageManager.enabled = true;
         }
 
         private void OnChange(ARTrackedImagesChangedEventArgs eventArgs)
