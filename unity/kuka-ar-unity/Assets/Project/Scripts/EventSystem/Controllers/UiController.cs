@@ -17,7 +17,7 @@ public class UiController : MonoBehaviour
     internal AnimationStates MenuAnim;
     internal AnimationStates MoreOptionsAnim;
     internal AnimationStates FocusModeAnim;
-    internal List<string> NextAnim;
+    internal List<AnimationFilter> NextAnim;
     private IpValidationService validationService;
     
     [SerializeField] private GameObject abortServerConfigArrow;
@@ -37,7 +37,7 @@ public class UiController : MonoBehaviour
         MoreOptionsAnim = AnimationStates.StandBy;
         FocusModeAnim = AnimationStates.StandBy;
         
-        NextAnim = new List<string>();
+        NextAnim = new List<AnimationFilter>();
         selectedMode = focusModeToggle.GetComponent<Toggle>();
         if (PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun)
         {
@@ -70,7 +70,7 @@ public class UiController : MonoBehaviour
         if (id == uid)
         {
             MenuAnim = AnimationStates.FadeOut;
-            NextAnim.Add("MoreOptionsIn");
+            NextAnim.Add(AnimationFilter.MoreOptionsIn);
         }
     }
 
@@ -79,7 +79,7 @@ public class UiController : MonoBehaviour
         if (id == uid && validationService.ValidationResult)
         {
             ServerConfigAnim = AnimationStates.FadeOut;
-            NextAnim.Add("MenuIn");
+            NextAnim.Add(AnimationFilter.MenuIn);
             PlayerPrefs.SetInt("firstRun", 1);
             PlayerPrefs.SetString("serverIp", HttpService.Instance.ConfiguredIp);
         }
@@ -92,11 +92,11 @@ public class UiController : MonoBehaviour
             MoreOptionsAnim = AnimationStates.FadeOut;
             if (selectedMode.isOn)
             {
-                NextAnim.Add("FocusModeIn");
+                NextAnim.Add(AnimationFilter.FocusModeIn);
             }
             else
             {
-                NextAnim.Add("MenuIn");
+                NextAnim.Add(AnimationFilter.MenuIn);
             }
         }
     }
@@ -106,7 +106,7 @@ public class UiController : MonoBehaviour
         if (id == uid)
         {
             MoreOptionsAnim = AnimationStates.FadeOut;
-            NextAnim.Add("ServerConfigScreenIn");
+            NextAnim.Add(AnimationFilter.ServerConfigScreenIn);
             abortServerConfigArrow.SetActive(true);
         }
     }
@@ -124,7 +124,7 @@ public class UiController : MonoBehaviour
         if (id == uid)
         {
             ServerConfigAnim = AnimationStates.FadeOut;
-            NextAnim.Add("MenuIn");
+            NextAnim.Add(AnimationFilter.MenuIn);
         }
     }
 
@@ -133,7 +133,7 @@ public class UiController : MonoBehaviour
         if (id == uid)
         {
             FocusModeAnim = AnimationStates.FadeOut;
-            NextAnim.Add("MoreOptionsIn");
+            NextAnim.Add(AnimationFilter.MoreOptionsIn);
         }
     }
 }

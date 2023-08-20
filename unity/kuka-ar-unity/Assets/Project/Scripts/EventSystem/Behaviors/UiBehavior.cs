@@ -115,32 +115,32 @@ public class UiBehavior : MonoBehaviour
             {
                 switch (s)
                 {
-                    case "MenuIn":
+                    case AnimationFilter.MenuIn:
                         controller.menuUi.SetActive(true);
                         controller.MenuAnim = AnimationStates.FadeIn;
                         break;
-                    case "ServerConfigScreenIn":
+                    case AnimationFilter.ServerConfigScreenIn:
                         controller.serverConfig.SetActive(true);
                         controller.ServerConfigAnim = AnimationStates.FadeIn;
                         break;
-                    case "MoreOptionsIn":
+                    case AnimationFilter.MoreOptionsIn:
                         controller.moreOptions.SetActive(true);
                         controller.MoreOptionsAnim = AnimationStates.FadeIn;                 
                         break;
-                    case "FocusModeIn":
+                    case AnimationFilter.FocusModeIn:
                         controller.focusMode.SetActive(true);
                         controller.FocusModeAnim = AnimationStates.FadeIn;
                         break;
-                    case "Menu":
+                    case AnimationFilter.Menu:
                         controller.MenuAnim = AnimationStates.FadeOut;
                         break;
-                    case "ServerConfigScreen":
+                    case AnimationFilter.ServerConfigScreen:
                         controller.ServerConfigAnim = AnimationStates.FadeOut;
                         break;
-                    case "MoreOptions":
+                    case AnimationFilter.MoreOptions:
                         controller.MoreOptionsAnim = AnimationStates.FadeOut;                 
                         break;
-                    case "FocusMode":
+                    case AnimationFilter.FocusMode:
                         controller.FocusModeAnim = AnimationStates.FadeOut;
                         break;
                 }

@@ -2,13 +2,7 @@ namespace Project.Scripts.EventSystem.Enums
 {
     public class PlayersPrefsStates
     {
-        public int FirstRun { get; private set; }
-        public int NthRun { get; private set; }
-
-        public PlayersPrefsStates()
-        {
-            FirstRun = 0;
-            NthRun = 1;
-        }
+        public readonly int FirstRun = 0;
+        public readonly int NthRun = 1;
     }
 }
