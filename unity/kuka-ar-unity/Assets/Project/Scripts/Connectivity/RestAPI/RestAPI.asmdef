@@ -1,0 +1,16 @@
+{
+    "name": "RestAPI",
+    "rootNamespace": "",
+    "references": [
+        "GUID:c33d397f998e1d141b74148276071b9d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
