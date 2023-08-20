@@ -10,9 +10,9 @@ namespace Project.Scripts.Connectivity.RestAPI.Commands
     {
         private readonly string url;
         
-        public GetRobotConfigDataCommand(string url)
+        public GetRobotConfigDataCommand()
         {
-            this.url = url;
+            url = "/configured";
         }
         
         public async Task<Dictionary<string, RobotData>> Execute(HttpClient httpClient)

@@ -18,7 +18,7 @@ namespace Project.Scripts.Connectivity.RestAPI
         private void Start()
         {
             httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://192.168.18.20:8080/kuka-variables/");
+            httpClient.BaseAddress = new Uri("http://192.168.18.20:8080/kuka-variables");
         }
 
         public async Task<TResult> ExecuteCommand<TResult>(IRequestCommand<TResult> command)

@@ -10,9 +10,9 @@ namespace Project.Scripts.Connectivity.RestAPI.Commands
     {
         private readonly string url;
         
-        public GetTargetImagesCommand(string url)
+        public GetTargetImagesCommand()
         {
-            this.url = url;
+            url = "/images";
         }
         
         public async Task<Dictionary<string, byte[]>> Execute(HttpClient httpClient)

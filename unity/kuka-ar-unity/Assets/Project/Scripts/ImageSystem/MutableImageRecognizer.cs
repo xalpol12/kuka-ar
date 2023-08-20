@@ -5,7 +5,6 @@ using Project.Scripts.Connectivity.RestAPI;
 using Project.Scripts.Connectivity.RestAPI.Commands;
 using Project.Scripts.Utils;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -60,7 +59,7 @@ namespace Project.Scripts.ImageSystem
 
         public IEnumerator LoadTargetsFromServer()
         {
-            var newTargetsTask = restClient.ExecuteCommand(new GetTargetImagesCommand("/stickers"));
+            var newTargetsTask = restClient.ExecuteCommand(new GetTargetImagesCommand());
             
             while (!newTargetsTask.IsCompleted)
             {
