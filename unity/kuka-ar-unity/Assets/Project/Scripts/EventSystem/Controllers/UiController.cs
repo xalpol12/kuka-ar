@@ -3,6 +3,7 @@ using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.ServerConfig;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Project.Scripts.EventSystem.Controllers
 {
@@ -14,15 +15,19 @@ namespace Project.Scripts.EventSystem.Controllers
         public GameObject moreOptions;
         public GameObject serverConfig;
         public GameObject webView;
+        public GameObject focusMode;
 
         internal AnimationStates ServerConfigAnim;
         internal AnimationStates MenuAnim;
         internal AnimationStates MoreOptionsAnim;
         internal AnimationStates WebViewAnim;
+        internal AnimationStates FocusModeAnim;
         internal List<string> NextAnim;
         private IpValidationService validationService;
 
         [SerializeField] private GameObject abortServerConfigArrow;
+        [SerializeField] private GameObject focusModeToggle;
+        private Toggle selectedMode;
         private bool showMoreOptionsDialog;
 
         void Start()
@@ -33,13 +38,16 @@ namespace Project.Scripts.EventSystem.Controllers
             MenuAnim = AnimationStates.StandBy;
             MoreOptionsAnim = AnimationStates.StandBy;
             WebViewAnim = AnimationStates.StandBy;
+            FocusModeAnim = AnimationStates.StandBy;
 
             NextAnim = new List<string>();
+            selectedMode = focusModeToggle.GetComponent<Toggle>();
 
             menuUi.SetActive(false);
             moreOptions.SetActive(false);
             serverConfig.SetActive(true);
             webView.SetActive(false);
+            focusMode.SetActive(false);
 
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
             ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;
@@ -47,6 +55,7 @@ namespace Project.Scripts.EventSystem.Controllers
             MoreOptionsEvents.Events.OnClickBack += GoToMainScreen;
             MoreOptionsEvents.Events.OnClickDisplayServer += ReconfigureServer;
             MoreOptionsEvents.Events.OnClickDisplayBrowser += SubmitAnIssue;
+            FocusModeEvents.Events.OnClickDisplayMoreOptions += FocusModeHandler;
         }
 
         private void ShowMoreOptions(int uid)
@@ -73,7 +82,14 @@ namespace Project.Scripts.EventSystem.Controllers
             if (id == uid)
             {
                 MoreOptionsAnim = AnimationStates.FadeOut;
-                NextAnim.Add("MenuIn");
+                if (selectedMode.isOn)
+                {
+                    NextAnim.Add("FocusModeIn");
+                }
+                else
+                {
+                    NextAnim.Add("MenuIn");
+                }
             }
         }
 
@@ -102,6 +118,15 @@ namespace Project.Scripts.EventSystem.Controllers
             {
                 ServerConfigAnim = AnimationStates.FadeOut;
                 NextAnim.Add("MenuIn");
+            }
+        }
+
+        private void FocusModeHandler(int uid)
+        {
+            if (id == uid)
+            {
+                FocusModeAnim = AnimationStates.FadeOut;
+                NextAnim.Add("MoreOptionsIn");
             }
         }
     }

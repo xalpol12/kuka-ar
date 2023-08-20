@@ -11,6 +11,7 @@ namespace Project.Scripts.EventSystem.Behaviors
         private CanvasGroup menuCanvasGroup;
         private CanvasGroup moreOptionsCanvasGroup;
         private CanvasGroup webViewCanvasGroup;
+        private CanvasGroup focusModeCanvasGroup;
         private GameObject serverBackArrow;
         void Start()
         {
@@ -20,6 +21,7 @@ namespace Project.Scripts.EventSystem.Behaviors
             menuCanvasGroup = controller.menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>();
             moreOptionsCanvasGroup = controller.moreOptions.transform.Find("Canvas").GetComponent<CanvasGroup>();
             webViewCanvasGroup = controller.webView.transform.Find("Canvas").GetComponent<CanvasGroup>();
+            focusModeCanvasGroup = controller.focusMode.transform.Find("Canvas").GetComponent<CanvasGroup>();
         }
 
         void Update()
@@ -58,6 +60,15 @@ namespace Project.Scripts.EventSystem.Behaviors
             else if (controller.WebViewAnim == AnimationStates.FadeOut)
             {
                 FadeOut(webViewCanvasGroup);
+            }
+
+            if (controller.FocusModeAnim == AnimationStates.FadeIn)
+            {
+                FadeIn(focusModeCanvasGroup);
+            }
+            else if (controller.FocusModeAnim == AnimationStates.FadeOut)
+            {
+                FadeOut(focusModeCanvasGroup);
             }
         }
 
@@ -107,6 +118,10 @@ namespace Project.Scripts.EventSystem.Behaviors
                     controller.WebViewAnim = AnimationStates.StandBy;
                     controller.webView.SetActive(active);
                     break;
+                case "FocusMode":
+                    controller.FocusModeAnim = AnimationStates.StandBy;
+                    controller.focusMode.SetActive(active);
+                    break;
             }
         }
 
@@ -134,6 +149,10 @@ namespace Project.Scripts.EventSystem.Behaviors
                             controller.webView.SetActive(true);
                             controller.WebViewAnim = AnimationStates.FadeIn;
                             break;
+                        case "FocusModeIn":
+                            controller.focusMode.SetActive(true);
+                            controller.FocusModeAnim = AnimationStates.FadeIn;
+                            break;
                         case "Menu":
                             controller.MenuAnim = AnimationStates.FadeOut;
                             break;
@@ -146,6 +165,9 @@ namespace Project.Scripts.EventSystem.Behaviors
                         case "WebView":
                             controller.WebViewAnim = AnimationStates.FadeOut;
                             break;
+                        case "FocusMode":
+                            controller.FocusModeAnim = AnimationStates.FadeOut;
+                            break;
                     }
                 }
 
@@ -154,4 +176,3 @@ namespace Project.Scripts.EventSystem.Behaviors
         }
     }
 }
-
