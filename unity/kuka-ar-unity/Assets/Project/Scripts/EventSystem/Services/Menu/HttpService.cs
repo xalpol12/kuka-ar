@@ -25,7 +25,8 @@ public class HttpService : MonoBehaviour
 
     private void Start()
     {
-        ConfiguredIp = "127.0.0.1";
+        ConfiguredIp = string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")) ?
+            "127.0.0.1" : PlayerPrefs.GetString("serverIp");
         ConfiguredRobots = new List<AddRobotData>();
         Robots = new List<AddRobotData>();
         Stickers = new List<Sprite>();
