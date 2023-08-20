@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.ServerConfig;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Project.Scripts.EventSystem.Controllers
@@ -14,13 +16,11 @@ namespace Project.Scripts.EventSystem.Controllers
         public GameObject menuUi;
         public GameObject moreOptions;
         public GameObject serverConfig;
-        public GameObject webView;
         public GameObject focusMode;
 
         internal AnimationStates ServerConfigAnim;
         internal AnimationStates MenuAnim;
         internal AnimationStates MoreOptionsAnim;
-        internal AnimationStates WebViewAnim;
         internal AnimationStates FocusModeAnim;
         internal List<string> NextAnim;
         private IpValidationService validationService;
@@ -37,7 +37,6 @@ namespace Project.Scripts.EventSystem.Controllers
             ServerConfigAnim = AnimationStates.FadeIn;
             MenuAnim = AnimationStates.StandBy;
             MoreOptionsAnim = AnimationStates.StandBy;
-            WebViewAnim = AnimationStates.StandBy;
             FocusModeAnim = AnimationStates.StandBy;
 
             NextAnim = new List<string>();
@@ -46,7 +45,6 @@ namespace Project.Scripts.EventSystem.Controllers
             menuUi.SetActive(false);
             moreOptions.SetActive(false);
             serverConfig.SetActive(true);
-            webView.SetActive(false);
             focusMode.SetActive(false);
 
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
@@ -69,7 +67,6 @@ namespace Project.Scripts.EventSystem.Controllers
 
         private void SaveServerConfiguration(int uid)
         {
-
             if (id == uid && validationService.ValidationResult)
             {
                 ServerConfigAnim = AnimationStates.FadeOut;
@@ -107,8 +104,7 @@ namespace Project.Scripts.EventSystem.Controllers
         {
             if (id == uid)
             {
-                MoreOptionsAnim = AnimationStates.FadeOut;
-                NextAnim.Add("WebViewIn");
+                SceneManager.LoadScene("WebViewScene");
             }
         }
 
