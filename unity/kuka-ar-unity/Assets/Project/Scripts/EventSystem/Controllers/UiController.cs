@@ -1,65 +1,69 @@
 using System.Collections.Generic;
 using Project.Scripts.EventSystem.Enums;
+using Project.Scripts.EventSystem.Events;
+using Project.Scripts.EventSystem.Services.ServerConfig;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-public class UiController : MonoBehaviour
+namespace Project.Scripts.EventSystem.Controllers
 {
-    public int id;
-    public GameObject menuUi;
-    public GameObject moreOptions;
-    public GameObject serverConfig;
-    public float animSpeed;
-    internal AnimationStates ServerConfigAnim;
-    internal AnimationStates MenuAnim;
-    internal AnimationStates MoreOptionsAnim;
-    internal List<string> NextAnim;
-    private IpValidationService validationService;
-    private bool showMoreOptionsDialog;
-
-    void Start()
+    public class UiController : MonoBehaviour
     {
-        validationService = IpValidationService.Instance;
-        
-        ServerConfigAnim = AnimationStates.FadeIn;
-        MenuAnim = AnimationStates.StandBy;
-        MoreOptionsAnim = AnimationStates.StandBy;
-        NextAnim = new List<string>();
-        
-        menuUi.SetActive(false);
-        moreOptions.SetActive(false);
-        serverConfig.SetActive(true);
-        
-        MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
-        ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;
-        MoreOptionsEvents.Events.onClickBack += GoToMainScreen;
-    }
+        public int id;
+        public GameObject menuUi;
+        public GameObject moreOptions;
+        public GameObject serverConfig;
+        public float animSpeed;
+        internal AnimationStates ServerConfigAnim;
+        internal AnimationStates MenuAnim;
+        internal AnimationStates MoreOptionsAnim;
+        internal List<string> NextAnim;
+        private IpValidationService validationService;
+        private bool showMoreOptionsDialog;
 
-    private void ShowMoreOptions(int uid)
-    {
-        if (id == uid)
+        void Start()
         {
-            MenuAnim = AnimationStates.FadeOut;
-            NextAnim.Add("MoreOptionsIn");
+            validationService = IpValidationService.Instance;
+        
+            ServerConfigAnim = AnimationStates.FadeIn;
+            MenuAnim = AnimationStates.StandBy;
+            MoreOptionsAnim = AnimationStates.StandBy;
+            NextAnim = new List<string>();
+        
+            menuUi.SetActive(false);
+            moreOptions.SetActive(false);
+            serverConfig.SetActive(true);
+        
+            MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
+            ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;
+            MoreOptionsEvents.Events.onClickBack += GoToMainScreen;
         }
-    }
 
-    private void SaveServerConfiguration(int uid)
-    {
-        
-        if (id == uid && validationService.ValidationResult)
+        private void ShowMoreOptions(int uid)
         {
-            ServerConfigAnim = AnimationStates.FadeOut;
-            NextAnim.Add("MenuIn");
+            if (id == uid)
+            {
+                MenuAnim = AnimationStates.FadeOut;
+                NextAnim.Add("MoreOptionsIn");
+            }
         }
-    }
 
-    private void GoToMainScreen(int uid)
-    {
-        if (id == uid)
+        private void SaveServerConfiguration(int uid)
         {
-            MoreOptionsAnim = AnimationStates.FadeOut;
-            NextAnim.Add("MenuIn");
+        
+            if (id == uid && validationService.ValidationResult)
+            {
+                ServerConfigAnim = AnimationStates.FadeOut;
+                NextAnim.Add("MenuIn");
+            }
+        }
+
+        private void GoToMainScreen(int uid)
+        {
+            if (id == uid)
+            {
+                MoreOptionsAnim = AnimationStates.FadeOut;
+                NextAnim.Add("MenuIn");
+            }
         }
     }
 }

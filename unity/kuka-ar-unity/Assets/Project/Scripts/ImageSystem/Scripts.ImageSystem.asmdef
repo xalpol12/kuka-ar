@@ -1,11 +1,11 @@
 {
-    "name": "WebSocket",
+    "name": "ImageSystem",
     "rootNamespace": "",
     "references": [
         "GUID:ad47d37b55b3cfa4ba4960d7128606d5",
-        "GUID:04376767bc1f3b428aefa3d20743e819",
-        "GUID:767269c2bcccae44bb11534738dda684",
-        "GUID:c33d397f998e1d141b74148276071b9d",
+        "GUID:a9420e37d7990b54abdef6688edbe313",
+        "GUID:92703082f92b41ba80f0d6912de66115",
+        "GUID:eeb86127709eb3b479f586c700f85505",
         "GUID:a878be4ce749fb645a1f59bb8f9b8ce8"
     ],
     "includePlatforms": [],

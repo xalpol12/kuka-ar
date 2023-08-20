@@ -5,7 +5,10 @@
         "Scripts",
         "Unity.XR.ARFoundation",
         "Unity.XR.ARSubsystems",
-        "WebSocket"
+        "WebSocket",
+        "Scripts.TrackedRobots",
+        "Scripts.Connectivity",
+        "Scripts.Utils"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

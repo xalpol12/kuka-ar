@@ -1,19 +1,22 @@
 using System;
 using UnityEngine;
 
-public class MoreOptionsEvents : MonoBehaviour
+namespace Project.Scripts.EventSystem.Events
 {
-    public static MoreOptionsEvents Events;
-
-    private void Awake()
+    public class MoreOptionsEvents : MonoBehaviour
     {
-        Events = this;
-    }
+        public static MoreOptionsEvents Events;
 
-    public event Action<int> onClickBack;
+        private void Awake()
+        {
+            Events = this;
+        }
 
-    public void BackToMenu(int id)
-    {
-        onClickBack?.Invoke(id);
+        public event Action<int> onClickBack;
+
+        public void BackToMenu(int id)
+        {
+            onClickBack?.Invoke(id);
+        }
     }
 }
