@@ -1,7 +1,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Project.Scripts.Connectivity.RestAPI.Commands
+namespace Project.Scripts.Connectivity.RestAPI
 {
     public interface IRequestCommand<TResult>
     {

@@ -1,7 +1,6 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Project.Scripts.Connectivity.RestAPI.Commands;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.RestAPI

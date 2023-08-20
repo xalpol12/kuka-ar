@@ -1,25 +1,25 @@
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Project.Scripts.Connectivity.Models;
 
 namespace Project.Scripts.Connectivity.RestAPI.Commands
 {
-    public class GetTargetImagesCommand : IRequestCommand<Dictionary<String, byte[]>>
+    public class GetRobotConfigDataCommand : IRequestCommand<Dictionary<string, RobotData>>
     {
         private readonly string url;
         
-        public GetTargetImagesCommand(string url)
+        public GetRobotConfigDataCommand(string url)
         {
             this.url = url;
         }
         
-        public async Task<Dictionary<string, byte[]>> Execute(HttpClient httpClient)
+        public async Task<Dictionary<string, RobotData>> Execute(HttpClient httpClient)
         {
             var response = await httpClient.GetAsync(url);
             var json = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Dictionary<String, byte[]>>(json);
+            return JsonConvert.DeserializeObject<Dictionary<string, RobotData>>(json);
         }
     }
 }
