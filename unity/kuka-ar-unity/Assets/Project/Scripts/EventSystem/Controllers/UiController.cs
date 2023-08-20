@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
@@ -28,23 +27,37 @@ namespace Project.Scripts.EventSystem.Controllers
         [SerializeField] private GameObject abortServerConfigArrow;
         [SerializeField] private GameObject focusModeToggle;
         private Toggle selectedMode;
+        private int serverConfigDisplayState;
         private bool showMoreOptionsDialog;
 
         void Start()
         {
             validationService = IpValidationService.Instance;
 
-            ServerConfigAnim = AnimationStates.FadeIn;
-            MenuAnim = AnimationStates.StandBy;
+            ServerConfigAnim = PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun ?
+                AnimationStates.FadeIn : AnimationStates.StandBy;
+            MenuAnim = PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun ?
+                AnimationStates.StandBy : AnimationStates.FadeIn;
             MoreOptionsAnim = AnimationStates.StandBy;
             FocusModeAnim = AnimationStates.StandBy;
 
             NextAnim = new List<string>();
             selectedMode = focusModeToggle.GetComponent<Toggle>();
+            if (PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun)
+            {
+                menuUi.SetActive(false);
+                serverConfig.SetActive(true);
+            }
+            else
+            {
+                menuUi.SetActive(true);
+                serverConfig.SetActive(false);
 
-            menuUi.SetActive(false);
+                menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 1;
+                serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 0;
+            }
+
             moreOptions.SetActive(false);
-            serverConfig.SetActive(true);
             focusMode.SetActive(false);
 
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
@@ -71,6 +84,8 @@ namespace Project.Scripts.EventSystem.Controllers
             {
                 ServerConfigAnim = AnimationStates.FadeOut;
                 NextAnim.Add("MenuIn");
+                PlayerPrefs.SetInt("firstRun", 1);
+                PlayerPrefs.SetString("serverIp", HttpService.Instance.ConfiguredIp);
             }
         }
 
