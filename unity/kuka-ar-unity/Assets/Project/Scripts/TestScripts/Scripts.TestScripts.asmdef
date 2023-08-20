@@ -1,9 +1,9 @@
 {
-    "name": "RestAPI.Commands",
+    "name": "Scripts.TestScripts",
     "rootNamespace": "",
     "references": [
-        "GUID:cb20bccb431e7424e97f83cce3b65bbd",
-        "GUID:c33d397f998e1d141b74148276071b9d",
+        "GUID:ad47d37b55b3cfa4ba4960d7128606d5",
+        "GUID:bb05188734a25b149898e54d16dd5dd3",
         "GUID:a878be4ce749fb645a1f59bb8f9b8ce8"
     ],
     "includePlatforms": [],

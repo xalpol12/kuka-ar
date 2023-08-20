@@ -1,4 +1,6 @@
 using System;
+using Project.Scripts.ImageSystem;
+using Project.Scripts.Utils;
 using UnityEngine;
 
 namespace Project.Scripts.TestScripts
@@ -14,8 +16,9 @@ namespace Project.Scripts.TestScripts
 
         private void DownloadImages()
         {
-            if (ImagesDownloaded == false) return;
-            
+            if (ImagesDownloaded) return;
+            DebugLogger.Instance.AddLog("Clicked download images button!; ");
+            MutableImageRecognizer.Instance.LoadNewTargets();
             ImagesDownloaded = true;
         }
     }

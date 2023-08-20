@@ -13,6 +13,8 @@ namespace Project.Scripts.ImageSystem
     [RequireComponent(typeof(ARTrackedImageManager))]
     public class MutableImageRecognizer : MonoBehaviour
     {
+        public static MutableImageRecognizer Instance;
+        
         private AnchorManager anchorManager;
         private ARTrackedImageManager imageManager;
         private Dictionary<string, ARTrackedImage> trackedImages;
@@ -21,6 +23,9 @@ namespace Project.Scripts.ImageSystem
 
         private void Awake()
         {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            
             anchorManager = gameObject.GetComponent<AnchorManager>();
             imageManager = gameObject.GetComponent<ARTrackedImageManager>();
         }
@@ -33,18 +38,19 @@ namespace Project.Scripts.ImageSystem
             ConfigureMutableLibrary();
             imageManager.trackedImagesChanged += OnChange;
             
-            DebugLogger.Instance().AddLog(
-                "Device supports mutable image library: " +
-                imageManager.subsystem.subsystemDescriptor.supportsMutableLibrary + "; ");
+            DebugLogger.Instance.AddLog("Device supports mutable tracked image library: " + 
+                                        imageManager.subsystem.subsystemDescriptor.supportsMutableLibrary + "; ");
         }
 
         private void ConfigureMutableLibrary()
         {
-            var constantImageLib = imageManager.GetComponent<XRReferenceImageLibrary>();
+            #if !UNITY_EDITOR || !UNITY_EDITOR_WIN
+            var constantImageLib = imageManager.referenceLibrary as XRReferenceImageLibrary;
             imageManager.referenceLibrary = imageManager.CreateRuntimeLibrary(constantImageLib);
             imageManager.requestedMaxNumberOfMovingImages = 5; //TODO: change later
             imageManager.trackedImagePrefab = imageManager.GetComponent<GameObject>(); //TODO: check if prefab works
             imageManager.enabled = true;
+            #endif
         }
 
         private void OnChange(ARTrackedImagesChangedEventArgs eventArgs)
@@ -53,11 +59,16 @@ namespace Project.Scripts.ImageSystem
             {
                 trackedImages.Add(newImage.referenceImage.name, newImage);
                 StartCoroutine(anchorManager.StartNewAnchorTracking(newImage));
-                DebugLogger.Instance().AddLog($"Current tracked images count: {trackedImages.Count.ToString()}; ");
+                DebugLogger.Instance.AddLog($"Current tracked images count: {trackedImages.Count.ToString()}; ");
             }
         }
 
-        public IEnumerator LoadTargetsFromServer()
+        public void LoadNewTargets()
+        {
+            StartCoroutine(LoadTargetsFromServer());
+        }
+
+        private IEnumerator LoadTargetsFromServer()
         {
             var newTargetsTask = restClient.ExecuteCommand(new GetTargetImagesCommand());
             
@@ -97,10 +108,10 @@ namespace Project.Scripts.ImageSystem
             
             while (jobHandler.status == AddReferenceImageJobStatus.Pending)
             {
-                DebugLogger.Instance().AddLog("Waiting for image to add... ;");
+                DebugLogger.Instance.AddLog("Waiting for image to add... ;");
                 yield return null;
             }
-            DebugLogger.Instance().AddLog("New image added; ");
+            DebugLogger.Instance.AddLog("New image added; ");
         }
     }
 }

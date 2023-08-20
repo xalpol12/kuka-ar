@@ -48,7 +48,7 @@ namespace Project.Scripts.AnchorSystem
 
         public IEnumerator StartNewAnchorTracking(ARTrackedImage foundImage)
         {
-            DebugLogger.Instance().AddLog("Searching for reference points...; ");
+            DebugLogger.Instance.AddLog("Searching for reference points...; ");
             
             #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
             var imageTransform = foundImage.transform;
@@ -76,7 +76,7 @@ namespace Project.Scripts.AnchorSystem
             yield return null;
             #endif
             
-            DebugLogger.Instance().AddLog("Object placed; ");
+            DebugLogger.Instance.AddLog("Object placed; ");
         }
 
         private ARAnchor PlaceNewAnchor(Transform imageTransform, RobotData configData)
