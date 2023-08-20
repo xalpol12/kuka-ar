@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UiController : MonoBehaviour
 {
@@ -10,15 +11,19 @@ public class UiController : MonoBehaviour
     public GameObject moreOptions;
     public GameObject serverConfig;
     public GameObject webView;
+    public GameObject focusMode;
     
     internal AnimationStates ServerConfigAnim;
     internal AnimationStates MenuAnim;
     internal AnimationStates MoreOptionsAnim;
     internal AnimationStates WebViewAnim;
+    internal AnimationStates FocusModeAnim;
     internal List<string> NextAnim;
     private IpValidationService validationService;
     
     [SerializeField] private GameObject abortServerConfigArrow;
+    [SerializeField] private GameObject focusModeToggle;
+    private Toggle selectedMode;
     private bool showMoreOptionsDialog;
 
     void Start()
@@ -29,13 +34,16 @@ public class UiController : MonoBehaviour
         MenuAnim = AnimationStates.StandBy;
         MoreOptionsAnim = AnimationStates.StandBy;
         WebViewAnim = AnimationStates.StandBy;
+        FocusModeAnim = AnimationStates.StandBy;
         
         NextAnim = new List<string>();
+        selectedMode = focusModeToggle.GetComponent<Toggle>();
         
         menuUi.SetActive(false);
         moreOptions.SetActive(false);
         serverConfig.SetActive(true);
         webView.SetActive(false);
+        focusMode.SetActive(false);
         
         MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
         ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;
@@ -43,6 +51,7 @@ public class UiController : MonoBehaviour
         MoreOptionsEvents.Events.OnClickBack += GoToMainScreen;
         MoreOptionsEvents.Events.OnClickDisplayServer += ReconfigureServer;
         MoreOptionsEvents.Events.OnClickDisplayBrowser += SubmitAnIssue;
+        FocusModeEvents.Events.OnClickDisplayMoreOptions += FocusModeHandler;
     }
 
     private void ShowMoreOptions(int uid)
@@ -69,7 +78,14 @@ public class UiController : MonoBehaviour
         if (id == uid)
         {
             MoreOptionsAnim = AnimationStates.FadeOut;
-            NextAnim.Add("MenuIn");
+            if (selectedMode.isOn)
+            {
+                NextAnim.Add("FocusModeIn");
+            }
+            else
+            {
+                NextAnim.Add("MenuIn");
+            }
         }
     }
 
@@ -98,6 +114,15 @@ public class UiController : MonoBehaviour
         {
             ServerConfigAnim = AnimationStates.FadeOut;
             NextAnim.Add("MenuIn");
+        }
+    }
+
+    private void FocusModeHandler(int uid)
+    {
+        if (id == uid)
+        {
+            FocusModeAnim = AnimationStates.FadeOut;
+            NextAnim.Add("MoreOptionsIn");
         }
     }
 }
