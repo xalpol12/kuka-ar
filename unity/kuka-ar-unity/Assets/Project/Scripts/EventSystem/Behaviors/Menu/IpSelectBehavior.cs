@@ -21,7 +21,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             selectController = GetComponent<IpSelectController>();
             allIpAddresses = new List<GameObject>();
             state = AnimationStates.FadeIn;
-        
+
             InitListLogic();
 
             selectIpHomePosition = selectController.ipSelector.transform.position;
@@ -69,7 +69,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 ServerFailure(true);
                 return;
             }
-        
+
             gridItem.transform.Find("RobotIp").GetComponent<TMP_Text>().text =
                 selectController.HttpService.ConfiguredRobots[0].IpAddress;
             gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
@@ -79,7 +79,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 gridItem.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
             });
             allIpAddresses.Add(gridItem);
-        
+
             for (var i = 1; i < selectController.HttpService.ConfiguredRobots.Count + 2; i++)
             {
                 var newIpAddress = Instantiate(gridItem, grid.transform, false);
@@ -90,9 +90,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 else
                 {
                     newIpAddress.transform.Find("RobotIp").GetComponent<TMP_Text>().text =
-                        selectController.HttpService.ConfiguredRobots[i].IpAddress;
+                                    selectController.HttpService.ConfiguredRobots[i].IpAddress;
                 }
-            
+
                 newIpAddress.transform.GetComponent<Button>().onClick.AddListener(() =>
                 {
                     selectController.StylingService.MarkAsUnselected(allIpAddresses);
@@ -100,10 +100,10 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                     {
                         return;
                     }
-                    OnIpSelect(parentComponent, newIpAddress.transform.GetSiblingIndex()); // - 1 
+                    OnIpSelect(parentComponent, newIpAddress.transform.GetSiblingIndex() - 1);
                     newIpAddress.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
                 });
-            
+
                 allIpAddresses.Add(newIpAddress);
             }
         }
@@ -112,19 +112,19 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         {
             var translation = Vector3.right * (Time.deltaTime * selectController.TransformFactor);
             var newPose = selectController.ipSelector.transform.position + translation;
-        
+
             if (newPose.x > selectController.PositioningService.BestFitPosition.x)
             {
                 if (state == AnimationStates.FadeIn)
                 {
                     var finalPose = new Vector3(selectController.PositioningService.BestFitPosition.x, newPose.y);
-                
+
                     selectController.ipSelector.transform.position = finalPose;
                     state = AnimationStates.StandBy;
                 }
                 return;
             }
-        
+
             selectController.ipSelector.transform.Translate(translation);
         }
 
@@ -132,12 +132,12 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         {
             var translation = Vector3.left * (Time.deltaTime * selectController.TransformFactor);
             var newPose = selectController.ipSelector.transform.position + translation;
-        
+
             if (newPose.x < selectIpHomePosition.x)
             {
                 translation = new Vector3();
             }
-        
+
             selectController.ipSelector.transform.Translate(translation);
         }
 
@@ -148,12 +148,12 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             {
                 http = selectController.HttpService.ConfiguredRobots[index];
             }
-        
+
             switch (selectController.ElementClicked)
             {
                 case ButtonType.IpAddress:
                     parent.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
-                        .Find("Label").GetComponent<TMP_Text>().text = http.IpAddress;
+                                .Find("Label").GetComponent<TMP_Text>().text = http.IpAddress;
                     break;
                 case ButtonType.Category:
                     var mod = index % selectController.HttpService.CategoryNames.Count;
@@ -181,7 +181,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 var temp = "";
                 var currentText = item.transform.Find("RobotIp").GetComponent<TMP_Text>().text;
                 if (currentText == parentComponent.Find("IpAddress").GetComponent<RectTransform>()
-                        .gameObject.transform.Find("Label").GetComponent<TMP_Text>().text || 
+                        .gameObject.transform.Find("Label").GetComponent<TMP_Text>().text ||
                     currentText == parentComponent.Find("ChosenCategory").GetComponent<RectTransform>()
                         .gameObject.transform.Find("CategoryLabel").GetComponent<TMP_Text>().text ||
                     currentText == parentComponent.Find("RobotName").GetComponent<RectTransform>()
@@ -215,7 +215,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                                 break;
                         }
                     }
-                
+
                 }
 
                 if (temp == null)
@@ -236,8 +236,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 .transform.Find("IpAddressGrid").GetComponent<RectTransform>().gameObject;
             view.transform.Find("IpAddressGridElement").GetComponent<RectTransform>().gameObject.SetActive(!state);
             selectController.ipSelector.transform.parent.transform.gameObject
-                .transform.Find("Button").GetComponent<Button>().gameObject
-                .transform.Find("SaveCloseButton").GetComponent<TMP_Text>().text = state ? "Close" : "Save";
+                    .transform.Find("Button").GetComponent<Button>().gameObject
+                    .transform.Find("SaveCloseButton").GetComponent<TMP_Text>().text = state ? "Close" : "Save";
             view.transform.Find("ServerError").GetComponent<RectTransform>().gameObject.SetActive(state);
         }
     }

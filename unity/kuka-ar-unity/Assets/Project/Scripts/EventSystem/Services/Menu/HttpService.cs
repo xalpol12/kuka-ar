@@ -35,8 +35,8 @@ namespace Project.Scripts.EventSystem.Services.Menu
             CategoryNames = new List<string>();
 
             GetConfigured();
+            GetRobots();
             GetStickers();
-
             MenuEvents.Event.OnClickReloadServerData += OnClickDataReload;
         }
 
@@ -76,10 +76,12 @@ namespace Project.Scripts.EventSystem.Services.Menu
             {
                 await Task.Yield();
             }
+            // TODO
+            //  -> REMOVE THIS WILD MOCK UP
+            // var data = JsonConvert.DeserializeObject<List<AddRobotData>>(http.downloadHandler.text);
 
-            var data = JsonConvert.DeserializeObject<List<AddRobotData>>(http.downloadHandler.text);
-
-            Robots = data ?? new List<AddRobotData>();
+            // Robots = data ?? new List<AddRobotData>();
+            Robots = ConfiguredRobots;
         }
 
         private async void GetStickers()
