@@ -46,38 +46,38 @@ namespace Project.Scripts.AnchorSystem
             robotConfigData.Add("192.168.1.50", newRobotConfigData);
         }
 
-        public IEnumerator StartNewAnchorTracking(ARTrackedImage foundImage)
-        {
-            DebugLogger.Instance().AddLog("Searching for reference points...; ");
-            
-            #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
-            var imageTransform = foundImage.transform;
-            var robotIp = foundImage.referenceImage.name;
-            var configData = robotConfigData[robotIp];
-            
-            bool isCreated = false;
-            while (!isCreated)
-            {
-                yield return null;
-                if (foundImage.trackingState != TrackingState.Tracking) continue;
-
-                var anchor = PlaceNewAnchor(imageTransform, configData);
-                trackedAnchors.Add(robotIp, anchor);
-                
-                WebSocketClient.Instance().SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp));
-                
-                trackedRobotsHandler.InstantiateTrackedRobot(robotIp, anchor.transform);
-                
-                isCreated = true;
-            }   
-            #endif
-
-            #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-            yield return null;
-            #endif
-            
-            DebugLogger.Instance().AddLog("Object placed; ");
-        }
+        // public IEnumerator StartNewAnchorTracking(ARTrackedImage foundImage)
+        // {
+        //     DebugLogger.Instance().AddLog("Searching for reference points...; ");
+        //     
+        //     #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
+        //     var imageTransform = foundImage.transform;
+        //     var robotIp = foundImage.referenceImage.name;
+        //     var configData = robotConfigData[robotIp];
+        //     
+        //     bool isCreated = false;
+        //     while (!isCreated)
+        //     {
+        //         yield return null;
+        //         if (foundImage.trackingState != TrackingState.Tracking) continue;
+        //
+        //         var anchor = PlaceNewAnchor(imageTransform, configData);
+        //         trackedAnchors.Add(robotIp, anchor);
+        //         
+        //         WebSocketClient.Instance().SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp));
+        //         
+        //         trackedRobotsHandler.InstantiateTrackedRobot(robotIp, anchor.transform);
+        //         
+        //         isCreated = true;
+        //     }   
+        //     #endif
+        //
+        //     #if UNITY_EDITOR || UNITY_STANDALONE_WIN
+        //     yield return null;
+        //     #endif
+        //     
+        //     DebugLogger.Instance().AddLog("Object placed; ");
+        // }
 
         private ARAnchor PlaceNewAnchor(Transform imageTransform, RobotData configData)
         {
