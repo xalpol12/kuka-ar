@@ -1676,6 +1676,12 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 995259640}
   m_CullTransparentMesh: 1
+--- !u!1 &1209388915 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2927669739693054776, guid: 2dec6bad165255e45942ae03de04b2b0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1859340661}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1431225514 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5005100864788321482, guid: dd7296c0fd45910408ee763d82f20820,
@@ -2150,6 +2156,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1463774060277496294, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: saveButton
+      value: 
+      objectReference: {fileID: 1209388915}
     - target: {fileID: 1487796030442664205, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_SizeDelta.y
