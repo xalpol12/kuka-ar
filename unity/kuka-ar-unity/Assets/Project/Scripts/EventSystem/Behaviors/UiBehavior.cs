@@ -7,7 +7,6 @@ public class UiBehavior : MonoBehaviour
     private CanvasGroup serverCanvasGroup;
     private CanvasGroup menuCanvasGroup;
     private CanvasGroup moreOptionsCanvasGroup;
-    private CanvasGroup webViewCanvasGroup;
     private CanvasGroup focusModeCanvasGroup;
     private GameObject serverBackArrow;
     void Start()
@@ -17,7 +16,6 @@ public class UiBehavior : MonoBehaviour
         serverCanvasGroup = controller.serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>();
         menuCanvasGroup = controller.menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>();
         moreOptionsCanvasGroup = controller.moreOptions.transform.Find("Canvas").GetComponent<CanvasGroup>();
-        webViewCanvasGroup = controller.webView.transform.Find("Canvas").GetComponent<CanvasGroup>();
         focusModeCanvasGroup = controller.focusMode.transform.Find("Canvas").GetComponent<CanvasGroup>();
     }
 
@@ -48,15 +46,6 @@ public class UiBehavior : MonoBehaviour
         else if(controller.MoreOptionsAnim == AnimationStates.FadeOut)
         {
             FadeOut(moreOptionsCanvasGroup);
-        }
-
-        if (controller.WebViewAnim == AnimationStates.FadeIn)
-        {
-            FadeIn(webViewCanvasGroup);
-        } 
-        else if (controller.WebViewAnim == AnimationStates.FadeOut)
-        {
-            FadeOut(webViewCanvasGroup);
         }
 
         if (controller.FocusModeAnim == AnimationStates.FadeIn)
@@ -111,10 +100,6 @@ public class UiBehavior : MonoBehaviour
                 controller.MoreOptionsAnim = AnimationStates.StandBy;
                 controller.moreOptions.SetActive(active);
                 break;
-            case "WebView":
-                controller.WebViewAnim = AnimationStates.StandBy;
-                controller.webView.SetActive(active);
-                break;
             case "FocusMode":
                 controller.FocusModeAnim = AnimationStates.StandBy;
                 controller.focusMode.SetActive(active);
@@ -142,10 +127,6 @@ public class UiBehavior : MonoBehaviour
                         controller.moreOptions.SetActive(true);
                         controller.MoreOptionsAnim = AnimationStates.FadeIn;                 
                         break;
-                    case "WebViewIn":
-                        controller.webView.SetActive(true);
-                        controller.WebViewAnim = AnimationStates.FadeIn;
-                        break;
                     case "FocusModeIn":
                         controller.focusMode.SetActive(true);
                         controller.FocusModeAnim = AnimationStates.FadeIn;
@@ -158,9 +139,6 @@ public class UiBehavior : MonoBehaviour
                         break;
                     case "MoreOptions":
                         controller.MoreOptionsAnim = AnimationStates.FadeOut;                 
-                        break;
-                    case "WebView":
-                        controller.WebViewAnim = AnimationStates.FadeOut;
                         break;
                     case "FocusMode":
                         controller.FocusModeAnim = AnimationStates.FadeOut;

@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UiController : MonoBehaviour
@@ -10,13 +12,11 @@ public class UiController : MonoBehaviour
     public GameObject menuUi;
     public GameObject moreOptions;
     public GameObject serverConfig;
-    public GameObject webView;
     public GameObject focusMode;
     
     internal AnimationStates ServerConfigAnim;
     internal AnimationStates MenuAnim;
     internal AnimationStates MoreOptionsAnim;
-    internal AnimationStates WebViewAnim;
     internal AnimationStates FocusModeAnim;
     internal List<string> NextAnim;
     private IpValidationService validationService;
@@ -33,7 +33,6 @@ public class UiController : MonoBehaviour
         ServerConfigAnim = AnimationStates.FadeIn;
         MenuAnim = AnimationStates.StandBy;
         MoreOptionsAnim = AnimationStates.StandBy;
-        WebViewAnim = AnimationStates.StandBy;
         FocusModeAnim = AnimationStates.StandBy;
         
         NextAnim = new List<string>();
@@ -42,7 +41,6 @@ public class UiController : MonoBehaviour
         menuUi.SetActive(false);
         moreOptions.SetActive(false);
         serverConfig.SetActive(true);
-        webView.SetActive(false);
         focusMode.SetActive(false);
         
         MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
@@ -65,7 +63,6 @@ public class UiController : MonoBehaviour
 
     private void SaveServerConfiguration(int uid)
     {
-        
         if (id == uid && validationService.ValidationResult)
         {
             ServerConfigAnim = AnimationStates.FadeOut;
@@ -103,8 +100,7 @@ public class UiController : MonoBehaviour
     {
         if (id == uid)
         {
-            MoreOptionsAnim = AnimationStates.FadeOut;
-            NextAnim.Add("WebViewIn");
+            SceneManager.LoadScene("WebViewScene");
         }
     }
 
