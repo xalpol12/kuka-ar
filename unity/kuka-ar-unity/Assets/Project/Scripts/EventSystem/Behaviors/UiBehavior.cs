@@ -7,6 +7,8 @@ public class UiBehavior : MonoBehaviour
     private CanvasGroup serverCanvasGroup;
     private CanvasGroup menuCanvasGroup;
     private CanvasGroup moreOptionsCanvasGroup;
+    private CanvasGroup webViewCanvasGroup;
+    private GameObject serverBackArrow;
     void Start()
     {
         controller = GetComponent<UiController>();
@@ -14,6 +16,7 @@ public class UiBehavior : MonoBehaviour
         serverCanvasGroup = controller.serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>();
         menuCanvasGroup = controller.menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>();
         moreOptionsCanvasGroup = controller.moreOptions.transform.Find("Canvas").GetComponent<CanvasGroup>();
+        webViewCanvasGroup = controller.webView.transform.Find("Canvas").GetComponent<CanvasGroup>();
     }
 
     void Update()
@@ -43,6 +46,15 @@ public class UiBehavior : MonoBehaviour
         else if(controller.MoreOptionsAnim == AnimationStates.FadeOut)
         {
             FadeOut(moreOptionsCanvasGroup);
+        }
+
+        if (controller.WebViewAnim == AnimationStates.FadeIn)
+        {
+            FadeIn(webViewCanvasGroup);
+        } 
+        else if (controller.WebViewAnim == AnimationStates.FadeOut)
+        {
+            FadeOut(webViewCanvasGroup);
         }
     }
 
@@ -88,6 +100,10 @@ public class UiBehavior : MonoBehaviour
                 controller.MoreOptionsAnim = AnimationStates.StandBy;
                 controller.moreOptions.SetActive(active);
                 break;
+            case "WebView":
+                controller.WebViewAnim = AnimationStates.StandBy;
+                controller.webView.SetActive(active);
+                break;
         }
     }
 
@@ -111,6 +127,10 @@ public class UiBehavior : MonoBehaviour
                         controller.moreOptions.SetActive(true);
                         controller.MoreOptionsAnim = AnimationStates.FadeIn;                 
                         break;
+                    case "WebViewIn":
+                        controller.webView.SetActive(true);
+                        controller.WebViewAnim = AnimationStates.FadeIn;
+                        break;
                     case "Menu":
                         controller.MenuAnim = AnimationStates.FadeOut;
                         break;
@@ -119,6 +139,9 @@ public class UiBehavior : MonoBehaviour
                         break;
                     case "MoreOptions":
                         controller.MoreOptionsAnim = AnimationStates.FadeOut;                 
+                        break;
+                    case "WebView":
+                        controller.WebViewAnim = AnimationStates.FadeOut;
                         break;
                 }
             }

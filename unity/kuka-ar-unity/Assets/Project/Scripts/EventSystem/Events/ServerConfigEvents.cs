@@ -12,6 +12,7 @@ public class ServerConfigEvents : MonoBehaviour
 
     public event Action<int> OnClickPingServer;
     public event Action<int> OnClickSaveServerConfig;
+    public event Action<int> OnClickBackToMenu; 
 
     public void ServerPing(int id)
     {
@@ -21,5 +22,10 @@ public class ServerConfigEvents : MonoBehaviour
     public void SaveServerConfig(int id)
     {
         OnClickSaveServerConfig?.Invoke(id);
+    }
+
+    public void BackToMenu(int id)
+    {
+        OnClickBackToMenu?.Invoke(id);
     }
 }
