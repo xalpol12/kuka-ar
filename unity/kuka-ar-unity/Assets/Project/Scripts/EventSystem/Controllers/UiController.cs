@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
+using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.EventSystem.Services.ServerConfig;
 using UnityEngine;
 using UnityEngine.SceneManagement;
