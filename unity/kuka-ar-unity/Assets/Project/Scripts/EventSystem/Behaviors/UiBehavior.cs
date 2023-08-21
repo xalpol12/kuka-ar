@@ -10,6 +10,8 @@ namespace Project.Scripts.EventSystem.Behaviors
         private CanvasGroup serverCanvasGroup;
         private CanvasGroup menuCanvasGroup;
         private CanvasGroup moreOptionsCanvasGroup;
+        private CanvasGroup focusModeCanvasGroup;
+        private GameObject serverBackArrow;
         void Start()
         {
             controller = GetComponent<UiController>();
@@ -17,6 +19,7 @@ namespace Project.Scripts.EventSystem.Behaviors
             serverCanvasGroup = controller.serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>();
             menuCanvasGroup = controller.menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>();
             moreOptionsCanvasGroup = controller.moreOptions.transform.Find("Canvas").GetComponent<CanvasGroup>();
+            focusModeCanvasGroup = controller.focusMode.transform.Find("Canvas").GetComponent<CanvasGroup>();
         }
 
         void Update()
@@ -29,7 +32,7 @@ namespace Project.Scripts.EventSystem.Behaviors
             {
                 FadeOut(serverCanvasGroup);
             }
-        
+
             if (controller.MenuAnim == AnimationStates.FadeIn)
             {
                 FadeIn(menuCanvasGroup);
@@ -38,7 +41,7 @@ namespace Project.Scripts.EventSystem.Behaviors
             {
                 FadeOut(menuCanvasGroup);
             }
-        
+
             if (controller.MoreOptionsAnim == AnimationStates.FadeIn)
             {
                 FadeIn(moreOptionsCanvasGroup);
@@ -46,6 +49,15 @@ namespace Project.Scripts.EventSystem.Behaviors
             else if(controller.MoreOptionsAnim == AnimationStates.FadeOut)
             {
                 FadeOut(moreOptionsCanvasGroup);
+            }
+
+            if (controller.FocusModeAnim == AnimationStates.FadeIn)
+            {
+                FadeIn(focusModeCanvasGroup);
+            }
+            else if (controller.FocusModeAnim == AnimationStates.FadeOut)
+            {
+                FadeOut(focusModeCanvasGroup);
             }
         }
 
@@ -91,6 +103,10 @@ namespace Project.Scripts.EventSystem.Behaviors
                     controller.MoreOptionsAnim = AnimationStates.StandBy;
                     controller.moreOptions.SetActive(active);
                     break;
+                case "FocusMode":
+                    controller.FocusModeAnim = AnimationStates.StandBy;
+                    controller.focusMode.SetActive(active);
+                    break;
             }
         }
 
@@ -102,26 +118,33 @@ namespace Project.Scripts.EventSystem.Behaviors
                 {
                     switch (s)
                     {
-                        case "MenuIn":
+                        case AnimationFilter.MenuIn:
                             controller.menuUi.SetActive(true);
                             controller.MenuAnim = AnimationStates.FadeIn;
                             break;
-                        case "ServerConfigScreenIn":
+                        case AnimationFilter.ServerConfigScreenIn:
                             controller.serverConfig.SetActive(true);
                             controller.ServerConfigAnim = AnimationStates.FadeIn;
                             break;
-                        case "MoreOptionsIn":
+                        case AnimationFilter.MoreOptionsIn:
                             controller.moreOptions.SetActive(true);
-                            controller.MoreOptionsAnim = AnimationStates.FadeIn;                 
+                            controller.MoreOptionsAnim = AnimationStates.FadeIn;
                             break;
-                        case "Menu":
+                        case AnimationFilter.FocusModeIn:
+                            controller.focusMode.SetActive(true);
+                            controller.FocusModeAnim = AnimationStates.FadeIn;
+                            break;
+                        case AnimationFilter.Menu:
                             controller.MenuAnim = AnimationStates.FadeOut;
                             break;
-                        case "ServerConfigScreen":
+                        case AnimationFilter.ServerConfigScreen:
                             controller.ServerConfigAnim = AnimationStates.FadeOut;
                             break;
-                        case "MoreOptions":
-                            controller.MoreOptionsAnim = AnimationStates.FadeOut;                 
+                        case AnimationFilter.MoreOptions:
+                            controller.MoreOptionsAnim = AnimationStates.FadeOut;
+                            break;
+                        case AnimationFilter.FocusMode:
+                            controller.FocusModeAnim = AnimationStates.FadeOut;
                             break;
                     }
                 }

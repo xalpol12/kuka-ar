@@ -68,25 +68,25 @@ namespace Project.Scripts.TrackedRobots
             #endif
         }
 
-        #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN //called from AnchorManager
-        public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
-        {
-            if (!enqueuedIps.Contains(ipAddress))
-            {
-                UnityMainThreadDispatcher.Instance().Enqueue(() =>
-                {
-                    trackedRobots.Add(ipAddress, new TrackedRobotModel(
-                        Instantiate(prefab, basePoint.position, basePoint.rotation),
-                        threshold));
-                    DebugLogger.Instance().AddLog($"Object for ip {ipAddress} instantiated; ");
-
-                    enqueuedIps.Remove(ipAddress);
-                });
-
-                enqueuedIps.Add(ipAddress);
-            }
-        }
-        #endif
+        // #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN //called from AnchorManager
+        // public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
+        // {
+        //     if (!enqueuedIps.Contains(ipAddress))
+        //     {
+        //         UnityMainThreadDispatcher.Instance().Enqueue(() =>
+        //         {
+        //             trackedRobots.Add(ipAddress, new TrackedRobotModel(
+        //                 Instantiate(prefab, basePoint.position, basePoint.rotation),
+        //                 threshold));
+        //             DebugLogger.Instance().AddLog($"Object for ip {ipAddress} instantiated; ");
+        //
+        //             enqueuedIps.Remove(ipAddress);
+        //         });
+        //
+        //         enqueuedIps.Add(ipAddress);
+        //     }
+        // }
+        // #endif
         
         void Update()
         {

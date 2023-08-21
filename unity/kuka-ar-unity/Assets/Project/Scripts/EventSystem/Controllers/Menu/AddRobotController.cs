@@ -11,6 +11,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public int id;
         public GameObject bottomNav;
         public GameObject addDialog;
+        [SerializeField] private GameObject saveButton;
         internal int TransformFactor;
         internal bool ShowAddDialog;
         internal bool IsSliderHold;
@@ -24,14 +25,14 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             TransformFactor = 3000;
             httpService = HttpService.Instance;
             addNewRobotService = AddNewRobotService.Instance;
-        
+
             data = new AddRobotData
             {
                 IpAddress = "IP Address",
                 RobotCategory = "Category",
                 RobotName = "Name"
             };
-        
+
             MenuEvents.Event.OnClickAddNewRobot += OnClickDisplayDialog;
             MenuEvents.Event.OnRobotSave += OnSave;
             MenuEvents.Event.OnDragAddNewRobot += GrabSlider;
@@ -57,11 +58,16 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
                     .transform
                     .Find("CategoryLabel").GetComponent<TMP_Text>().text,
                 RobotName = addDialog.transform.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
-                    .Find("NameLabel").GetComponent<TMP_Text>().text
+                .Find("NameLabel").GetComponent<TMP_Text>().text
             };
-        
+
             if (id == uid)
             {
+                if (saveButton.GetComponent<TMP_Text>().text == "Close")
+                {
+                    ShowAddDialog = false;
+                    return;
+                }
                 if (!string.IsNullOrWhiteSpace(content.IpAddress) && content.IpAddress != data.IpAddress &&
                     !string.IsNullOrWhiteSpace(content.RobotCategory) && content.RobotCategory != data.RobotCategory &&
                     !string.IsNullOrWhiteSpace(content.RobotName) && content.RobotName != data.RobotName)

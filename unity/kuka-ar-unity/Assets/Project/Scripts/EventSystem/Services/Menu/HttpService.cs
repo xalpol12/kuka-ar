@@ -15,10 +15,12 @@ namespace Project.Scripts.EventSystem.Services.Menu
     {
         public int id;
         public static HttpService Instance;
+        internal string ConfiguredIp;
         internal List<AddRobotData> ConfiguredRobots;
+        internal List<AddRobotData> Robots;
         internal List<Sprite> Stickers;
         internal List<string> CategoryNames;
-    
+
         private void Awake()
         {
             Instance = this;
@@ -26,60 +28,79 @@ namespace Project.Scripts.EventSystem.Services.Menu
 
         private void Start()
         {
+            ConfiguredIp = string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")) ?
+                "127.0.0.1" : PlayerPrefs.GetString("serverIp");
             ConfiguredRobots = new List<AddRobotData>();
+            Robots = new List<AddRobotData>();
             Stickers = new List<Sprite>();
             CategoryNames = new List<string>();
-        
+
             GetConfigured();
+            GetRobots();
             GetStickers();
-        
             MenuEvents.Event.OnClickReloadServerData += OnClickDataReload;
         }
-    
+
         public void OnClickDataReload(int uid)
         {
             if (id == uid)
             {
                 GetConfigured();
+                GetRobots();
                 GetStickers();
             }
         }
 
         private async void GetConfigured()
         {
-            var http = CreateApiRequest("http://localhost:8080/kuka-variables/configured");
+            var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/configured");
             var status = http.SendWebRequest();
-        
+
             while (!status.isDone)
             {
                 await Task.Yield();
             }
-        
+
             var data = JsonConvert
                 .DeserializeObject<Dictionary<string, Dictionary<string, RobotData>>>(http.downloadHandler.text);
-        
+
             ConfiguredRobots = data != null ? MapConfiguredResponse(data) : new List<AddRobotData>();
             CategoryNames = ConfiguredRobots.Count > 0 ? MapUniqueCategoryNames() : new List<string>();
         }
 
-        private async void GetStickers()
+        private async void GetRobots()
         {
-            var http = CreateApiRequest("http://localhost:8080/kuka-variables/stickers");
+            var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/robots");
             var status = http.SendWebRequest();
-        
+
             while (!status.isDone)
             {
                 await Task.Yield();
             }
-        
+
+            var data = JsonConvert.DeserializeObject<List<AddRobotData>>(http.downloadHandler.text);
+
+            Robots = data ?? new List<AddRobotData>();
+        }
+
+        private async void GetStickers()
+        {
+            var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/stickers");
+            var status = http.SendWebRequest();
+
+            while (!status.isDone)
+            {
+                await Task.Yield();
+            }
+
             var data = JsonConvert.DeserializeObject<Dictionary<string, byte[]>>(http.downloadHandler.text);
-        
+
             Stickers = data != null ? MapStickers(data) : new List<Sprite>();
         }
 
         public async void PostNewRobot(object body)
         {
-            var http = CreateApiRequest("http://localhost:8080/kuka-variables/add", RequestType.POST, body);
+            var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/add", RequestType.POST, body);
             var status = http.SendWebRequest();
 
             while (!status.isDone)
@@ -106,7 +127,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
 
         private List<AddRobotData> MapConfiguredResponse(Dictionary<string, Dictionary<string, RobotData>> response)
         {
-        
+
             var list = new List<AddRobotData>();
             var i = 0;
             foreach (var group in response)
@@ -117,7 +138,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
                     {
                         RobotName = entry.Value.Name,
                         RobotCategory = group.Key,
-                        IpAddress = "192.168.100." + i,
+                        IpAddress = "FAKE 192.168.100." + i,
                     };
                     list.Add(robot);
                     i++;
