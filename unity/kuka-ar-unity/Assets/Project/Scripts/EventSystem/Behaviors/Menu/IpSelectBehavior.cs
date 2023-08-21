@@ -12,12 +12,10 @@ public class IpSelectBehavior : MonoBehaviour
     private IpSelectController selectController;
     private List<GameObject> allIpAddresses;
     private Vector3 selectIpHomePosition;
-    private AnimationStates state;
     private void Start()
     {
         selectController = GetComponent<IpSelectController>();
         allIpAddresses = new List<GameObject>();
-        state = AnimationStates.FadeIn;
         
         InitListLogic();
 
@@ -112,13 +110,9 @@ public class IpSelectBehavior : MonoBehaviour
         
         if (newPose.x > selectController.PositioningService.BestFitPosition.x)
         {
-            if (state == AnimationStates.FadeIn)
-            {
-                var finalPose = new Vector3(selectController.PositioningService.BestFitPosition.x, newPose.y);
+            var finalPose = new Vector3(selectController.PositioningService.BestFitPosition.x, newPose.y);
                 
-                selectController.ipSelector.transform.position = finalPose;
-                state = AnimationStates.StandBy;
-            }
+            selectController.ipSelector.transform.position = finalPose;
             return;
         }
         

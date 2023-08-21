@@ -1,3 +1,4 @@
+using Project.Scripts.EventSystem.Enums;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,10 @@ public class SaveController : MonoBehaviour
         
         var inputTextBox = ipInputField.GetComponent<TMP_InputField>();
         inputTextBox.lineType = TMP_InputField.LineType.SingleLine;
+        if (PlayerPrefs.GetInt("firstRun") != new PlayersPrefsStates().FirstRun)
+        {
+            inputTextBox.text = PlayerPrefs.GetString("serverIp");
+        }
         
         ipInputField.transform.parent.Find("SaveButton").GetComponent<Button>().onClick.AddListener(ValidateIp);
         inputTextBox.onValueChanged.AddListener(ResetInvalidState);

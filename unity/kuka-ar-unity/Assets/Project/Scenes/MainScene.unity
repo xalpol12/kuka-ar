@@ -2002,6 +2002,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 139581659144925199, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: errorMargin
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 284351212937662932, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_SizeDelta.x
@@ -2116,6 +2121,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Alpha
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2192036922304516611, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_Interactable
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2469524310366369001, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
@@ -2392,6 +2402,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7100495805471895554, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -1000
+      objectReference: {fileID: 0}
     - target: {fileID: 7724729606699638640, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_IsActive
@@ -2466,7 +2481,6 @@ MonoBehaviour:
   menuUi: {fileID: 540334627}
   moreOptions: {fileID: 596074375}
   serverConfig: {fileID: 2130753306}
-  webView: {fileID: 0}
   focusMode: {fileID: 99730721}
   abortServerConfigArrow: {fileID: 239668983}
   focusModeToggle: {fileID: 2143018079}

@@ -4,8 +4,7 @@ public class AddRobotBehavior : MonoBehaviour
 {
     [SerializeField]
     private float pullAddMenuMaxHeight = 0.018f;
-
-    [SerializeField] private float errorMargin = 0.05f;
+    
     private AddRobotController robotController;
     private JogsControlService service;
     private GameObject selectOptions;
@@ -53,11 +52,12 @@ public class AddRobotBehavior : MonoBehaviour
         
         var translation = Vector3.up * (Time.deltaTime * robotController.TransformFactor);
         var newPose = robotController.addDialog.transform.position + translation;
-
-        if (newPose.y > Screen.width * errorMargin)
+        if (newPose.y > Screen.height * pullAddMenuMaxHeight)
         {
-            translation = new Vector3();
+            robotController.addDialog.transform.position = new Vector3(
+                robotController.addDialog.transform.position.x, Screen.height * pullAddMenuMaxHeight);
             isDialogFullyOpen = true;
+            return;
         }
 
         if (newPose.y > homePosition.y / 2)
