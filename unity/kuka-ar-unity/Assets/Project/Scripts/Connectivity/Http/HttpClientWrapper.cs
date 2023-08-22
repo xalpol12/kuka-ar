@@ -3,11 +3,11 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Project.Scripts.Connectivity.RestAPI
+namespace Project.Scripts.Connectivity.Http
 {
-    public class RestClient : MonoBehaviour
+    public class HttpClientWrapper : MonoBehaviour
     {
-        public static RestClient Instance;
+        public static HttpClientWrapper Instance;
         private HttpClient httpClient;
 
         private void Awake()
@@ -21,7 +21,7 @@ namespace Project.Scripts.Connectivity.RestAPI
             httpClient.BaseAddress = new Uri("http://192.168.18.20:8080/kuka-variables");
         }
 
-        public async Task<TResult> ExecuteCommand<TResult>(IRequestCommand<TResult> command)
+        public async Task<TResult> ExecuteRequest<TResult>(IHttpRequest<TResult> command)
         {
             return await command.Execute(httpClient);
         }

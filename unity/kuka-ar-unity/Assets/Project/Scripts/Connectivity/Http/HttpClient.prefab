@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1832692684057740499}
   - component: {fileID: 8196887518999874679}
   m_Layer: 0
-  m_Name: RestClient
+  m_Name: HttpClient
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

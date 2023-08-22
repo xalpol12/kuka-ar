@@ -1800,7 +1800,7 @@ PrefabInstance:
     - target: {fileID: 3871040488300906024, guid: 5a309b06356858f4eb5a43990468ddc2,
         type: 3}
       propertyPath: m_Name
-      value: RestClient
+      value: HttpClient
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

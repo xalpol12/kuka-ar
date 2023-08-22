@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.AnchorSystem;
-using Project.Scripts.Connectivity.RestAPI;
-using Project.Scripts.Connectivity.RestAPI.Commands;
+using Project.Scripts.Connectivity.Http;
+using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -21,7 +21,7 @@ namespace Project.Scripts.ImageSystem
         private ARTrackedImageManager imageManager;
         private Dictionary<string, ARTrackedImage> trackedImages;
 
-        private RestClient restClient;
+        private HttpClientWrapper httpClientWrapper;
 
         private void Awake()
         {
@@ -35,7 +35,7 @@ namespace Project.Scripts.ImageSystem
         {
             trackedImages = new Dictionary<string, ARTrackedImage>();
             
-            restClient = RestClient.Instance;
+            httpClientWrapper = HttpClientWrapper.Instance;
 
             imageManager = gameObject.AddComponent<ARTrackedImageManager>();
             ConfigureMutableLibrary();
@@ -72,7 +72,7 @@ namespace Project.Scripts.ImageSystem
 
         private IEnumerator LoadTargetsFromServer()
         {
-            var newTargetsTask = restClient.ExecuteCommand(new GetTargetImagesCommand());
+            var newTargetsTask = httpClientWrapper.ExecuteRequest(new GetTargetImagesRequest());
 
             while (!newTargetsTask.IsCompleted)
             {

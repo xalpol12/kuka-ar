@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Models;
 
-namespace Project.Scripts.Connectivity.RestAPI.Commands
+namespace Project.Scripts.Connectivity.Http.Requests
 {
-    public class GetRobotConfigDataCommand : IRequestCommand<Dictionary<string, RobotData>>
+    public class GetRobotConfigDataRequest : IHttpRequest<Dictionary<string, RobotData>>
     {
         private readonly string url;
         
-        public GetRobotConfigDataCommand()
+        public GetRobotConfigDataRequest()
         {
             url = "/configured";
         }

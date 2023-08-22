@@ -3,15 +3,14 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Project.Scripts.Utils;
 
-namespace Project.Scripts.Connectivity.RestAPI.Commands
+namespace Project.Scripts.Connectivity.Http.Requests
 {
-    public class GetTargetImagesCommand : IRequestCommand<Dictionary<String, byte[]>>
+    public class GetTargetImagesRequest : IHttpRequest<Dictionary<String, byte[]>>
     {
         private readonly string url;
         
-        public GetTargetImagesCommand()
+        public GetTargetImagesRequest()
         {
             url = "/stickers";
         }
