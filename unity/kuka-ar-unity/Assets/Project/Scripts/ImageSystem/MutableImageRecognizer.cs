@@ -10,10 +10,12 @@ using UnityEngine.XR.ARSubsystems;
 
 namespace Project.Scripts.ImageSystem
 {
-    [RequireComponent(typeof(ARTrackedImageManager))]
     public class MutableImageRecognizer : MonoBehaviour
     {
         public static MutableImageRecognizer Instance;
+        
+        [SerializeField] private XRReferenceImageLibrary runtimeImageLibrary;
+        [SerializeField] private GameObject arPrefab;
         
         private AnchorManager anchorManager;
         private ARTrackedImageManager imageManager;
@@ -27,14 +29,15 @@ namespace Project.Scripts.ImageSystem
             DontDestroyOnLoad(gameObject);
             
             anchorManager = gameObject.GetComponent<AnchorManager>();
-            imageManager = gameObject.GetComponent<ARTrackedImageManager>();
         }
 
         private void Start()
         {
             trackedImages = new Dictionary<string, ARTrackedImage>();
-            restClient = RestClient.Instance;
             
+            restClient = RestClient.Instance;
+
+            imageManager = gameObject.AddComponent<ARTrackedImageManager>();
             ConfigureMutableLibrary();
             imageManager.trackedImagesChanged += OnChange;
             
@@ -45,10 +48,9 @@ namespace Project.Scripts.ImageSystem
         private void ConfigureMutableLibrary()
         {
             #if !UNITY_EDITOR || !UNITY_EDITOR_WIN
-            var constantImageLib = imageManager.referenceLibrary as XRReferenceImageLibrary;
-            imageManager.referenceLibrary = imageManager.CreateRuntimeLibrary(constantImageLib);
+            imageManager.referenceLibrary = imageManager.CreateRuntimeLibrary(runtimeImageLibrary);
             imageManager.requestedMaxNumberOfMovingImages = 5; //TODO: change later
-            imageManager.trackedImagePrefab = imageManager.GetComponent<GameObject>(); //TODO: check if prefab works
+            imageManager.trackedImagePrefab = arPrefab;
             imageManager.enabled = true;
             #endif
         }
@@ -71,7 +73,7 @@ namespace Project.Scripts.ImageSystem
         private IEnumerator LoadTargetsFromServer()
         {
             var newTargetsTask = restClient.ExecuteCommand(new GetTargetImagesCommand());
-            
+
             while (!newTargetsTask.IsCompleted)
             {
                 yield return null;
@@ -111,7 +113,7 @@ namespace Project.Scripts.ImageSystem
                 DebugLogger.Instance.AddLog("Waiting for image to add... ;");
                 yield return null;
             }
-            DebugLogger.Instance.AddLog("New image added; ");
+            DebugLogger.Instance.AddLog($"New image {image.Key} added; ");
         }
     }
 }
