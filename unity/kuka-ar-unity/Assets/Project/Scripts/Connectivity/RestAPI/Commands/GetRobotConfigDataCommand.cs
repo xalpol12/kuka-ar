@@ -17,7 +17,7 @@ namespace Project.Scripts.Connectivity.RestAPI.Commands
         
         public async Task<Dictionary<string, RobotData>> Execute(HttpClient httpClient)
         {
-            var response = await httpClient.GetAsync(url);
+            var response = await httpClient.GetAsync(httpClient.BaseAddress + url);
             var json = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Dictionary<string, RobotData>>(json);
         }

@@ -13,12 +13,12 @@ namespace Project.Scripts.Connectivity.RestAPI.Commands
         
         public GetTargetImagesCommand()
         {
-            url = "/images";
+            url = "/stickers";
         }
         
         public async Task<Dictionary<string, byte[]>> Execute(HttpClient httpClient)
         {
-            var response = await httpClient.GetAsync(httpClient.BaseAddress.AbsolutePath + url);
+            var response = await httpClient.GetAsync(httpClient.BaseAddress + url);
             var json = await response.Content.ReadAsStringAsync();
             
             DebugLogger.Instance.AddLog(json);
