@@ -20,9 +20,7 @@ namespace Project.Scripts.Connectivity.RestAPI.Commands
         {
             var response = await httpClient.GetAsync(httpClient.BaseAddress + url);
             var json = await response.Content.ReadAsStringAsync();
-            
-            DebugLogger.Instance.AddLog(json);
-            
+
             return JsonConvert.DeserializeObject<Dictionary<String, byte[]>>(json);
         }
     }
