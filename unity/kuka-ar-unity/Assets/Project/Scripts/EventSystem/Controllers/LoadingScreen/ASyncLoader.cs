@@ -25,7 +25,7 @@ public class ASyncLoader : MonoBehaviour
 
         while (!loadOperation.isDone)
         {
-            progressbar.value = Mathf.Clamp(loadOperation.progress / 0.9f, 0,1);
+            progressbar.value = Mathf.Clamp(loadOperation.progress / 0.9f, progressbar.minValue,progressbar.maxValue);
             yield return null;
         }
     }

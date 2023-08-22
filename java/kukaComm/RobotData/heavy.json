@@ -1,0 +1,28 @@
+[
+  {
+    "name": "heavy_2",
+    "positionShift": {
+      "x": 1,
+      "y": 7,
+      "z": 5
+    },
+    "rotationShift": {
+      "x": 1,
+      "y": 2,
+      "z": 11.5
+    }
+  },
+  {
+    "name": "heavy_1",
+    "positionShift": {
+      "x": 1,
+      "y": 2,
+      "z": 3
+    },
+    "rotationShift": {
+      "x": 1,
+      "y": 2,
+      "z": 3
+    }
+  }
+]

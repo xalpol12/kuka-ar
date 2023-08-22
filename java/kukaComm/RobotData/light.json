@@ -1,0 +1,15 @@
+[
+  {
+    "name": "light_1",
+    "positionShift": {
+      "x": 1,
+      "y": 2,
+      "z": 3
+    },
+    "rotationShift": {
+      "x": 1,
+      "y": 2,
+      "z": 3
+    }
+  }
+]
