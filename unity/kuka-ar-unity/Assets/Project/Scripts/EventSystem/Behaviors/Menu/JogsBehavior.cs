@@ -1,4 +1,6 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class JogsBehavior : MonoBehaviour
 {
@@ -28,16 +30,17 @@ public class JogsBehavior : MonoBehaviour
             jogsController.Service.IsBottomNavDocked &&
             !jogsController.Service.IsAddRobotDialogOpen)
         {
-            ShowJogs();
+            StartCoroutine(ShowJogs());
         }
         else
         {
-            HideJogs();
+            StartCoroutine(HideJogs());
         }
     }
 
-    private void HideJogs()
+    private IEnumerator HideJogs()
     {
+        yield return null;
         var toggleActive = false;
         foreach (Transform child in jogsValues.transform)
         {
@@ -49,6 +52,7 @@ public class JogsBehavior : MonoBehaviour
                 if (newPosition.y < jogsHomePosition.y)
                 {
                     toggleActive = true;
+                    yield return null;
                     break;
                 }
             }
@@ -60,6 +64,7 @@ public class JogsBehavior : MonoBehaviour
                 var newPosition = child.position + translation;
                 if (newPosition.y - 10 > jogsHomePosition.y)
                 {
+                    yield return null;
                     break;
                 }  
             }
@@ -72,11 +77,11 @@ public class JogsBehavior : MonoBehaviour
             jogsDisplay.SetActive(true);
             jogsValues.SetActive(false);
         }
-        
     }
 
-    private void ShowJogs()
+    private IEnumerator ShowJogs()
     {
+        yield return null;
         jogsDisplay.SetActive(false);
         jogsValues.SetActive(true);
         foreach (Transform child in jogsValues.transform)
@@ -88,7 +93,7 @@ public class JogsBehavior : MonoBehaviour
                 var newPosition = child.position + translation;
                 if (newPosition.y > jogsHomePosition.y + distance)
                 {
-                    break;
+                    yield break;
                 }
             }
             else
@@ -98,7 +103,7 @@ public class JogsBehavior : MonoBehaviour
                 var newPosition = child.position + translation;
                 if (newPosition.y < jogsHomePosition.y - (child.GetSiblingIndex() - 1) * distance)
                 {
-                    break;
+                    yield break;
                 }
             }
             
