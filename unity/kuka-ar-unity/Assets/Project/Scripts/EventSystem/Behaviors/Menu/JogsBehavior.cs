@@ -1,6 +1,6 @@
 using System.Collections;
+using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class JogsBehavior : MonoBehaviour
 {
@@ -11,28 +11,28 @@ public class JogsBehavior : MonoBehaviour
     private Vector3 jogsHomePosition;
     
     private int distance;
-    void Start()
+    private void Start()
     {
         jogsController = GetComponent<JogsController>();
         jogsValues = jogsController.jogs.GetComponent<RectTransform>().Find("JogsValues").gameObject;
         jogsDisplay = jogsController.jogs.GetComponent<RectTransform>().Find("JogDisplay").gameObject;
         
-        jogsDisplay.SetActive(!jogsController.ShowJogs);
-        jogsValues.SetActive(jogsController.ShowJogs);
+        jogsDisplay.SetActive(true);
+        jogsValues.SetActive(false);
         jogsHomePosition = jogsDisplay.transform.position;
         
         distance = (int)((Screen.height * 0.115f) + PositioningService.Instance.PositioningError);
     }
     
-    void Update()
+    private void Update()
     {
-        if (jogsController.ShowJogs &&
+        if (jogsController.JogsTrigger == LogicStates.Running &&
             jogsController.Service.IsBottomNavDocked &&
             !jogsController.Service.IsAddRobotDialogOpen)
         {
             StartCoroutine(ShowJogs());
         }
-        else
+        else if (jogsController.JogsTrigger == LogicStates.Hiding)
         {
             StartCoroutine(HideJogs());
         }
@@ -53,6 +53,8 @@ public class JogsBehavior : MonoBehaviour
                 {
                     toggleActive = true;
                     yield return null;
+
+                    jogsController.JogsTrigger = LogicStates.Waiting; 
                     break;
                 }
             }
@@ -65,6 +67,8 @@ public class JogsBehavior : MonoBehaviour
                 if (newPosition.y - 10 > jogsHomePosition.y)
                 {
                     yield return null;
+                    
+                    jogsController.JogsTrigger = LogicStates.Waiting;
                     break;
                 }  
             }
@@ -93,6 +97,8 @@ public class JogsBehavior : MonoBehaviour
                 var newPosition = child.position + translation;
                 if (newPosition.y > jogsHomePosition.y + distance)
                 {
+                    jogsController.JogsTrigger = LogicStates.Waiting; 
+
                     yield break;
                 }
             }
@@ -103,6 +109,8 @@ public class JogsBehavior : MonoBehaviour
                 var newPosition = child.position + translation;
                 if (newPosition.y < jogsHomePosition.y - (child.GetSiblingIndex() - 1) * distance)
                 {
+                    jogsController.JogsTrigger = LogicStates.Waiting; 
+
                     yield break;
                 }
             }

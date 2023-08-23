@@ -1,3 +1,4 @@
+using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
 public class JogsController : MonoBehaviour
@@ -5,16 +6,18 @@ public class JogsController : MonoBehaviour
     public int id;
     public float transformFactor;
     public GameObject jogs;
+    private bool showJogs;
     private int defaultTransformFactor;
     internal JogsControlService Service;
-    internal bool ShowJogs;
+    internal LogicStates JogsTrigger;
 
     void Start()
     {
         Service = JogsControlService.Instance;
         
         
-        ShowJogs = false;
+        showJogs = false;
+        JogsTrigger = LogicStates.Waiting;
         defaultTransformFactor = 10;
         
         ValueCheck();
@@ -26,7 +29,8 @@ public class JogsController : MonoBehaviour
     {
         if (id == gui)
         {
-            ShowJogs = !ShowJogs;
+            showJogs = !showJogs;
+            JogsTrigger = showJogs ? LogicStates.Running : LogicStates.Hiding;
         }
     }
 
