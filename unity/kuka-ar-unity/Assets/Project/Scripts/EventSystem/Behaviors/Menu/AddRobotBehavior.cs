@@ -1,3 +1,5 @@
+using System.Collections;
+using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
 public class AddRobotBehavior : MonoBehaviour
@@ -22,31 +24,30 @@ public class AddRobotBehavior : MonoBehaviour
         
         isDialogFullyOpen = false;
         
-        robotController.addDialog.SetActive(robotController.ShowAddDialog);
+        robotController.addDialog.SetActive(false);
     }
     
     void Update()
-    {
-        if (robotController.ShowAddDialog)
+    {   
+        if (robotController.IsSliderHold)
         {
-            if (robotController.IsSliderHold)
-            {
-                DragSlider();
-            }
-            
-            ShowAddDialog();
-
+            StartCoroutine(DragSlider());
+        }
+        
+        if (robotController.DialogState == LogicStates.Running)
+        {
+            StartCoroutine(ShowAddDialog());
             selectOptions.SetActive(isDialogFullyOpen);
             service.IsAddRobotDialogOpen = true;
         }
-        else
+        else if (robotController.DialogState == LogicStates.Hiding)
         {
-            HideAddDialog();
+            StartCoroutine(HideAddDialog());
             service.IsAddRobotDialogOpen = false;
         }
     }
 
-    private void ShowAddDialog()
+    private IEnumerator ShowAddDialog()
     {
         robotController.addDialog.SetActive(true);
         
@@ -56,18 +57,20 @@ public class AddRobotBehavior : MonoBehaviour
         {
             robotController.addDialog.transform.position = new Vector3(
                 robotController.addDialog.transform.position.x, Screen.height * pullAddMenuMaxHeight);
+            robotController.DialogState = LogicStates.Waiting;
+            
             isDialogFullyOpen = true;
-            return;
         }
 
-        if (newPose.y > homePosition.y / 2)
+        if (newPose.y > Screen.height * pullAddMenuMaxHeight / 2)
         {
             robotController.bottomNav.SetActive(false);
         }
         robotController.addDialog.transform.Translate(translation);
+        yield return null;
     }
 
-    private void HideAddDialog()
+    private IEnumerator HideAddDialog()
     {
         var translation = Vector3.down * (Time.deltaTime * robotController.TransformFactor);
         var newPose = robotController.addDialog.transform.position + translation;
@@ -75,32 +78,33 @@ public class AddRobotBehavior : MonoBehaviour
         if (newPose.y < homePosition.y)
         {
             translation = new Vector3();
+            robotController.DialogState = LogicStates.Waiting;
         }
 
-        if (newPose.y < homePosition.y / 2 )
+        if (newPose.y < Screen.height * pullAddMenuMaxHeight / 2 )
         {
             robotController.bottomNav.SetActive(true);
         }
         
         isDialogFullyOpen = false;
         robotController.addDialog.transform.Translate(translation);
+        yield return null;
     }
-    
-    private void DragSlider()
+
+    private IEnumerator DragSlider()
     {
-        var menuPosition = Vector3.up ;
-        menuPosition.y *= Input.mousePosition.y - (Screen.height * 0.018f - homePosition.y);
-        menuPosition.x = homePosition.x;
+        var menuPosition = new Vector3(homePosition.x ,Input.mousePosition.y);
         if (menuPosition.y > Screen.height * pullAddMenuMaxHeight)
         {
             menuPosition.y = Screen.height * pullAddMenuMaxHeight;
         }
-
-        if (menuPosition.y < homePosition.y * 0.8f)
+        
+        if (menuPosition.y < Screen.height * pullAddMenuMaxHeight / 2)
         {
-            menuPosition.y = homePosition.y * 0.83f;
-            robotController.ShowAddDialog = false;
+            robotController.DialogState = LogicStates.Hiding;   
+            yield return null;
         }
         robotController.addDialog.transform.position = menuPosition;
+        yield return null;
     }
 }

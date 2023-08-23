@@ -1,4 +1,5 @@
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.EventSystem.Enums;
 using TMPro;
 using UnityEngine;
 
@@ -9,16 +10,18 @@ public class AddRobotController : MonoBehaviour
     public GameObject addDialog;
     [SerializeField] private GameObject saveButton;
     internal int TransformFactor;
-    internal bool ShowAddDialog;
     internal bool IsSliderHold;
     internal bool IsAddRobotPressed;
+    internal LogicStates DialogState;
     private AddNewRobotService addNewRobotService;
     private AddRobotData data;
     private HttpService httpService;
     void Start()
     {
-        ShowAddDialog = false;
+        //ShowAddDialog = false;
         TransformFactor = 3000;
+        DialogState = LogicStates.Waiting;
+        
         httpService = HttpService.Instance;
         addNewRobotService = AddNewRobotService.Instance;
         
@@ -39,7 +42,7 @@ public class AddRobotController : MonoBehaviour
     {
         if (id == uid)
         {
-            ShowAddDialog = true;
+            DialogState = LogicStates.Running;
             httpService.OnClickDataReload(4);
         }
     }
@@ -61,14 +64,14 @@ public class AddRobotController : MonoBehaviour
         {
             if (saveButton.GetComponent<TMP_Text>().text == "Close")
             {
-                ShowAddDialog = false;
+                DialogState = LogicStates.Hiding;
                 return;
             }
             if (!string.IsNullOrWhiteSpace(content.IpAddress) && content.IpAddress != data.IpAddress &&
                 !string.IsNullOrWhiteSpace(content.RobotCategory) && content.RobotCategory != data.RobotCategory &&
                 !string.IsNullOrWhiteSpace(content.RobotName) && content.RobotName != data.RobotName)
             {
-                ShowAddDialog = false;
+                DialogState = LogicStates.Hiding;
                 addNewRobotService.ResetSelectState = true;
                 httpService.PostNewRobot(data);
                 httpService.OnClickDataReload(4);
