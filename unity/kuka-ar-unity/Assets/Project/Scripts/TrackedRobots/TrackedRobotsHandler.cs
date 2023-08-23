@@ -50,7 +50,7 @@ namespace Project.Scripts.TrackedRobots
             {
                 if (!enqueuedIps.Contains(entry))
                 {
-                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    UnityMainThreadDispatcher.Instance.Enqueue(() =>
                     {
                         trackedRobots.Add(entry, new TrackedRobotModel(
                             Instantiate(prefab, Vector3.zero, Quaternion.identity),
@@ -74,7 +74,7 @@ namespace Project.Scripts.TrackedRobots
         {
             if (!enqueuedIps.Contains(ipAddress))
             {
-                UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                UnityMainThreadDispatcher.Instance.Enqueue(() =>
                 {
                     trackedRobots.Add(ipAddress, new TrackedRobotModel(
                         Instantiate(prefab, basePoint.position, basePoint.rotation),
