@@ -4,15 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wawrzyniak.testsocket.Model.Records.IpVariablePair;
 import com.wawrzyniak.testsocket.Service.KukaMockService;
 import com.wawrzyniak.testsocket.Service.SessionManagerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
-import java.util.logging.Logger;
 
 public class KukaCommController extends TextWebSocketHandler {
-    private static final Logger logger = Logger.getLogger(KukaCommController.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(KukaCommController.class);
 
     @Autowired
     SessionManagerService sessionService;

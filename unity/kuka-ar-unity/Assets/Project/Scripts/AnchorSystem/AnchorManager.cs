@@ -48,13 +48,13 @@ namespace Project.Scripts.AnchorSystem
 
         public IEnumerator StartNewAnchorTracking(ARTrackedImage foundImage)
         {
-            DebugLogger.Instance().AddLog("Searching for reference points...; ");
-            
+            DebugLogger.Instance.AddLog("Searching for reference points...; ");
+
             #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
             var imageTransform = foundImage.transform;
             var robotIp = foundImage.referenceImage.name;
             var configData = robotConfigData[robotIp];
-            
+
             bool isCreated = false;
             while (!isCreated)
             {
@@ -63,20 +63,20 @@ namespace Project.Scripts.AnchorSystem
 
                 var anchor = PlaceNewAnchor(imageTransform, configData);
                 trackedAnchors.Add(robotIp, anchor);
-                
+
                 WebSocketClient.Instance().SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp));
-                
+
                 trackedRobotsHandler.InstantiateTrackedRobot(robotIp, anchor.transform);
-                
+
                 isCreated = true;
-            }   
+            }
             #endif
 
             #if UNITY_EDITOR || UNITY_STANDALONE_WIN
             yield return null;
             #endif
-            
-            DebugLogger.Instance().AddLog("Object placed; ");
+
+            DebugLogger.Instance.AddLog("Object placed; ");
         }
 
         private ARAnchor PlaceNewAnchor(Transform imageTransform, RobotData configData)

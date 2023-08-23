@@ -47,11 +47,11 @@ namespace Project.Scripts.Connectivity.WebSocket
             ws.OnMessage += OnWebsocketMessage;
 
             ws.OnOpen += () => 
-                DebugLogger.Instance().AddLog($"Connected to ws: {serverAddress}; ");
+                DebugLogger.Instance.AddLog($"Connected to ws: {serverAddress}; ");
             ws.OnError += (e) =>
-                DebugLogger.Instance().AddLog($"Ws error code {e}; ");
+                DebugLogger.Instance.AddLog($"Ws error code {e}; ");
 
-            DebugLogger.Instance().AddLog("Await ws.Connect(); ");
+            DebugLogger.Instance.AddLog("Await ws.Connect(); ");
             await ws.Connect();
         }
 
