@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Concurrent;
+using Codice.Utils;
+using Project.Scripts.Connectivity.ExceptionHandling;
 using TMPro;
 using UnityEngine;
 
@@ -12,12 +14,15 @@ namespace Project.Scripts.Utils
         [SerializeField] private TextMeshProUGUI textField;
         private ConcurrentQueue<string> messages;
         
+        private GlobalExceptionStorage globalExceptionStorage;
+
         private void Awake()
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
             
             messages = new ConcurrentQueue<string>();
+            globalExceptionStorage = GlobalExceptionStorage.Instance;
         }
 
         public void AddLog(String log)
@@ -36,6 +41,11 @@ namespace Project.Scripts.Utils
             if (messages.TryDequeue(out string message))
             {
                 textField.text += message;
+            }
+
+            if (globalExceptionStorage.TryPopException(out var exception))
+            {
+                textField.text += exception.ToString();
             }
         }
 

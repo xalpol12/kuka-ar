@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Project.Scripts.Connectivity.ExceptionHandling;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
@@ -20,7 +21,7 @@ namespace Project.Scripts.TrackedRobots
         }
         
         private readonly GameObject gameObject;
-        private HashSet<ExceptionMessagePair> foundExceptions { get; }
+        
         private KRLInt activeBase;
         private KRLInt activeTcp;
         private KRLFrame tcpOrientation;
@@ -37,7 +38,6 @@ namespace Project.Scripts.TrackedRobots
             this.positionThreshold = positionThreshold;
             this.rotationThreshold = rotationThreshold;
             
-            foundExceptions = new HashSet<ExceptionMessagePair>();
             orientationUpdates = new Queue<KRLFrame>();
             lastEnqueued = new KRLFrame
             {
@@ -106,7 +106,7 @@ namespace Project.Scripts.TrackedRobots
 
         private void UpdateExceptions(HashSet<ExceptionMessagePair> exceptions)
         {
-            foundExceptions.UnionWith(exceptions);
+            GlobalExceptionStorage.Instance.AddExceptions(exceptions);
         }
 
         private bool IsNewValueGreaterThanPositionThreshold(KRLFrame newValue, KRLFrame oldValue)
