@@ -27,9 +27,10 @@ public class KukaCommStaticDataController {
 
     private final KukaMockService kukaService;
     private final ImageService imageService;
+    private final ConfiguredRobotService robotService;
   
     @GetMapping("configured")
-    public Map<String, Map<String, RobotData>> getAllRobots(){
+    public Map<String, Map<String, RobotData>> getAllRobots() {
         logger.debug("Called endpoint: GET /configured");
         return kukaService.getAvailableRobots();
     }
@@ -42,7 +43,6 @@ public class KukaCommStaticDataController {
 
     @GetMapping("robots")
     public List<ConfiguredRobotDTO> getALLRobotsWithStickers() {
-
         return robotService.getAllConfiguredRobots();
     }
     @GetMapping("robot/{ip}")
@@ -66,7 +66,7 @@ public class KukaCommStaticDataController {
 
 
     @PostMapping("random")
-    public boolean isRandomizing(@RequestBody boolean setRandomizing){
+    public boolean isRandomizing(@RequestBody boolean setRandomizing) {
         logger.debug("Called endpoint: POST /random, request body: " + setRandomizing);
         kukaService.setRandomizing(setRandomizing);
         return kukaService.isRandomizing();
