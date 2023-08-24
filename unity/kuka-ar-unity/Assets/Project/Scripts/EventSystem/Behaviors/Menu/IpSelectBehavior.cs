@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
@@ -36,19 +37,18 @@ public class IpSelectBehavior : MonoBehaviour
 
     private void Update()
     {
-        if (selectController.ShowOptions)
+        if (selectController.ShowOptionsController == LogicStates.Running)
         {
-            UpdateListData();
-            ShowIpSelectDialog();
+            StartCoroutine(UpdateListData());
+            StartCoroutine(ShowIpSelectDialog());
             if (selectController.AddNewRobotService.ResetSelectState)
             {
-                selectController.StylingService.MarkAsUnselected(allIpAddresses);
-                selectController.AddNewRobotService.ResetSelectState = false;
+                StartCoroutine(ResetStates());
             }
         }
-        else
+        else if (selectController.ShowOptionsController == LogicStates.Hiding)
         {
-            HideIpSelectDialog();
+            StartCoroutine(HideIpSelectDialog());
         }
     }
 
@@ -103,7 +103,7 @@ public class IpSelectBehavior : MonoBehaviour
         }
     }
 
-    private void ShowIpSelectDialog()
+    private IEnumerator ShowIpSelectDialog()
     {
         var translation = Vector3.right * (Time.deltaTime * selectController.TransformFactor);
         var newPose = selectController.ipSelector.transform.position + translation;
@@ -113,23 +113,27 @@ public class IpSelectBehavior : MonoBehaviour
             var finalPose = new Vector3(selectController.PositioningService.BestFitPosition.x, newPose.y);
                 
             selectController.ipSelector.transform.position = finalPose;
-            return;
+            selectController.ShowOptionsController = LogicStates.Waiting;
+            yield break;
         }
         
         selectController.ipSelector.transform.Translate(translation);
+        yield return null;
     }
 
-    private void HideIpSelectDialog()
+    private IEnumerator HideIpSelectDialog()
     {
         var translation = Vector3.left * (Time.deltaTime * selectController.TransformFactor);
         var newPose = selectController.ipSelector.transform.position + translation;
         
         if (newPose.x < selectIpHomePosition.x)
         {
-            translation = new Vector3();
+            selectController.ShowOptionsController = LogicStates.Waiting;
+            yield break;
         }
         
         selectController.ipSelector.transform.Translate(translation);
+        yield return null;
     }
 
     private void OnIpSelect(Transform parent, int index)
@@ -159,12 +163,13 @@ public class IpSelectBehavior : MonoBehaviour
         }
     }
 
-    private void UpdateListData()
+    private IEnumerator UpdateListData()
     {
         var parentComponent = selectController.ipSelector.transform.parent;
         if (selectController.PrevElementClicked != selectController.ElementClicked)
         {
             selectController.StylingService.MarkAsUnselected(allIpAddresses);
+            yield return null;
         }
 
         foreach (var (item, index) in allIpAddresses.WithIndex())
@@ -183,7 +188,9 @@ public class IpSelectBehavior : MonoBehaviour
             if (selectController.ElementClicked == ButtonType.Category &&
                 index > selectController.HttpService.CategoryNames.Count - 1)
             {
+                item.gameObject.SetActive(false);
                 temp = null;
+                yield return null;
             }
             else
             {
@@ -218,6 +225,7 @@ public class IpSelectBehavior : MonoBehaviour
                 item.gameObject.SetActive(true);
                 item.transform.Find("RobotIp").GetComponent<TMP_Text>().text = temp;
             }
+            yield return null;
         }
     }
 
@@ -230,5 +238,12 @@ public class IpSelectBehavior : MonoBehaviour
                 .transform.Find("Button").GetComponent<Button>().gameObject
                 .transform.Find("SaveCloseButton").GetComponent<TMP_Text>().text = state ? "Close" : "Save";
         view.transform.Find("ServerError").GetComponent<RectTransform>().gameObject.SetActive(state);
+    }
+
+    private IEnumerator ResetStates()
+    {
+        selectController.StylingService.MarkAsUnselected(allIpAddresses);
+        selectController.AddNewRobotService.ResetSelectState = false;
+        yield return null;
     }
 }

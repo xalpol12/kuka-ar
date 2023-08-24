@@ -1,4 +1,5 @@
 using Project.Scripts.Connectivity.Enums;
+using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
 public class IpSelectController : MonoBehaviour
@@ -11,10 +12,11 @@ public class IpSelectController : MonoBehaviour
     internal ButtonType PrevElementClicked;
     internal AddNewRobotService AddNewRobotService;
     internal PositioningService PositioningService;
-    internal bool ShowOptions;
+    internal LogicStates ShowOptionsController;
     internal int TransformFactor;
-    
+
     private const int GroupOffset = 1000;
+    private bool showOptions;
 
     private void Start()
     {
@@ -23,7 +25,8 @@ public class IpSelectController : MonoBehaviour
         AddNewRobotService = AddNewRobotService.Instance;
         PositioningService = PositioningService.Instance;
         
-        ShowOptions = false;
+        showOptions = false;
+        ShowOptionsController = LogicStates.Waiting;
         TransformFactor = 7500;
         
         MenuEvents.Event.OnClickIpAddress += OnClickSelectIpAddress;
@@ -31,7 +34,7 @@ public class IpSelectController : MonoBehaviour
     
     private void OnClickSelectIpAddress(int uid)
     {
-        if (!ShowOptions)
+        if (!showOptions)
         {
             PrevElementClicked = ElementClicked;
             switch (uid % GroupOffset)
@@ -51,7 +54,8 @@ public class IpSelectController : MonoBehaviour
         uid /= GroupOffset;
         if (id == uid)
         {
-            ShowOptions = !ShowOptions;
+            showOptions = !showOptions;
+            ShowOptionsController = showOptions ? LogicStates.Running : LogicStates.Hiding;
         }
     }
 }
