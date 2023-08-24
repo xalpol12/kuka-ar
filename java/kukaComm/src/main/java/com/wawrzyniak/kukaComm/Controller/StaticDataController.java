@@ -47,7 +47,7 @@ public class StaticDataController {
     public ConfiguredRobotDTO addRobot(@RequestBody ConfiguredRobotDTO robotDTO) {
         return robotService.save(robotDTO);
     }
-    @PostMapping("update/{ip}")
+    @PostMapping("update")
     public ConfiguredRobotDTO updateRobot(@RequestBody ConfiguredRobotDTO robotDTO) throws RobotNotConfiguredException {
         return robotService.updateByIp(robotDTO);
     }
