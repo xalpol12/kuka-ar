@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class JogsControlService : MonoBehaviour
@@ -12,7 +11,7 @@ public class JogsControlService : MonoBehaviour
         Instance = this;
     }
     
-    void Start()
+    private void Start()
     {
         IsBottomNavDocked = true;
         IsAddRobotDialogOpen = false;

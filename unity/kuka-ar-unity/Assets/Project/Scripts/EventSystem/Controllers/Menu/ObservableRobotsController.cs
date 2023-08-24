@@ -5,7 +5,8 @@ public class ObservableRobotsController : MonoBehaviour
     public GameObject parentGrid;
     internal HttpService HttpService;
     internal SelectableStylingService StylingService;
-    void Start()
+
+    private void Start()
     {
         HttpService = HttpService.Instance;
         StylingService = SelectableStylingService.Instance;

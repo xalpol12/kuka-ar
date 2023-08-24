@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Enums;
@@ -27,11 +28,9 @@ public class IpSelectBehavior : MonoBehaviour
             .transform.Find("TryAgain").GetComponent<Button>().onClick.AddListener(() =>
             {
                 selectController.HttpService.OnClickDataReload(4);
-                if (selectController.HttpService.ConfiguredRobots.Count > 0)
-                {
-                    ServerFailure(false);
-                    InitListLogic();
-                }
+                if (selectController.HttpService.ConfiguredRobots.Count <= 0) return;
+                ServerFailure(false);
+                InitListLogic();
             });
     }
 
@@ -143,23 +142,27 @@ public class IpSelectBehavior : MonoBehaviour
         {
             http = selectController.HttpService.ConfiguredRobots[index];
         }
-        
+
         switch (selectController.ElementClicked)
         {
             case ButtonType.IpAddress:
                 parent.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
-                            .Find("Label").GetComponent<TMP_Text>().text = http.IpAddress;
+                    .Find("Label").GetComponent<TMP_Text>().text = http.IpAddress;
                 break;
             case ButtonType.Category:
+            {
                 var mod = index % selectController.HttpService.CategoryNames.Count;
                 parent.Find("ChosenCategory").GetComponent<RectTransform>().gameObject.transform
                         .Find("CategoryLabel").GetComponent<TMP_Text>().text =
                     selectController.HttpService.CategoryNames[mod];
                 break;
+            }
             case ButtonType.RobotName:
                 parent.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
                     .Find("NameLabel").GetComponent<TMP_Text>().text = http.RobotName;
                 break;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
     }
 
@@ -200,20 +203,14 @@ public class IpSelectBehavior : MonoBehaviour
                 }
                 else
                 {
-                    switch (selectController.ElementClicked)
+                    temp = selectController.ElementClicked switch
                     {
-                        case ButtonType.IpAddress:
-                            temp = selectController.HttpService.ConfiguredRobots[index].IpAddress;
-                            break;
-                        case ButtonType.Category:
-                            temp = selectController.HttpService.CategoryNames[index];
-                            break;
-                        case ButtonType.RobotName:
-                            temp = selectController.HttpService.ConfiguredRobots[index].RobotName;
-                            break;
-                    }
+                        ButtonType.IpAddress => selectController.HttpService.ConfiguredRobots[index].IpAddress,
+                        ButtonType.Category => selectController.HttpService.CategoryNames[index],
+                        ButtonType.RobotName => selectController.HttpService.ConfiguredRobots[index].RobotName,
+                        _ => throw new ArgumentOutOfRangeException()
+                    };
                 }
-                
             }
 
             if (temp == null)

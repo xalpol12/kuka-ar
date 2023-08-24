@@ -52,10 +52,8 @@ public class IpSelectController : MonoBehaviour
         }
 
         uid /= GroupOffset;
-        if (id == uid)
-        {
-            showOptions = !showOptions;
-            ShowOptionsController = showOptions ? LogicStates.Running : LogicStates.Hiding;
-        }
+        if (id != uid) return;
+        showOptions = !showOptions;
+        ShowOptionsController = showOptions ? LogicStates.Running : LogicStates.Hiding;
     }
 }

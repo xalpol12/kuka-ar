@@ -9,16 +9,17 @@ public class AddRobotController : MonoBehaviour
     public GameObject bottomNav;
     public GameObject addDialog;
     [SerializeField] private GameObject saveButton;
+    
     internal int TransformFactor;
     internal bool IsSliderHold;
     internal bool IsAddRobotPressed;
     internal LogicStates DialogState;
+    
     private AddNewRobotService addNewRobotService;
     private AddRobotData data;
     private HttpService httpService;
-    void Start()
+    private void Start()
     {
-        //ShowAddDialog = false;
         TransformFactor = 3000;
         DialogState = LogicStates.Waiting;
         
@@ -40,11 +41,9 @@ public class AddRobotController : MonoBehaviour
 
     private void OnClickDisplayDialog(int uid)
     {
-        if (id == uid)
-        {
-            DialogState = LogicStates.Running;
-            httpService.OnClickDataReload(4);
-        }
+        if (id != uid) return;
+        DialogState = LogicStates.Running;
+        httpService.OnClickDataReload(4);
     }
 
     private void OnSave(int uid)
@@ -59,24 +58,21 @@ public class AddRobotController : MonoBehaviour
             RobotName = addDialog.transform.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
             .Find("NameLabel").GetComponent<TMP_Text>().text
         };
-        
-        if (id == uid)
+
+        if (id != uid) return;
+        if (saveButton.GetComponent<TMP_Text>().text == "Close")
         {
-            if (saveButton.GetComponent<TMP_Text>().text == "Close")
-            {
-                DialogState = LogicStates.Hiding;
-                return;
-            }
-            if (!string.IsNullOrWhiteSpace(content.IpAddress) && content.IpAddress != data.IpAddress &&
-                !string.IsNullOrWhiteSpace(content.RobotCategory) && content.RobotCategory != data.RobotCategory &&
-                !string.IsNullOrWhiteSpace(content.RobotName) && content.RobotName != data.RobotName)
-            {
-                DialogState = LogicStates.Hiding;
-                addNewRobotService.ResetSelectState = true;
-                httpService.PostNewRobot(data);
-                httpService.OnClickDataReload(4);
-            }
+            DialogState = LogicStates.Hiding;
+            return;
         }
+
+        if (string.IsNullOrWhiteSpace(content.IpAddress) || content.IpAddress == data.IpAddress ||
+            string.IsNullOrWhiteSpace(content.RobotCategory) || content.RobotCategory == data.RobotCategory ||
+            string.IsNullOrWhiteSpace(content.RobotName) || content.RobotName == data.RobotName) return;
+        DialogState = LogicStates.Hiding;
+        addNewRobotService.ResetSelectState = true;
+        httpService.PostNewRobot(data);
+        httpService.OnClickDataReload(4);
     }
 
     private void ReleaseSlider(int uid)

@@ -15,7 +15,8 @@ public class BottomNavBehavior : MonoBehaviour
     private Image circleImage;
     private Vector3 dockPosition;
     private const int ErrorOffset = 25;
-    void Start()
+
+    private void Start()
     {
         bottomNav = GetComponent<BottomNavController>();
         service = JogsControlService.Instance;
@@ -31,7 +32,7 @@ public class BottomNavBehavior : MonoBehaviour
         dockPosition = bottomPanel.position;
     }
 
-    void Update()
+    private void Update()
     {
         if (bottomNav.SliderState == LogicStates.Running)
         {

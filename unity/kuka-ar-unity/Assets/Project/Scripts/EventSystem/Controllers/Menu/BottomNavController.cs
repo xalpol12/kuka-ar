@@ -1,4 +1,3 @@
-using Project.Scripts.EventSystem;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
@@ -14,7 +13,7 @@ public class BottomNavController : MonoBehaviour
     internal bool IsCirclePressed;
     internal int TransformFactor;
 
-    void Start()
+    private void Start()
     {
         StylingService = SelectableStylingService.Instance;
         

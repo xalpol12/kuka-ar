@@ -9,7 +9,7 @@ public class SaveController : MonoBehaviour
     private IpValidationService validationService;
     private HttpService httpService;
     private Sprite cloudIcon;
-    void Start()
+    private void Start()
     {
         validationService = IpValidationService.Instance;
         httpService = HttpService.Instance;

@@ -13,7 +13,8 @@ public class AddRobotBehavior : MonoBehaviour
     private Vector3 homePosition;
     
     private bool isDialogFullyOpen;
-    void Start()
+
+    private void Start()
     {
         robotController = GetComponent<AddRobotController>();
         service = JogsControlService.Instance;
@@ -26,8 +27,8 @@ public class AddRobotBehavior : MonoBehaviour
         
         robotController.addDialog.SetActive(false);
     }
-    
-    void Update()
+
+    private void Update()
     {   
         if (robotController.IsSliderHold)
         {

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -5,6 +6,7 @@ using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -13,10 +15,14 @@ public class HttpService : MonoBehaviour
     public int id;
     public static HttpService Instance;
     internal string ConfiguredIp;
+    internal ConnectionStatus RobotConnectionStatus;
     internal List<AddRobotData> ConfiguredRobots;
     internal List<AddRobotData> Robots;
     internal List<Sprite> Stickers;
     internal List<string> CategoryNames;
+
+    [SerializeField]
+    private float connectionTimeout;
     
     private void Awake()
     {
@@ -31,6 +37,8 @@ public class HttpService : MonoBehaviour
         Robots = new List<AddRobotData>();
         Stickers = new List<Sprite>();
         CategoryNames = new List<string>();
+        RobotConnectionStatus = ConnectionStatus.Disconnected;
+        connectionTimeout /= 1000;
         
         GetConfigured();
         GetRobots();
@@ -40,13 +48,30 @@ public class HttpService : MonoBehaviour
     
     public void OnClickDataReload(int uid)
     {
-        if (id == uid)
-        {
-            GetConfigured();
-            GetRobots();
-            GetStickers();
-        }
+        if (id != uid) return;
+        GetConfigured();
+        GetRobots();
+        GetStickers();
     }
+
+    internal IEnumerator PingChosenRobot(string ip)
+    {
+        var ping = new Ping(ip);
+        var time = 0;
+        while (!ping.isDone)
+        {
+            if (time > connectionTimeout)
+            {
+                break;
+            }
+
+            time -= ping.time;
+            RobotConnectionStatus = ConnectionStatus.Connecting;
+            yield return new WaitForSeconds(0.05f);
+        }
+        
+        RobotConnectionStatus = time > connectionTimeout ? ConnectionStatus.Disconnected : ConnectionStatus.Connected;
+    } 
 
     private async void GetConfigured()
     {
@@ -106,7 +131,7 @@ public class HttpService : MonoBehaviour
         }
     }
 
-    private UnityWebRequest CreateApiRequest(string path, RequestType type = RequestType.GET, object data = null)
+    private static UnityWebRequest CreateApiRequest(string path, RequestType type = RequestType.GET, object data = null)
     {
         var request = new UnityWebRequest(path, type.ToString());
 
@@ -146,7 +171,7 @@ public class HttpService : MonoBehaviour
         return list;
     }
 
-    private List<Sprite> MapStickers(Dictionary<string, byte[]> response)
+    private static List<Sprite> MapStickers(Dictionary<string, byte[]> response)
     {
         var list = new List<Sprite>();
         foreach (var sticker in response)

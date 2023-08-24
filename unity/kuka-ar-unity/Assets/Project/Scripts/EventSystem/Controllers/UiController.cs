@@ -26,7 +26,7 @@ public class UiController : MonoBehaviour
     private int serverConfigDisplayState;
     private bool showMoreOptionsDialog;
 
-    void Start()
+    private void Start()
     {
         validationService = IpValidationService.Instance;
         
@@ -67,48 +67,33 @@ public class UiController : MonoBehaviour
 
     private void ShowMoreOptions(int uid)
     {
-        if (id == uid)
-        {
-            MenuAnim = AnimationStates.FadeOut;
-            NextAnim.Add(AnimationFilter.MoreOptionsIn);
-        }
+        if (id != uid) return;
+        MenuAnim = AnimationStates.FadeOut;
+        NextAnim.Add(AnimationFilter.MoreOptionsIn);
     }
 
     private void SaveServerConfiguration(int uid)
     {
-        if (id == uid && validationService.ValidationResult)
-        {
-            ServerConfigAnim = AnimationStates.FadeOut;
-            NextAnim.Add(AnimationFilter.MenuIn);
-            PlayerPrefs.SetInt("firstRun", 1);
-            PlayerPrefs.SetString("serverIp", HttpService.Instance.ConfiguredIp);
-        }
+        if (id != uid || !validationService.ValidationResult) return;
+        ServerConfigAnim = AnimationStates.FadeOut;
+        NextAnim.Add(AnimationFilter.MenuIn);
+        PlayerPrefs.SetInt("firstRun", 1);
+        PlayerPrefs.SetString("serverIp", HttpService.Instance.ConfiguredIp);
     }
 
     private void GoToMainScreen(int uid)
     {
-        if (id == uid)
-        {
-            MoreOptionsAnim = AnimationStates.FadeOut;
-            if (selectedMode.isOn)
-            {
-                NextAnim.Add(AnimationFilter.FocusModeIn);
-            }
-            else
-            {
-                NextAnim.Add(AnimationFilter.MenuIn);
-            }
-        }
+        if (id != uid) return;
+        MoreOptionsAnim = AnimationStates.FadeOut;
+        NextAnim.Add(selectedMode.isOn ? AnimationFilter.FocusModeIn : AnimationFilter.MenuIn);
     }
 
     private void ReconfigureServer(int uid)
     {
-        if (id == uid)
-        {
-            MoreOptionsAnim = AnimationStates.FadeOut;
-            NextAnim.Add(AnimationFilter.ServerConfigScreenIn);
-            abortServerConfigArrow.SetActive(true);
-        }
+        if (id != uid) return;
+        MoreOptionsAnim = AnimationStates.FadeOut;
+        NextAnim.Add(AnimationFilter.ServerConfigScreenIn);
+        abortServerConfigArrow.SetActive(true);
     }
 
     private void SubmitAnIssue(int uid)
@@ -121,19 +106,15 @@ public class UiController : MonoBehaviour
 
     private void AbortServerReconfiguration(int uid)
     {
-        if (id == uid)
-        {
-            ServerConfigAnim = AnimationStates.FadeOut;
-            NextAnim.Add(AnimationFilter.MenuIn);
-        }
+        if (id != uid) return;
+        ServerConfigAnim = AnimationStates.FadeOut;
+        NextAnim.Add(AnimationFilter.MenuIn);
     }
 
     private void FocusModeHandler(int uid)
     {
-        if (id == uid)
-        {
-            FocusModeAnim = AnimationStates.FadeOut;
-            NextAnim.Add(AnimationFilter.MoreOptionsIn);
-        }
+        if (id != uid) return;
+        FocusModeAnim = AnimationStates.FadeOut;
+        NextAnim.Add(AnimationFilter.MoreOptionsIn);
     }
 }

@@ -19,7 +19,7 @@ public class ASyncLoader : MonoBehaviour
         StartCoroutine(LoadLevelAsync("MainScene"));
     }
 
-    IEnumerator LoadLevelAsync(string level)
+    private IEnumerator LoadLevelAsync(string level)
     {
         var loadOperation = SceneManager.LoadSceneAsync(level);
 

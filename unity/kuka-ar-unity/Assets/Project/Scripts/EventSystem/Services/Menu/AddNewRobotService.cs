@@ -1,4 +1,3 @@
-using System;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using TMPro;
 using UnityEngine;
@@ -38,12 +37,10 @@ public class AddNewRobotService : MonoBehaviour
 
     private void Update()
     {
-        if (ResetSelectState)
-        {
-            ip.text = defaultValues.IpAddress;
-            category.text = defaultValues.RobotCategory;
-            robotName.text = defaultValues.RobotName;
-            ResetSelectState = false;
-        }
+        if (!ResetSelectState) return;
+        ip.text = defaultValues.IpAddress;
+        category.text = defaultValues.RobotCategory;
+        robotName.text = defaultValues.RobotName;
+        ResetSelectState = false;
     }
 }

@@ -10,7 +10,8 @@ public class ObservableRobotsBehavior : MonoBehaviour
     private GameObject scrollList;
     private Sprite fileNotFound;
     private List<GameObject> allGridItems;
-    void Start()
+
+    private void Start()
     {
         observableRobotsController = GetComponent<ObservableRobotsController>();
         fileNotFound = Resources.Load<Sprite>("Icons/FileNotFound");
@@ -24,11 +25,9 @@ public class ObservableRobotsBehavior : MonoBehaviour
             .GetComponent<Button>().onClick.AddListener(() =>
             {
                 observableRobotsController.HttpService.OnClickDataReload(4);
-                if (observableRobotsController.HttpService.Robots.Count > 0)
-                {
-                    ConnectionFailed(false);
-                    InitObservableRobots();
-                }
+                if (observableRobotsController.HttpService.Robots.Count <= 0) return;
+                ConnectionFailed(false);
+                InitObservableRobots();
             });
     }
 
@@ -47,7 +46,7 @@ public class ObservableRobotsBehavior : MonoBehaviour
         
         if (http.Stickers.Count == 0)
         {
-            foreach (var i in http.Robots)
+            foreach (var unused in http.Robots)
             {
                 http.Stickers.Add(fileNotFound);
             }
@@ -106,20 +105,19 @@ public class ObservableRobotsBehavior : MonoBehaviour
 
     private void OnSelectActions(Transform panelRef, int index)
     {
-        var connection = ConnectionStatus.Connecting;
+        // todo fix coroutine wait time to display proper status
+        var ipAddress = observableRobotsController.HttpService.Robots[index].RobotName;
         var statusText = panelRef.Find("ConnectionStatus").GetComponent<TMP_Text>();
-        switch (connection)
+        
+        StartCoroutine(observableRobotsController.HttpService.PingChosenRobot(ipAddress));
+        
+        statusText.color = observableRobotsController.HttpService.RobotConnectionStatus switch
         {
-            case ConnectionStatus.Connected:
-                statusText.color = new Color(0.176f, 0.78f, 0.439f);
-                break;
-            case ConnectionStatus.Connecting:
-                statusText.color = new Color(0.94f, 0.694f,0.188f);
-                break;
-            case ConnectionStatus.Disconnected:
-                statusText.color = new Color(0.949f, 0.247f, 0.259f);
-                break;
-        }
+            ConnectionStatus.Connected => new Color(0.176f, 0.78f, 0.439f),
+            ConnectionStatus.Connecting => new Color(0.94f, 0.694f, 0.188f),
+            ConnectionStatus.Disconnected => new Color(0.949f, 0.247f, 0.259f),
+            _ => statusText.color
+        };
 
         if (index > observableRobotsController.HttpService.Robots.Count - 1)
         {
@@ -127,9 +125,8 @@ public class ObservableRobotsBehavior : MonoBehaviour
         }
         panelRef.Find("CurrentIpAddress").GetComponent<TMP_Text>().text = 
             observableRobotsController.HttpService.Robots[index].IpAddress;
-        panelRef.Find("CurrentRobotName").GetComponent<TMP_Text>().text =
-            observableRobotsController.HttpService.Robots[index].RobotName;
-        statusText.text = connection.ToString();
+        panelRef.Find("CurrentRobotName").GetComponent<TMP_Text>().text = ipAddress;
+        statusText.text = observableRobotsController.HttpService.RobotConnectionStatus.ToString();
         observableRobotsController.StylingService.IsAfterItemSelect = true;
     }
 

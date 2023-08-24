@@ -11,7 +11,7 @@ public class JogsController : MonoBehaviour
     internal JogsControlService Service;
     internal LogicStates JogsTrigger;
 
-    void Start()
+    private void Start()
     {
         Service = JogsControlService.Instance;
         
@@ -27,11 +27,9 @@ public class JogsController : MonoBehaviour
 
     private void OnClickJog(int gui)
     {
-        if (id == gui)
-        {
-            showJogs = !showJogs;
-            JogsTrigger = showJogs ? LogicStates.Running : LogicStates.Hiding;
-        }
+        if (id != gui) return;
+        showJogs = !showJogs;
+        JogsTrigger = showJogs ? LogicStates.Running : LogicStates.Hiding;
     }
 
     private void ValueCheck()
