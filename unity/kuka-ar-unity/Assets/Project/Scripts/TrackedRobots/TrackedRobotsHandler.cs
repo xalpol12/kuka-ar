@@ -10,12 +10,15 @@ namespace Project.Scripts.TrackedRobots
     public class TrackedRobotsHandler : MonoBehaviour
     {
         public GameObject prefab;
+        
         [Tooltip("Minimal difference between two position update values to be registered [in meters]")]
         [Range(0f, 5f)]
         public float positionThreshold = 0.01f;
+        
         [Tooltip("Minimal difference between two rotation update values to be registered [in degrees]")]
         [Range(0f, 360f)]
         public float rotationThreshold = 1f;
+        
         private Dictionary<string, TrackedRobotModel> trackedRobots;
         private HashSet<string> enqueuedIps;
 
@@ -53,7 +56,7 @@ namespace Project.Scripts.TrackedRobots
                             Instantiate(prefab, Vector3.zero, Quaternion.identity),
                             positionThreshold,
                             rotationThreshold));
-                        DebugLogger.Instance().AddLog($"Object for ip {entry} instantiated; ");
+                        DebugLogger.Instance.AddLog($"Object for ip {entry} instantiated; ");
                         trackedRobots[entry].UpdateTrackedRobotVariables(robotData);
 
                         enqueuedIps.Remove(entry);
@@ -65,6 +68,7 @@ namespace Project.Scripts.TrackedRobots
             #endif
         }
 
+        //TODO: add this method to UpdateTrackedPoint so that Unity Editor uses it
         #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN //called from AnchorManager
         public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
         {
@@ -74,12 +78,13 @@ namespace Project.Scripts.TrackedRobots
                 {
                     trackedRobots.Add(ipAddress, new TrackedRobotModel(
                         Instantiate(prefab, basePoint.position, basePoint.rotation),
-                        threshold));
-                    DebugLogger.Instance().AddLog($"Object for ip {ipAddress} instantiated; ");
-
+                        positionThreshold,
+                        rotationThreshold));
+                    DebugLogger.Instance.AddLog($"Object for ip {ipAddress} instantiated; ");
+        
                     enqueuedIps.Remove(ipAddress);
                 });
-
+        
                 enqueuedIps.Add(ipAddress);
             }
         }

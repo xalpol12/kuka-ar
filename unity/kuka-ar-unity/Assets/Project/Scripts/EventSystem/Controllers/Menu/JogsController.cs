@@ -1,41 +1,45 @@
-using Project.Scripts.EventSystem;
+using Project.Scripts.EventSystem.Events;
+using Project.Scripts.EventSystem.Services.Menu;
 using UnityEngine;
 
-public class JogsController : MonoBehaviour
+namespace Project.Scripts.EventSystem.Controllers.Menu
 {
-    public int id;
-    public float transformFactor;
-    public GameObject jogs;
-    private int defaultTransformFactor;
-    internal JogsControlService Service;
-    internal bool ShowJogs;
-
-    void Start()
+    public class JogsController : MonoBehaviour
     {
-        Service = JogsControlService.Instance;
-        
-        
-        ShowJogs = false;
-        defaultTransformFactor = 10;
-        
-        ValueCheck();
-        
-        MenuEvents.Event.OnClickJog += OnClickJog;
-    }
+        public int id;
+        public float transformFactor;
+        public GameObject jogs;
+        private int defaultTransformFactor;
+        internal JogsControlService Service;
+        internal bool ShowJogs;
 
-    private void OnClickJog(int gui)
-    {
-        if (id == gui)
+        void Start()
         {
-            ShowJogs = !ShowJogs;
+            Service = JogsControlService.Instance;
+        
+        
+            ShowJogs = false;
+            defaultTransformFactor = 10;
+        
+            ValueCheck();
+        
+            MenuEvents.Event.OnClickJog += OnClickJog;
         }
-    }
 
-    private void ValueCheck()
-    {
-        if (transformFactor is > 200f or < 0f)
+        private void OnClickJog(int gui)
         {
-            transformFactor = defaultTransformFactor;
+            if (id == gui)
+            {
+                ShowJogs = !ShowJogs;
+            }
+        }
+
+        private void ValueCheck()
+        {
+            if (transformFactor is > 200f or < 0f)
+            {
+                transformFactor = defaultTransformFactor;
+            }
         }
     }
 }

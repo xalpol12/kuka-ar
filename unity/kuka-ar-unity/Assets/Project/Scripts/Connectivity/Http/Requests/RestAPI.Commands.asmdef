@@ -1,0 +1,18 @@
+{
+    "name": "RestAPI.Commands",
+    "rootNamespace": "",
+    "references": [
+        "GUID:cb20bccb431e7424e97f83cce3b65bbd",
+        "GUID:c33d397f998e1d141b74148276071b9d",
+        "GUID:a878be4ce749fb645a1f59bb8f9b8ce8"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

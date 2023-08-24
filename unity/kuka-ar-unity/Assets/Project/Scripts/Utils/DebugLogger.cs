@@ -7,11 +7,16 @@ namespace Project.Scripts.Utils
 {
     public class DebugLogger : MonoBehaviour
     {
+        public static DebugLogger Instance;
+        
         [SerializeField] private TextMeshProUGUI textField;
         private ConcurrentQueue<string> messages;
-
-        private void Start()
+        
+        private void Awake()
         {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+            
             messages = new ConcurrentQueue<string>();
         }
 
@@ -33,41 +38,10 @@ namespace Project.Scripts.Utils
                 textField.text += message;
             }
         }
-        
-        #region Singleton logic
-        
-        private static DebugLogger instance = null;
 
-        public static DebugLogger Instance()
-        {
-            if (!Exists())
-            {
-                throw new Exception (
-                    "DebugLogger could not find the DebugLogger object. " +
-                    "Please ensure you have added the DebugLogger Prefab to your scene.");
-            }
-            return instance;
-        }
-    
-        private static bool Exists()
-        {
-            return instance != null;
-        }
-
-        private void Awake()
-        {
-            if (instance == null)
-            {
-                instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-        }
-        
         void OnDestroy()
         {
-            instance = null;
+            Instance = null;
         }
-        
-        #endregion
     }
 }

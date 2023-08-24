@@ -1,65 +1,145 @@
 using System.Collections.Generic;
 using Project.Scripts.EventSystem.Enums;
+using Project.Scripts.EventSystem.Events;
+using Project.Scripts.EventSystem.Services.Menu;
+using Project.Scripts.EventSystem.Services.ServerConfig;
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
-public class UiController : MonoBehaviour
+namespace Project.Scripts.EventSystem.Controllers
 {
-    public int id;
-    public GameObject menuUi;
-    public GameObject moreOptions;
-    public GameObject serverConfig;
-    public float animSpeed;
-    internal AnimationStates ServerConfigAnim;
-    internal AnimationStates MenuAnim;
-    internal AnimationStates MoreOptionsAnim;
-    internal List<string> NextAnim;
-    private IpValidationService validationService;
-    private bool showMoreOptionsDialog;
-
-    void Start()
+    public class UiController : MonoBehaviour
     {
-        validationService = IpValidationService.Instance;
-        
-        ServerConfigAnim = AnimationStates.FadeIn;
-        MenuAnim = AnimationStates.StandBy;
-        MoreOptionsAnim = AnimationStates.StandBy;
-        NextAnim = new List<string>();
-        
-        menuUi.SetActive(false);
-        moreOptions.SetActive(false);
-        serverConfig.SetActive(true);
-        
-        MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
-        ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;
-        MoreOptionsEvents.Events.onClickBack += GoToMainScreen;
-    }
+        public int id;
+        public float animSpeed;
+        public GameObject menuUi;
+        public GameObject moreOptions;
+        public GameObject serverConfig;
+        public GameObject focusMode;
 
-    private void ShowMoreOptions(int uid)
-    {
-        if (id == uid)
+        internal AnimationStates ServerConfigAnim;
+        internal AnimationStates MenuAnim;
+        internal AnimationStates MoreOptionsAnim;
+        internal AnimationStates FocusModeAnim;
+        internal List<AnimationFilter> NextAnim;
+        private IpValidationService validationService;
+
+        [SerializeField] private GameObject abortServerConfigArrow;
+        [SerializeField] private GameObject focusModeToggle;
+        private Toggle selectedMode;
+        private int serverConfigDisplayState;
+        private bool showMoreOptionsDialog;
+
+        void Start()
         {
-            MenuAnim = AnimationStates.FadeOut;
-            NextAnim.Add("MoreOptionsIn");
+            validationService = IpValidationService.Instance;
+
+            ServerConfigAnim = PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun ?
+                AnimationStates.FadeIn : AnimationStates.StandBy;
+            MenuAnim = PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun ?
+                AnimationStates.StandBy : AnimationStates.FadeIn;
+            MoreOptionsAnim = AnimationStates.StandBy;
+            FocusModeAnim = AnimationStates.StandBy;
+
+            NextAnim = new List<AnimationFilter>();
+            selectedMode = focusModeToggle.GetComponent<Toggle>();
+            if (PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun)
+            {
+                menuUi.SetActive(false);
+                serverConfig.SetActive(true);
+            }
+            else
+            {
+                menuUi.SetActive(true);
+                serverConfig.SetActive(false);
+
+                menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 1;
+                serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 0;
+            }
+
+            moreOptions.SetActive(false);
+            focusMode.SetActive(false);
+
+            MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
+            ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;
+            ServerConfigEvents.Events.OnClickBackToMenu += AbortServerReconfiguration;
+            MoreOptionsEvents.Events.OnClickBack += GoToMainScreen;
+            MoreOptionsEvents.Events.OnClickDisplayServer += ReconfigureServer;
+            MoreOptionsEvents.Events.OnClickDisplayBrowser += SubmitAnIssue;
+            FocusModeEvents.Events.OnClickDisplayMoreOptions += FocusModeHandler;
         }
-    }
 
-    private void SaveServerConfiguration(int uid)
-    {
-        
-        if (id == uid && validationService.ValidationResult)
+        private void ShowMoreOptions(int uid)
         {
-            ServerConfigAnim = AnimationStates.FadeOut;
-            NextAnim.Add("MenuIn");
+            if (id == uid)
+            {
+                MenuAnim = AnimationStates.FadeOut;
+                NextAnim.Add(AnimationFilter.MoreOptionsIn);
+            }
         }
-    }
 
-    private void GoToMainScreen(int uid)
-    {
-        if (id == uid)
+        private void SaveServerConfiguration(int uid)
         {
-            MoreOptionsAnim = AnimationStates.FadeOut;
-            NextAnim.Add("MenuIn");
+            if (id == uid && validationService.ValidationResult)
+            {
+                ServerConfigAnim = AnimationStates.FadeOut;
+                NextAnim.Add(AnimationFilter.MenuIn);
+                PlayerPrefs.SetInt("firstRun", 1);
+                PlayerPrefs.SetString("serverIp", HttpService.Instance.ConfiguredIp);
+            }
+        }
+
+        private void GoToMainScreen(int uid)
+        {
+            if (id == uid)
+            {
+                MoreOptionsAnim = AnimationStates.FadeOut;
+                if (selectedMode.isOn)
+                {
+                    NextAnim.Add(AnimationFilter.FocusModeIn);
+                }
+                else
+                {
+                    NextAnim.Add(AnimationFilter.MenuIn);
+                }
+            }
+        }
+
+        private void ReconfigureServer(int uid)
+        {
+            if (id == uid)
+            {
+                MoreOptionsAnim = AnimationStates.FadeOut;
+                NextAnim.Add(AnimationFilter.ServerConfigScreenIn);
+                abortServerConfigArrow.SetActive(true);
+            }
+        }
+
+        private void SubmitAnIssue(int uid)
+        {
+            if (id == uid)
+            {
+                SceneManager.LoadScene("WebViewScene");
+            }
+        }
+
+        private void AbortServerReconfiguration(int uid)
+        {
+            if (id == uid)
+            {
+                ServerConfigAnim = AnimationStates.FadeOut;
+                NextAnim.Add(AnimationFilter.MenuIn);
+            }
+        }
+
+        private void FocusModeHandler(int uid)
+        {
+            if (id == uid)
+            {
+                FocusModeAnim = AnimationStates.FadeOut;
+                NextAnim.Add(AnimationFilter.MoreOptionsIn);
+            }
         }
     }
 }

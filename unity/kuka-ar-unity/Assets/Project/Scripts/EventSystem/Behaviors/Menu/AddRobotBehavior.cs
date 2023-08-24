@@ -1,106 +1,111 @@
+using Project.Scripts.EventSystem.Controllers.Menu;
+using Project.Scripts.EventSystem.Services.Menu;
 using UnityEngine;
 
-public class AddRobotBehavior : MonoBehaviour
+namespace Project.Scripts.EventSystem.Behaviors.Menu
 {
-    [SerializeField]
-    private float pullAddMenuMaxHeight = 0.018f;
+    public class AddRobotBehavior : MonoBehaviour
+    {
+        [SerializeField]
+        private float pullAddMenuMaxHeight = 0.018f;
 
-    [SerializeField] private float errorMargin = 0.05f;
-    private AddRobotController robotController;
-    private JogsControlService service;
-    private GameObject selectOptions;
-    private Vector3 homePosition;
+        [SerializeField] private float errorMargin = 0.05f;
+        private AddRobotController robotController;
+        private JogsControlService service;
+        private GameObject selectOptions;
+        private Vector3 homePosition;
     
-    private bool isDialogFullyOpen;
-    void Start()
-    {
-        robotController = GetComponent<AddRobotController>();
-        service = JogsControlService.Instance;
-        selectOptions = robotController.addDialog.transform.Find("SelectOptions")
-            .GetComponent<RectTransform>().gameObject;
-        
-        homePosition = robotController.addDialog.transform.position;
-        
-        isDialogFullyOpen = false;
-        
-        robotController.addDialog.SetActive(robotController.ShowAddDialog);
-    }
-    
-    void Update()
-    {
-        if (robotController.ShowAddDialog)
+        private bool isDialogFullyOpen;
+        void Start()
         {
-            if (robotController.IsSliderHold)
+            robotController = GetComponent<AddRobotController>();
+            service = JogsControlService.Instance;
+            selectOptions = robotController.addDialog.transform.Find("SelectOptions")
+                .GetComponent<RectTransform>().gameObject;
+        
+            homePosition = robotController.addDialog.transform.position;
+        
+            isDialogFullyOpen = false;
+        
+            robotController.addDialog.SetActive(robotController.ShowAddDialog);
+        }
+    
+        void Update()
+        {
+            if (robotController.ShowAddDialog)
             {
-                DragSlider();
-            }
+                if (robotController.IsSliderHold)
+                {
+                    DragSlider();
+                }
             
-            ShowAddDialog();
+                ShowAddDialog();
 
-            selectOptions.SetActive(isDialogFullyOpen);
-            service.IsAddRobotDialogOpen = true;
+                selectOptions.SetActive(isDialogFullyOpen);
+                service.IsAddRobotDialogOpen = true;
+            }
+            else
+            {
+                HideAddDialog();
+                service.IsAddRobotDialogOpen = false;
+            }
         }
-        else
+
+        private void ShowAddDialog()
         {
-            HideAddDialog();
-            service.IsAddRobotDialogOpen = false;
-        }
-    }
-
-    private void ShowAddDialog()
-    {
-        robotController.addDialog.SetActive(true);
+            robotController.addDialog.SetActive(true);
         
-        var translation = Vector3.up * (Time.deltaTime * robotController.TransformFactor);
-        var newPose = robotController.addDialog.transform.position + translation;
+            var translation = Vector3.up * (Time.deltaTime * robotController.TransformFactor);
+            var newPose = robotController.addDialog.transform.position + translation;
 
-        if (newPose.y > Screen.width * errorMargin)
-        {
-            translation = new Vector3();
-            isDialogFullyOpen = true;
+            if (newPose.y > Screen.width * errorMargin)
+            {
+                translation = new Vector3();
+                isDialogFullyOpen = true;
+            }
+
+            if (newPose.y > homePosition.y / 2)
+            {
+                robotController.bottomNav.SetActive(false);
+            }
+            robotController.addDialog.transform.Translate(translation);
         }
 
-        if (newPose.y > homePosition.y / 2)
+        private void HideAddDialog()
         {
-            robotController.bottomNav.SetActive(false);
-        }
-        robotController.addDialog.transform.Translate(translation);
-    }
-
-    private void HideAddDialog()
-    {
-        var translation = Vector3.down * (Time.deltaTime * robotController.TransformFactor);
-        var newPose = robotController.addDialog.transform.position + translation;
+            var translation = Vector3.down * (Time.deltaTime * robotController.TransformFactor);
+            var newPose = robotController.addDialog.transform.position + translation;
         
-        if (newPose.y < homePosition.y)
-        {
-            translation = new Vector3();
-        }
+            if (newPose.y < homePosition.y)
+            {
+                translation = new Vector3();
+            }
 
-        if (newPose.y < homePosition.y / 2 )
-        {
-            robotController.bottomNav.SetActive(true);
-        }
+            if (newPose.y < homePosition.y / 2 )
+            {
+                robotController.bottomNav.SetActive(true);
+            }
         
-        isDialogFullyOpen = false;
-        robotController.addDialog.transform.Translate(translation);
-    }
+            isDialogFullyOpen = false;
+            robotController.addDialog.transform.Translate(translation);
+        }
     
-    private void DragSlider()
-    {
-        var menuPosition = Vector3.up ;
-        menuPosition.y *= Input.mousePosition.y - (Screen.height * 0.018f - homePosition.y);
-        menuPosition.x = homePosition.x;
-        if (menuPosition.y > Screen.height * pullAddMenuMaxHeight)
+        private void DragSlider()
         {
-            menuPosition.y = Screen.height * pullAddMenuMaxHeight;
-        }
+            var menuPosition = Vector3.up ;
+            menuPosition.y *= Input.mousePosition.y - (Screen.height * 0.018f - homePosition.y);
+            menuPosition.x = homePosition.x;
+            if (menuPosition.y > Screen.height * pullAddMenuMaxHeight)
+            {
+                menuPosition.y = Screen.height * pullAddMenuMaxHeight;
+            }
 
-        if (menuPosition.y < homePosition.y * 0.8f)
-        {
-            menuPosition.y = homePosition.y * 0.83f;
-            robotController.ShowAddDialog = false;
+            if (menuPosition.y < homePosition.y * 0.8f)
+            {
+                menuPosition.y = homePosition.y * 0.83f;
+                robotController.ShowAddDialog = false;
+            }
+            robotController.addDialog.transform.position = menuPosition;
         }
-        robotController.addDialog.transform.position = menuPosition;
     }
 }

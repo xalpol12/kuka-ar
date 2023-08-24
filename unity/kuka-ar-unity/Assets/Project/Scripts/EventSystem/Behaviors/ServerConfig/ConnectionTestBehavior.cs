@@ -1,16 +1,20 @@
+using Project.Scripts.EventSystem.Controllers.ServerConfig;
 using UnityEngine;
 
-public class ConnectionTestBehavior : MonoBehaviour
+namespace Project.Scripts.EventSystem.Behaviors.ServerConfig
 {
-    private ConnectionTestController controller;
+    public class ConnectionTestBehavior : MonoBehaviour
+    {
+        private ConnectionTestController controller;
     
-    void Start()
-    {
-        controller = GetComponent<ConnectionTestController>();
-    }
+        void Start()
+        {
+            controller = GetComponent<ConnectionTestController>();
+        }
 
-    void Update()
-    {
+        void Update()
+        {
         
+        }
     }
 }
