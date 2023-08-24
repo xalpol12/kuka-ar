@@ -1,3 +1,5 @@
+using System.Collections;
+using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,46 +33,40 @@ public class BottomNavBehavior : MonoBehaviour
 
     void Update()
     {
-        if (bottomNav.IsSliderHold)
+        if (bottomNav.SliderState == LogicStates.Running)
         {
-            bottomNav.transform.position = BottomMenuPositionHandler();
+            StartCoroutine(BottomMenuPositionHandler());
         }
-        else
+        else if (bottomNav.SliderState == LogicStates.Hiding)
         {
-            if (bottomNav.IsAfterItemSelect)
-            {
-                CloseObservableRobotsList();
-            }
-            else
-            {
-                AutoDestinationPull();
-            }
+            StartCoroutine(bottomNav.StylingService.IsAfterItemSelect ?
+                CloseObservableRobotsList() : AutoDestinationPull());
         }
-
-        AddNewRobotAnimation();
-        ConstantPanelVisibilityHandler();
-        JogsExpandHandler();
+        StartCoroutine(AddNewRobotAnimation());
+        StartCoroutine(ConstantPanelVisibilityHandler());
+        StartCoroutine(JogsExpandHandler());
     }
 
-    private Vector3 BottomMenuPositionHandler()
+    private IEnumerator BottomMenuPositionHandler()
     {
-        var menuPosition = Vector3.up ;
-        menuPosition.y *= Input.mousePosition.y - (Screen.height * 0.105f - dockPosition.y);
-        menuPosition.x = dockPosition.x;
-
+        var menuPosition = new Vector3(dockPosition.x, Input.mousePosition.y) ;
         if (menuPosition.y > Screen.height * pullMenuScreenMaxHeight)
         {
             menuPosition.y = Screen.height * pullMenuScreenMaxHeight;
+            bottomNav.SliderState = LogicStates.Waiting;
+            yield break;
         }
 
         if (menuPosition.y < dockPosition.y)
         {
             menuPosition.y = dockPosition.y;
+            yield break;
         }
-        return menuPosition;
+        bottomNav.transform.position = menuPosition;
+        yield return null;
     }
 
-    private void AutoDestinationPull()
+    private IEnumerator AutoDestinationPull()
     {
         if (!bottomNav.transform.position.y.Equals(dockPosition.y))
         {
@@ -87,56 +83,61 @@ public class BottomNavBehavior : MonoBehaviour
             var newPosition = bottomNav.transform.position + translation;
             if (newPosition.y > Screen.height * pullMenuScreenMaxHeight)
             {
-                translation = new Vector3();
+                bottomNav.SliderState = LogicStates.Waiting;
+                yield break;
             }
             
             if (newPosition.y < dockPosition.y)
             {
                 bottomNav.transform.position = dockPosition;
-                return;
+                bottomNav.SliderState = LogicStates.Waiting;
+                yield break;
             }
                     
             bottomNav.transform.Translate(translation);
+            yield return null;
         }
     }
 
-    private void CloseObservableRobotsList()
+    private IEnumerator CloseObservableRobotsList()
     {
         var translation = Vector3.down * (Time.deltaTime * bottomNav.TransformFactor);
         var newPosition = bottomNav.transform.position + translation;
 
         if (newPosition.y < dockPosition.y)
         {
-            translation = new Vector3();
-            bottomNav.IsAfterItemSelect = false;
+            bottomNav.StylingService.IsAfterItemSelect = false;
+            yield break;
         }
         
         bottomNav.transform.Translate(translation);
+        yield return null;
     }
 
-    private void ConstantPanelVisibilityHandler()
+    private IEnumerator ConstantPanelVisibilityHandler()
     {
         if (bottomNav.transform.position.y > (Screen.height * pullMenuScreenMaxHeight + dockPosition.y) / 2)
         {
             constantPanel.SetActive(false);
             scrollList.SetActive(true);
+            yield break;
         }
-        else
-        {
-            constantPanel.SetActive(true);
-            scrollList.SetActive(false);
-        }
+        
+        constantPanel.SetActive(true);
+        scrollList.SetActive(false);
     }
 
-    private void JogsExpandHandler()
+    private IEnumerator JogsExpandHandler()
     {
         service.IsBottomNavDocked = bottomNav.bottomNavPanel.transform.position.y - ErrorOffset <= dockPosition.y;
+        yield return null;
     }
 
-    private void AddNewRobotAnimation()
+    private IEnumerator AddNewRobotAnimation()
     {
         plusImage.SetActive(!bottomNav.IsCirclePressed);
         circleImage.sprite = bottomNav.IsCirclePressed ?
             bottomNav.StylingService.PressedAddIcon : bottomNav.StylingService.DefaultAddIcon;
+        yield return null;
     }
 }

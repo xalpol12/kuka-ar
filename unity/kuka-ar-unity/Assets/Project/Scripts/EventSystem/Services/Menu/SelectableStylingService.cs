@@ -10,6 +10,7 @@ public class SelectableStylingService : MonoBehaviour
     internal Sprite SelectedSprite;
     internal Sprite DefaultAddIcon;
     internal Sprite PressedAddIcon;
+    internal bool IsAfterItemSelect;
 
     private void Awake()
     {
@@ -18,6 +19,8 @@ public class SelectableStylingService : MonoBehaviour
 
     private void Start()
     {
+        IsAfterItemSelect = false;
+        
         DefaultSprite = Resources.Load<Sprite>("Gradients/GreyListBar");
         SelectedSprite = Resources.Load<Sprite>("Fields/Selected");
         DefaultAddIcon = Resources.Load<Sprite>("Icons/circle");

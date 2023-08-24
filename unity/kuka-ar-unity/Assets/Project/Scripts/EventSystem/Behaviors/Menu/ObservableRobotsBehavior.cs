@@ -130,7 +130,7 @@ public class ObservableRobotsBehavior : MonoBehaviour
         panelRef.Find("CurrentRobotName").GetComponent<TMP_Text>().text =
             observableRobotsController.HttpService.Robots[index].RobotName;
         statusText.text = connection.ToString();
-        observableRobotsController.BottomNavController.IsAfterItemSelect = true;
+        observableRobotsController.StylingService.IsAfterItemSelect = true;
     }
 
     private void ConnectionFailed(bool state)

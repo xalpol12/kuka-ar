@@ -57,9 +57,10 @@ public class AddRobotBehavior : MonoBehaviour
         {
             robotController.addDialog.transform.position = new Vector3(
                 robotController.addDialog.transform.position.x, Screen.height * pullAddMenuMaxHeight);
-            robotController.DialogState = LogicStates.Waiting;
             
+            robotController.DialogState = LogicStates.Waiting;
             isDialogFullyOpen = true;
+            yield break;
         }
 
         if (newPose.y > Screen.height * pullAddMenuMaxHeight / 2)
@@ -77,8 +78,8 @@ public class AddRobotBehavior : MonoBehaviour
         
         if (newPose.y < homePosition.y)
         {
-            translation = new Vector3();
             robotController.DialogState = LogicStates.Waiting;
+            yield break;
         }
 
         if (newPose.y < Screen.height * pullAddMenuMaxHeight / 2 )
@@ -97,13 +98,16 @@ public class AddRobotBehavior : MonoBehaviour
         if (menuPosition.y > Screen.height * pullAddMenuMaxHeight)
         {
             menuPosition.y = Screen.height * pullAddMenuMaxHeight;
+            yield break;
         }
         
         if (menuPosition.y < Screen.height * pullAddMenuMaxHeight / 2)
         {
             robotController.DialogState = LogicStates.Hiding;   
-            yield return null;
+            yield break;
         }
+
+        robotController.DialogState = LogicStates.Running;
         robotController.addDialog.transform.position = menuPosition;
         yield return null;
     }

@@ -1,4 +1,5 @@
 using Project.Scripts.EventSystem;
+using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
 public class BottomNavController : MonoBehaviour
@@ -8,24 +9,18 @@ public class BottomNavController : MonoBehaviour
     public int id;
     public GameObject bottomNavPanel;
     internal SelectableStylingService StylingService;
-    internal bool IsSliderHold;
-    internal bool IsAfterItemSelect;
+    internal LogicStates SliderState;
+    
     internal bool IsCirclePressed;
     internal int TransformFactor;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     void Start()
     {
         StylingService = SelectableStylingService.Instance;
         
         TransformFactor = 5000;
-        IsSliderHold = false;
+        SliderState = LogicStates.Waiting;
         IsCirclePressed = false;
-        IsAfterItemSelect = false;
         PositioningService.Instance.BestFitPosition = bottomNavPanel.transform.position;
         
         MenuEvents.Event.OnPressConstantSelectorSlider += BottomNavOnMove;
@@ -37,13 +32,13 @@ public class BottomNavController : MonoBehaviour
     private void BottomNavOnMove(int uid)
     {
         if (uid != id) return;
-        IsSliderHold = true;
+        SliderState = LogicStates.Running;
     }
 
     private void BottomNavToDockPosition(int uid)
     {
         if (uid != id) return;
-        IsSliderHold = false;
+        SliderState = LogicStates.Hiding;
     }
 
     private void CirclePress(int uid)
