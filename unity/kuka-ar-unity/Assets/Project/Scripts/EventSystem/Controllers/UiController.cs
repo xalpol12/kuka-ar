@@ -19,6 +19,7 @@ public class UiController : MonoBehaviour
     internal AnimationStates FocusModeAnim;
     internal List<AnimationFilter> NextAnim;
     private IpValidationService validationService;
+    private HttpService httpService;
     
     [SerializeField] private GameObject abortServerConfigArrow;
     [SerializeField] private GameObject focusModeToggle;
@@ -29,6 +30,7 @@ public class UiController : MonoBehaviour
     private void Start()
     {
         validationService = IpValidationService.Instance;
+        httpService= HttpService.Instance;
         
         ServerConfigAnim = PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun ?
             AnimationStates.FadeIn : AnimationStates.StandBy;
@@ -98,7 +100,7 @@ public class UiController : MonoBehaviour
 
     private void SubmitAnIssue(int uid)
     {
-        if (id == uid)
+        if (id == uid && !httpService.HasInternet)
         {
             SceneManager.LoadScene("WebViewScene");
         }

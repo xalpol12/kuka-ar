@@ -379,6 +379,72 @@ PrefabInstance:
       propertyPath: m_AdditionalShaderChannelsFlag
       value: 25
       objectReference: {fileID: 0}
+    - target: {fileID: 2433194008634784368, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_Url
+      value: https://cdn.pixabay.com/animation/2023/01/01/10/15/10-15-49-381_512.gif
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433194008634784368, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_Looping
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433194008634784368, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_VideoClip
+      value: 
+      objectReference: {fileID: 32900000, guid: f747b667caa08524c8ed336330c35bfa,
+        type: 3}
+    - target: {fileID: 2433194008634784368, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_DataSource
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433194008634784368, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_AspectRatio
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433194008634784368, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_AudioOutputMode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433194008634784368, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_ControlledAudioTrackCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433194008634784368, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_DirectAudioMutes.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433194008634784368, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_DirectAudioVolumes.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433194008634784368, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_EnabledAudioTracks.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433194008634784368, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_TargetAudioSources.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433194008634784368, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_DirectAudioMutes.Array.data[0]
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2433194008634784368, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_DirectAudioVolumes.Array.data[0]
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2469301714028408685, guid: d662f5ff8d19f374e9151b112ede7d22,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -487,6 +553,46 @@ PrefabInstance:
     - target: {fileID: 6417213484613081403, guid: d662f5ff8d19f374e9151b112ede7d22,
         type: 3}
       propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8435317517606687991, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8435317517606687991, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8435317517606687991, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8435317517606687991, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8435317517606687991, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8435317517606687991, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8435317517606687991, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8435317517606687991, guid: d662f5ff8d19f374e9151b112ede7d22,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

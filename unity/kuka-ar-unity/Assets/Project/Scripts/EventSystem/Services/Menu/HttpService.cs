@@ -20,6 +20,7 @@ public class HttpService : MonoBehaviour
     internal List<AddRobotData> Robots;
     internal List<Sprite> Stickers;
     internal List<string> CategoryNames;
+    internal bool HasInternet;
 
     [SerializeField]
     private float connectionTimeout;
