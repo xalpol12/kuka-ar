@@ -106,11 +106,14 @@ public class ObservableRobotsBehavior : MonoBehaviour
     private void OnSelectActions(Transform panelRef, int index)
     {
         // todo fix coroutine wait time to display proper status
-        var ipAddress = observableRobotsController.HttpService.Robots[index].RobotName;
+        Debug.Log(observableRobotsController.HttpService.Robots[index].RobotName);
+        Debug.Log(observableRobotsController.HttpService.Robots[index].IpAddress);
+        Debug.Log(observableRobotsController.HttpService.Robots[index].RobotCategory);
+        var ipAddress = observableRobotsController.HttpService.Robots[index].IpAddress;
         var statusText = panelRef.Find("ConnectionStatus").GetComponent<TMP_Text>();
-        
+
         StartCoroutine(observableRobotsController.HttpService.PingChosenRobot(ipAddress));
-        
+
         statusText.color = observableRobotsController.HttpService.RobotConnectionStatus switch
         {
             ConnectionStatus.Connected => new Color(0.176f, 0.78f, 0.439f),
@@ -123,11 +126,16 @@ public class ObservableRobotsBehavior : MonoBehaviour
         {
             index = observableRobotsController.HttpService.Robots.Count;
         }
-        panelRef.Find("CurrentIpAddress").GetComponent<TMP_Text>().text = 
-            observableRobotsController.HttpService.Robots[index].IpAddress;
-        panelRef.Find("CurrentRobotName").GetComponent<TMP_Text>().text = ipAddress;
+
+        panelRef.Find("CurrentIpAddress").GetComponent<TMP_Text>().text = ipAddress;
+            
+        panelRef.Find("CurrentRobotName").GetComponent<TMP_Text>().text = 
+            observableRobotsController.HttpService.Robots[index].RobotName;
+        panelRef.Find("CoordSystemPicker").GetComponent<Image>().sprite =
+            observableRobotsController.HttpService.Stickers[index];
         statusText.text = observableRobotsController.HttpService.RobotConnectionStatus.ToString();
         observableRobotsController.StylingService.IsAfterItemSelect = true;
+        observableRobotsController.StylingService.SliderState = LogicStates.Hiding;
     }
 
     private void ConnectionFailed(bool state)

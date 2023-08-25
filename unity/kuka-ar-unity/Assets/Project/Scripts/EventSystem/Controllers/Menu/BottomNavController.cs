@@ -8,7 +8,6 @@ public class BottomNavController : MonoBehaviour
     public int id;
     public GameObject bottomNavPanel;
     internal SelectableStylingService StylingService;
-    internal LogicStates SliderState;
     
     internal bool IsCirclePressed;
     internal int TransformFactor;
@@ -18,7 +17,6 @@ public class BottomNavController : MonoBehaviour
         StylingService = SelectableStylingService.Instance;
         
         TransformFactor = 5000;
-        SliderState = LogicStates.Waiting;
         IsCirclePressed = false;
         PositioningService.Instance.BestFitPosition = bottomNavPanel.transform.position;
         
@@ -31,13 +29,13 @@ public class BottomNavController : MonoBehaviour
     private void BottomNavOnMove(int uid)
     {
         if (uid != id) return;
-        SliderState = LogicStates.Running;
+        StylingService.SliderState = LogicStates.Running;
     }
 
     private void BottomNavToDockPosition(int uid)
     {
         if (uid != id) return;
-        SliderState = LogicStates.Hiding;
+        StylingService.SliderState = LogicStates.Hiding;
     }
 
     private void CirclePress(int uid)

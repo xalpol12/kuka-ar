@@ -50,8 +50,8 @@ public class HttpService : MonoBehaviour
     public void OnClickDataReload(int uid)
     {
         if (id != uid) return;
-        GetConfigured();
         GetRobots();
+        GetConfigured();
         GetStickers();
     }
 
@@ -161,7 +161,7 @@ public class HttpService : MonoBehaviour
                 {
                     RobotName = entry.Value.Name,
                     RobotCategory = group.Key,
-                    IpAddress = "FAKE 192.168.100." + i,
+                    IpAddress = "Robots[0].IpAddress", // TODO FIX LATER
                 };
                 list.Add(robot);
                 i++;

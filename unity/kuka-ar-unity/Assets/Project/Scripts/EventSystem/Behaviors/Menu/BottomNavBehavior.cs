@@ -34,11 +34,11 @@ public class BottomNavBehavior : MonoBehaviour
 
     private void Update()
     {
-        if (bottomNav.SliderState == LogicStates.Running)
+        if (bottomNav.StylingService.SliderState == LogicStates.Running)
         {
             StartCoroutine(BottomMenuPositionHandler());
         }
-        else if (bottomNav.SliderState == LogicStates.Hiding)
+        else if (bottomNav.StylingService.SliderState == LogicStates.Hiding)
         {
             StartCoroutine(bottomNav.StylingService.IsAfterItemSelect ?
                 CloseObservableRobotsList() : AutoDestinationPull());
@@ -54,7 +54,7 @@ public class BottomNavBehavior : MonoBehaviour
         if (menuPosition.y > Screen.height * pullMenuScreenMaxHeight)
         {
             menuPosition.y = Screen.height * pullMenuScreenMaxHeight;
-            bottomNav.SliderState = LogicStates.Waiting;
+            bottomNav.StylingService.SliderState = LogicStates.Waiting;
             yield break;
         }
 
@@ -84,14 +84,14 @@ public class BottomNavBehavior : MonoBehaviour
             var newPosition = bottomNav.transform.position + translation;
             if (newPosition.y > Screen.height * pullMenuScreenMaxHeight)
             {
-                bottomNav.SliderState = LogicStates.Waiting;
+                bottomNav.StylingService.SliderState = LogicStates.Waiting;
                 yield break;
             }
             
             if (newPosition.y < dockPosition.y)
             {
                 bottomNav.transform.position = dockPosition;
-                bottomNav.SliderState = LogicStates.Waiting;
+                bottomNav.StylingService.SliderState = LogicStates.Waiting;
                 yield break;
             }
                     
