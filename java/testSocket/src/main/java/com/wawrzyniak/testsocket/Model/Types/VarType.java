@@ -11,7 +11,8 @@ public enum VarType {
     POSITION("$POS_ACT"),
     BASE_NUMBER("$ACT_BASE"),
     TOOL_NUMBER("$ACT_TOOL"),
-    JOINTS("$AXIS_ACT");
+    JOINTS("$AXIS_ACT"),
+    WRONG("Wrong id for debug");
 
     private final String value;
 
@@ -29,6 +30,9 @@ public enum VarType {
             }
             case JOINTS: {
                 yield new KRLJoints();
+            }
+            case WRONG: {
+                yield null;
             }
         };
         return new ValuePair(this.value, type);
