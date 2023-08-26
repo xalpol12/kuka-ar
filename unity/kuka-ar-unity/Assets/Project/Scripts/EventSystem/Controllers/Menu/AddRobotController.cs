@@ -2,6 +2,7 @@ using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.EventSystem.Enums;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AddRobotController : MonoBehaviour
 {
@@ -18,6 +19,10 @@ public class AddRobotController : MonoBehaviour
     private AddNewRobotService addNewRobotService;
     private AddRobotData data;
     private HttpService httpService;
+    private SelectableStylingService stylingService;
+    private Image ipImage;
+    private Image categoryImage;
+    private Image nameImage;
     private void Start()
     {
         TransformFactor = 3000;
@@ -25,6 +30,11 @@ public class AddRobotController : MonoBehaviour
         
         httpService = HttpService.Instance;
         addNewRobotService = AddNewRobotService.Instance;
+        stylingService = SelectableStylingService.Instance;
+        
+        ipImage = addDialog.transform.Find("IpAddress").GetComponent<Image>();
+        categoryImage = addDialog.transform.Find("ChosenCategory").GetComponent<Image>();
+        nameImage = addDialog.transform.Find("RobotName").GetComponent<Image>();
         
         data = new AddRobotData
         {
@@ -68,7 +78,25 @@ public class AddRobotController : MonoBehaviour
 
         if (string.IsNullOrWhiteSpace(content.IpAddress) || content.IpAddress == data.IpAddress ||
             string.IsNullOrWhiteSpace(content.RobotCategory) || content.RobotCategory == data.RobotCategory ||
-            string.IsNullOrWhiteSpace(content.RobotName) || content.RobotName == data.RobotName) return;
+            string.IsNullOrWhiteSpace(content.RobotName) || content.RobotName == data.RobotName)
+        {
+            if (string.IsNullOrWhiteSpace(content.IpAddress) || content.IpAddress == data.IpAddress)
+            {
+                ipImage.sprite = stylingService.InvalidSelectable;
+            }
+
+            if (string.IsNullOrWhiteSpace(content.RobotCategory) || content.RobotCategory == data.RobotCategory)
+            {
+                categoryImage.sprite = stylingService.InvalidSelectable;
+            }
+
+            if (string.IsNullOrWhiteSpace(content.RobotName) || content.RobotName == data.RobotName)
+            {
+                nameImage.sprite = stylingService.InvalidSelectable;
+            }
+            
+            return;
+        }
         DialogState = LogicStates.Hiding;
         addNewRobotService.ResetSelectState = true;
         httpService.PostNewRobot(data);

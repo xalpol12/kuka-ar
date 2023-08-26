@@ -106,9 +106,6 @@ public class ObservableRobotsBehavior : MonoBehaviour
     private void OnSelectActions(Transform panelRef, int index)
     {
         // todo fix coroutine wait time to display proper status
-        Debug.Log(observableRobotsController.HttpService.Robots[index].RobotName);
-        Debug.Log(observableRobotsController.HttpService.Robots[index].IpAddress);
-        Debug.Log(observableRobotsController.HttpService.Robots[index].RobotCategory);
         var ipAddress = observableRobotsController.HttpService.Robots[index].IpAddress;
         var statusText = panelRef.Find("ConnectionStatus").GetComponent<TMP_Text>();
 

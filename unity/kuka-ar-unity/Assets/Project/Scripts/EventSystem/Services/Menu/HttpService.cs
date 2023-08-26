@@ -152,7 +152,6 @@ public class HttpService : MonoBehaviour
     {
         
         var list = new List<AddRobotData>();
-        var i = 0;
         foreach (var group in response)
         {
             foreach (var entry in group.Value)
@@ -164,10 +163,7 @@ public class HttpService : MonoBehaviour
                     IpAddress = "Robots[0].IpAddress", // TODO FIX LATER
                 };
                 list.Add(robot);
-                i++;
             }
-
-            i += 5;
         }
         return list;
     }

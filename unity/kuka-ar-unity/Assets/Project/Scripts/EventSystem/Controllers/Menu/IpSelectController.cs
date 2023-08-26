@@ -1,6 +1,7 @@
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class IpSelectController : MonoBehaviour
 {
@@ -17,6 +18,9 @@ public class IpSelectController : MonoBehaviour
 
     private const int GroupOffset = 1000;
     private bool showOptions;
+    private Image ipField;
+    private Image categoryField;
+    private Image nameField;
 
     private void Start()
     {
@@ -28,6 +32,11 @@ public class IpSelectController : MonoBehaviour
         showOptions = false;
         ShowOptionsController = LogicStates.Waiting;
         TransformFactor = 7500;
+        
+        var parent = ipSelector.transform.parent;
+        ipField = parent.Find("IpAddress").GetComponent<Image>();
+        categoryField = parent.Find("ChosenCategory").GetComponent<Image>();
+        nameField = parent.Find("RobotName").GetComponent<Image>();
         
         MenuEvents.Event.OnClickIpAddress += OnClickSelectIpAddress;
     }
@@ -41,12 +50,15 @@ public class IpSelectController : MonoBehaviour
             {
                 case 0:
                     ElementClicked = ButtonType.IpAddress;
+                    ipField.sprite = StylingService.DefaultInputField;
                     break;
                 case 1:
                     ElementClicked = ButtonType.Category;
+                    categoryField.sprite = StylingService.DefaultInputField;
                     break;
                 case 2:
                     ElementClicked = ButtonType.RobotName;
+                    nameField.sprite = StylingService.DefaultInputField;
                     break;
             }
         }

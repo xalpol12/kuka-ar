@@ -11,6 +11,8 @@ public class SelectableStylingService : MonoBehaviour
     internal Sprite SelectedSprite;
     internal Sprite DefaultAddIcon;
     internal Sprite PressedAddIcon;
+    internal Sprite InvalidSelectable;
+    internal Sprite DefaultInputField;
     internal LogicStates SliderState;
     internal bool IsAfterItemSelect;
 
@@ -28,6 +30,8 @@ public class SelectableStylingService : MonoBehaviour
         SelectedSprite = Resources.Load<Sprite>("Fields/Selected");
         DefaultAddIcon = Resources.Load<Sprite>("Icons/circle");
         PressedAddIcon = Resources.Load<Sprite>("Icons/circlePress");
+        InvalidSelectable = Resources.Load<Sprite>("Fields/SelectFieldInvalid");
+        DefaultInputField = Resources.Load<Sprite>("Fields/InputField");
     }
 
     public void MarkAsUnselected(List<GameObject> allGridItems)
