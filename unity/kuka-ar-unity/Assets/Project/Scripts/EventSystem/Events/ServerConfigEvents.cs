@@ -1,27 +1,34 @@
 using System;
 using UnityEngine;
 
-public class ServerConfigEvents : MonoBehaviour
+namespace Project.Scripts.EventSystem.Events
 {
-    public static ServerConfigEvents Events;
-
-    private void Awake()
+    public class ServerConfigEvents : MonoBehaviour
     {
-        Events = this;
-    }
+        public static ServerConfigEvents Events;
 
     public event Action<int> OnClickPingServer;
     public event Action<int> OnClickSaveServerConfig;
     public event Action<int> OnClickBackToMenu; 
 
-    public void ServerPing(int id)
-    {
-        OnClickPingServer?.Invoke(id);
-    }
+        public event Action<int> OnClickPingServer;
+        public event Action<int> OnClickSaveServerConfig;
+        public event Action<int> OnClickBackToMenu;
 
-    public void SaveServerConfig(int id)
-    {
-        OnClickSaveServerConfig?.Invoke(id);
+        public void ServerPing(int id)
+        {
+            OnClickPingServer?.Invoke(id);
+        }
+
+        public void SaveServerConfig(int id)
+        {
+            OnClickSaveServerConfig?.Invoke(id);
+        }
+
+        public void BackToMenu(int id)
+        {
+            OnClickBackToMenu?.Invoke(id);
+        }
     }
 
     public void BackToMenu(int id)

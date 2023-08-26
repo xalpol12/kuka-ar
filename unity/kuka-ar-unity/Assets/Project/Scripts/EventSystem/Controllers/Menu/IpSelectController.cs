@@ -3,7 +3,7 @@ using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class IpSelectController : MonoBehaviour
+namespace Project.Scripts.EventSystem.Controllers.Menu
 {
     public int id;
     public GameObject ipSelector;
@@ -22,12 +22,12 @@ public class IpSelectController : MonoBehaviour
     private Image categoryField;
     private Image nameField;
 
-    private void Start()
-    {
-        HttpService = HttpService.Instance;
-        StylingService = SelectableStylingService.Instance;
-        AddNewRobotService = AddNewRobotService.Instance;
-        PositioningService = PositioningService.Instance;
+        private void Start()
+        {
+            HttpService = HttpService.Instance;
+            StylingService = SelectableStylingService.Instance;
+            AddNewRobotService = AddNewRobotService.Instance;
+            PositioningService = PositioningService.Instance;
         
         showOptions = false;
         ShowOptionsController = LogicStates.Waiting;
@@ -45,8 +45,7 @@ public class IpSelectController : MonoBehaviour
     {
         if (!showOptions)
         {
-            PrevElementClicked = ElementClicked;
-            switch (uid % GroupOffset)
+            if (!ShowOptions)
             {
                 case 0:
                     ElementClicked = ButtonType.IpAddress;
@@ -61,7 +60,6 @@ public class IpSelectController : MonoBehaviour
                     nameField.sprite = StylingService.DefaultInputField;
                     break;
             }
-        }
 
         uid /= GroupOffset;
         if (id != uid) return;

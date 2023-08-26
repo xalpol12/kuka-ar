@@ -13,10 +13,17 @@ namespace Project.Scripts.Connectivity.WebSocket
 {
     public class WebSocketClient : MonoBehaviour
     {
+        public static WebSocketClient Instance;
+        
         [SerializeField] private TrackedRobotsHandler trackedRobotsHandlerScript;
         private NativeWebSocket.WebSocket ws;
         private static JsonSerializerSettings settings;
         private ConcurrentQueue<string> messagesToSend;
+
+        private void Awake()
+        {
+            Instance = this;
+        }
 
         private void Start()
         {
@@ -47,11 +54,11 @@ namespace Project.Scripts.Connectivity.WebSocket
             ws.OnMessage += OnWebsocketMessage;
 
             ws.OnOpen += () => 
-                DebugLogger.Instance().AddLog($"Connected to ws: {serverAddress}; ");
+                DebugLogger.Instance.AddLog($"Connected to ws: {serverAddress}; ");
             ws.OnError += (e) =>
-                DebugLogger.Instance().AddLog($"Ws error code {e}; ");
+                DebugLogger.Instance.AddLog($"Ws error code {e}; ");
 
-            DebugLogger.Instance().AddLog("Await ws.Connect(); ");
+            DebugLogger.Instance.AddLog("Await ws.Connect(); ");
             await ws.Connect();
         }
 
@@ -87,41 +94,5 @@ namespace Project.Scripts.Connectivity.WebSocket
                 ws.Close();
             }
         }
-
-        #region Singleton logic
-
-        private static WebSocketClient instance;
-
-        public static WebSocketClient Instance()
-        {
-            if (!Exists())
-            {
-                throw new Exception(
-                    "WebSocketClient could not find the WebSocketClient object." +
-                    "Please ensure you have added the WebSocketClient Prefab to your scene.");
-            }
-            return instance;
-        }
-
-        private static bool Exists()
-        {
-            return instance != null;
-        }
-
-        private void Awake()
-        {
-            if (instance == null)
-            {
-                instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-        }
-
-        private void OnDestroy()
-        {
-            instance = null;
-        }
-
-        #endregion
     }
 }

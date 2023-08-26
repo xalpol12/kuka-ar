@@ -8,7 +8,14 @@ namespace Project.Scripts.Multithreading
 {
 	public class UnityMainThreadDispatcher : MonoBehaviour {
 
+		public static UnityMainThreadDispatcher Instance;
+		
 		private static readonly Queue<Action> ExecutionQueue = new();
+		
+		void Awake()
+		{
+			Instance = this;
+		}
 
 		public void Update() 
 		{
@@ -71,41 +78,5 @@ namespace Project.Scripts.Multithreading
 			yield return null;
 		}
 		
-		#region Singleton logic
-
-		private static UnityMainThreadDispatcher instance = null;
-
-		private static bool Exists() 
-		{
-			return instance != null;
-		}
-
-		public static UnityMainThreadDispatcher Instance() 
-		{
-			if (!Exists ()) 
-			{
-				throw new Exception (
-					"UnityMainThreadDispatcher could not find the UnityMainThreadDispatcher object. " +
-					"Please ensure you have added the MainThreadExecutor Prefab to your scene.");
-			}
-			return instance;
-		}
-
-
-		void Awake()
-		{
-			if (instance == null) 
-			{
-				instance = this;
-				DontDestroyOnLoad(gameObject);
-			}
-		}
-
-		void OnDestroy() 
-		{
-			instance = null;
-		}
-
-		#endregion
 	}
 }

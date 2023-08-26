@@ -3,9 +3,11 @@ using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SelectableStylingService : MonoBehaviour
+namespace Project.Scripts.EventSystem.Services.Menu
 {
-    public static SelectableStylingService Instance;
+    public class SelectableStylingService : MonoBehaviour
+    {
+        public static SelectableStylingService Instance;
     
     internal Sprite DefaultSprite;
     internal Sprite SelectedSprite;
@@ -16,10 +18,10 @@ public class SelectableStylingService : MonoBehaviour
     internal LogicStates SliderState;
     internal bool IsAfterItemSelect;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+        private void Awake()
+        {
+            Instance = this;
+        }
 
     private void Start()
     {
@@ -34,11 +36,12 @@ public class SelectableStylingService : MonoBehaviour
         DefaultInputField = Resources.Load<Sprite>("Fields/InputField");
     }
 
-    public void MarkAsUnselected(List<GameObject> allGridItems)
-    {
-        foreach (var item in allGridItems)
+        public void MarkAsUnselected(List<GameObject> allGridItems)
         {
-            item.transform.GetComponent<Image>().sprite = DefaultSprite;
+            foreach (var item in allGridItems)
+            {
+                item.transform.GetComponent<Image>().sprite = DefaultSprite;
+            }
         }
     }
 }

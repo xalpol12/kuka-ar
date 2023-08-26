@@ -2,7 +2,7 @@ using System.Collections;
 using System.Threading;
 using UnityEngine;
 
-public class FrameRateController : MonoBehaviour
+namespace Project.Scripts.EventSystem.Controllers
 {
     [Header("Frame settings")] 
     private const int MaxRate = 9999;
@@ -18,9 +18,7 @@ public class FrameRateController : MonoBehaviour
         StartCoroutine(nameof(WaitForNextFrame));
     }
 
-    private IEnumerator WaitForNextFrame()
-    {
-        while (true)
+        private IEnumerator WaitForNextFrame()
         {
             yield return new WaitForEndOfFrame();
             currentFrameTime += 1.0f / targetFrameRate;

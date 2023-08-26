@@ -1,6 +1,8 @@
 package com.wawrzyniak.kukaComm.Service.RobotData;
 
 import com.wawrzyniak.kukaComm.Repository.RobotStickerRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +26,7 @@ public class RobotStickerService {
     public Map<String, byte[]> getAllStickers() throws IOException {
         Map<String, byte[]> stickers = new HashMap<>();
         List<File> files = stickerRepository.getStickers();
-        for (File file : files){
+        for (File file : files) {
             stickers.put(getBaseName(file.getName()), Files.readAllBytes(file.toPath()));
         }
         return stickers;

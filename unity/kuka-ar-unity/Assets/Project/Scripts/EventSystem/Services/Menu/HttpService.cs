@@ -10,7 +10,7 @@ using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 using UnityEngine.Networking;
 
-public class HttpService : MonoBehaviour
+namespace Project.Scripts.EventSystem.Services.Menu
 {
     public int id;
     public static HttpService Instance;
@@ -27,8 +27,13 @@ public class HttpService : MonoBehaviour
     
     private void Awake()
     {
-        Instance = this;
-    }
+        public int id;
+        public static HttpService Instance;
+        internal string ConfiguredIp;
+        internal List<AddRobotData> ConfiguredRobots;
+        internal List<AddRobotData> Robots;
+        internal List<Sprite> Stickers;
+        internal List<string> CategoryNames;
 
     private void Start()
     {
@@ -81,15 +86,13 @@ public class HttpService : MonoBehaviour
         
         while (!status.isDone)
         {
-            await Task.Yield();
+            if (id == uid)
+            {
+                GetConfigured();
+                GetRobots();
+                GetStickers();
+            }
         }
-        
-        var data = JsonConvert
-            .DeserializeObject<Dictionary<string, Dictionary<string, RobotData>>>(http.downloadHandler.text);
-        
-        ConfiguredRobots = data != null ? MapConfiguredResponse(data) : new List<AddRobotData>();
-        CategoryNames = ConfiguredRobots.Count > 0 ? MapUniqueCategoryNames() : new List<string>();
-    }
 
     private async void GetRobots()
     {
@@ -113,40 +116,70 @@ public class HttpService : MonoBehaviour
         
         while (!status.isDone)
         {
-            await Task.Yield();
+            var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/configured");
+            var status = http.SendWebRequest();
+
+            while (!status.isDone)
+            {
+                await Task.Yield();
+            }
+
+            var data = JsonConvert
+                .DeserializeObject<Dictionary<string, Dictionary<string, RobotData>>>(http.downloadHandler.text);
+
+            ConfiguredRobots = data != null ? MapConfiguredResponse(data) : new List<AddRobotData>();
+            CategoryNames = ConfiguredRobots.Count > 0 ? MapUniqueCategoryNames() : new List<string>();
         }
-        
-        var data = JsonConvert.DeserializeObject<Dictionary<string, byte[]>>(http.downloadHandler.text);
-        
-        Stickers = data != null ? MapStickers(data) : new List<Sprite>();
-    }
 
     public async void PostNewRobot(object body)
     {
         var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/add", RequestType.POST, body);
         var status = http.SendWebRequest();
 
-        while (!status.isDone)
-        {
-            await Task.Yield();
+            while (!status.isDone)
+            {
+                await Task.Yield();
+            }
+
+            var data = JsonConvert.DeserializeObject<List<AddRobotData>>(http.downloadHandler.text);
+
+            Robots = data ?? new List<AddRobotData>();
         }
-    }
+
+        private async void GetStickers()
+        {
+            var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/stickers");
+            var status = http.SendWebRequest();
+
+            while (!status.isDone)
+            {
+                await Task.Yield();
+            }
+
+            var data = JsonConvert.DeserializeObject<Dictionary<string, byte[]>>(http.downloadHandler.text);
+
+            Stickers = data != null ? MapStickers(data) : new List<Sprite>();
+        }
 
     private static UnityWebRequest CreateApiRequest(string path, RequestType type = RequestType.GET, object data = null)
     {
         var request = new UnityWebRequest(path, type.ToString());
 
-        if (data != null)
-        {
-            var raw = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data));
-            request.uploadHandler = new UploadHandlerRaw(raw);
+            while (!status.isDone)
+            {
+                await Task.Yield();
+            }
         }
 
-        request.downloadHandler = new DownloadHandlerBuffer();
-        request.SetRequestHeader("Content-Type","application/json");
+        private UnityWebRequest CreateApiRequest(string path, RequestType type = RequestType.GET, object data = null)
+        {
+            var request = new UnityWebRequest(path, type.ToString());
 
-        return request;
-    }
+            if (data != null)
+            {
+                var raw = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data));
+                request.uploadHandler = new UploadHandlerRaw(raw);
+            }
 
     private List<AddRobotData> MapConfiguredResponse(Dictionary<string, Dictionary<string, RobotData>> response)
     {
@@ -154,9 +187,12 @@ public class HttpService : MonoBehaviour
         var list = new List<AddRobotData>();
         foreach (var group in response)
         {
-            foreach (var entry in group.Value)
+
+            var list = new List<AddRobotData>();
+            var i = 0;
+            foreach (var group in response)
             {
-                var robot = new AddRobotData
+                foreach (var entry in group.Value)
                 {
                     RobotName = entry.Value.Name,
                     RobotCategory = group.Key,
@@ -165,34 +201,36 @@ public class HttpService : MonoBehaviour
                 list.Add(robot);
             }
         }
-        return list;
-    }
 
     private static List<Sprite> MapStickers(Dictionary<string, byte[]> response)
     {
         var list = new List<Sprite>();
         foreach (var sticker in response)
         {
-            var tex = new Texture2D(1,1);
-            tex.LoadImage(sticker.Value);
-            var sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-            list.Add(sprite);
-        }
-
-        return list;
-    }
-
-    private List<string> MapUniqueCategoryNames()
-    {
-        var list = new List<string>();
-        foreach (var category in ConfiguredRobots)
-        {
-            if (!list.Contains(category.RobotCategory))
+            var list = new List<Sprite>();
+            foreach (var sticker in response)
             {
-                list.Add(category.RobotCategory);
+                var tex = new Texture2D(1,1);
+                tex.LoadImage(sticker.Value);
+                var sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+                list.Add(sprite);
             }
+
+            return list;
         }
 
-        return list;
+        private List<string> MapUniqueCategoryNames()
+        {
+            var list = new List<string>();
+            foreach (var category in ConfiguredRobots)
+            {
+                if (!list.Contains(category.RobotCategory))
+                {
+                    list.Add(category.RobotCategory);
+                }
+            }
+
+            return list;
+        }
     }
 }

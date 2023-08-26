@@ -1,5 +1,8 @@
 package com.wawrzyniak.kukaComm.Repository;
 
+import com.wawrzyniak.kukaComm.Service.RobotData.RobotStickerService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
@@ -10,6 +13,9 @@ import java.util.List;
 
 @Repository
 public class RobotStickerRepository {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(RobotStickerRepository.class);
 
     @Value("${img.location}")
     private String location;
@@ -23,8 +29,10 @@ public class RobotStickerRepository {
         File dir = new File(location);
         File[] files = dir.listFiles(fileFilter);
         if (files == null) {
+            logger.debug("Found 0 stickers in directory: {}", location);
             return new ArrayList<>();
         }
+        logger.debug("Found: {} stickers in directory: {}", files.length, location);
         return new ArrayList<>(List.of(files));
     }
 

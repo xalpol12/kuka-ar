@@ -5,6 +5,7 @@ import com.wawrzyniak.kukaComm.Exceptions.WrongIpException;
 import com.wawrzyniak.kukaComm.Model.ModelReading.ConfiguredRobot;
 import com.wawrzyniak.kukaComm.Model.ModelReading.ConfiguredRobotDTO;
 import com.wawrzyniak.kukaComm.Repository.ConfiguredRobotsRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,15 +15,11 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 
 @Service
+@RequiredArgsConstructor
 public class ConfiguredRobotService {
 
     private final RobotMapper mapper;
     private final ConfiguredRobotsRepository robotRepository;
-    @Autowired
-    public ConfiguredRobotService(RobotMapper mapper, ConfiguredRobotsRepository robotRepository) {
-        this.mapper = mapper;
-        this.robotRepository = robotRepository;
-    }
 
     public ConfiguredRobotDTO save(ConfiguredRobotDTO robotDTO) throws WrongIpException {
         ConfiguredRobot robotToSave = mapper.dtoToRobot(robotDTO);
@@ -46,7 +43,7 @@ public class ConfiguredRobotService {
 
     public void deleteByIp(String ipAddress) {
         Optional<ConfiguredRobot> robotToDelete = robotRepository.findByIpAddress(ipAddress);
-        if(robotToDelete.isEmpty()) {
+        if (robotToDelete.isEmpty()) {
             return;
         }
         robotRepository.delete(robotToDelete.get());

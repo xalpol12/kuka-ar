@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AddRobotController : MonoBehaviour
+namespace Project.Scripts.EventSystem.Controllers.Menu
 {
     public int id;
     public GameObject bottomNav;
@@ -38,16 +38,10 @@ public class AddRobotController : MonoBehaviour
         
         data = new AddRobotData
         {
-            IpAddress = "IP Address",
-            RobotCategory = "Category",
-            RobotName = "Name"
-        };
-        
-        MenuEvents.Event.OnClickAddNewRobot += OnClickDisplayDialog;
-        MenuEvents.Event.OnRobotSave += OnSave;
-        MenuEvents.Event.OnDragAddNewRobot += GrabSlider;
-        MenuEvents.Event.OnDropAddNewRobot += ReleaseSlider;
-    }
+            ShowAddDialog = false;
+            TransformFactor = 3000;
+            httpService = HttpService.Instance;
+            addNewRobotService = AddNewRobotService.Instance;
 
     private void OnClickDisplayDialog(int uid)
     {
@@ -56,9 +50,7 @@ public class AddRobotController : MonoBehaviour
         httpService.OnClickDataReload(4);
     }
 
-    private void OnSave(int uid)
-    {
-        var content = new AddRobotData
+        private void OnClickDisplayDialog(int uid)
         {
             IpAddress = addDialog.transform.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
                 .Find("Label").GetComponent<TMP_Text>().text,
@@ -103,19 +95,52 @@ public class AddRobotController : MonoBehaviour
         httpService.OnClickDataReload(4);
     }
 
-    private void ReleaseSlider(int uid)
-    {
-        if (id == uid)
+        private void OnSave(int uid)
         {
-            IsSliderHold = false;
-        }
-    }
+            var content = new AddRobotData
+            {
+                IpAddress = addDialog.transform.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
+                    .Find("Label").GetComponent<TMP_Text>().text,
+                RobotCategory = addDialog.transform.Find("ChosenCategory").GetComponent<RectTransform>().gameObject
+                    .transform
+                    .Find("CategoryLabel").GetComponent<TMP_Text>().text,
+                RobotName = addDialog.transform.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
+                .Find("NameLabel").GetComponent<TMP_Text>().text
+            };
 
-    private void GrabSlider(int uid)
-    {
-        if (id == uid)
+            if (id == uid)
+            {
+                if (saveButton.GetComponent<TMP_Text>().text == "Close")
+                {
+                    ShowAddDialog = false;
+                    return;
+                }
+                if (!string.IsNullOrWhiteSpace(content.IpAddress) && content.IpAddress != data.IpAddress &&
+                    !string.IsNullOrWhiteSpace(content.RobotCategory) && content.RobotCategory != data.RobotCategory &&
+                    !string.IsNullOrWhiteSpace(content.RobotName) && content.RobotName != data.RobotName)
+                {
+                    ShowAddDialog = false;
+                    addNewRobotService.ResetSelectState = true;
+                    httpService.PostNewRobot(data);
+                    httpService.OnClickDataReload(4);
+                }
+            }
+        }
+
+        private void ReleaseSlider(int uid)
         {
-            IsSliderHold = true;
+            if (id == uid)
+            {
+                IsSliderHold = false;
+            }
+        }
+
+        private void GrabSlider(int uid)
+        {
+            if (id == uid)
+            {
+                IsSliderHold = true;
+            }
         }
     }
 }

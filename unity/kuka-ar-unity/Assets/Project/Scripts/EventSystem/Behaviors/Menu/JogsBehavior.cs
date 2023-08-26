@@ -2,13 +2,15 @@ using System.Collections;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
-public class JogsBehavior : MonoBehaviour
+namespace Project.Scripts.EventSystem.Behaviors.Menu
 {
-    private JogsController jogsController;
-    private GameObject jogsValues;
-    private GameObject jogsDisplay;
+    public class JogsBehavior : MonoBehaviour
+    {
+        private JogsController jogsController;
+        private GameObject jogsValues;
+        private GameObject jogsDisplay;
     
-    private Vector3 jogsHomePosition;
+        private Vector3 jogsHomePosition;
     
     private int distance;
     private void Start()
@@ -21,8 +23,8 @@ public class JogsBehavior : MonoBehaviour
         jogsValues.SetActive(false);
         jogsHomePosition = jogsDisplay.transform.position;
         
-        distance = (int)((Screen.height * 0.115f) + PositioningService.Instance.PositioningError);
-    }
+            distance = (int)((Screen.height * 0.115f) + PositioningService.Instance.PositioningError);
+        }
     
     private void Update()
     {
@@ -44,12 +46,11 @@ public class JogsBehavior : MonoBehaviour
         var toggleActive = false;
         foreach (Transform child in jogsValues.transform)
         {
-            Vector3 translation;
-            if (child.name == "HideJogs")
+            var toggleActive = false;
+            foreach (Transform child in jogsValues.transform)
             {
-                translation = Vector3.down * (jogsController.transformFactor * (Time.deltaTime * distance));
-                var newPosition = child.position + translation;
-                if (newPosition.y < jogsHomePosition.y)
+                Vector3 translation;
+                if (child.name == "HideJogs")
                 {
                     toggleActive = true;
                     yield return null;
@@ -57,8 +58,22 @@ public class JogsBehavior : MonoBehaviour
                     jogsController.JogsTrigger = LogicStates.Waiting; 
                     break;
                 }
+                else
+                {
+                    translation = Vector3.up * 
+                                  (jogsController.transformFactor * (Time.deltaTime * 
+                                                                     (child.GetSiblingIndex() - 1) * distance));
+                    var newPosition = child.position + translation;
+                    if (newPosition.y - 10 > jogsHomePosition.y)
+                    {
+                        break;
+                    }  
+                }
+            
+                child.Translate(translation);
             }
-            else
+
+            if (toggleActive)
             {
                 translation = Vector3.up * 
                               (jogsController.transformFactor * (Time.deltaTime * 
@@ -72,11 +87,10 @@ public class JogsBehavior : MonoBehaviour
                     break;
                 }  
             }
-            
-            child.Translate(translation);
+        
         }
 
-        if (toggleActive)
+        private void ShowJogs()
         {
             jogsDisplay.SetActive(true);
             jogsValues.SetActive(false);
@@ -93,29 +107,22 @@ public class JogsBehavior : MonoBehaviour
             Vector3 translation;
             if (child.name == "HideJogs")
             {
-                translation = Vector3.up * (jogsController.transformFactor * (Time.deltaTime * distance));
-                var newPosition = child.position + translation;
-                if (newPosition.y > jogsHomePosition.y + distance)
+                Vector3 translation;
+                if (child.name == "HideJogs")
                 {
                     jogsController.JogsTrigger = LogicStates.Waiting; 
 
                     yield break;
                 }
-            }
-            else
-            {
-                translation = Vector3.down *
-                              (jogsController.transformFactor * (Time.deltaTime * (child.GetSiblingIndex() - 1) * distance));
-                var newPosition = child.position + translation;
-                if (newPosition.y < jogsHomePosition.y - (child.GetSiblingIndex() - 1) * distance)
+                else
                 {
                     jogsController.JogsTrigger = LogicStates.Waiting; 
 
                     yield break;
                 }
-            }
             
-            child.Translate(translation);
+                child.Translate(translation);
+            }
         }
     }
 }

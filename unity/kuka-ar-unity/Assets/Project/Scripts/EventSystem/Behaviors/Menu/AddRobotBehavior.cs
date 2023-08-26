@@ -2,7 +2,7 @@ using System.Collections;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
-public class AddRobotBehavior : MonoBehaviour
+namespace Project.Scripts.EventSystem.Behaviors.Menu
 {
     [SerializeField]
     private float pullAddMenuMaxHeight = 0.018f;
@@ -21,9 +21,9 @@ public class AddRobotBehavior : MonoBehaviour
         selectOptions = robotController.addDialog.transform.Find("SelectOptions")
             .GetComponent<RectTransform>().gameObject;
         
-        homePosition = robotController.addDialog.transform.position;
+            homePosition = robotController.addDialog.transform.position;
         
-        isDialogFullyOpen = false;
+            isDialogFullyOpen = false;
         
         robotController.addDialog.SetActive(false);
     }

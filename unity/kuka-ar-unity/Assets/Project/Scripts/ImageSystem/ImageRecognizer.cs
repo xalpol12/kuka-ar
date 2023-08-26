@@ -10,19 +10,19 @@ namespace Project.Scripts.ImageSystem
     public class ImageRecognizer : MonoBehaviour
     {
         private AnchorManager anchorManager;
-        private ARTrackedImageManager trackedImageManager;
+        private ARTrackedImageManager imageManager;
         private Dictionary<string, ARTrackedImage> trackedImages;
 
         private void Awake()
         {
             anchorManager = gameObject.GetComponent<AnchorManager>();
-            trackedImageManager = gameObject.GetComponent<ARTrackedImageManager>();
+            imageManager = gameObject.GetComponent<ARTrackedImageManager>();
         }
 
         private void Start()
         {
             trackedImages = new Dictionary<string, ARTrackedImage>();
-            trackedImageManager.trackedImagesChanged += OnChange;
+            imageManager.trackedImagesChanged += OnChange;
         }
 
         private void OnChange(ARTrackedImagesChangedEventArgs eventArgs)
@@ -30,8 +30,8 @@ namespace Project.Scripts.ImageSystem
             foreach (var newImage in eventArgs.added)
             {
                 trackedImages.Add(newImage.referenceImage.name, newImage);
-                // StartCoroutine(anchorManager.StartNewAnchorTracking(newImage));
-                DebugLogger.Instance().AddLog($"Current tracked images count: {trackedImages.Count.ToString()}; ");
+                StartCoroutine(anchorManager.StartNewAnchorTracking(newImage));
+                DebugLogger.Instance.AddLog($"Current tracked images count: {trackedImages.Count.ToString()}; ");
             }
         }
     }

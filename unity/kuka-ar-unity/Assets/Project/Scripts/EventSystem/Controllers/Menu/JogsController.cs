@@ -1,7 +1,7 @@
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
-public class JogsController : MonoBehaviour
+namespace Project.Scripts.EventSystem.Controllers.Menu
 {
     public int id;
     public float transformFactor;
@@ -20,10 +20,10 @@ public class JogsController : MonoBehaviour
         JogsTrigger = LogicStates.Waiting;
         defaultTransformFactor = 10;
         
-        ValueCheck();
+            ValueCheck();
         
-        MenuEvents.Event.OnClickJog += OnClickJog;
-    }
+            MenuEvents.Event.OnClickJog += OnClickJog;
+        }
 
     private void OnClickJog(int gui)
     {
@@ -32,11 +32,12 @@ public class JogsController : MonoBehaviour
         JogsTrigger = showJogs ? LogicStates.Running : LogicStates.Hiding;
     }
 
-    private void ValueCheck()
-    {
-        if (transformFactor is > 200f or < 0f)
+        private void ValueCheck()
         {
-            transformFactor = defaultTransformFactor;
+            if (transformFactor is > 200f or < 0f)
+            {
+                transformFactor = defaultTransformFactor;
+            }
         }
     }
 }

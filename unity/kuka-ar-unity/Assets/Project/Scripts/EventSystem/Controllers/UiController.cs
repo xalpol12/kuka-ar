@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
 using Project.Scripts.EventSystem.Enums;
+using Project.Scripts.EventSystem.Events;
+using Project.Scripts.EventSystem.Services.Menu;
+using Project.Scripts.EventSystem.Services.ServerConfig;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class UiController : MonoBehaviour
+namespace Project.Scripts.EventSystem.Controllers
 {
     public int id;
     public float animSpeed;
@@ -88,7 +91,6 @@ public class UiController : MonoBehaviour
         {
             PlayerPrefs.SetString("isAfterBugReport", false.ToString());
         }
-    }
 
     private void OnApplicationFocus(bool hasFocus)
     {
@@ -140,6 +142,58 @@ public class UiController : MonoBehaviour
         {
             SceneManager.LoadScene("WebViewScene");
             isAfterBugReport = true;
+        }
+
+        private void GoToMainScreen(int uid)
+        {
+            if (id == uid)
+            {
+                MoreOptionsAnim = AnimationStates.FadeOut;
+                if (selectedMode.isOn)
+                {
+                    NextAnim.Add(AnimationFilter.FocusModeIn);
+                }
+                else
+                {
+                    NextAnim.Add(AnimationFilter.MenuIn);
+                }
+            }
+        }
+
+        private void ReconfigureServer(int uid)
+        {
+            if (id == uid)
+            {
+                MoreOptionsAnim = AnimationStates.FadeOut;
+                NextAnim.Add(AnimationFilter.ServerConfigScreenIn);
+                abortServerConfigArrow.SetActive(true);
+            }
+        }
+
+        private void SubmitAnIssue(int uid)
+        {
+            if (id == uid)
+            {
+                SceneManager.LoadScene("WebViewScene");
+            }
+        }
+
+        private void AbortServerReconfiguration(int uid)
+        {
+            if (id == uid)
+            {
+                ServerConfigAnim = AnimationStates.FadeOut;
+                NextAnim.Add(AnimationFilter.MenuIn);
+            }
+        }
+
+        private void FocusModeHandler(int uid)
+        {
+            if (id == uid)
+            {
+                FocusModeAnim = AnimationStates.FadeOut;
+                NextAnim.Add(AnimationFilter.MoreOptionsIn);
+            }
         }
     }
 

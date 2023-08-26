@@ -1,6 +1,7 @@
+using Project.Scripts.EventSystem.Services.Menu;
 using UnityEngine;
 
-public class ObservableRobotsController : MonoBehaviour
+namespace Project.Scripts.EventSystem.Controllers.Menu
 {
     public GameObject parentGrid;
     internal HttpService HttpService;
@@ -11,6 +12,7 @@ public class ObservableRobotsController : MonoBehaviour
         HttpService = HttpService.Instance;
         StylingService = SelectableStylingService.Instance;
         
-        HttpService.OnClickDataReload(4);
+            HttpService.OnClickDataReload(4);
+        }
     }
 }

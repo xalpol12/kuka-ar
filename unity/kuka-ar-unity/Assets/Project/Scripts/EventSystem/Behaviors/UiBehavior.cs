@@ -2,7 +2,7 @@ using System.Collections;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
-public class UiBehavior : MonoBehaviour
+namespace Project.Scripts.EventSystem.Behaviors
 {
     private UiController controller;
     private CanvasGroup serverCanvasGroup;
@@ -12,7 +12,15 @@ public class UiBehavior : MonoBehaviour
     private GameObject serverBackArrow;
     private void Start()
     {
-        controller = GetComponent<UiController>();
+        private UiController controller;
+        private CanvasGroup serverCanvasGroup;
+        private CanvasGroup menuCanvasGroup;
+        private CanvasGroup moreOptionsCanvasGroup;
+        private CanvasGroup focusModeCanvasGroup;
+        private GameObject serverBackArrow;
+        void Start()
+        {
+            controller = GetComponent<UiController>();
 
         serverCanvasGroup = controller.serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>();
         menuCanvasGroup = controller.menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>();
@@ -26,7 +34,8 @@ public class UiBehavior : MonoBehaviour
         {
             StartCoroutine(FadeIn(serverCanvasGroup));
         }
-        else if(controller.ServerConfigAnim == AnimationStates.FadeOut)
+
+        private void FadeIn(CanvasGroup group)
         {
             StartCoroutine(FadeOut(serverCanvasGroup));
         }
@@ -131,15 +140,12 @@ public class UiBehavior : MonoBehaviour
                 controller.focusMode.SetActive(active);
                 break;
         }
-    }
 
-    private void AnimQueryResolver()
-    {
-        if (controller.NextAnim.Count > 0)
+        private void AnimQueryResolver()
         {
-            foreach (var s in controller.NextAnim)
+            if (controller.NextAnim.Count > 0)
             {
-                switch (s)
+                foreach (var s in controller.NextAnim)
                 {
                     case AnimationFilter.MenuIn:
                         controller.menuUi.SetActive(true);
@@ -170,9 +176,9 @@ public class UiBehavior : MonoBehaviour
                         controller.FocusModeAnim = AnimationStates.FadeOut;
                         break;
                 }
-            }
 
-            controller.NextAnim.Clear();
+                controller.NextAnim.Clear();
+            }
         }
     }
 }

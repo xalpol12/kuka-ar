@@ -1,12 +1,15 @@
 using UnityEngine;
 
-public class PositioningService : MonoBehaviour
+namespace Project.Scripts.EventSystem.Services.Menu
 {
-    public static PositioningService Instance;
-    internal readonly int PositioningError = 20;
-    internal Vector3 BestFitPosition;
-    private void Awake()
+    public class PositioningService : MonoBehaviour
     {
-        Instance = this;
+        public static PositioningService Instance;
+        internal readonly int PositioningError = 20;
+        internal Vector3 BestFitPosition;
+        private void Awake()
+        {
+            Instance = this;
+        }
     }
 }

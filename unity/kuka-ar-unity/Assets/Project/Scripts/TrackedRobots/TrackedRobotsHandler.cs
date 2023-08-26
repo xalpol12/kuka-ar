@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Project.Scripts.Connectivity.ExceptionHandling;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Parsing.OutputJson;
 using Project.Scripts.Multithreading;
@@ -10,12 +11,15 @@ namespace Project.Scripts.TrackedRobots
     public class TrackedRobotsHandler : MonoBehaviour
     {
         public GameObject prefab;
+        
         [Tooltip("Minimal difference between two position update values to be registered [in meters]")]
         [Range(0f, 5f)]
         public float positionThreshold = 0.01f;
+        
         [Tooltip("Minimal difference between two rotation update values to be registered [in degrees]")]
         [Range(0f, 360f)]
         public float rotationThreshold = 1f;
+        
         private Dictionary<string, TrackedRobotModel> trackedRobots;
         private HashSet<string> enqueuedIps;
 
@@ -28,11 +32,15 @@ namespace Project.Scripts.TrackedRobots
 
         public void ReceivePackageFromWebsocket(OutputWithErrors newData)
         {
-            // TODO: add unwrapping exceptions from main node
             foreach (var foundIp in newData.Values.Keys)
             {
                 var robotData = newData.Values[foundIp];
                 UpdateTrackedPoint(foundIp, robotData);
+            }
+
+            if (newData.Exception.HasValue)
+            {
+                GlobalExceptionStorage.Instance.AddException(newData.Exception.Value);
             }
         }
 
@@ -47,13 +55,13 @@ namespace Project.Scripts.TrackedRobots
             {
                 if (!enqueuedIps.Contains(entry))
                 {
-                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    UnityMainThreadDispatcher.Instance.Enqueue(() =>
                     {
                         trackedRobots.Add(entry, new TrackedRobotModel(
                             Instantiate(prefab, Vector3.zero, Quaternion.identity),
                             positionThreshold,
                             rotationThreshold));
-                        DebugLogger.Instance().AddLog($"Object for ip {entry} instantiated; ");
+                        DebugLogger.Instance.AddLog($"Object for ip {entry} instantiated; ");
                         trackedRobots[entry].UpdateTrackedRobotVariables(robotData);
 
                         enqueuedIps.Remove(entry);
@@ -65,25 +73,27 @@ namespace Project.Scripts.TrackedRobots
             #endif
         }
 
-        // #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN //called from AnchorManager
-        // public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
-        // {
-        //     if (!enqueuedIps.Contains(ipAddress))
-        //     {
-        //         UnityMainThreadDispatcher.Instance().Enqueue(() =>
-        //         {
-        //             trackedRobots.Add(ipAddress, new TrackedRobotModel(
-        //                 Instantiate(prefab, basePoint.position, basePoint.rotation),
-        //                 threshold));
-        //             DebugLogger.Instance().AddLog($"Object for ip {ipAddress} instantiated; ");
-        //
-        //             enqueuedIps.Remove(ipAddress);
-        //         });
-        //
-        //         enqueuedIps.Add(ipAddress);
-        //     }
-        // }
-        // #endif
+        //TODO: add this method to UpdateTrackedPoint so that Unity Editor uses it
+        #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN //called from AnchorManager
+        public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
+        {
+            if (!enqueuedIps.Contains(ipAddress))
+            {
+                UnityMainThreadDispatcher.Instance.Enqueue(() =>
+                {
+                    trackedRobots.Add(ipAddress, new TrackedRobotModel(
+                        Instantiate(prefab, basePoint.position, basePoint.rotation),
+                        positionThreshold,
+                        rotationThreshold));
+                    DebugLogger.Instance.AddLog($"Object for ip {ipAddress} instantiated; ");
+        
+                    enqueuedIps.Remove(ipAddress);
+                });
+        
+                enqueuedIps.Add(ipAddress);
+            }
+        }
+        #endif
         
         void Update()
         {

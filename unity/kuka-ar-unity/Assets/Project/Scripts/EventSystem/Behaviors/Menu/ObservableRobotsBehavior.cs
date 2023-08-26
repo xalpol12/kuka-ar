@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ObservableRobotsBehavior : MonoBehaviour
+namespace Project.Scripts.EventSystem.Behaviors.Menu
 {
     private ObservableRobotsController observableRobotsController;
     private GameObject scrollList;
@@ -13,11 +13,14 @@ public class ObservableRobotsBehavior : MonoBehaviour
 
     private void Start()
     {
-        observableRobotsController = GetComponent<ObservableRobotsController>();
-        fileNotFound = Resources.Load<Sprite>("Icons/FileNotFound");
-        
-        scrollList = observableRobotsController.parentGrid;
-        allGridItems = new List<GameObject>();
+        private ObservableRobotsController observableRobotsController;
+        private GameObject scrollList;
+        private Sprite fileNotFound;
+        private List<GameObject> allGridItems;
+        void Start()
+        {
+            observableRobotsController = GetComponent<ObservableRobotsController>();
+            fileNotFound = Resources.Load<Sprite>("Icons/FileNotFound");
 
         InitObservableRobots();
         
@@ -31,12 +34,7 @@ public class ObservableRobotsBehavior : MonoBehaviour
             });
     }
 
-    private void InitObservableRobots()
-    {
-        var constantPanelRef = scrollList.transform.parent.GetComponent<Image>()
-            .gameObject.transform.Find("ConstantPanel").GetComponent<Image>()
-            .gameObject.transform;
-        var http = observableRobotsController.HttpService;
+            InitObservableRobots();
 
         if (http.Robots.Count == 0)
         {
@@ -60,13 +58,12 @@ public class ObservableRobotsBehavior : MonoBehaviour
             http.Robots[0].IpAddress;
         gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[0];
 
-        gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
+        private void InitObservableRobots()
         {
-            observableRobotsController.StylingService.MarkAsUnselected(allGridItems);
-            OnSelectActions(constantPanelRef, gridItem.transform.GetSiblingIndex());
-            gridItem.transform.GetComponent<Image>().sprite = observableRobotsController.StylingService.SelectedSprite;
-        });
-        allGridItems.Add(gridItem);
+            var constantPanelRef = scrollList.transform.parent.GetComponent<Image>()
+                .gameObject.transform.Find("ConstantPanel").GetComponent<Image>()
+                .gameObject.transform;
+            var http = observableRobotsController.HttpService;
 
         for (var i = 1; i < observableRobotsController.HttpService.Robots.Count + 2; i++)
         {
@@ -74,12 +71,11 @@ public class ObservableRobotsBehavior : MonoBehaviour
 
             if (i > observableRobotsController.HttpService.Robots.Count - 1)
             {
-                newGridItem.transform.GetComponent<Image>().color = Color.clear;
-                newGridItem.transform.Find("TemplateImg").GetComponent<Image>().color = Color.clear;
-                newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text = "";
-                newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text = "";
+                ConnectionFailed(true);
+                return;
             }
-            else
+
+            if (http.Stickers.Count == 0)
             {
                 newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
                                 http.Robots[i].RobotName;
@@ -88,20 +84,48 @@ public class ObservableRobotsBehavior : MonoBehaviour
                 gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[i - 1];
             }
 
-            newGridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
+            var grid = scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject;
+            var gridItem = grid.transform.Find("GridElement").GetComponent<Image>().gameObject;
+            gridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
+                http.Robots[0].RobotName;
+            gridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
+                http.Robots[0].IpAddress;
+            gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[0];
+
+            gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
                 observableRobotsController.StylingService.MarkAsUnselected(allGridItems);
                 if (gridItem.transform.GetSiblingIndex() >
                     observableRobotsController.HttpService.Robots.Count + 1)
                 {
-                    return;
+                    newGridItem.transform.GetComponent<Image>().color = Color.clear;
+                    newGridItem.transform.Find("TemplateImg").GetComponent<Image>().color = Color.clear;
+                    newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text = "";
+                    newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text = "";
                 }
-                OnSelectActions(constantPanelRef, newGridItem.transform.GetSiblingIndex());
-                newGridItem.transform.GetComponent<Image>().sprite = observableRobotsController.StylingService.SelectedSprite;
-            });
-            allGridItems.Add(newGridItem);
+                else
+                {
+                    newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
+                                    http.Robots[i].RobotName;
+                    newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
+                                    http.Robots[i].IpAddress;
+                    gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[i - 1];
+                }
+
+                newGridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    observableRobotsController.StylingService.MarkAsUnselected(allGridItems);
+                    if (gridItem.transform.GetSiblingIndex() >
+                        observableRobotsController.HttpService.Robots.Count + 1)
+                    {
+                        return;
+                    }
+                    OnSelectActions(constantPanelRef, newGridItem.transform.GetSiblingIndex());
+                    newGridItem.transform.GetComponent<Image>().sprite = observableRobotsController.StylingService.SelectedSprite;
+                });
+                allGridItems.Add(newGridItem);
+            }
         }
-    }
 
     private void OnSelectActions(Transform panelRef, int index)
     {
@@ -133,12 +157,5 @@ public class ObservableRobotsBehavior : MonoBehaviour
         statusText.text = observableRobotsController.HttpService.RobotConnectionStatus.ToString();
         observableRobotsController.StylingService.IsAfterItemSelect = true;
         observableRobotsController.StylingService.SliderState = LogicStates.Hiding;
-    }
-
-    private void ConnectionFailed(bool state)
-    {
-        scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject
-            .transform.Find("GridElement").GetComponent<Image>().gameObject.SetActive(!state);
-        scrollList.transform.parent.Find("ServerError").GetComponent<Image>().gameObject.SetActive(state);
     }
 }
