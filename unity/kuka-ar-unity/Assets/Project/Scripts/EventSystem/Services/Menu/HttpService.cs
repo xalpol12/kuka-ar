@@ -160,7 +160,7 @@ public class HttpService : MonoBehaviour
                 {
                     RobotName = entry.Value.Name,
                     RobotCategory = group.Key,
-                    IpAddress = "Robots[0].IpAddress", // TODO FIX LATER
+                    IpAddress = "192.168.1." + (int)Random.value, // TODO FIX LATER
                 };
                 list.Add(robot);
             }
