@@ -27,7 +27,7 @@ public class ConfiguredRobotService {
     public ConfiguredRobotDTO save(ConfiguredRobotDTO robotDTO) throws WrongIpException {
         ConfiguredRobot robotToSave = mapper.dtoToRobot(robotDTO);
         if (!validate(robotToSave.getIpAddress())) {
-            throw new WrongIpException("Wrong Ip format");
+            throw new WrongIpException("Wrong IP address format");
         }
 
         ConfiguredRobot savedRobot = robotRepository.save(robotToSave);

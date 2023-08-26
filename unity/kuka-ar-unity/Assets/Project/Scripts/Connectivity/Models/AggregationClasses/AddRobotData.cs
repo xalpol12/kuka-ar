@@ -1,16 +1,16 @@
-using System.Runtime.Serialization;
+using Newtonsoft.Json;
 
 namespace Project.Scripts.Connectivity.Models.AggregationClasses
 {
     public class AddRobotData
     {
-        [DataMember(Name = "id")]
+        [JsonProperty("id")]
         private ulong Id { get; set; }
-        [DataMember(Name = "ipAddress")]
+        [JsonProperty("ipAddress")]
         public string IpAddress { get; set; }
-        [DataMember(Name = "category")]
+        [JsonProperty("category")]
         public string RobotCategory { get; set; }
-        [DataMember(Name = "name")]
+        [JsonProperty("name")]
         public string RobotName { get; set; }
     }
 }

@@ -1,7 +1,6 @@
 package com.wawrzyniak.kukaComm.Service.RobotData;
 
 import com.wawrzyniak.kukaComm.Exceptions.RobotNotConfiguredException;
-import com.wawrzyniak.kukaComm.Exceptions.WrongIdException;
 import com.wawrzyniak.kukaComm.Exceptions.WrongIpException;
 import com.wawrzyniak.kukaComm.Model.ModelReading.ConfiguredRobotDTO;
 import com.wawrzyniak.kukaComm.Repository.ConfiguredRobotsRepository;
@@ -12,7 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class ConfiguredRobotServiceTest {
