@@ -6,6 +6,11 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
+# UNITY TESTS
+#       - name: Run Unity test
+#        uses: game-ci/unity-test-runner@v3.0.0
+#        path: ./unity/kuka-ar-unity/..
+
 name: java build
 
 on:
@@ -15,10 +20,21 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
-
+  test_builds:
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+      - name: Run Java tests
+        run: mvn -f ./java/kukaComm/pom.xml test
 
+  build:
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - name: Set up JDK 17
