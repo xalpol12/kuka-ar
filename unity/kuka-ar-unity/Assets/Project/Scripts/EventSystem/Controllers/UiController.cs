@@ -18,45 +18,44 @@ public class UiController : MonoBehaviour
     internal AnimationStates MoreOptionsAnim;
     internal AnimationStates FocusModeAnim;
     internal List<AnimationFilter> NextAnim;
-    private IpValidationService validationService;
-    private HttpService httpService;
+    
     
     [SerializeField] private GameObject abortServerConfigArrow;
     [SerializeField] private GameObject focusModeToggle;
+    
+    private IpValidationService validationService;
+    private HttpService httpService;
     private Toggle selectedMode;
     private int serverConfigDisplayState;
     private bool showMoreOptionsDialog;
+    private bool isAfterBugReport;
+    private bool isQuitting;
 
     private void Start()
     {
         validationService = IpValidationService.Instance;
         httpService= HttpService.Instance;
         
-        ServerConfigAnim = PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun ?
-            AnimationStates.FadeIn : AnimationStates.StandBy;
-        MenuAnim = PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun ?
-            AnimationStates.StandBy : AnimationStates.FadeIn;
-        MoreOptionsAnim = AnimationStates.StandBy;
-        FocusModeAnim = AnimationStates.StandBy;
-        
         NextAnim = new List<AnimationFilter>();
         selectedMode = focusModeToggle.GetComponent<Toggle>();
+        isQuitting = false;
+        
+        SetFadeController();
         if (PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun)
         {
-            menuUi.SetActive(false);
-            serverConfig.SetActive(true);
+            SetPrefabsActiveState(false, true, false);
+        }
+        else if (isAfterBugReport)
+        {
+            SetPrefabsActiveState(false,false,true);
         }
         else
         {
-            menuUi.SetActive(true);
-            serverConfig.SetActive(false);
-            
+            SetPrefabsActiveState(true, false, false);
+
             menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 1;
             serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 0;
         }
-        
-        moreOptions.SetActive(false);
-        focusMode.SetActive(false);
         
         MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
         ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;
@@ -67,11 +66,29 @@ public class UiController : MonoBehaviour
         FocusModeEvents.Events.OnClickDisplayMoreOptions += FocusModeHandler;
     }
 
+    private void OnEnable()
+    {
+        isAfterBugReport = PlayerPrefs.GetString("isAfterBugReport") == true.ToString();
+    }
+
+    private void OnDisable()
+    {
+        if (isQuitting) return;
+        PlayerPrefs.SetString("isAfterBugReport", isAfterBugReport.ToString());
+    }
+
+    private void OnApplicationQuit()
+    {
+        PlayerPrefs.SetString("isAfterBugReport", false.ToString());
+        isQuitting = true;
+    }
+
     private void ShowMoreOptions(int uid)
     {
         if (id != uid) return;
         MenuAnim = AnimationStates.FadeOut;
         NextAnim.Add(AnimationFilter.MoreOptionsIn);
+        Debug.Log(isAfterBugReport);
     }
 
     private void SaveServerConfiguration(int uid)
@@ -103,6 +120,7 @@ public class UiController : MonoBehaviour
         if (id == uid && !httpService.HasInternet)
         {
             SceneManager.LoadScene("WebViewScene");
+            isAfterBugReport = true;
         }
     }
 
@@ -118,5 +136,31 @@ public class UiController : MonoBehaviour
         if (id != uid) return;
         FocusModeAnim = AnimationStates.FadeOut;
         NextAnim.Add(AnimationFilter.MoreOptionsIn);
+    }
+
+    private void SetPrefabsActiveState(bool menu, bool server, bool options)
+    {
+        menuUi.SetActive(menu);
+        serverConfig.SetActive(server);
+        moreOptions.SetActive(options);
+        focusMode.SetActive(false);
+    }
+
+    private void SetFadeController()
+    {
+        if (PlayerPrefs.GetString("isAfterBugReport") == true.ToString())
+        {
+            ServerConfigAnim = AnimationStates.StandBy;
+            MenuAnim = AnimationStates.StandBy;
+            MoreOptionsAnim = AnimationStates.FadeIn;
+            FocusModeAnim = AnimationStates.StandBy;
+            return;
+        }
+        ServerConfigAnim = PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun ?
+            AnimationStates.FadeIn : AnimationStates.StandBy;
+        MenuAnim = PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun ?
+            AnimationStates.StandBy : AnimationStates.FadeIn;
+        MoreOptionsAnim = AnimationStates.StandBy;
+        FocusModeAnim = AnimationStates.StandBy;
     }
 }
