@@ -2,6 +2,10 @@ package com.wawrzyniak.testsocket.Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wawrzyniak.testsocket.Exceptions.RobotNotConfiguredException;
+import com.wawrzyniak.testsocket.Exceptions.WrongRequestException;
+import com.wawrzyniak.testsocket.Model.ExceptionMockingRequests.ClearExceptionRequest;
+import com.wawrzyniak.testsocket.Model.ExceptionMockingRequests.DisconnectRequest;
+import com.wawrzyniak.testsocket.Model.ExceptionMockingRequests.ExceptionToVariable;
 import com.wawrzyniak.testsocket.Model.ModelReading.ConfiguredRobotDTO;
 import com.wawrzyniak.testsocket.Model.Records.RobotData;
 import com.wawrzyniak.testsocket.Model.Value.KRLValue;
@@ -77,5 +81,20 @@ public class KukaCommStaticDataController {
     public KRLValue setValue(@RequestBody ValueSetRequest request) throws JsonProcessingException {
         logger.debug("Called endpoint: POST /configured, request body: " + request);
         return kukaService.setValue(request.getHost(), request.getVar(), request.getValue());
+    }
+
+    @PostMapping("exception/add")
+    public void addExceptionToVariable(@RequestBody ExceptionToVariable exception) throws WrongRequestException {
+        kukaService.addExceptionToVariable(exception.getHostIP(), exception.getVariable(), exception.getException());
+    }
+
+    @PostMapping("exception/clear")
+    public void clearExceptionFromVariable(@RequestBody ClearExceptionRequest exception) throws WrongRequestException {
+        kukaService.removeExceptionFromVariable(exception.getHostIP(), exception.getVariable());
+    }
+
+    @PostMapping("exception/disconnect")
+    public void disconnectRobot(@RequestBody DisconnectRequest request) throws WrongRequestException {
+        kukaService.disconnectRobot(request.getHostIP());
     }
 }

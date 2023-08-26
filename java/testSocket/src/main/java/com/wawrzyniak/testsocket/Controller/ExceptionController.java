@@ -1,6 +1,7 @@
 package com.wawrzyniak.testsocket.Controller;
 
 import com.wawrzyniak.testsocket.Exceptions.RobotNotConfiguredException;
+import com.wawrzyniak.testsocket.Exceptions.WrongRequestException;
 import com.wawrzyniak.testsocket.Model.Records.ExceptionMessagePair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,14 @@ public class ExceptionController {
                 e.getClass().getSimpleName(),
                 e.getMessage());
 
+        return new ResponseEntity<>(nameMessagePair, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = WrongRequestException.class)
+    public ResponseEntity<ExceptionMessagePair> wrongRequest(Exception e){
+        ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
+                e.getClass().getSimpleName(),
+                e.getMessage());
         return new ResponseEntity<>(nameMessagePair, HttpStatus.BAD_REQUEST);
     }
 }
