@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Project.Scripts.Connectivity.ExceptionHandling;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Parsing.OutputJson;
 using Project.Scripts.Multithreading;
@@ -31,11 +32,15 @@ namespace Project.Scripts.TrackedRobots
 
         public void ReceivePackageFromWebsocket(OutputWithErrors newData)
         {
-            // TODO: add unwrapping exceptions from main node
             foreach (var foundIp in newData.Values.Keys)
             {
                 var robotData = newData.Values[foundIp];
                 UpdateTrackedPoint(foundIp, robotData);
+            }
+
+            if (newData.Exception.HasValue)
+            {
+                GlobalExceptionStorage.Instance.AddException(newData.Exception.Value);
             }
         }
 
@@ -50,7 +55,7 @@ namespace Project.Scripts.TrackedRobots
             {
                 if (!enqueuedIps.Contains(entry))
                 {
-                    UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                    UnityMainThreadDispatcher.Instance.Enqueue(() =>
                     {
                         trackedRobots.Add(entry, new TrackedRobotModel(
                             Instantiate(prefab, Vector3.zero, Quaternion.identity),
@@ -74,7 +79,7 @@ namespace Project.Scripts.TrackedRobots
         {
             if (!enqueuedIps.Contains(ipAddress))
             {
-                UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                UnityMainThreadDispatcher.Instance.Enqueue(() =>
                 {
                     trackedRobots.Add(ipAddress, new TrackedRobotModel(
                         Instantiate(prefab, basePoint.position, basePoint.rotation),

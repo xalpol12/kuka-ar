@@ -64,7 +64,7 @@ namespace Project.Scripts.AnchorSystem
                 var anchor = PlaceNewAnchor(imageTransform, configData);
                 trackedAnchors.Add(robotIp, anchor);
 
-                WebSocketClient.Instance().SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp));
+                WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp));
 
                 trackedRobotsHandler.InstantiateTrackedRobot(robotIp, anchor.transform);
 

@@ -45,6 +45,7 @@ public class KukaCommStaticDataController {
     public List<ConfiguredRobotDTO> getALLRobotsWithStickers() {
         return robotService.getAllConfiguredRobots();
     }
+  
     @GetMapping("robot/{ip}")
     public ConfiguredRobotDTO getRobotByIp(@PathVariable String ip) throws RobotNotConfiguredException {
         return robotService.getRobotByIp(ip);
