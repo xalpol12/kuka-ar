@@ -15,8 +15,8 @@ public class AddRobotController : MonoBehaviour
     internal bool IsSliderHold;
     internal bool IsAddRobotPressed;
     internal LogicStates DialogState;
-    
-    private AddNewRobotService addNewRobotService;
+    internal AddNewRobotService AddNewRobotService;
+
     private AddRobotData data;
     private HttpService httpService;
     private SelectableStylingService stylingService;
@@ -29,7 +29,7 @@ public class AddRobotController : MonoBehaviour
         DialogState = LogicStates.Waiting;
         
         httpService = HttpService.Instance;
-        addNewRobotService = AddNewRobotService.Instance;
+        AddNewRobotService = AddNewRobotService.Instance;
         stylingService = SelectableStylingService.Instance;
         
         ipImage = addDialog.transform.Find("IpAddress").GetComponent<Image>();
@@ -98,7 +98,7 @@ public class AddRobotController : MonoBehaviour
             return;
         }
         DialogState = LogicStates.Hiding;
-        addNewRobotService.ResetSelectState = true;
+        AddNewRobotService.ResetSelectState = true;
         httpService.PostNewRobot(data);
         httpService.OnClickDataReload(4);
     }

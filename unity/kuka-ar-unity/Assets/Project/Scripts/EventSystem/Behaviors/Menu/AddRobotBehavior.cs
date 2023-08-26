@@ -46,6 +46,14 @@ public class AddRobotBehavior : MonoBehaviour
             StartCoroutine(HideAddDialog());
             service.IsAddRobotDialogOpen = false;
         }
+        
+        if (Input.GetKey(KeyCode.Escape) &&
+            service.IsAddRobotDialogOpen &&
+            !robotController.AddNewRobotService.IsSelectDialogOpen)
+        {
+            robotController.DialogState = LogicStates.Hiding;
+            StartCoroutine(HideAddDialog());
+        }
     }
 
     private IEnumerator ShowAddDialog()

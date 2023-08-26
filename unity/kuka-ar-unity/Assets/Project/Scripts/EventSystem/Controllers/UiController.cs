@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
@@ -19,7 +20,6 @@ public class UiController : MonoBehaviour
     internal AnimationStates FocusModeAnim;
     internal List<AnimationFilter> NextAnim;
     
-    
     [SerializeField] private GameObject abortServerConfigArrow;
     [SerializeField] private GameObject focusModeToggle;
     
@@ -27,7 +27,6 @@ public class UiController : MonoBehaviour
     private HttpService httpService;
     private Toggle selectedMode;
     private int serverConfigDisplayState;
-    private bool showMoreOptionsDialog;
     private bool isAfterBugReport;
     private bool isQuitting;
 
@@ -83,12 +82,32 @@ public class UiController : MonoBehaviour
         isQuitting = true;
     }
 
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            PlayerPrefs.SetString("isAfterBugReport", false.ToString());
+        }
+    }
+
+    private void OnApplicationFocus(bool hasFocus)
+    {
+        if (!hasFocus)
+        {
+            PlayerPrefs.SetString("isAfterBugReport", false.ToString());
+        }
+    }
+    
+    internal void CallAbort()
+    {
+        AbortServerReconfiguration(5);
+    }
+
     private void ShowMoreOptions(int uid)
     {
         if (id != uid) return;
         MenuAnim = AnimationStates.FadeOut;
         NextAnim.Add(AnimationFilter.MoreOptionsIn);
-        Debug.Log(isAfterBugReport);
     }
 
     private void SaveServerConfiguration(int uid)
@@ -128,7 +147,7 @@ public class UiController : MonoBehaviour
     {
         if (id != uid) return;
         ServerConfigAnim = AnimationStates.FadeOut;
-        NextAnim.Add(AnimationFilter.MenuIn);
+        NextAnim.Add(AnimationFilter.MoreOptionsIn);
     }
 
     private void FocusModeHandler(int uid)

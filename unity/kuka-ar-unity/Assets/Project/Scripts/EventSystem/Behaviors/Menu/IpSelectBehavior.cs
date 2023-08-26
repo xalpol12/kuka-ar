@@ -14,10 +14,12 @@ public class IpSelectBehavior : MonoBehaviour
     private IpSelectController selectController;
     private List<GameObject> allIpAddresses;
     private Vector3 selectIpHomePosition;
+    private bool isDialogOpen;
     private void Start()
     {
         selectController = GetComponent<IpSelectController>();
         allIpAddresses = new List<GameObject>();
+        isDialogOpen = false;
         
         InitListLogic();
 
@@ -49,6 +51,13 @@ public class IpSelectBehavior : MonoBehaviour
         {
             StartCoroutine(HideIpSelectDialog());
         }
+        
+        if (Input.GetKey(KeyCode.Escape) && isDialogOpen)
+        {
+            selectController.ShowOptionsController = LogicStates.Hiding;
+            StartCoroutine(HideIpSelectDialog());
+        }
+        
     }
 
     private void InitListLogic()
@@ -110,7 +119,9 @@ public class IpSelectBehavior : MonoBehaviour
         if (newPose.x > selectController.PositioningService.BestFitPosition.x)
         {
             var finalPose = new Vector3(selectController.PositioningService.BestFitPosition.x, newPose.y);
-                
+
+            isDialogOpen = true;
+            selectController.AddNewRobotService.IsSelectDialogOpen = isDialogOpen;
             selectController.ipSelector.transform.position = finalPose;
             selectController.ShowOptionsController = LogicStates.Waiting;
             yield break;
@@ -127,6 +138,8 @@ public class IpSelectBehavior : MonoBehaviour
         
         if (newPose.x < selectIpHomePosition.x)
         {
+            isDialogOpen = false;
+            selectController.AddNewRobotService.IsSelectDialogOpen = isDialogOpen;
             selectController.ShowOptionsController = LogicStates.Waiting;
             yield break;
         }

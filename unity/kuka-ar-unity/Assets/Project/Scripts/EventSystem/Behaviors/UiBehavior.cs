@@ -1,3 +1,4 @@
+using System.Collections;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class UiBehavior : MonoBehaviour
     private CanvasGroup moreOptionsCanvasGroup;
     private CanvasGroup focusModeCanvasGroup;
     private GameObject serverBackArrow;
-    void Start()
+    private void Start()
     {
         controller = GetComponent<UiController>();
 
@@ -19,69 +20,97 @@ public class UiBehavior : MonoBehaviour
         focusModeCanvasGroup = controller.focusMode.transform.Find("Canvas").GetComponent<CanvasGroup>();
     }
 
-    void Update()
+    private void Update()
     {
         if (controller.ServerConfigAnim == AnimationStates.FadeIn)
         {
-            FadeIn(serverCanvasGroup);
+            StartCoroutine(FadeIn(serverCanvasGroup));
         }
         else if(controller.ServerConfigAnim == AnimationStates.FadeOut)
         {
-            FadeOut(serverCanvasGroup);
+            StartCoroutine(FadeOut(serverCanvasGroup));
         }
         
         if (controller.MenuAnim == AnimationStates.FadeIn)
         {
-            FadeIn(menuCanvasGroup);
+            StartCoroutine(FadeIn(menuCanvasGroup));
         }
         else if(controller.MenuAnim == AnimationStates.FadeOut)
         {
-            FadeOut(menuCanvasGroup);
+            StartCoroutine(FadeOut(menuCanvasGroup));
         }
         
         if (controller.MoreOptionsAnim == AnimationStates.FadeIn)
         {
-            FadeIn(moreOptionsCanvasGroup);
+            StartCoroutine(FadeIn(moreOptionsCanvasGroup));
         }
         else if(controller.MoreOptionsAnim == AnimationStates.FadeOut)
         {
-            FadeOut(moreOptionsCanvasGroup);
+            StartCoroutine(FadeOut(moreOptionsCanvasGroup));
         }
 
         if (controller.FocusModeAnim == AnimationStates.FadeIn)
         {
-            FadeIn(focusModeCanvasGroup);
+            StartCoroutine(FadeIn(focusModeCanvasGroup));
         }
         else if (controller.FocusModeAnim == AnimationStates.FadeOut)
         {
-            FadeOut(focusModeCanvasGroup);
+            StartCoroutine(FadeOut(focusModeCanvasGroup));
+        }
+        
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            if (controller.moreOptions.activeSelf)
+            {
+                controller.MoreOptionsAnim = AnimationStates.FadeOut;
+                controller.NextAnim.Add(AnimationFilter.MenuIn);
+                StartCoroutine(FadeOut(moreOptionsCanvasGroup));
+                Debug.Log("active");
+            } else if (controller.serverConfig.activeSelf)
+            {
+                controller.ServerConfigAnim = AnimationStates.FadeOut;
+                controller.NextAnim.Add(AnimationFilter.MoreOptionsIn);
+                StartCoroutine(FadeOut(serverCanvasGroup));
+                Debug.Log("Server");
+            }
+            else if (controller.focusMode.activeSelf)
+            {
+                controller.MenuAnim = AnimationStates.FadeOut;
+                controller.NextAnim.Add(AnimationFilter.MoreOptionsIn);
+                StartCoroutine(FadeOut(focusModeCanvasGroup));
+                 Debug.Log("FocusMode");
+            }
         }
     }
 
-    private void FadeIn(CanvasGroup group)
+    private IEnumerator FadeIn(CanvasGroup group)
     {
         var newAlpha = group.alpha + (Time.deltaTime * controller.animSpeed);
         if (newAlpha > 1)
         {
-            newAlpha = 1;
+            group.alpha = 1;
             MakeStandBy(group.gameObject.transform.parent.name);
             AnimQueryResolver();
+            yield break;
         }
 
         group.alpha = newAlpha;
+        yield return null;
     }
 
-    private void FadeOut(CanvasGroup group)
+    private IEnumerator FadeOut(CanvasGroup group)
     {
         var newAlpha = group.alpha - (Time.deltaTime * controller.animSpeed);
         if (newAlpha < 0)
         {
-            newAlpha = 0;
+            group.alpha = 0;
             MakeStandBy(group.gameObject.transform.parent.name, false);
             AnimQueryResolver();
+            yield break;
         }
 
         group.alpha = newAlpha;
+        yield return null;
     }
 
     private void MakeStandBy(string callerName, bool active = true)

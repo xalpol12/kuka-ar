@@ -7,6 +7,7 @@ public class AddNewRobotService : MonoBehaviour
     public static AddNewRobotService Instance;
     public GameObject parent;
     internal bool ResetSelectState;
+    internal bool IsSelectDialogOpen;
     private TMP_Text ip;
     private TMP_Text category;
     private TMP_Text robotName;
@@ -19,6 +20,7 @@ public class AddNewRobotService : MonoBehaviour
     private void Start()
     {
         ResetSelectState = false;
+        IsSelectDialogOpen = false;
 
         ip = parent.transform.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
             .Find("Label").GetComponent<TMP_Text>();

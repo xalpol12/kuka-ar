@@ -9,6 +9,14 @@ public class WebViewController : MonoBehaviour
         WebViewEvents.Events.OnClickOpenMoreOptions += SwapScene;
     }
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            SwapScene(6);
+        }
+    }
+
     private void SwapScene(int uid)
     {
         if (id == uid)

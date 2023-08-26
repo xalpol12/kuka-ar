@@ -14,6 +14,7 @@ public class BottomNavBehavior : MonoBehaviour
     private GameObject plusImage;
     private Image circleImage;
     private Vector3 dockPosition;
+    private bool isAfterBottomNavEscape;
     private const int ErrorOffset = 25;
 
     private void Start()
@@ -30,6 +31,7 @@ public class BottomNavBehavior : MonoBehaviour
             .transform.Find("AddButtonCircle").GetComponent<Image>();
         
         dockPosition = bottomPanel.position;
+        isAfterBottomNavEscape = false;
     }
 
     private void Update()
@@ -40,9 +42,17 @@ public class BottomNavBehavior : MonoBehaviour
         }
         else if (bottomNav.StylingService.SliderState == LogicStates.Hiding)
         {
-            StartCoroutine(bottomNav.StylingService.IsAfterItemSelect ?
+            StartCoroutine(bottomNav.StylingService.IsAfterItemSelect || isAfterBottomNavEscape ?
                 CloseObservableRobotsList() : AutoDestinationPull());
         }
+
+        if (Input.GetKey(KeyCode.Escape) && !service.IsBottomNavDocked)
+        {
+            isAfterBottomNavEscape = true;
+            bottomNav.StylingService.SliderState = LogicStates.Hiding;
+            StartCoroutine(CloseObservableRobotsList());
+        }
+        
         StartCoroutine(AddNewRobotAnimation());
         StartCoroutine(ConstantPanelVisibilityHandler());
         StartCoroutine(JogsExpandHandler());
@@ -108,6 +118,7 @@ public class BottomNavBehavior : MonoBehaviour
         if (newPosition.y < dockPosition.y)
         {
             bottomNav.StylingService.IsAfterItemSelect = false;
+            isAfterBottomNavEscape = false;
             yield break;
         }
         
