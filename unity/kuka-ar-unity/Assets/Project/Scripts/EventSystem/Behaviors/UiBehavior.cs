@@ -65,20 +65,17 @@ public class UiBehavior : MonoBehaviour
                 controller.MoreOptionsAnim = AnimationStates.FadeOut;
                 controller.NextAnim.Add(AnimationFilter.MenuIn);
                 StartCoroutine(FadeOut(moreOptionsCanvasGroup));
-                Debug.Log("active");
             } else if (controller.serverConfig.activeSelf)
             {
                 controller.ServerConfigAnim = AnimationStates.FadeOut;
                 controller.NextAnim.Add(AnimationFilter.MoreOptionsIn);
                 StartCoroutine(FadeOut(serverCanvasGroup));
-                Debug.Log("Server");
             }
             else if (controller.focusMode.activeSelf)
             {
                 controller.MenuAnim = AnimationStates.FadeOut;
                 controller.NextAnim.Add(AnimationFilter.MoreOptionsIn);
                 StartCoroutine(FadeOut(focusModeCanvasGroup));
-                 Debug.Log("FocusMode");
             }
         }
     }
