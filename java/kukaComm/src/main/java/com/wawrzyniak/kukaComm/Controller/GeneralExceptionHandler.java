@@ -2,6 +2,7 @@ package com.wawrzyniak.kukaComm.Controller;
 
 
 import com.wawrzyniak.kukaComm.Exceptions.RobotNotConfiguredException;
+import com.wawrzyniak.kukaComm.Exceptions.WrongIpException;
 import com.wawrzyniak.kukaComm.Model.Records.ExceptionMessagePair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,5 +30,14 @@ public class GeneralExceptionHandler {
                 e.getMessage());
 
         return new ResponseEntity<>(nameMessagePair, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = WrongIpException.class)
+    public ResponseEntity<ExceptionMessagePair> saveRobotFail(Exception e) {
+        ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
+                e.getClass().getSimpleName(),
+                e.getMessage());
+
+        return new ResponseEntity<>(nameMessagePair, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 }

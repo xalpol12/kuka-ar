@@ -1,6 +1,7 @@
 package com.wawrzyniak.kukaComm.Controller;
 
 import com.wawrzyniak.kukaComm.Exceptions.RobotNotConfiguredException;
+import com.wawrzyniak.kukaComm.Exceptions.WrongIpException;
 import com.wawrzyniak.kukaComm.Model.ModelReading.ConfiguredRobotDTO;
 import com.wawrzyniak.kukaComm.Model.ModelReading.RobotData;
 import com.wawrzyniak.kukaComm.Service.RobotData.ConfiguredRobotService;
@@ -44,10 +45,10 @@ public class StaticDataController {
     }
 
     @PostMapping("add")
-    public ConfiguredRobotDTO addRobot(@RequestBody ConfiguredRobotDTO robotDTO) {
+    public ConfiguredRobotDTO addRobot(@RequestBody ConfiguredRobotDTO robotDTO) throws WrongIpException {
         return robotService.save(robotDTO);
     }
-    @PostMapping("update/{ip}")
+    @PostMapping("update")
     public ConfiguredRobotDTO updateRobot(@RequestBody ConfiguredRobotDTO robotDTO) throws RobotNotConfiguredException {
         return robotService.updateByIp(robotDTO);
     }
