@@ -21,7 +21,7 @@ namespace Project.Scripts.Connectivity.Models.Wrappers
             OnValueUpdated(krlInt);
         }
 
-        protected virtual void OnValueUpdated(KRLInt e)
+        private void OnValueUpdated(KRLInt e)
         {
             ValueUpdated?.Invoke(this, e);
         }
