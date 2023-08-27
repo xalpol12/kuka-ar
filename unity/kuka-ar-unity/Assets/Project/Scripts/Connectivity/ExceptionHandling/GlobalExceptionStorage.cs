@@ -36,11 +36,6 @@ namespace Project.Scripts.Connectivity.ExceptionHandling
             registeredExceptions.Push(exception);
         }
 
-        // public ExceptionMessagePair? TryReadNextException()
-        // {
-        //     return registeredExceptions.TryPop(out var exception) ? exception : null;
-        // }
-
         public bool TryPopException(out ExceptionMessagePair exception)
         {
             return registeredExceptions.TryPop(out exception);
