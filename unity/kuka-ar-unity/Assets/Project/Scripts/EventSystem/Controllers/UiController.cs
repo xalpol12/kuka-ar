@@ -3,6 +3,7 @@ using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.EventSystem.Services.ServerConfig;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -17,6 +18,7 @@ namespace Project.Scripts.EventSystem.Controllers
         public GameObject moreOptions;
         public GameObject serverConfig;
         public GameObject focusMode;
+        public GameObject noInternet;
     
         internal AnimationStates ServerConfigAnim;
         internal AnimationStates MenuAnim;
@@ -29,6 +31,8 @@ namespace Project.Scripts.EventSystem.Controllers
     
         private IpValidationService validationService;
         private HttpService httpService;
+        private SelectableStylingService stylingService;
+        private TMP_Text noInternetText;
         private Toggle selectedMode;
         private int serverConfigDisplayState;
         private bool isAfterBugReport;
@@ -38,9 +42,11 @@ namespace Project.Scripts.EventSystem.Controllers
         {
             validationService = IpValidationService.Instance;
             httpService= HttpService.Instance;
+            stylingService = SelectableStylingService.Instance;
         
             NextAnim = new List<AnimationFilter>();
             selectedMode = focusModeToggle.GetComponent<Toggle>();
+            noInternetText = noInternet.GetComponent<TMP_Text>();
             isQuitting = false;
         
             SetFadeController();
@@ -101,11 +107,6 @@ namespace Project.Scripts.EventSystem.Controllers
                 PlayerPrefs.SetString("isAfterBugReport", false.ToString());
             }
         }
-    
-        internal void CallAbort()
-        {
-            AbortServerReconfiguration(5);
-        }
 
         private void ShowMoreOptions(int uid)
         {
@@ -120,7 +121,7 @@ namespace Project.Scripts.EventSystem.Controllers
             ServerConfigAnim = AnimationStates.FadeOut;
             NextAnim.Add(AnimationFilter.MenuIn);
             PlayerPrefs.SetInt("firstRun", 1);
-            PlayerPrefs.SetString("serverIp", HttpService.Instance.ConfiguredIp);
+            PlayerPrefs.SetString("serverIp", httpService.ConfiguredIp);
         }
 
         private void GoToMainScreen(int uid)
@@ -140,11 +141,15 @@ namespace Project.Scripts.EventSystem.Controllers
 
         private void SubmitAnIssue(int uid)
         {
-            if (id == uid && !httpService.HasInternet)
+            var internet = Application.internetReachability == NetworkReachability.NotReachable;
+            if (id == uid && !internet)
             {
                 SceneManager.LoadScene("WebViewScene");
                 isAfterBugReport = true;
+                return;
             }
+            noInternetText.color = internet ? Color.red : Color.clear;
+            StartCoroutine(stylingService.FadeOutText(noInternetText));
         }
 
         private void AbortServerReconfiguration(int uid)

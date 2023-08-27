@@ -1,4 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -35,6 +37,18 @@ namespace Project.Scripts.EventSystem.Services.Menu
             foreach (var item in allGridItems)
             {
                 item.transform.GetComponent<Image>().sprite = DefaultSprite;
+            }
+        }
+
+        public IEnumerator FadeOutText(TMP_Text text)
+        {
+            yield return new WaitForSeconds(2);
+            var i = 1f;
+            while (i > -0.01f)
+            {
+                text.color = new Color(1, 0, 0, i);
+                i -= 0.01f;
+                yield return null;
             }
         }
     }
