@@ -41,21 +41,21 @@ namespace Project.Scripts.EventSystem.DebugEventSystem
         {
             if (FirstRobotConnected) return;
             FirstRobotConnected = true;
-            WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.50\", \"var\": \"BASE\" }");
+            WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.50\", \"var\": \"BASE_NUMBER\" }");
         }
     
         private void InitializeConnectionSecondRobot()
         {
             if (SecondRobotConnected) return;
             SecondRobotConnected = true;
-            WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.51\", \"var\": \"BASE\" }");
+            WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.50\", \"var\": \"TOOL_NUMBER\" }");
         }
     
         private void InitializeConnectionThirdRobot()
         {
             if (ThirdRobotConnected) return;
             ThirdRobotConnected = true;
-            WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.52\", \"var\": \"BASE\" }");
+            WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.50\", \"var\": \"JOINTS\" }");
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Project.Scripts.Connectivity.ExceptionHandling;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
@@ -117,13 +118,13 @@ namespace Project.Scripts.TrackedRobots
 
         private void OnActiveToolUpdated(object sender, KRLInt e)
         {
-            DebugLogger.Instance.AddLog($"Tool number updated: {e.Value.ToString()}; ");
+            DebugLogger.Instance.AddLog($"TCP number updated: {e.Value.ToString()}; ");
             ActiveToolUpdated?.Invoke(this, e);
         }
 
         private void OnActiveJointsUpdated(object sender, KRLJoints e)
         {
-            DebugLogger.Instance.AddLog($"Joints updated: {e.ToString()}; ");
+            DebugLogger.Instance.AddLog($"Joints updated: {e.J1.ToString(CultureInfo.InvariantCulture)}; ");
             ActiveJointsUpdated?.Invoke(this, e);
         }
     }
