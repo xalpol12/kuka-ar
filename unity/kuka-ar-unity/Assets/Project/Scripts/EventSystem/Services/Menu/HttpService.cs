@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -5,6 +6,7 @@ using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -16,11 +18,16 @@ namespace Project.Scripts.EventSystem.Services.Menu
         public int id;
         public static HttpService Instance;
         internal string ConfiguredIp;
+        internal ConnectionStatus RobotConnectionStatus;
         internal List<AddRobotData> ConfiguredRobots;
         internal List<AddRobotData> Robots;
         internal List<Sprite> Stickers;
         internal List<string> CategoryNames;
+        internal bool HasInternet;
 
+        [SerializeField]
+        private float connectionTimeout;
+    
         private void Awake()
         {
             Instance = this;
@@ -34,36 +41,55 @@ namespace Project.Scripts.EventSystem.Services.Menu
             Robots = new List<AddRobotData>();
             Stickers = new List<Sprite>();
             CategoryNames = new List<string>();
-
+            RobotConnectionStatus = ConnectionStatus.Disconnected;
+            connectionTimeout /= 1000;
+        
             GetConfigured();
             GetRobots();
             GetStickers();
             MenuEvents.Event.OnClickReloadServerData += OnClickDataReload;
         }
-
+    
         public void OnClickDataReload(int uid)
         {
-            if (id == uid)
-            {
-                GetConfigured();
-                GetRobots();
-                GetStickers();
-            }
+            if (id != uid) return;
+            GetRobots();
+            GetConfigured();
+            GetStickers();
         }
+
+        internal IEnumerator PingChosenRobot(string ip)
+        {
+            var ping = new Ping(ip);
+            var time = 0;
+            while (!ping.isDone)
+            {
+                if (time > connectionTimeout)
+                {
+                    break;
+                }
+
+                time -= ping.time;
+                RobotConnectionStatus = ConnectionStatus.Connecting;
+                yield return new WaitForSeconds(0.05f);
+            }
+        
+            RobotConnectionStatus = time > connectionTimeout ? ConnectionStatus.Disconnected : ConnectionStatus.Connected;
+        } 
 
         private async void GetConfigured()
         {
             var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/configured");
             var status = http.SendWebRequest();
-
+        
             while (!status.isDone)
             {
                 await Task.Yield();
             }
-
+        
             var data = JsonConvert
                 .DeserializeObject<Dictionary<string, Dictionary<string, RobotData>>>(http.downloadHandler.text);
-
+        
             ConfiguredRobots = data != null ? MapConfiguredResponse(data) : new List<AddRobotData>();
             CategoryNames = ConfiguredRobots.Count > 0 ? MapUniqueCategoryNames() : new List<string>();
         }
@@ -87,14 +113,14 @@ namespace Project.Scripts.EventSystem.Services.Menu
         {
             var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/stickers");
             var status = http.SendWebRequest();
-
+        
             while (!status.isDone)
             {
                 await Task.Yield();
             }
-
+        
             var data = JsonConvert.DeserializeObject<Dictionary<string, byte[]>>(http.downloadHandler.text);
-
+        
             Stickers = data != null ? MapStickers(data) : new List<Sprite>();
         }
 
@@ -109,7 +135,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
             }
         }
 
-        private UnityWebRequest CreateApiRequest(string path, RequestType type = RequestType.GET, object data = null)
+        private static UnityWebRequest CreateApiRequest(string path, RequestType type = RequestType.GET, object data = null)
         {
             var request = new UnityWebRequest(path, type.ToString());
 
@@ -127,9 +153,8 @@ namespace Project.Scripts.EventSystem.Services.Menu
 
         private List<AddRobotData> MapConfiguredResponse(Dictionary<string, Dictionary<string, RobotData>> response)
         {
-
+        
             var list = new List<AddRobotData>();
-            var i = 0;
             foreach (var group in response)
             {
                 foreach (var entry in group.Value)
@@ -138,18 +163,15 @@ namespace Project.Scripts.EventSystem.Services.Menu
                     {
                         RobotName = entry.Value.Name,
                         RobotCategory = group.Key,
-                        IpAddress = "FAKE 192.168.100." + i,
+                        IpAddress = "192.168.1." + (int)Random.value, // TODO FIX LATER
                     };
                     list.Add(robot);
-                    i++;
                 }
-
-                i += 5;
             }
             return list;
         }
 
-        private List<Sprite> MapStickers(Dictionary<string, byte[]> response)
+        private static List<Sprite> MapStickers(Dictionary<string, byte[]> response)
         {
             var list = new List<Sprite>();
             foreach (var sticker in response)

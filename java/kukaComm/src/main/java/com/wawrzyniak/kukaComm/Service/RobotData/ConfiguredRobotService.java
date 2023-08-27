@@ -1,6 +1,7 @@
 package com.wawrzyniak.kukaComm.Service.RobotData;
 
 import com.wawrzyniak.kukaComm.Exceptions.RobotNotConfiguredException;
+import com.wawrzyniak.kukaComm.Exceptions.WrongIpException;
 import com.wawrzyniak.kukaComm.Model.ModelReading.ConfiguredRobot;
 import com.wawrzyniak.kukaComm.Model.ModelReading.ConfiguredRobotDTO;
 import com.wawrzyniak.kukaComm.Repository.ConfiguredRobotsRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -19,8 +21,12 @@ public class ConfiguredRobotService {
     private final RobotMapper mapper;
     private final ConfiguredRobotsRepository robotRepository;
 
-    public ConfiguredRobotDTO save(ConfiguredRobotDTO robotDTO) {
+    public ConfiguredRobotDTO save(ConfiguredRobotDTO robotDTO) throws WrongIpException {
         ConfiguredRobot robotToSave = mapper.dtoToRobot(robotDTO);
+        if (!validate(robotToSave.getIpAddress())) {
+            throw new WrongIpException("Wrong IP address format");
+        }
+
         ConfiguredRobot savedRobot = robotRepository.save(robotToSave);
         return this.mapper.robotToDto(savedRobot);
     }
@@ -56,5 +62,9 @@ public class ConfiguredRobotService {
         Iterable<ConfiguredRobot> iterator = robotRepository.findAll();
         iterator.forEach(robots::add);
         return mapper.robotListToDto(robots);
+    }
+
+    private boolean validate(String ipAddress) {
+        return Pattern.compile("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$").matcher(ipAddress).find();
     }
 }

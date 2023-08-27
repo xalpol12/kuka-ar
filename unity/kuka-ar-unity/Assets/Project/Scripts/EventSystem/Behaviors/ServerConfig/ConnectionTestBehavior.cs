@@ -7,14 +7,9 @@ namespace Project.Scripts.EventSystem.Behaviors.ServerConfig
     {
         private ConnectionTestController controller;
     
-        void Start()
+        private void Start()
         {
             controller = GetComponent<ConnectionTestController>();
-        }
-
-        void Update()
-        {
-        
         }
     }
 }

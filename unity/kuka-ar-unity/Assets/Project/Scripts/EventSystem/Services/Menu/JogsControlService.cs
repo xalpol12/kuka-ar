@@ -13,7 +13,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
             Instance = this;
         }
     
-        void Start()
+        private void Start()
         {
             IsBottomNavDocked = true;
             IsAddRobotDialogOpen = false;

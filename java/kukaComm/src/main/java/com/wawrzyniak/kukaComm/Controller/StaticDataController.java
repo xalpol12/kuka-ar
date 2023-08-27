@@ -1,6 +1,7 @@
 package com.wawrzyniak.kukaComm.Controller;
 
 import com.wawrzyniak.kukaComm.Exceptions.RobotNotConfiguredException;
+import com.wawrzyniak.kukaComm.Exceptions.WrongIpException;
 import com.wawrzyniak.kukaComm.Model.ModelReading.ConfiguredRobotDTO;
 import com.wawrzyniak.kukaComm.Model.ModelReading.RobotData;
 import com.wawrzyniak.kukaComm.Service.RobotData.ConfiguredRobotService;

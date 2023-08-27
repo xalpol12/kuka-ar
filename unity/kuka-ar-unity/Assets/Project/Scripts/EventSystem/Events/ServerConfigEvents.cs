@@ -14,7 +14,7 @@ namespace Project.Scripts.EventSystem.Events
 
         public event Action<int> OnClickPingServer;
         public event Action<int> OnClickSaveServerConfig;
-        public event Action<int> OnClickBackToMenu;
+        public event Action<int> OnClickBackToMenu; 
 
         public void ServerPing(int id)
         {

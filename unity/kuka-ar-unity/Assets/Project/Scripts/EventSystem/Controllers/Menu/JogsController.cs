@@ -1,3 +1,4 @@
+using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
 using UnityEngine;
@@ -9,16 +10,18 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public int id;
         public float transformFactor;
         public GameObject jogs;
+        private bool showJogs;
         private int defaultTransformFactor;
         internal JogsControlService Service;
-        internal bool ShowJogs;
+        internal LogicStates JogsTrigger;
 
-        void Start()
+        private void Start()
         {
             Service = JogsControlService.Instance;
         
         
-            ShowJogs = false;
+            showJogs = false;
+            JogsTrigger = LogicStates.Waiting;
             defaultTransformFactor = 10;
         
             ValueCheck();
@@ -28,10 +31,9 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 
         private void OnClickJog(int gui)
         {
-            if (id == gui)
-            {
-                ShowJogs = !ShowJogs;
-            }
+            if (id != gui) return;
+            showJogs = !showJogs;
+            JogsTrigger = showJogs ? LogicStates.Running : LogicStates.Hiding;
         }
 
         private void ValueCheck()

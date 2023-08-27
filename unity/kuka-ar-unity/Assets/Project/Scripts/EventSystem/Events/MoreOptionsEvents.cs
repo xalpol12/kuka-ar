@@ -14,7 +14,7 @@ namespace Project.Scripts.EventSystem.Events
 
         public event Action<int> OnClickBack;
         public event Action<int> OnClickDisplayServer;
-        public event Action<int> OnClickDisplayBrowser;
+        public event Action<int> OnClickDisplayBrowser; 
 
         public void BackToMenu(int id)
         {

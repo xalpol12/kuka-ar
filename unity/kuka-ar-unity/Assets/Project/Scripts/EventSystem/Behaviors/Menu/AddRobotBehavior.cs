@@ -1,4 +1,6 @@
+using System.Collections;
 using Project.Scripts.EventSystem.Controllers.Menu;
+using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Services.Menu;
 using UnityEngine;
 
@@ -8,15 +10,15 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
     {
         [SerializeField]
         private float pullAddMenuMaxHeight = 0.018f;
-
-        [SerializeField] private float errorMargin = 0.05f;
+    
         private AddRobotController robotController;
         private JogsControlService service;
         private GameObject selectOptions;
         private Vector3 homePosition;
     
         private bool isDialogFullyOpen;
-        void Start()
+
+        private void Start()
         {
             robotController = GetComponent<AddRobotController>();
             service = JogsControlService.Instance;
@@ -27,85 +29,100 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         
             isDialogFullyOpen = false;
         
-            robotController.addDialog.SetActive(robotController.ShowAddDialog);
+            robotController.addDialog.SetActive(false);
         }
-    
-        void Update()
-        {
-            if (robotController.ShowAddDialog)
-            {
-                if (robotController.IsSliderHold)
-                {
-                    DragSlider();
-                }
-            
-                ShowAddDialog();
 
+        private void Update()
+        {   
+            if (robotController.IsSliderHold)
+            {
+                StartCoroutine(DragSlider());
+            }
+        
+            if (robotController.DialogState == LogicStates.Running)
+            {
+                StartCoroutine(ShowAddDialog());
                 selectOptions.SetActive(isDialogFullyOpen);
                 service.IsAddRobotDialogOpen = true;
             }
-            else
+            else if (robotController.DialogState == LogicStates.Hiding)
             {
-                HideAddDialog();
+                StartCoroutine(HideAddDialog());
                 service.IsAddRobotDialogOpen = false;
+            }
+        
+            if (Input.GetKey(KeyCode.Escape) &&
+                service.IsAddRobotDialogOpen &&
+                !robotController.AddNewRobotService.IsSelectDialogOpen)
+            {
+                robotController.DialogState = LogicStates.Hiding;
+                StartCoroutine(HideAddDialog());
             }
         }
 
-        private void ShowAddDialog()
+        private IEnumerator ShowAddDialog()
         {
             robotController.addDialog.SetActive(true);
         
             var translation = Vector3.up * (Time.deltaTime * robotController.TransformFactor);
             var newPose = robotController.addDialog.transform.position + translation;
-
-            if (newPose.y > Screen.width * errorMargin)
+            if (newPose.y > Screen.height * pullAddMenuMaxHeight)
             {
-                translation = new Vector3();
+                robotController.addDialog.transform.position = new Vector3(
+                    robotController.addDialog.transform.position.x, Screen.height * pullAddMenuMaxHeight);
+            
+                robotController.DialogState = LogicStates.Waiting;
                 isDialogFullyOpen = true;
+                yield break;
             }
 
-            if (newPose.y > homePosition.y / 2)
+            if (newPose.y > Screen.height * pullAddMenuMaxHeight / 2)
             {
                 robotController.bottomNav.SetActive(false);
             }
             robotController.addDialog.transform.Translate(translation);
+            yield return null;
         }
 
-        private void HideAddDialog()
+        private IEnumerator HideAddDialog()
         {
             var translation = Vector3.down * (Time.deltaTime * robotController.TransformFactor);
             var newPose = robotController.addDialog.transform.position + translation;
         
             if (newPose.y < homePosition.y)
             {
-                translation = new Vector3();
+                robotController.DialogState = LogicStates.Waiting;
+                yield break;
             }
 
-            if (newPose.y < homePosition.y / 2 )
+            if (newPose.y < Screen.height * pullAddMenuMaxHeight / 2 )
             {
                 robotController.bottomNav.SetActive(true);
             }
         
             isDialogFullyOpen = false;
             robotController.addDialog.transform.Translate(translation);
+            yield return null;
         }
-    
-        private void DragSlider()
+
+        private IEnumerator DragSlider()
         {
-            var menuPosition = Vector3.up ;
-            menuPosition.y *= Input.mousePosition.y - (Screen.height * 0.018f - homePosition.y);
-            menuPosition.x = homePosition.x;
+            var menuPosition = new Vector3(homePosition.x ,Input.mousePosition.y);
             if (menuPosition.y > Screen.height * pullAddMenuMaxHeight)
             {
                 menuPosition.y = Screen.height * pullAddMenuMaxHeight;
+                yield break;
+            }
+        
+            if (menuPosition.y < Screen.height * pullAddMenuMaxHeight / 2)
+            {
+                robotController.DialogState = LogicStates.Hiding;   
+                yield break;
             }
 
-            if (menuPosition.y < homePosition.y * 0.8f)
-            {
-                menuPosition.y = homePosition.y * 0.83f;
-                robotController.ShowAddDialog = false;
-            }
+            robotController.DialogState = LogicStates.Running;
             robotController.addDialog.transform.position = menuPosition;
+            yield return null;
         }
     }
 }

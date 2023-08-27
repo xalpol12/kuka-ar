@@ -1,3 +1,4 @@
+using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
 using UnityEngine;
@@ -11,24 +12,16 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public int id;
         public GameObject bottomNavPanel;
         internal SelectableStylingService StylingService;
-        internal bool IsSliderHold;
-        internal bool IsAfterItemSelect;
+    
         internal bool IsCirclePressed;
         internal int TransformFactor;
 
-        private void Awake()
-        {
-            Instance = this;
-        }
-
-        void Start()
+        private void Start()
         {
             StylingService = SelectableStylingService.Instance;
         
             TransformFactor = 5000;
-            IsSliderHold = false;
             IsCirclePressed = false;
-            IsAfterItemSelect = false;
             PositioningService.Instance.BestFitPosition = bottomNavPanel.transform.position;
         
             MenuEvents.Event.OnPressConstantSelectorSlider += BottomNavOnMove;
@@ -40,13 +33,13 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         private void BottomNavOnMove(int uid)
         {
             if (uid != id) return;
-            IsSliderHold = true;
+            StylingService.SliderState = LogicStates.Running;
         }
 
         private void BottomNavToDockPosition(int uid)
         {
             if (uid != id) return;
-            IsSliderHold = false;
+            StylingService.SliderState = LogicStates.Hiding;
         }
 
         private void CirclePress(int uid)

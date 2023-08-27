@@ -7,13 +7,12 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
     {
         public GameObject parentGrid;
         internal HttpService HttpService;
-        internal BottomNavController BottomNavController;
         internal SelectableStylingService StylingService;
-        void Start()
+
+        private void Start()
         {
             HttpService = HttpService.Instance;
             StylingService = SelectableStylingService.Instance;
-            BottomNavController = BottomNavController.Instance;
         
             HttpService.OnClickDataReload(4);
         }

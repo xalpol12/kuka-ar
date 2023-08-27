@@ -1,3 +1,4 @@
+using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.EventSystem.Services.ServerConfig;
 using TMPro;
@@ -12,15 +13,19 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
         private IpValidationService validationService;
         private HttpService httpService;
         private Sprite cloudIcon;
-        void Start()
+        private void Start()
         {
             validationService = IpValidationService.Instance;
             httpService = HttpService.Instance;
             cloudIcon = Resources.Load<Sprite>("Icons/cloudIcon");
-
+        
             var inputTextBox = ipInputField.GetComponent<TMP_InputField>();
             inputTextBox.lineType = TMP_InputField.LineType.SingleLine;
-
+            if (PlayerPrefs.GetInt("firstRun") != new PlayersPrefsStates().FirstRun)
+            {
+                inputTextBox.text = PlayerPrefs.GetString("serverIp");
+            }
+        
             ipInputField.transform.parent.Find("SaveButton").GetComponent<Button>().onClick.AddListener(ValidateIp);
             inputTextBox.onValueChanged.AddListener(ResetInvalidState);
             inputTextBox.onSelect.AddListener(ClearPlaceholder);
@@ -33,7 +38,7 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
             ipInputField.GetComponent<Image>().sprite = validationService.Default();
             ipInputField.transform.parent.Find("TestConnectionController").GetComponent<RectTransform>()
                 .Find("Cloud").GetComponent<Image>().sprite = cloudIcon;
-
+        
             if (string.IsNullOrWhiteSpace(ipInputField.GetComponent<TMP_InputField>().text))
             {
                 ipInputField.transform.Find("Text Area").GetComponent<RectTransform>()
@@ -43,7 +48,7 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
 
         private void ValidateIp()
         {
-            ipInputField.GetComponent<Image>().sprite =
+            ipInputField.GetComponent<Image>().sprite = 
                 validationService.IpAddressValidation(ipInputField.GetComponent<TMP_InputField>().text);
         }
 

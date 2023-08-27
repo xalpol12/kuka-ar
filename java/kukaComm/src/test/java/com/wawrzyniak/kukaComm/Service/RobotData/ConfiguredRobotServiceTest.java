@@ -1,6 +1,7 @@
 package com.wawrzyniak.kukaComm.Service.RobotData;
 
 import com.wawrzyniak.kukaComm.Exceptions.RobotNotConfiguredException;
+import com.wawrzyniak.kukaComm.Exceptions.WrongIpException;
 import com.wawrzyniak.kukaComm.Model.ModelReading.ConfiguredRobotDTO;
 import com.wawrzyniak.kukaComm.Repository.ConfiguredRobotsRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,7 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
 class ConfiguredRobotServiceTest {
@@ -26,7 +28,7 @@ class ConfiguredRobotServiceTest {
     }
 
     @Test
-    void save() {
+    void save() throws WrongIpException {
         //given
         ConfiguredRobotDTO robotDTO = new ConfiguredRobotDTO();
         robotDTO.setId(1L);
@@ -43,7 +45,25 @@ class ConfiguredRobotServiceTest {
     }
 
     @Test
-    void update() throws RobotNotConfiguredException {
+    void saveWithInvalidIp() {
+        // given
+        ConfiguredRobotDTO robotDTO = new ConfiguredRobotDTO();
+        robotDTO.setId(1L);
+        robotDTO.setName("kukaTest");
+        robotDTO.setCategory("Tests");
+        robotDTO.setIpAddress("1921.168.1.520");
+
+        try {
+            // when
+            robotService.save(robotDTO);
+        } catch (WrongIpException e) {
+            // then
+            assertEquals("Wrong IP address format", e.getMessage());
+        }
+    }
+
+    @Test
+    void update() throws RobotNotConfiguredException, WrongIpException {
         //given
         ConfiguredRobotDTO robotDTO = new ConfiguredRobotDTO();
         robotDTO.setId(1L);
@@ -69,7 +89,7 @@ class ConfiguredRobotServiceTest {
     }
 
     @Test
-    void deleteByIp() {
+    void deleteByIp() throws WrongIpException{
         //given
         ConfiguredRobotDTO robotDTO = new ConfiguredRobotDTO();
         robotDTO.setId(1L);
@@ -88,7 +108,7 @@ class ConfiguredRobotServiceTest {
     }
 
     @Test
-    void getRobotByIp() throws RobotNotConfiguredException {
+    void getRobotByIp() throws RobotNotConfiguredException, WrongIpException {
         //given
         ConfiguredRobotDTO robotDTO = new ConfiguredRobotDTO();
         robotDTO.setId(1L);
@@ -107,7 +127,7 @@ class ConfiguredRobotServiceTest {
     }
 
     @Test
-    void getAllConfiguredRobots() {
+    void getAllConfiguredRobots() throws WrongIpException{
         //given
         ConfiguredRobotDTO robotDTO_0 = new ConfiguredRobotDTO();
         robotDTO_0.setId(1L);

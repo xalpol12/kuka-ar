@@ -11,7 +11,7 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
         private IpValidationService validationService;
         private ServerHttpService httpService;
    
-        void Start()
+        private void Start()
         {
             validationService = IpValidationService.Instance;
             httpService = ServerHttpService.Instance;
