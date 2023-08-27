@@ -12,6 +12,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public int id;
         public GameObject bottomNavPanel;
         internal SelectableStylingService StylingService;
+        internal SelectableLogicService LogicService;
     
         internal bool IsCirclePressed;
         internal int TransformFactor;
@@ -20,7 +21,8 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         private void Start()
         {
             StylingService = SelectableStylingService.Instance;
-        
+            LogicService = SelectableLogicService.Instance;
+            
             TransformFactor = 5000;
             IsCirclePressed = false;
             PositioningService.Instance.BestFitPosition = bottomNavPanel.transform.position;
@@ -35,13 +37,13 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         private void BottomNavOnMove(int uid)
         {
             if (uid != id) return;
-            StylingService.SliderState = LogicStates.Running;
+            LogicService.SliderState = LogicStates.Running;
         }
 
         private void BottomNavToDockPosition(int uid)
         {
             if (uid != id) return;
-            StylingService.SliderState = LogicStates.Hiding;
+            LogicService.SliderState = LogicStates.Hiding;
         }
 
         private void CirclePress(int uid)

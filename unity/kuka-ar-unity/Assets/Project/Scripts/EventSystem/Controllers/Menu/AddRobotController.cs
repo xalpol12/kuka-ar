@@ -24,6 +24,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         private AddRobotData data;
         private HttpService httpService;
         private SelectableStylingService stylingService;
+        private SelectableLogicService logicService;
         private Image ipImage;
         private Image categoryImage;
         private Image nameImage;
@@ -35,6 +36,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             httpService = HttpService.Instance;
             AddNewRobotService = AddNewRobotService.Instance;
             stylingService = SelectableStylingService.Instance;
+            logicService = SelectableLogicService.Instance;
         
             ipImage = addDialog.transform.Find("IpAddress").GetComponent<Image>();
             categoryImage = addDialog.transform.Find("ChosenCategory").GetComponent<Image>();
@@ -102,8 +104,9 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             }
             DialogState = LogicStates.Hiding;
             AddNewRobotService.ResetSelectState = true;
-            httpService.PostNewRobot(data);
+            httpService.PostNewRobot(content);
             httpService.ReloadRobots();
+            logicService.IsAfterNewRobotSave = true;
         }
 
         private void ReleaseSlider(int uid)

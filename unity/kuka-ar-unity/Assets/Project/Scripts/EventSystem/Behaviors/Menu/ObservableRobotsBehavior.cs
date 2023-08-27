@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
@@ -14,6 +15,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private GameObject scrollList;
         private Sprite fileNotFound;
         private List<GameObject> allGridItems;
+        private GameObject grid;
+        private GameObject gridItem;
 
         private void Start()
         {
@@ -22,8 +25,10 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         
             scrollList = observableRobotsController.parentGrid;
             allGridItems = new List<GameObject>();
+            grid = scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject;
+            gridItem = grid.transform.Find("GridElement").GetComponent<Image>().gameObject;
 
-            InitObservableRobots();
+            StartCoroutine(InitObservableRobots());
         
             scrollList.transform.parent.Find("ServerError").GetComponent<Image>().transform.Find("TryAgain")
                 .GetComponent<Button>().onClick.AddListener(() =>
@@ -35,26 +40,33 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 });
         }
 
-        private void InitObservableRobots()
+        private void Update()
+        {
+            if (observableRobotsController.LogicService.IsAfterNewRobotSave)
+            {
+                StartCoroutine(DestroyListEntries());
+                observableRobotsController.LogicService.IsAfterNewRobotSave = false;
+            }
+        }
+
+        private IEnumerator InitObservableRobots()
         {
             var constantPanelRef = scrollList.transform.parent.GetComponent<Image>()
                 .gameObject.transform.Find("ConstantPanel").GetComponent<Image>()
                 .gameObject.transform;
             var http = observableRobotsController.HttpService;
-            var grid = scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject;
-            var gridItem = grid.transform.Find("GridElement").GetComponent<Image>().gameObject;
             
             if (http.Robots.Count == 0)
             {
                 gridItem.SetActive(false);   
-                return;
+                yield break;
             }
             gridItem.SetActive(true);
             
             if (http.Stickers.Count <= 0)
             {
                 ConnectionFailed(true);
-                return;
+                yield break;
             }
             
             gridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
@@ -105,6 +117,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 });
                 allGridItems.Add(newGridItem);
             }
+
+            yield return null;
         }
 
         private void OnSelectActions(Transform panelRef, int index)
@@ -133,10 +147,25 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 observableRobotsController.HttpService.Robots[index].RobotName;
             panelRef.Find("CoordSystemPicker").GetComponent<Image>().sprite = GetSticker(ipAddress);
             statusText.text = observableRobotsController.HttpService.RobotConnectionStatus.ToString();
-            observableRobotsController.StylingService.IsAfterItemSelect = true;
-            observableRobotsController.StylingService.SliderState = LogicStates.Hiding;
+            observableRobotsController.LogicService.IsAfterItemSelect = true;
+            observableRobotsController.LogicService.SliderState = LogicStates.Hiding;
         }
 
+        private IEnumerator DestroyListEntries()
+        {
+            allGridItems = new List<GameObject>();
+            foreach (var child in grid.GetComponentsInChildren<RectTransform>())
+            {
+                if (child.name.Contains("(Clone)"))
+                {
+                    Destroy(child.gameObject);
+                }
+            }
+    
+            StartCoroutine(InitObservableRobots());
+            yield return null;
+        }
+        
         private void ConnectionFailed(bool state)
         {
             scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject

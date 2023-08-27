@@ -148,7 +148,8 @@ namespace Project.Scripts.EventSystem.Services.Menu
 
         public async void PostNewRobot(object body)
         {
-            var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/add", RequestType.POST, body);
+            var http = 
+                CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/add", RequestType.POST, body);
             var status = http.SendWebRequest();
 
             while (!status.isDone)
