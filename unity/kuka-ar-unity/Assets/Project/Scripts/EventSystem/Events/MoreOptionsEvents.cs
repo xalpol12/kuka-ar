@@ -7,22 +7,28 @@ namespace Project.Scripts.EventSystem.Events
     {
         public static MoreOptionsEvents Events;
 
-    public event Action<int> OnClickBack;
-    public event Action<int> OnClickDisplayServer;
-    public event Action<int> OnClickDisplayBrowser; 
+        private void Awake()
+        {
+            Events = this;
+        }
 
-    public void BackToMenu(int id)
-    {
-        OnClickBack?.Invoke(id);
-    }
+        public event Action<int> OnClickBack;
+        public event Action<int> OnClickDisplayServer;
+        public event Action<int> OnClickDisplayBrowser; 
 
-    public void DisplayServerConfigurationWindow(int id)
-    {
-        OnClickDisplayServer?.Invoke(id);
-    }
+        public void BackToMenu(int id)
+        {
+            OnClickBack?.Invoke(id);
+        }
 
-    public void DisplayIssueWebPage(int id)
-    {
-        OnClickDisplayBrowser?.Invoke(id);
+        public void DisplayServerConfigurationWindow(int id)
+        {
+            OnClickDisplayServer?.Invoke(id);
+        }
+
+        public void DisplayIssueWebPage(int id)
+        {
+            OnClickDisplayBrowser?.Invoke(id);
+        }
     }
 }

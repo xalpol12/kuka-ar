@@ -1,27 +1,31 @@
+using Project.Scripts.EventSystem.Events;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class WebViewController : MonoBehaviour
+namespace Project.Scripts.EventSystem.Controllers.WebView
 {
-    [SerializeField] private int id;
-    private void Start()
+    public class WebViewController : MonoBehaviour
     {
-        WebViewEvents.Events.OnClickOpenMoreOptions += SwapScene;
-    }
-
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.Escape))
+        [SerializeField] private int id;
+        private void Start()
         {
-            SwapScene(6);
+            WebViewEvents.Events.OnClickOpenMoreOptions += SwapScene;
         }
-    }
 
-    private void SwapScene(int uid)
-    {
-        if (id == uid)
+        private void Update()
         {
-            SceneManager.LoadScene("MainScene");
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                SwapScene(6);
+            }
+        }
+
+        private void SwapScene(int uid)
+        {
+            if (id == uid)
+            {
+                SceneManager.LoadScene("MainScene");
+            }
         }
     }
 }

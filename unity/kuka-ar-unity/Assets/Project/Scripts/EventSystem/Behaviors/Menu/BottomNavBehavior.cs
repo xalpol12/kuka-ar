@@ -1,155 +1,160 @@
 using System.Collections;
+using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
+using Project.Scripts.EventSystem.Services.Menu;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BottomNavBehavior : MonoBehaviour
+namespace Project.Scripts.EventSystem.Behaviors.Menu
 {
-    [SerializeField] private float pullMenuScreenMaxHeight = 0.34f;
+    public class BottomNavBehavior : MonoBehaviour
+    {
+        [SerializeField] private float pullMenuScreenMaxHeight = 0.34f;
     
-    private BottomNavController bottomNav;
-    private JogsControlService service;
-    private GameObject constantPanel;
-    private GameObject scrollList;
-    private GameObject plusImage;
-    private Image circleImage;
-    private Vector3 dockPosition;
-    private bool isAfterBottomNavEscape;
-    private const int ErrorOffset = 25;
+        private BottomNavController bottomNav;
+        private JogsControlService service;
+        private GameObject constantPanel;
+        private GameObject scrollList;
+        private GameObject plusImage;
+        private Image circleImage;
+        private Vector3 dockPosition;
+        private bool isAfterBottomNavEscape;
+        private const int ErrorOffset = 25;
 
-    private void Start()
-    {
-        bottomNav = GetComponent<BottomNavController>();
-        service = JogsControlService.Instance;
+        private void Start()
+        {
+            bottomNav = GetComponent<BottomNavController>();
+            service = JogsControlService.Instance;
         
-        var bottomPanel = bottomNav.transform;
-        scrollList = bottomPanel.Find("ViewCoordList").GetComponent<Image>().gameObject;
-        constantPanel = bottomPanel.Find("ConstantPanel").GetComponent<Image>().gameObject;
-        plusImage = constantPanel.transform.Find("AddButtonContainer").GetComponent<RectTransform>().gameObject
-            .transform.Find("AddButton").GetComponent<RectTransform>().gameObject;
-        circleImage = constantPanel.transform.Find("AddButtonContainer").GetComponent<RectTransform>().gameObject
-            .transform.Find("AddButtonCircle").GetComponent<Image>();
+            var bottomPanel = bottomNav.transform;
+            scrollList = bottomPanel.Find("ViewCoordList").GetComponent<Image>().gameObject;
+            constantPanel = bottomPanel.Find("ConstantPanel").GetComponent<Image>().gameObject;
+            plusImage = constantPanel.transform.Find("AddButtonContainer").GetComponent<RectTransform>().gameObject
+                .transform.Find("AddButton").GetComponent<RectTransform>().gameObject;
+            circleImage = constantPanel.transform.Find("AddButtonContainer").GetComponent<RectTransform>().gameObject
+                .transform.Find("AddButtonCircle").GetComponent<Image>();
         
-        dockPosition = bottomPanel.position;
-        isAfterBottomNavEscape = false;
-    }
-
-    private void Update()
-    {
-        if (bottomNav.StylingService.SliderState == LogicStates.Running)
-        {
-            StartCoroutine(BottomMenuPositionHandler());
-        }
-        else if (bottomNav.StylingService.SliderState == LogicStates.Hiding)
-        {
-            StartCoroutine(bottomNav.StylingService.IsAfterItemSelect || isAfterBottomNavEscape ?
-                CloseObservableRobotsList() : AutoDestinationPull());
+            dockPosition = bottomPanel.position;
+            isAfterBottomNavEscape = false;
         }
 
-        if (Input.GetKey(KeyCode.Escape) && !service.IsBottomNavDocked)
+        private void Update()
         {
-            isAfterBottomNavEscape = true;
-            bottomNav.StylingService.SliderState = LogicStates.Hiding;
-            StartCoroutine(CloseObservableRobotsList());
-        }
-        
-        StartCoroutine(AddNewRobotAnimation());
-        StartCoroutine(ConstantPanelVisibilityHandler());
-        StartCoroutine(JogsExpandHandler());
-    }
-
-    private IEnumerator BottomMenuPositionHandler()
-    {
-        var menuPosition = new Vector3(dockPosition.x, Input.mousePosition.y) ;
-        if (menuPosition.y > Screen.height * pullMenuScreenMaxHeight)
-        {
-            menuPosition.y = Screen.height * pullMenuScreenMaxHeight;
-            bottomNav.StylingService.SliderState = LogicStates.Waiting;
-            yield break;
-        }
-
-        if (menuPosition.y < dockPosition.y)
-        {
-            menuPosition.y = dockPosition.y;
-            yield break;
-        }
-        bottomNav.transform.position = menuPosition;
-        yield return null;
-    }
-
-    private IEnumerator AutoDestinationPull()
-    {
-        if (!bottomNav.transform.position.y.Equals(dockPosition.y))
-        {
-            Vector3 translation;
-            if (transform.position.y > (Screen.height * pullMenuScreenMaxHeight + dockPosition.y) / 2)
+            if (bottomNav.StylingService.SliderState == LogicStates.Running)
             {
-                translation = Vector3.up * (Time.deltaTime * bottomNav.TransformFactor);
+                StartCoroutine(BottomMenuPositionHandler());
             }
-            else
+            else if (bottomNav.StylingService.SliderState == LogicStates.Hiding)
             {
-                translation = Vector3.down * (Time.deltaTime * bottomNav.TransformFactor);
+                StartCoroutine(bottomNav.StylingService.IsAfterItemSelect || isAfterBottomNavEscape ?
+                    CloseObservableRobotsList() : AutoDestinationPull());
             }
-            
-            var newPosition = bottomNav.transform.position + translation;
-            if (newPosition.y > Screen.height * pullMenuScreenMaxHeight)
+
+            if (Input.GetKey(KeyCode.Escape) && !service.IsBottomNavDocked)
             {
+                isAfterBottomNavEscape = true;
+                bottomNav.StylingService.SliderState = LogicStates.Hiding;
+                StartCoroutine(CloseObservableRobotsList());
+            }
+        
+            StartCoroutine(AddNewRobotAnimation());
+            StartCoroutine(ConstantPanelVisibilityHandler());
+            StartCoroutine(JogsExpandHandler());
+        }
+
+        private IEnumerator BottomMenuPositionHandler()
+        {
+            var menuPosition = new Vector3(dockPosition.x, Input.mousePosition.y) ;
+            if (menuPosition.y > Screen.height * pullMenuScreenMaxHeight)
+            {
+                menuPosition.y = Screen.height * pullMenuScreenMaxHeight;
                 bottomNav.StylingService.SliderState = LogicStates.Waiting;
                 yield break;
             }
+
+            if (menuPosition.y < dockPosition.y)
+            {
+                menuPosition.y = dockPosition.y;
+                yield break;
+            }
+            bottomNav.transform.position = menuPosition;
+            yield return null;
+        }
+
+        private IEnumerator AutoDestinationPull()
+        {
+            if (!bottomNav.transform.position.y.Equals(dockPosition.y))
+            {
+                Vector3 translation;
+                if (transform.position.y > (Screen.height * pullMenuScreenMaxHeight + dockPosition.y) / 2)
+                {
+                    translation = Vector3.up * (Time.deltaTime * bottomNav.TransformFactor);
+                }
+                else
+                {
+                    translation = Vector3.down * (Time.deltaTime * bottomNav.TransformFactor);
+                }
             
+                var newPosition = bottomNav.transform.position + translation;
+                if (newPosition.y > Screen.height * pullMenuScreenMaxHeight)
+                {
+                    bottomNav.StylingService.SliderState = LogicStates.Waiting;
+                    yield break;
+                }
+            
+                if (newPosition.y < dockPosition.y)
+                {
+                    bottomNav.transform.position = dockPosition;
+                    bottomNav.StylingService.SliderState = LogicStates.Waiting;
+                    yield break;
+                }
+                    
+                bottomNav.transform.Translate(translation);
+                yield return null;
+            }
+        }
+
+        private IEnumerator CloseObservableRobotsList()
+        {
+            var translation = Vector3.down * (Time.deltaTime * bottomNav.TransformFactor);
+            var newPosition = bottomNav.transform.position + translation;
+
             if (newPosition.y < dockPosition.y)
             {
-                bottomNav.transform.position = dockPosition;
-                bottomNav.StylingService.SliderState = LogicStates.Waiting;
+                bottomNav.StylingService.IsAfterItemSelect = false;
+                isAfterBottomNavEscape = false;
                 yield break;
             }
-                    
+        
             bottomNav.transform.Translate(translation);
             yield return null;
         }
-    }
 
-    private IEnumerator CloseObservableRobotsList()
-    {
-        var translation = Vector3.down * (Time.deltaTime * bottomNav.TransformFactor);
-        var newPosition = bottomNav.transform.position + translation;
-
-        if (newPosition.y < dockPosition.y)
+        private IEnumerator ConstantPanelVisibilityHandler()
         {
-            bottomNav.StylingService.IsAfterItemSelect = false;
-            isAfterBottomNavEscape = false;
-            yield break;
-        }
+            if (bottomNav.transform.position.y > (Screen.height * pullMenuScreenMaxHeight + dockPosition.y) / 2)
+            {
+                constantPanel.SetActive(false);
+                scrollList.SetActive(true);
+                yield break;
+            }
         
-        bottomNav.transform.Translate(translation);
-        yield return null;
-    }
+            constantPanel.SetActive(true);
+            scrollList.SetActive(false);
+        }
 
-    private IEnumerator ConstantPanelVisibilityHandler()
-    {
-        if (bottomNav.transform.position.y > (Screen.height * pullMenuScreenMaxHeight + dockPosition.y) / 2)
+        private IEnumerator JogsExpandHandler()
         {
-            constantPanel.SetActive(false);
-            scrollList.SetActive(true);
-            yield break;
+            service.IsBottomNavDocked = bottomNav.bottomNavPanel.transform.position.y - ErrorOffset <= dockPosition.y;
+            yield return null;
         }
-        
-        constantPanel.SetActive(true);
-        scrollList.SetActive(false);
-    }
 
-    private IEnumerator JogsExpandHandler()
-    {
-        service.IsBottomNavDocked = bottomNav.bottomNavPanel.transform.position.y - ErrorOffset <= dockPosition.y;
-        yield return null;
-    }
-
-    private IEnumerator AddNewRobotAnimation()
-    {
-        plusImage.SetActive(!bottomNav.IsCirclePressed);
-        circleImage.sprite = bottomNav.IsCirclePressed ?
-            bottomNav.StylingService.PressedAddIcon : bottomNav.StylingService.DefaultAddIcon;
-        yield return null;
+        private IEnumerator AddNewRobotAnimation()
+        {
+            plusImage.SetActive(!bottomNav.IsCirclePressed);
+            circleImage.sprite = bottomNav.IsCirclePressed ?
+                bottomNav.StylingService.PressedAddIcon : bottomNav.StylingService.DefaultAddIcon;
+            yield return null;
+        }
     }
 }

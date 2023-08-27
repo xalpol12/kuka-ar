@@ -6,9 +6,17 @@ namespace Project.Scripts.EventSystem.Services.Menu
     {
         public static JogsControlService Instance;
     
-    private void Start()
-    {
-        IsBottomNavDocked = true;
-        IsAddRobotDialogOpen = false;
+        internal bool IsBottomNavDocked;
+        internal bool IsAddRobotDialogOpen;
+        private void Awake()
+        {
+            Instance = this;
+        }
+    
+        private void Start()
+        {
+            IsBottomNavDocked = true;
+            IsAddRobotDialogOpen = false;
+        }
     }
 }

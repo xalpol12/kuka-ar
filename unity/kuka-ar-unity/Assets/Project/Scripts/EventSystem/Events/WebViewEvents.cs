@@ -1,19 +1,22 @@
 using System;
 using UnityEngine;
 
-public class WebViewEvents : MonoBehaviour
+namespace Project.Scripts.EventSystem.Events
 {
-    public static WebViewEvents Events;
-
-    private void Awake()
+    public class WebViewEvents : MonoBehaviour
     {
-        Events = this;
-    }
+        public static WebViewEvents Events;
 
-    public event Action<int> OnClickOpenMoreOptions;
+        private void Awake()
+        {
+            Events = this;
+        }
 
-    public void OnClickGoBack(int id)
-    {
-        OnClickOpenMoreOptions?.Invoke(id);
+        public event Action<int> OnClickOpenMoreOptions;
+
+        public void OnClickGoBack(int id)
+        {
+            OnClickOpenMoreOptions?.Invoke(id);
+        }
     }
 }

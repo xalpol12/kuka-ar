@@ -4,19 +4,12 @@ using UnityEngine;
 
 namespace Project.Scripts.EventSystem.Services.Menu
 {
-    public static AddNewRobotService Instance;
-    public GameObject parent;
-    internal bool ResetSelectState;
-    internal bool IsSelectDialogOpen;
-    private TMP_Text ip;
-    private TMP_Text category;
-    private TMP_Text robotName;
-    private AddRobotData defaultValues;
-    private void Awake()
+    public class AddNewRobotService : MonoBehaviour
     {
         public static AddNewRobotService Instance;
         public GameObject parent;
         internal bool ResetSelectState;
+        internal bool IsSelectDialogOpen;
         private TMP_Text ip;
         private TMP_Text category;
         private TMP_Text robotName;
@@ -26,10 +19,10 @@ namespace Project.Scripts.EventSystem.Services.Menu
             Instance = this;
         }
 
-    private void Start()
-    {
-        ResetSelectState = false;
-        IsSelectDialogOpen = false;
+        private void Start()
+        {
+            ResetSelectState = false;
+            IsSelectDialogOpen = false;
 
             ip = parent.transform.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
                 .Find("Label").GetComponent<TMP_Text>();
@@ -46,12 +39,13 @@ namespace Project.Scripts.EventSystem.Services.Menu
             };
         }
 
-    private void Update()
-    {
-        if (!ResetSelectState) return;
-        ip.text = defaultValues.IpAddress;
-        category.text = defaultValues.RobotCategory;
-        robotName.text = defaultValues.RobotName;
-        ResetSelectState = false;
+        private void Update()
+        {
+            if (!ResetSelectState) return;
+            ip.text = defaultValues.IpAddress;
+            category.text = defaultValues.RobotCategory;
+            robotName.text = defaultValues.RobotName;
+            ResetSelectState = false;
+        }
     }
 }

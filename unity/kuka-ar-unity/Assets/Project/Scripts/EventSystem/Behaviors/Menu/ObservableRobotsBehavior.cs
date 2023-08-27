@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
 using TMPro;
 using UnityEngine;
@@ -6,57 +7,32 @@ using UnityEngine.UI;
 
 namespace Project.Scripts.EventSystem.Behaviors.Menu
 {
-    private ObservableRobotsController observableRobotsController;
-    private GameObject scrollList;
-    private Sprite fileNotFound;
-    private List<GameObject> allGridItems;
-
-    private void Start()
+    public class ObservableRobotsBehavior : MonoBehaviour
     {
         private ObservableRobotsController observableRobotsController;
         private GameObject scrollList;
         private Sprite fileNotFound;
         private List<GameObject> allGridItems;
-        void Start()
+
+        private void Start()
         {
             observableRobotsController = GetComponent<ObservableRobotsController>();
             fileNotFound = Resources.Load<Sprite>("Icons/FileNotFound");
-
-        InitObservableRobots();
         
-        scrollList.transform.parent.Find("ServerError").GetComponent<Image>().transform.Find("TryAgain")
-            .GetComponent<Button>().onClick.AddListener(() =>
-            {
-                observableRobotsController.HttpService.OnClickDataReload(4);
-                if (observableRobotsController.HttpService.Robots.Count <= 0) return;
-                ConnectionFailed(false);
-                InitObservableRobots();
-            });
-    }
+            scrollList = observableRobotsController.parentGrid;
+            allGridItems = new List<GameObject>();
 
             InitObservableRobots();
-
-        if (http.Robots.Count == 0)
-        {
-            ConnectionFailed(true);
-            return;
-        }
         
-        if (http.Stickers.Count == 0)
-        {
-            foreach (var unused in http.Robots)
-            {
-                http.Stickers.Add(fileNotFound);
-            }
+            scrollList.transform.parent.Find("ServerError").GetComponent<Image>().transform.Find("TryAgain")
+                .GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    observableRobotsController.HttpService.OnClickDataReload(4);
+                    if (observableRobotsController.HttpService.Robots.Count <= 0) return;
+                    ConnectionFailed(false);
+                    InitObservableRobots();
+                });
         }
-        
-        var grid = scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject;
-        var gridItem = grid.transform.Find("GridElement").GetComponent<Image>().gameObject;
-        gridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
-            http.Robots[0].RobotName;
-        gridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
-            http.Robots[0].IpAddress;
-        gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[0];
 
         private void InitObservableRobots()
         {
@@ -65,25 +41,20 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 .gameObject.transform;
             var http = observableRobotsController.HttpService;
 
-        for (var i = 1; i < observableRobotsController.HttpService.Robots.Count + 2; i++)
-        {
-            var newGridItem = Instantiate(gridItem, grid.transform, false);
-
-            if (i > observableRobotsController.HttpService.Robots.Count - 1)
+            if (http.Robots.Count == 0)
             {
                 ConnectionFailed(true);
                 return;
             }
-
+        
             if (http.Stickers.Count == 0)
             {
-                newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
-                                http.Robots[i].RobotName;
-                newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
-                                http.Robots[i].IpAddress;
-                gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[i - 1];
+                foreach (var unused in http.Robots)
+                {
+                    http.Stickers.Add(fileNotFound);
+                }
             }
-
+        
             var grid = scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject;
             var gridItem = grid.transform.Find("GridElement").GetComponent<Image>().gameObject;
             gridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
@@ -95,8 +66,16 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
                 observableRobotsController.StylingService.MarkAsUnselected(allGridItems);
-                if (gridItem.transform.GetSiblingIndex() >
-                    observableRobotsController.HttpService.Robots.Count + 1)
+                OnSelectActions(constantPanelRef, gridItem.transform.GetSiblingIndex());
+                gridItem.transform.GetComponent<Image>().sprite = observableRobotsController.StylingService.SelectedSprite;
+            });
+            allGridItems.Add(gridItem);
+
+            for (var i = 1; i < observableRobotsController.HttpService.Robots.Count + 2; i++)
+            {
+                var newGridItem = Instantiate(gridItem, grid.transform, false);
+
+                if (i > observableRobotsController.HttpService.Robots.Count - 1)
                 {
                     newGridItem.transform.GetComponent<Image>().color = Color.clear;
                     newGridItem.transform.Find("TemplateImg").GetComponent<Image>().color = Color.clear;
@@ -106,9 +85,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 else
                 {
                     newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
-                                    http.Robots[i].RobotName;
+                        http.Robots[i].RobotName;
                     newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
-                                    http.Robots[i].IpAddress;
+                        http.Robots[i].IpAddress;
                     gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = http.Stickers[i - 1];
                 }
 
@@ -127,35 +106,43 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             }
         }
 
-    private void OnSelectActions(Transform panelRef, int index)
-    {
-        // todo fix coroutine wait time to display proper status
-        var ipAddress = observableRobotsController.HttpService.Robots[index].IpAddress;
-        var statusText = panelRef.Find("ConnectionStatus").GetComponent<TMP_Text>();
-
-        StartCoroutine(observableRobotsController.HttpService.PingChosenRobot(ipAddress));
-
-        statusText.color = observableRobotsController.HttpService.RobotConnectionStatus switch
+        private void OnSelectActions(Transform panelRef, int index)
         {
-            ConnectionStatus.Connected => new Color(0.176f, 0.78f, 0.439f),
-            ConnectionStatus.Connecting => new Color(0.94f, 0.694f, 0.188f),
-            ConnectionStatus.Disconnected => new Color(0.949f, 0.247f, 0.259f),
-            _ => statusText.color
-        };
+            // todo fix coroutine wait time to display proper status
+            var ipAddress = observableRobotsController.HttpService.Robots[index].IpAddress;
+            var statusText = panelRef.Find("ConnectionStatus").GetComponent<TMP_Text>();
 
-        if (index > observableRobotsController.HttpService.Robots.Count - 1)
-        {
-            index = observableRobotsController.HttpService.Robots.Count;
+            StartCoroutine(observableRobotsController.HttpService.PingChosenRobot(ipAddress));
+
+            statusText.color = observableRobotsController.HttpService.RobotConnectionStatus switch
+            {
+                ConnectionStatus.Connected => new Color(0.176f, 0.78f, 0.439f),
+                ConnectionStatus.Connecting => new Color(0.94f, 0.694f, 0.188f),
+                ConnectionStatus.Disconnected => new Color(0.949f, 0.247f, 0.259f),
+                _ => statusText.color
+            };
+
+            if (index > observableRobotsController.HttpService.Robots.Count - 1)
+            {
+                index = observableRobotsController.HttpService.Robots.Count;
+            }
+
+            panelRef.Find("CurrentIpAddress").GetComponent<TMP_Text>().text = ipAddress;
+            
+            panelRef.Find("CurrentRobotName").GetComponent<TMP_Text>().text = 
+                observableRobotsController.HttpService.Robots[index].RobotName;
+            panelRef.Find("CoordSystemPicker").GetComponent<Image>().sprite =
+                observableRobotsController.HttpService.Stickers[index];
+            statusText.text = observableRobotsController.HttpService.RobotConnectionStatus.ToString();
+            observableRobotsController.StylingService.IsAfterItemSelect = true;
+            observableRobotsController.StylingService.SliderState = LogicStates.Hiding;
         }
 
-        panelRef.Find("CurrentIpAddress").GetComponent<TMP_Text>().text = ipAddress;
-            
-        panelRef.Find("CurrentRobotName").GetComponent<TMP_Text>().text = 
-            observableRobotsController.HttpService.Robots[index].RobotName;
-        panelRef.Find("CoordSystemPicker").GetComponent<Image>().sprite =
-            observableRobotsController.HttpService.Stickers[index];
-        statusText.text = observableRobotsController.HttpService.RobotConnectionStatus.ToString();
-        observableRobotsController.StylingService.IsAfterItemSelect = true;
-        observableRobotsController.StylingService.SliderState = LogicStates.Hiding;
+        private void ConnectionFailed(bool state)
+        {
+            scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject
+                .transform.Find("GridElement").GetComponent<Image>().gameObject.SetActive(!state);
+            scrollList.transform.parent.Find("ServerError").GetComponent<Image>().gameObject.SetActive(state);
+        }
     }
 }

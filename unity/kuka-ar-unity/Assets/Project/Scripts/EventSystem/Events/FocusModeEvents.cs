@@ -1,21 +1,22 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class FocusModeEvents : MonoBehaviour
+namespace Project.Scripts.EventSystem.Events
 {
-    public static FocusModeEvents Events;
-
-    private void Awake()
+    public class FocusModeEvents : MonoBehaviour
     {
-        Events = this;
-    }
+        public static FocusModeEvents Events;
 
-    public event Action<int> OnClickDisplayMoreOptions;
+        private void Awake()
+        {
+            Events = this;
+        }
 
-    public void DisplayMoreOptions(int id)
-    {
-        OnClickDisplayMoreOptions?.Invoke(id);
+        public event Action<int> OnClickDisplayMoreOptions;
+
+        public void DisplayMoreOptions(int id)
+        {
+            OnClickDisplayMoreOptions?.Invoke(id);
+        }
     }
 }

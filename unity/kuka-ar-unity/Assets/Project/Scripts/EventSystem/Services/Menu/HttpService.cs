@@ -7,134 +7,97 @@ using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.EventSystem.Enums;
+using Project.Scripts.EventSystem.Events;
 using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Project.Scripts.EventSystem.Services.Menu
 {
-    public int id;
-    public static HttpService Instance;
-    internal string ConfiguredIp;
-    internal ConnectionStatus RobotConnectionStatus;
-    internal List<AddRobotData> ConfiguredRobots;
-    internal List<AddRobotData> Robots;
-    internal List<Sprite> Stickers;
-    internal List<string> CategoryNames;
-    internal bool HasInternet;
-
-    [SerializeField]
-    private float connectionTimeout;
-    
-    private void Awake()
+    public class HttpService : MonoBehaviour
     {
         public int id;
         public static HttpService Instance;
         internal string ConfiguredIp;
+        internal ConnectionStatus RobotConnectionStatus;
         internal List<AddRobotData> ConfiguredRobots;
         internal List<AddRobotData> Robots;
         internal List<Sprite> Stickers;
         internal List<string> CategoryNames;
+        internal bool HasInternet;
 
-    private void Start()
-    {
-        ConfiguredIp = string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")) ?
-            "127.0.0.1" : PlayerPrefs.GetString("serverIp");
-        ConfiguredRobots = new List<AddRobotData>();
-        Robots = new List<AddRobotData>();
-        Stickers = new List<Sprite>();
-        CategoryNames = new List<string>();
-        RobotConnectionStatus = ConnectionStatus.Disconnected;
-        connectionTimeout /= 1000;
-        
-        GetConfigured();
-        GetRobots();
-        GetStickers();
-        MenuEvents.Event.OnClickReloadServerData += OnClickDataReload;
-    }
+        [SerializeField]
+        private float connectionTimeout;
     
-    public void OnClickDataReload(int uid)
-    {
-        if (id != uid) return;
-        GetRobots();
-        GetConfigured();
-        GetStickers();
-    }
-
-    internal IEnumerator PingChosenRobot(string ip)
-    {
-        var ping = new Ping(ip);
-        var time = 0;
-        while (!ping.isDone)
+        private void Awake()
         {
-            if (time > connectionTimeout)
+            Instance = this;
+        }
+
+        private void Start()
+        {
+            ConfiguredIp = string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")) ?
+                "127.0.0.1" : PlayerPrefs.GetString("serverIp");
+            ConfiguredRobots = new List<AddRobotData>();
+            Robots = new List<AddRobotData>();
+            Stickers = new List<Sprite>();
+            CategoryNames = new List<string>();
+            RobotConnectionStatus = ConnectionStatus.Disconnected;
+            connectionTimeout /= 1000;
+        
+            GetConfigured();
+            GetRobots();
+            GetStickers();
+            MenuEvents.Event.OnClickReloadServerData += OnClickDataReload;
+        }
+    
+        public void OnClickDataReload(int uid)
+        {
+            if (id != uid) return;
+            GetRobots();
+            GetConfigured();
+            GetStickers();
+        }
+
+        internal IEnumerator PingChosenRobot(string ip)
+        {
+            var ping = new Ping(ip);
+            var time = 0;
+            while (!ping.isDone)
             {
-                break;
+                if (time > connectionTimeout)
+                {
+                    break;
+                }
+
+                time -= ping.time;
+                RobotConnectionStatus = ConnectionStatus.Connecting;
+                yield return new WaitForSeconds(0.05f);
             }
-
-            time -= ping.time;
-            RobotConnectionStatus = ConnectionStatus.Connecting;
-            yield return new WaitForSeconds(0.05f);
-        }
         
-        RobotConnectionStatus = time > connectionTimeout ? ConnectionStatus.Disconnected : ConnectionStatus.Connected;
-    } 
+            RobotConnectionStatus = time > connectionTimeout ? ConnectionStatus.Disconnected : ConnectionStatus.Connected;
+        } 
 
-    private async void GetConfigured()
-    {
-        var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/configured");
-        var status = http.SendWebRequest();
-        
-        while (!status.isDone)
-        {
-            if (id == uid)
-            {
-                GetConfigured();
-                GetRobots();
-                GetStickers();
-            }
-        }
-
-    private async void GetRobots()
-    {
-        var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/robots");
-        var status = http.SendWebRequest();
-
-        while (!status.isDone)
-        {
-            await Task.Yield();
-        }
-
-        var data = JsonConvert.DeserializeObject<List<AddRobotData>>(http.downloadHandler.text);
-
-        Robots = data ?? new List<AddRobotData>();
-    }
-
-    private async void GetStickers()
-    {
-        var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/stickers");
-        var status = http.SendWebRequest();
-        
-        while (!status.isDone)
+        private async void GetConfigured()
         {
             var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/configured");
             var status = http.SendWebRequest();
-
+        
             while (!status.isDone)
             {
                 await Task.Yield();
             }
-
+        
             var data = JsonConvert
                 .DeserializeObject<Dictionary<string, Dictionary<string, RobotData>>>(http.downloadHandler.text);
-
+        
             ConfiguredRobots = data != null ? MapConfiguredResponse(data) : new List<AddRobotData>();
             CategoryNames = ConfiguredRobots.Count > 0 ? MapUniqueCategoryNames() : new List<string>();
         }
 
-    public async void PostNewRobot(object body)
-    {
-        var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/add", RequestType.POST, body);
-        var status = http.SendWebRequest();
+        private async void GetRobots()
+        {
+            var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/robots");
+            var status = http.SendWebRequest();
 
             while (!status.isDone)
             {
@@ -150,20 +113,21 @@ namespace Project.Scripts.EventSystem.Services.Menu
         {
             var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/stickers");
             var status = http.SendWebRequest();
-
+        
             while (!status.isDone)
             {
                 await Task.Yield();
             }
-
+        
             var data = JsonConvert.DeserializeObject<Dictionary<string, byte[]>>(http.downloadHandler.text);
-
+        
             Stickers = data != null ? MapStickers(data) : new List<Sprite>();
         }
 
-    private static UnityWebRequest CreateApiRequest(string path, RequestType type = RequestType.GET, object data = null)
-    {
-        var request = new UnityWebRequest(path, type.ToString());
+        public async void PostNewRobot(object body)
+        {
+            var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/add", RequestType.POST, body);
+            var status = http.SendWebRequest();
 
             while (!status.isDone)
             {
@@ -171,7 +135,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
             }
         }
 
-        private UnityWebRequest CreateApiRequest(string path, RequestType type = RequestType.GET, object data = null)
+        private static UnityWebRequest CreateApiRequest(string path, RequestType type = RequestType.GET, object data = null)
         {
             var request = new UnityWebRequest(path, type.ToString());
 
@@ -181,31 +145,33 @@ namespace Project.Scripts.EventSystem.Services.Menu
                 request.uploadHandler = new UploadHandlerRaw(raw);
             }
 
-    private List<AddRobotData> MapConfiguredResponse(Dictionary<string, Dictionary<string, RobotData>> response)
-    {
-        
-        var list = new List<AddRobotData>();
-        foreach (var group in response)
-        {
+            request.downloadHandler = new DownloadHandlerBuffer();
+            request.SetRequestHeader("Content-Type","application/json");
 
+            return request;
+        }
+
+        private List<AddRobotData> MapConfiguredResponse(Dictionary<string, Dictionary<string, RobotData>> response)
+        {
+        
             var list = new List<AddRobotData>();
-            var i = 0;
             foreach (var group in response)
             {
                 foreach (var entry in group.Value)
                 {
-                    RobotName = entry.Value.Name,
-                    RobotCategory = group.Key,
-                    IpAddress = "192.168.1." + (int)Random.value, // TODO FIX LATER
-                };
-                list.Add(robot);
+                    var robot = new AddRobotData
+                    {
+                        RobotName = entry.Value.Name,
+                        RobotCategory = group.Key,
+                        IpAddress = "192.168.1." + (int)Random.value, // TODO FIX LATER
+                    };
+                    list.Add(robot);
+                }
             }
+            return list;
         }
 
-    private static List<Sprite> MapStickers(Dictionary<string, byte[]> response)
-    {
-        var list = new List<Sprite>();
-        foreach (var sticker in response)
+        private static List<Sprite> MapStickers(Dictionary<string, byte[]> response)
         {
             var list = new List<Sprite>();
             foreach (var sticker in response)

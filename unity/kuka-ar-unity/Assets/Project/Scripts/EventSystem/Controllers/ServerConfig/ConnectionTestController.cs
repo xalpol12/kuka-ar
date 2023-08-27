@@ -11,10 +11,10 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
         private IpValidationService validationService;
         private ServerHttpService httpService;
    
-    private void Start()
-    {
-        validationService = IpValidationService.Instance;
-        httpService = ServerHttpService.Instance;
+        private void Start()
+        {
+            validationService = IpValidationService.Instance;
+            httpService = ServerHttpService.Instance;
         
             connectionTestComponent.transform
                 .Find("TestConnection").GetComponent<Button>().onClick.AddListener(TestConnection);

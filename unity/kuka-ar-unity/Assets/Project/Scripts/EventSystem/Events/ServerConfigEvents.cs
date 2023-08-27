@@ -7,13 +7,14 @@ namespace Project.Scripts.EventSystem.Events
     {
         public static ServerConfigEvents Events;
 
-    public event Action<int> OnClickPingServer;
-    public event Action<int> OnClickSaveServerConfig;
-    public event Action<int> OnClickBackToMenu; 
+        private void Awake()
+        {
+            Events = this;
+        }
 
         public event Action<int> OnClickPingServer;
         public event Action<int> OnClickSaveServerConfig;
-        public event Action<int> OnClickBackToMenu;
+        public event Action<int> OnClickBackToMenu; 
 
         public void ServerPing(int id)
         {
@@ -29,10 +30,5 @@ namespace Project.Scripts.EventSystem.Events
         {
             OnClickBackToMenu?.Invoke(id);
         }
-    }
-
-    public void BackToMenu(int id)
-    {
-        OnClickBackToMenu?.Invoke(id);
     }
 }

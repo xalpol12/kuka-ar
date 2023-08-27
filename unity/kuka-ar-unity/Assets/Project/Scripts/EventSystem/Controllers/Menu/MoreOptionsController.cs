@@ -1,17 +1,21 @@
+using Project.Scripts.EventSystem.Services.Menu;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MoreOptionsController : MonoBehaviour
+namespace Project.Scripts.EventSystem.Controllers.Menu
 {
-    public GameObject moreOptions;
-    internal GameObject InternetText;
-    internal Button BugReportButton;
-    internal HttpService HttpService;
-    private void Start()
+    public class MoreOptionsController : MonoBehaviour
     {
-        HttpService = HttpService.Instance;
+        public GameObject moreOptions;
+        internal GameObject InternetText;
+        internal Button BugReportButton;
+        internal HttpService HttpService;
+        private void Start()
+        {
+            HttpService = HttpService.Instance;
         
-        InternetText = moreOptions.transform.parent.Find("InternetLabel").GetComponent<RectTransform>().gameObject;
-        BugReportButton = moreOptions.GetComponent<Button>();
+            InternetText = moreOptions.transform.parent.Find("InternetLabel").GetComponent<RectTransform>().gameObject;
+            BugReportButton = moreOptions.GetComponent<Button>();
+        }
     }
 }
