@@ -49,10 +49,29 @@ namespace Project.Scripts.EventSystem.Services.Menu
             GetStickers();
             MenuEvents.Event.OnClickReloadServerData += OnClickDataReload;
         }
-    
-        public void OnClickDataReload(int uid)
+
+        private void OnClickDataReload(int uid)
         {
-            if (id != uid) return;
+            if (uid != id) return;
+            ReloadAll();
+        }
+
+        public void ReloadRobots()
+        {
+            GetRobots();
+        }
+        
+        public void ReloadConfigured()
+        {
+            GetConfigured();
+        }
+        
+        public void ReloadSticker()
+        {
+            GetStickers();
+        }
+        public void ReloadAll()
+        {
             GetRobots();
             GetConfigured();
             GetStickers();

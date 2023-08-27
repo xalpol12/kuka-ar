@@ -57,7 +57,6 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             if (id != uid) return;
             DialogState = LogicStates.Running;
-            httpService.OnClickDataReload(4);
         }
 
         private void OnSave(int uid)
@@ -104,7 +103,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             DialogState = LogicStates.Hiding;
             AddNewRobotService.ResetSelectState = true;
             httpService.PostNewRobot(data);
-            httpService.OnClickDataReload(4);
+            httpService.ReloadRobots();
         }
 
         private void ReleaseSlider(int uid)

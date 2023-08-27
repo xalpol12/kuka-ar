@@ -28,7 +28,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             scrollList.transform.parent.Find("ServerError").GetComponent<Image>().transform.Find("TryAgain")
                 .GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    observableRobotsController.HttpService.OnClickDataReload(4);
+                    observableRobotsController.HttpService.ReloadSticker();
                     if (observableRobotsController.HttpService.Stickers.Count <= 0) return;
                     ConnectionFailed(false);
                     InitObservableRobots();

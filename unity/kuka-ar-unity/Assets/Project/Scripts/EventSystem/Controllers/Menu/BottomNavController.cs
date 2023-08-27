@@ -16,6 +16,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         internal bool IsCirclePressed;
         internal int TransformFactor;
 
+        private HttpService httpService;
         private void Start()
         {
             StylingService = SelectableStylingService.Instance;
@@ -23,6 +24,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             TransformFactor = 5000;
             IsCirclePressed = false;
             PositioningService.Instance.BestFitPosition = bottomNavPanel.transform.position;
+            httpService = HttpService.Instance;
         
             MenuEvents.Event.OnPressConstantSelectorSlider += BottomNavOnMove;
             MenuEvents.Event.OnReleaseConstantSelectorSlider += BottomNavToDockPosition;
@@ -47,6 +49,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             if (id == uid)
             {
                 IsCirclePressed = true;
+                httpService.ReloadConfigured();
             }
         }
 
