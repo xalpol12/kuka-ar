@@ -105,8 +105,12 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             DialogState = LogicStates.Hiding;
             AddNewRobotService.ResetSelectState = true;
             httpService.PostNewRobot(content);
-            httpService.ReloadRobots();
-            logicService.IsAfterNewRobotSave = true;
+            if (httpService.Response.IpAddress != null)
+            {
+                httpService.ReloadRobots();
+                logicService.IsAfterNewRobotSave = true;
+            }
+            
         }
 
         private void ReleaseSlider(int uid)

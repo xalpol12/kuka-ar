@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using UnityEngine;
@@ -25,6 +26,8 @@ namespace Project.Scripts.EventSystem.Services.Menu
         internal List<string> AvailableIps; 
         internal Dictionary<string, Sprite> Stickers;
         internal List<string> CategoryNames;
+        internal AddRobotData Response;
+        internal ExceptionMessagePair PostError;
 
         [SerializeField]
         private float connectionTimeout;
@@ -154,6 +157,16 @@ namespace Project.Scripts.EventSystem.Services.Menu
             while (!status.isDone)
             {
                 await Task.Yield();
+            }
+            
+            var data = JsonConvert.DeserializeObject<AddRobotData>(http.downloadHandler.text);
+            if (data != null)
+            {
+                Response = data;
+            }
+            else
+            {
+                PostError = JsonConvert.DeserializeObject<ExceptionMessagePair>(http.downloadHandler.text);
             }
         }
 
