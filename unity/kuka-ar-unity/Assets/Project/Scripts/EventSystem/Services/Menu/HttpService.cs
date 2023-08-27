@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -21,6 +22,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
         internal ConnectionStatus RobotConnectionStatus;
         internal List<AddRobotData> ConfiguredRobots;
         internal List<AddRobotData> Robots;
+        internal List<string> AvailableIps; 
         internal Dictionary<string, Sprite> Stickers;
         internal List<string> CategoryNames;
         internal bool HasInternet;
@@ -43,10 +45,10 @@ namespace Project.Scripts.EventSystem.Services.Menu
             CategoryNames = new List<string>();
             RobotConnectionStatus = ConnectionStatus.Disconnected;
             connectionTimeout /= 1000;
-        
+
+            GetStickers();
             GetConfigured();
             GetRobots();
-            GetStickers();
             MenuEvents.Event.OnClickReloadServerData += OnClickDataReload;
         }
 
@@ -111,6 +113,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
         
             ConfiguredRobots = data != null ? MapConfiguredResponse(data) : new List<AddRobotData>();
             CategoryNames = ConfiguredRobots.Count > 0 ? MapUniqueCategoryNames() : new List<string>();
+            AvailableIps = Stickers.Select(image => image.Key).ToList();
         }
 
         private async void GetRobots()
@@ -172,7 +175,6 @@ namespace Project.Scripts.EventSystem.Services.Menu
 
         private List<AddRobotData> MapConfiguredResponse(Dictionary<string, Dictionary<string, RobotData>> response)
         {
-        
             var list = new List<AddRobotData>();
             foreach (var group in response)
             {
@@ -181,8 +183,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
                     var robot = new AddRobotData
                     {
                         RobotName = entry.Value.Name,
-                        RobotCategory = group.Key,
-                        IpAddress = "192.168.1." + (int)Random.value, // TODO FIX LATER
+                        RobotCategory = group.Key, 
                     };
                     list.Add(robot);
                 }
