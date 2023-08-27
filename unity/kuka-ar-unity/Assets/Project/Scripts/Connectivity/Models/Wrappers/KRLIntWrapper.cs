@@ -17,8 +17,11 @@ namespace Project.Scripts.Connectivity.Models.Wrappers
 
         public void UpdateValue(KRLValue update)
         {
-            krlInt = (KRLInt)update;
-            OnValueUpdated(krlInt);
+            if (((KRLInt)update).Value != krlInt.Value)
+            {
+                krlInt = (KRLInt)update;
+                OnValueUpdated(krlInt);
+            }
         }
 
         private void OnValueUpdated(KRLInt e)
