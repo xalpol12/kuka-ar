@@ -32,7 +32,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 .transform.Find("ServerError").GetComponent<RectTransform>().gameObject
                 .transform.Find("TryAgain").GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    selectController.HttpService.OnClickDataReload(4);
+                    selectController.HttpService.ReloadConfigured();
                     if (selectController.HttpService.ConfiguredRobots.Count <= 0) return;
                     ServerFailure(false);
                     InitListLogic();

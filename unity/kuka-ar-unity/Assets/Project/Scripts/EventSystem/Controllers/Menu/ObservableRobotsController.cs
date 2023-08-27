@@ -13,8 +13,6 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             HttpService = HttpClientWrapper.Instance;
             StylingService = SelectableStylingService.Instance;
-        
-            HttpService.OnClickDataReload(4);
         }
     }
 }
