@@ -53,7 +53,7 @@ public class StaticDataController {
     }
 
     @PostMapping("add")
-    public ConfiguredRobotDTO addRobot(@RequestBody ConfiguredRobotDTO robotDTO) {
+    public ConfiguredRobotDTO addRobot(@RequestBody ConfiguredRobotDTO robotDTO) throws WrongIpException{
         logger.debug("Called: POST /add with request body: {}", robotDTO);
         return robotService.save(robotDTO);
     }
