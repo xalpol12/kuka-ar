@@ -24,7 +24,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
 
         private void Start()
         {
-            DefaultSprite = Resources.Load<Sprite>("Gradients/GreyListBar");
+            DefaultSprite = Resources.Load<Sprite>("Icons/cloudIcon");
             SelectedSprite = Resources.Load<Sprite>("Fields/Selected");
             DefaultAddIcon = Resources.Load<Sprite>("Icons/circle");
             PressedAddIcon = Resources.Load<Sprite>("Icons/circlePress");
