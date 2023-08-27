@@ -1,6 +1,5 @@
 
 using System;
-using Codice.CM.Common;
 using Project.Scripts.Connectivity.Models.KRLValues;
 
 namespace Project.Scripts.Connectivity.Models.Wrappers
