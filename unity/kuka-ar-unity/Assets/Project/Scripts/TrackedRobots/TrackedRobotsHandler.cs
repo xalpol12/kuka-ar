@@ -58,6 +58,7 @@ namespace Project.Scripts.TrackedRobots
                     UnityMainThreadDispatcher.Instance.Enqueue(() =>
                     {
                         trackedRobots.Add(entry, new TrackedRobotModel(
+                            Instantiate(prefab, Vector3.zero, Quaternion.identity), //TODO: add base offset during instantiation
                             Instantiate(prefab, Vector3.zero, Quaternion.identity),
                             positionThreshold,
                             rotationThreshold));
@@ -99,7 +100,7 @@ namespace Project.Scripts.TrackedRobots
         {
             foreach (var trackedRobot in trackedRobots.Values)
             {
-                trackedRobot.UpdateGameObjectOrientation();
+                trackedRobot.UpdateGameObjects();
             }
         }
     }
