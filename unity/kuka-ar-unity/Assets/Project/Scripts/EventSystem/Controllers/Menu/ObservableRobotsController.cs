@@ -8,11 +8,13 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public GameObject parentGrid;
         internal HttpClientWrapper HttpService;
         internal SelectableStylingService StylingService;
+        internal SelectableLogicService LogicService;
 
         private void Start()
         {
             HttpService = HttpClientWrapper.Instance;
             StylingService = SelectableStylingService.Instance;
+            LogicService = SelectableLogicService.Instance;
         }
     }
 }

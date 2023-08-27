@@ -222,7 +222,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                     }
                     else
                     {
-                        Debug.Log(index);
                         temp = selectController.ElementClicked switch
                         {
                             ButtonType.IpAddress => selectController.HttpService.AvailableIps[index],

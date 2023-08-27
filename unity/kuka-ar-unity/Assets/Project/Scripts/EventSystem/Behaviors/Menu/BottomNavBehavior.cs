@@ -40,20 +40,20 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private void Update()
         {
-            if (bottomNav.StylingService.SliderState == LogicStates.Running)
+            if (bottomNav.LogicService.SliderState == LogicStates.Running)
             {
                 StartCoroutine(BottomMenuPositionHandler());
             }
-            else if (bottomNav.StylingService.SliderState == LogicStates.Hiding)
+            else if (bottomNav.LogicService.SliderState == LogicStates.Hiding)
             {
-                StartCoroutine(bottomNav.StylingService.IsAfterItemSelect || isAfterBottomNavEscape ?
+                StartCoroutine(bottomNav.LogicService.IsAfterItemSelect || isAfterBottomNavEscape ?
                     CloseObservableRobotsList() : AutoDestinationPull());
             }
 
             if (Input.GetKey(KeyCode.Escape) && !service.IsBottomNavDocked)
             {
                 isAfterBottomNavEscape = true;
-                bottomNav.StylingService.SliderState = LogicStates.Hiding;
+                bottomNav.LogicService.SliderState = LogicStates.Hiding;
                 StartCoroutine(CloseObservableRobotsList());
             }
         
@@ -68,7 +68,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             if (menuPosition.y > Screen.height * pullMenuScreenMaxHeight)
             {
                 menuPosition.y = Screen.height * pullMenuScreenMaxHeight;
-                bottomNav.StylingService.SliderState = LogicStates.Waiting;
+                bottomNav.LogicService.SliderState = LogicStates.Waiting;
                 yield break;
             }
 
@@ -98,14 +98,14 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 var newPosition = bottomNav.transform.position + translation;
                 if (newPosition.y > Screen.height * pullMenuScreenMaxHeight)
                 {
-                    bottomNav.StylingService.SliderState = LogicStates.Waiting;
+                    bottomNav.LogicService.SliderState = LogicStates.Waiting;
                     yield break;
                 }
             
                 if (newPosition.y < dockPosition.y)
                 {
                     bottomNav.transform.position = dockPosition;
-                    bottomNav.StylingService.SliderState = LogicStates.Waiting;
+                    bottomNav.LogicService.SliderState = LogicStates.Waiting;
                     yield break;
                 }
                     
@@ -121,7 +121,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
             if (newPosition.y < dockPosition.y)
             {
-                bottomNav.StylingService.IsAfterItemSelect = false;
+                bottomNav.LogicService.IsAfterItemSelect = false;
                 isAfterBottomNavEscape = false;
                 yield break;
             }
