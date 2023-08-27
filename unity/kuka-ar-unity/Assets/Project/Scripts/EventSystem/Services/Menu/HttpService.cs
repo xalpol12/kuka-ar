@@ -25,7 +25,6 @@ namespace Project.Scripts.EventSystem.Services.Menu
         internal List<string> AvailableIps; 
         internal Dictionary<string, Sprite> Stickers;
         internal List<string> CategoryNames;
-        internal bool HasInternet;
 
         [SerializeField]
         private float connectionTimeout;
