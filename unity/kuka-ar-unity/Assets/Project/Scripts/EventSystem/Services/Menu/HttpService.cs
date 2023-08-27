@@ -21,7 +21,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
         internal ConnectionStatus RobotConnectionStatus;
         internal List<AddRobotData> ConfiguredRobots;
         internal List<AddRobotData> Robots;
-        internal List<Sprite> Stickers;
+        internal Dictionary<string, Sprite> Stickers;
         internal List<string> CategoryNames;
         internal bool HasInternet;
 
@@ -39,7 +39,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
                 "127.0.0.1" : PlayerPrefs.GetString("serverIp");
             ConfiguredRobots = new List<AddRobotData>();
             Robots = new List<AddRobotData>();
-            Stickers = new List<Sprite>();
+            Stickers = new Dictionary<string, Sprite>();
             CategoryNames = new List<string>();
             RobotConnectionStatus = ConnectionStatus.Disconnected;
             connectionTimeout /= 1000;
@@ -121,7 +121,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
         
             var data = JsonConvert.DeserializeObject<Dictionary<string, byte[]>>(http.downloadHandler.text);
         
-            Stickers = data != null ? MapStickers(data) : new List<Sprite>();
+            Stickers = data != null ? MapStickers(data) : new Dictionary<string, Sprite>();
         }
 
         public async void PostNewRobot(object body)
@@ -171,18 +171,18 @@ namespace Project.Scripts.EventSystem.Services.Menu
             return list;
         }
 
-        private static List<Sprite> MapStickers(Dictionary<string, byte[]> response)
+        private static Dictionary<string, Sprite> MapStickers(Dictionary<string, byte[]> response)
         {
-            var list = new List<Sprite>();
+            var dict = new Dictionary<string, Sprite>();
             foreach (var sticker in response)
             {
                 var tex = new Texture2D(1,1);
                 tex.LoadImage(sticker.Value);
                 var sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-                list.Add(sprite);
+                dict.Add(sticker.Key, sprite);
             }
 
-            return list;
+            return dict;
         }
 
         private List<string> MapUniqueCategoryNames()
