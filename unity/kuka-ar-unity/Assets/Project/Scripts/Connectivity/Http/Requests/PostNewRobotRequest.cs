@@ -1,4 +1,3 @@
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -10,7 +9,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
 {
     public class PostNewRobotRequest : IHttpRequest<object>
     {
-        private string url => "/add";
+        private static string URL => "/add";
         private readonly Robot newRobot;
         
         public PostNewRobotRequest(Robot robot)
@@ -21,7 +20,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
         public async Task<object> Execute(HttpClient httpClient)
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(newRobot), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(httpClient.BaseAddress + url, stringContent);
+            var response = await httpClient.PostAsync(httpClient.BaseAddress + URL, stringContent);
             return HttpStatusCode.OK;
         }
     }

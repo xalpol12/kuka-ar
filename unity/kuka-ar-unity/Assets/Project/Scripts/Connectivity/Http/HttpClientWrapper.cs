@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Project.Scripts.Connectivity.Models.AggregationClasses;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Http
@@ -9,6 +11,7 @@ namespace Project.Scripts.Connectivity.Http
     {
         private HttpClient httpClient;
         public static HttpClientWrapper Instance;
+        private WebDataStorage webDataStorage;
 
         public string BaseAddress {
             get => BaseAddress;
@@ -28,11 +31,32 @@ namespace Project.Scripts.Connectivity.Http
         private void Start()
         {
             httpClient = new HttpClient();
+            webDataStorage = WebDataStorage.Instance;
         }
 
         public async Task<TResult> ExecuteRequest<TResult>(IHttpRequest<TResult> command)
         {
-            return await command.Execute(httpClient);
+            var response = await command.Execute(httpClient);
+            WebStorageAssigmentHandler(command.ToString(), response);
+            return response;
+        }
+
+        private void WebStorageAssigmentHandler(string command,object serverData)
+        {
+            switch (command)
+            {
+                case "robots":
+                    webDataStorage.Robots = (List<Robot>) serverData;
+                    break;
+                case "cong":
+                    webDataStorage.ConfiguredRobots = (List<Robot>)serverData;
+                    webDataStorage.MapUniqueCategoryNames();
+                    break;
+                case "img":
+                    webDataStorage.Stickers = (Dictionary<string, Sprite>)serverData;
+                    webDataStorage.MapIpAddresses();
+                    break;
+            }
         }
 
         private void OnDestroy()

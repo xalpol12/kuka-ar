@@ -8,11 +8,11 @@ namespace Project.Scripts.Connectivity.Http.Requests
 {
     public class GetRobotConfigDataRequest : IHttpRequest<Dictionary<string, RobotData>>
     {
-        private string url => "/configured";
+        private string URL => "/configured";
         
         public async Task<Dictionary<string, RobotData>> Execute(HttpClient httpClient)
         {
-            var response = await httpClient.GetAsync(httpClient.BaseAddress + url);
+            var response = await httpClient.GetAsync(httpClient.BaseAddress + URL);
             var json = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<Dictionary<string, RobotData>>(json);
         }

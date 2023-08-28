@@ -1,3 +1,5 @@
+using Project.Scripts.Connectivity.Http;
+using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
@@ -17,7 +19,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         internal bool IsCirclePressed;
         internal int TransformFactor;
 
-        private HttpService httpService;
+        private HttpClientWrapper httpClient;
         private void Start()
         {
             StylingService = SelectableStylingService.Instance;
@@ -26,7 +28,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             TransformFactor = 5000;
             IsCirclePressed = false;
             PositioningService.Instance.BestFitPosition = bottomNavPanel.transform.position;
-            httpService = HttpService.Instance;
+            httpClient = HttpClientWrapper.Instance;
         
             MenuEvents.Event.OnPressConstantSelectorSlider += BottomNavOnMove;
             MenuEvents.Event.OnReleaseConstantSelectorSlider += BottomNavToDockPosition;
@@ -51,7 +53,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             if (id == uid)
             {
                 IsCirclePressed = true;
-                httpService.ReloadConfigured();
+                httpClient.ExecuteRequest(new GetRobotConfigDataRequest());
             }
         }
 

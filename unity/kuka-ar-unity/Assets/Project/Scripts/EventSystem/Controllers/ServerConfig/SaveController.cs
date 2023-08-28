@@ -1,12 +1,10 @@
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.EventSystem.Enums;
-using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.EventSystem.Services.ServerConfig;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using HttpClientWrapper = Project.Scripts.Connectivity.Http.HttpClientWrapper;
 
 namespace Project.Scripts.EventSystem.Controllers.ServerConfig
 {
