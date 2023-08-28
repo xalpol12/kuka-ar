@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Project.Scripts.Connectivity.ExceptionHandling;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
+using Project.Scripts.Connectivity.Models.Wrappers;
 using Project.Scripts.Utils;
 using UnityEngine;
 
@@ -11,6 +13,10 @@ namespace Project.Scripts.TrackedRobots
 {
     public class TrackedRobotModel
     {
+        public event EventHandler<KRLInt> ActiveBaseUpdated;
+        public event EventHandler<KRLInt> ActiveToolUpdated;
+        public event EventHandler<KRLJoints> ActiveJointsUpdated;
+        
         private static class ValueName
         {
             public const string ActiveBase = "$ACT_BASE";
@@ -19,30 +25,41 @@ namespace Project.Scripts.TrackedRobots
             public const string Tcp = "$POS_ACT";
             public const string Joints = "$AXIS_ACT";
         }
-        
-        private readonly GameObject gameObject;
-        
-        private KRLInt activeBase;
-        private KRLInt activeTcp;
-        private KRLFrame tcpOrientation;
-        private KRLJoints activeJoints;
 
-        private Queue<KRLFrame> orientationUpdates;
-        private readonly float positionThreshold;
-        private readonly float rotationThreshold;
-        private KRLFrame lastEnqueued;
+        private readonly GameObject baseObject;
+        private readonly GameObject tcpObject;
+        private readonly float posThresh;
+        private readonly float rotThresh;
 
-        public TrackedRobotModel(GameObject instantiatedObject, float positionThreshold, float rotationThreshold)
+        private readonly Dictionary<string, IKRLWrapper<KRLValue>> krlValues;
+
+        public TrackedRobotModel(GameObject baseObject, GameObject tcpObject, float posThresh, float rotThresh)
         {
-            gameObject = instantiatedObject;
-            this.positionThreshold = positionThreshold;
-            this.rotationThreshold = rotationThreshold;
-            
-            orientationUpdates = new Queue<KRLFrame>();
-            lastEnqueued = new KRLFrame
-            {
-                Position = Vector3.zero
-            };
+            this.baseObject = baseObject;
+            this.tcpObject = tcpObject;
+            this.posThresh = posThresh;
+            this.rotThresh = rotThresh;
+
+            krlValues = new Dictionary<string, IKRLWrapper<KRLValue>>(5);
+
+            SetupRobotVariables();
+            SubscribeToValueUpdatedEvents();
+        }
+
+        private void SetupRobotVariables()
+        {
+            krlValues.Add(ValueName.ActiveBase, new KRLIntWrapper());
+            krlValues.Add(ValueName.ActiveTcp, new KRLIntWrapper());
+            krlValues.Add(ValueName.Base, new KRLFrameWrapper(posThresh, rotThresh));
+            krlValues.Add(ValueName.Tcp, new KRLFrameWrapper(posThresh, rotThresh));
+            krlValues.Add(ValueName.Joints, new KRLJointsWrapper(rotThresh));
+        }
+
+        private void SubscribeToValueUpdatedEvents()
+        {
+            ((KRLIntWrapper) krlValues[ValueName.ActiveBase]).ValueUpdated += OnActiveBaseUpdated;
+            ((KRLIntWrapper) krlValues[ValueName.ActiveTcp]).ValueUpdated += OnActiveToolUpdated;
+            ((KRLJointsWrapper) krlValues[ValueName.Joints]).ValueUpdated += OnActiveJointsUpdated;
         }
 
         public void UpdateTrackedRobotVariables(IReadOnlyDictionary<string, ValueWithError> data)
@@ -61,70 +78,54 @@ namespace Project.Scripts.TrackedRobots
             }
         }
         
-        public void UpdateGameObjectOrientation()
-        {
-            if (orientationUpdates.TryDequeue(out var update))
-            {
-                gameObject.transform.position = update.Position;
-                gameObject.transform.rotation = Quaternion.Euler(update.Rotation);
-                DebugLogger.Instance.AddLog($"Pos: {update.Position.ToString()}, " +
-                                              $"rot: {update.Rotation.ToString()}; ");
-            }
-        }
-
         private void UpdateRobotData(string key, KRLValue value)
         {
-            switch (key)
-            {
-                case ValueName.ActiveBase:
-                    activeBase = (KRLInt)value;
-                    break;
-                case ValueName.ActiveTcp:
-                    activeTcp = (KRLInt)value;
-                    break;
-                case ValueName.Base:
-                    SetValueIfChanged((KRLFrame)value);
-                    break;
-                case ValueName.Tcp:
-                    tcpOrientation = (KRLFrame)value;
-                    break;
-                case ValueName.Joints:
-                    activeJoints = (KRLJoints)value;
-                    break;
-            }
+            krlValues[key].UpdateValue(value);
         }
         
-        private void SetValueIfChanged(KRLFrame update)
-        {
-            if (IsNewValueGreaterThanPositionThreshold(update, lastEnqueued) || 
-                IsNewValueGreaterThanRotationThreshold(update, lastEnqueued))
-            {
-                orientationUpdates.Enqueue(update);
-                lastEnqueued = update;
-            }
-        }
 
         private void UpdateExceptions(HashSet<ExceptionMessagePair> exceptions)
         {
             GlobalExceptionStorage.Instance.AddExceptions(exceptions);
         }
-
-        private bool IsNewValueGreaterThanPositionThreshold(KRLFrame newValue, KRLFrame oldValue)
+        
+        public void UpdateGameObjects()
         {
-            Vector3 difference = newValue.Position - oldValue.Position;
+            if (((KRLFrameWrapper) krlValues[ValueName.Base]).TryDequeue(out var baseUpdate))
+            {
+                UpdateGivenGameObject(baseObject, baseUpdate);
+            }
 
-            return Math.Abs(difference.x) > positionThreshold ||
-                   Math.Abs(difference.y) > positionThreshold ||
-                   Math.Abs(difference.z) > positionThreshold;
+            if (((KRLFrameWrapper) krlValues[ValueName.Tcp]).TryDequeue(out var tcpUpdate))
+            {
+                UpdateGivenGameObject(tcpObject, tcpUpdate);
+            }
         }
 
-        private bool IsNewValueGreaterThanRotationThreshold(KRLFrame newValue, KRLFrame oldValue)
+        private void UpdateGivenGameObject(GameObject gameObject, KRLFrame update)
         {
-            Vector3 difference = newValue.Rotation - oldValue.Rotation;
+            gameObject.transform.position = update.Position;
+            gameObject.transform.rotation = Quaternion.Euler(update.Rotation);
+            DebugLogger.Instance.AddLog($"Pos: {update.Position.ToString()}, " +
+                                        $"rot: {update.Rotation.ToString()}; ");
+        }
 
-            return Math.Abs(difference.x) > rotationThreshold ||
-                   Math.Abs(difference.y) > rotationThreshold ||
-                   Math.Abs(difference.z) > rotationThreshold;
+        private void OnActiveBaseUpdated(object sender, KRLInt e)
+        {
+            DebugLogger.Instance.AddLog($"Base number updated: {e.Value.ToString()}; ");
+            ActiveBaseUpdated?.Invoke(this, e);
+        }
+
+        private void OnActiveToolUpdated(object sender, KRLInt e)
+        {
+            DebugLogger.Instance.AddLog($"TCP number updated: {e.Value.ToString()}; ");
+            ActiveToolUpdated?.Invoke(this, e);
+        }
+
+        private void OnActiveJointsUpdated(object sender, KRLJoints e)
+        {
+            DebugLogger.Instance.AddLog($"Joints updated: {e.J1.ToString(CultureInfo.InvariantCulture)}; ");
+            ActiveJointsUpdated?.Invoke(this, e);
         }
     }
 }
