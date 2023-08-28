@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Project.Scripts.Connectivity.Http;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
@@ -28,7 +29,7 @@ namespace Project.Scripts.EventSystem.Controllers
         [SerializeField] private GameObject focusModeToggle;
     
         private IpValidationService validationService;
-        private HttpService httpService;
+        private HttpClientWrapper httpClient;
         private Toggle selectedMode;
         private int serverConfigDisplayState;
         private bool isAfterBugReport;
@@ -37,7 +38,7 @@ namespace Project.Scripts.EventSystem.Controllers
         private void Start()
         {
             validationService = IpValidationService.Instance;
-            httpService= HttpService.Instance;
+            httpClient= HttpClientWrapper.Instance;
         
             NextAnim = new List<AnimationFilter>();
             selectedMode = focusModeToggle.GetComponent<Toggle>();
@@ -120,7 +121,7 @@ namespace Project.Scripts.EventSystem.Controllers
             ServerConfigAnim = AnimationStates.FadeOut;
             NextAnim.Add(AnimationFilter.MenuIn);
             PlayerPrefs.SetInt("firstRun", 1);
-            PlayerPrefs.SetString("serverIp", HttpService.Instance.ConfiguredIp);
+            PlayerPrefs.SetString("serverIp", httpClient.BaseAddress);
         }
 
         private void GoToMainScreen(int uid)
@@ -140,7 +141,7 @@ namespace Project.Scripts.EventSystem.Controllers
 
         private void SubmitAnIssue(int uid)
         {
-            if (id == uid && !httpService.HasInternet)
+            if (id == uid && Application.internetReachability != NetworkReachability.NotReachable)
             {
                 SceneManager.LoadScene("WebViewScene");
                 isAfterBugReport = true;

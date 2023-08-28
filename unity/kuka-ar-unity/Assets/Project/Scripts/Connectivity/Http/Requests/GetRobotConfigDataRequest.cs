@@ -8,12 +8,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
 {
     public class GetRobotConfigDataRequest : IHttpRequest<Dictionary<string, RobotData>>
     {
-        private readonly string url;
-        
-        public GetRobotConfigDataRequest()
-        {
-            url = "/configured";
-        }
+        private string url => "/configured";
         
         public async Task<Dictionary<string, RobotData>> Execute(HttpClient httpClient)
         {

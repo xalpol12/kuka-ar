@@ -7,8 +7,18 @@ namespace Project.Scripts.Connectivity.Http
 {
     public class HttpClientWrapper : MonoBehaviour
     {
-        public static HttpClientWrapper Instance;
         private HttpClient httpClient;
+        public static HttpClientWrapper Instance;
+
+        public string BaseAddress {
+            get => BaseAddress;
+            set
+            {
+                string ipAddress = string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")) ?
+                    value : PlayerPrefs.GetString("serverIp");
+                httpClient.BaseAddress = new Uri($"http://{ipAddress}:8080/kuka-variables");
+            }
+        }
 
         private void Awake()
         {
@@ -18,7 +28,6 @@ namespace Project.Scripts.Connectivity.Http
         private void Start()
         {
             httpClient = new HttpClient();
-            httpClient.BaseAddress = new Uri("http://192.168.18.20:8080/kuka-variables");
         }
 
         public async Task<TResult> ExecuteRequest<TResult>(IHttpRequest<TResult> command)
