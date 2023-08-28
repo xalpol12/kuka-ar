@@ -51,7 +51,7 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
 
         private void ValidateIp()
         {
-            ipInputField.GetComponent<Image>().sprite = 
+            ipInputField.GetComponent<Image>().sprite =
                 validationService.IpAddressValidation(ipInputField.GetComponent<TMP_InputField>().text);
         }
 
