@@ -59,6 +59,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             if (id != uid) return;
             DialogState = LogicStates.Running;
+            httpService.OnClickDataReload(4);
         }
 
         private void OnSave(int uid)
