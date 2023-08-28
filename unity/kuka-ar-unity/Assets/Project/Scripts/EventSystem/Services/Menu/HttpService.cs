@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using UnityEngine;
@@ -21,9 +23,11 @@ namespace Project.Scripts.EventSystem.Services.Menu
         internal ConnectionStatus RobotConnectionStatus;
         internal List<AddRobotData> ConfiguredRobots;
         internal List<AddRobotData> Robots;
-        internal List<Sprite> Stickers;
+        internal List<string> AvailableIps; 
+        internal Dictionary<string, Sprite> Stickers;
         internal List<string> CategoryNames;
-        internal bool HasInternet;
+        internal AddRobotData Response;
+        internal ExceptionMessagePair PostError;
 
         [SerializeField]
         private float connectionTimeout;
@@ -39,20 +43,39 @@ namespace Project.Scripts.EventSystem.Services.Menu
                 "127.0.0.1" : PlayerPrefs.GetString("serverIp");
             ConfiguredRobots = new List<AddRobotData>();
             Robots = new List<AddRobotData>();
-            Stickers = new List<Sprite>();
+            Stickers = new Dictionary<string, Sprite>();
             CategoryNames = new List<string>();
             RobotConnectionStatus = ConnectionStatus.Disconnected;
             connectionTimeout /= 1000;
-        
+
+            GetStickers();
             GetConfigured();
             GetRobots();
-            GetStickers();
             MenuEvents.Event.OnClickReloadServerData += OnClickDataReload;
         }
-    
-        public void OnClickDataReload(int uid)
+
+        private void OnClickDataReload(int uid)
         {
-            if (id != uid) return;
+            if (uid != id) return;
+            ReloadAll();
+        }
+
+        public void ReloadRobots()
+        {
+            GetRobots();
+        }
+        
+        public void ReloadConfigured()
+        {
+            GetConfigured();
+        }
+        
+        public void ReloadSticker()
+        {
+            GetStickers();
+        }
+        public void ReloadAll()
+        {
             GetRobots();
             GetConfigured();
             GetStickers();
@@ -92,6 +115,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
         
             ConfiguredRobots = data != null ? MapConfiguredResponse(data) : new List<AddRobotData>();
             CategoryNames = ConfiguredRobots.Count > 0 ? MapUniqueCategoryNames() : new List<string>();
+            AvailableIps = Stickers.Select(image => image.Key).ToList();
         }
 
         private async void GetRobots()
@@ -121,17 +145,28 @@ namespace Project.Scripts.EventSystem.Services.Menu
         
             var data = JsonConvert.DeserializeObject<Dictionary<string, byte[]>>(http.downloadHandler.text);
         
-            Stickers = data != null ? MapStickers(data) : new List<Sprite>();
+            Stickers = data != null ? MapStickers(data) : new Dictionary<string, Sprite>();
         }
 
         public async void PostNewRobot(object body)
         {
-            var http = CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/add", RequestType.POST, body);
+            var http = 
+                CreateApiRequest($"http://{ConfiguredIp}:8080/kuka-variables/add", RequestType.POST, body);
             var status = http.SendWebRequest();
 
             while (!status.isDone)
             {
                 await Task.Yield();
+            }
+            
+            var data = JsonConvert.DeserializeObject<AddRobotData>(http.downloadHandler.text);
+            if (data != null)
+            {
+                Response = data;
+            }
+            else
+            {
+                PostError = JsonConvert.DeserializeObject<ExceptionMessagePair>(http.downloadHandler.text);
             }
         }
 
@@ -153,7 +188,6 @@ namespace Project.Scripts.EventSystem.Services.Menu
 
         private List<AddRobotData> MapConfiguredResponse(Dictionary<string, Dictionary<string, RobotData>> response)
         {
-        
             var list = new List<AddRobotData>();
             foreach (var group in response)
             {
@@ -162,8 +196,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
                     var robot = new AddRobotData
                     {
                         RobotName = entry.Value.Name,
-                        RobotCategory = group.Key,
-                        IpAddress = "192.168.1." + (int)Random.value, // TODO FIX LATER
+                        RobotCategory = group.Key, 
                     };
                     list.Add(robot);
                 }
@@ -171,18 +204,18 @@ namespace Project.Scripts.EventSystem.Services.Menu
             return list;
         }
 
-        private static List<Sprite> MapStickers(Dictionary<string, byte[]> response)
+        private static Dictionary<string, Sprite> MapStickers(Dictionary<string, byte[]> response)
         {
-            var list = new List<Sprite>();
+            var dict = new Dictionary<string, Sprite>();
             foreach (var sticker in response)
             {
                 var tex = new Texture2D(1,1);
                 tex.LoadImage(sticker.Value);
                 var sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
-                list.Add(sprite);
+                dict.Add(sticker.Key, sprite);
             }
 
-            return list;
+            return dict;
         }
 
         private List<string> MapUniqueCategoryNames()

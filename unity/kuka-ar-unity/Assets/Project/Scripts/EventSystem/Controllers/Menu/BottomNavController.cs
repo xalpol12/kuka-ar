@@ -12,17 +12,21 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public int id;
         public GameObject bottomNavPanel;
         internal SelectableStylingService StylingService;
+        internal SelectableLogicService LogicService;
     
         internal bool IsCirclePressed;
         internal int TransformFactor;
 
+        private HttpService httpService;
         private void Start()
         {
             StylingService = SelectableStylingService.Instance;
-        
+            LogicService = SelectableLogicService.Instance;
+            
             TransformFactor = 5000;
             IsCirclePressed = false;
             PositioningService.Instance.BestFitPosition = bottomNavPanel.transform.position;
+            httpService = HttpService.Instance;
         
             MenuEvents.Event.OnPressConstantSelectorSlider += BottomNavOnMove;
             MenuEvents.Event.OnReleaseConstantSelectorSlider += BottomNavToDockPosition;
@@ -33,13 +37,13 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         private void BottomNavOnMove(int uid)
         {
             if (uid != id) return;
-            StylingService.SliderState = LogicStates.Running;
+            LogicService.SliderState = LogicStates.Running;
         }
 
         private void BottomNavToDockPosition(int uid)
         {
             if (uid != id) return;
-            StylingService.SliderState = LogicStates.Hiding;
+            LogicService.SliderState = LogicStates.Hiding;
         }
 
         private void CirclePress(int uid)
@@ -47,6 +51,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             if (id == uid)
             {
                 IsCirclePressed = true;
+                httpService.ReloadConfigured();
             }
         }
 

@@ -1,5 +1,6 @@
+using System.Collections;
 using System.Collections.Generic;
-using Project.Scripts.EventSystem.Enums;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,8 +16,6 @@ namespace Project.Scripts.EventSystem.Services.Menu
         internal Sprite PressedAddIcon;
         internal Sprite InvalidSelectable;
         internal Sprite DefaultInputField;
-        internal LogicStates SliderState;
-        internal bool IsAfterItemSelect;
 
         private void Awake()
         {
@@ -25,10 +24,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
 
         private void Start()
         {
-            IsAfterItemSelect = false;
-            SliderState = LogicStates.Waiting;
-        
-            DefaultSprite = Resources.Load<Sprite>("Gradients/GreyListBar");
+            DefaultSprite = Resources.Load<Sprite>("Icons/cloudIcon");
             SelectedSprite = Resources.Load<Sprite>("Fields/Selected");
             DefaultAddIcon = Resources.Load<Sprite>("Icons/circle");
             PressedAddIcon = Resources.Load<Sprite>("Icons/circlePress");
@@ -41,6 +37,18 @@ namespace Project.Scripts.EventSystem.Services.Menu
             foreach (var item in allGridItems)
             {
                 item.transform.GetComponent<Image>().sprite = DefaultSprite;
+            }
+        }
+
+        public IEnumerator FadeOutText(TMP_Text text)
+        {
+            yield return new WaitForSeconds(2);
+            var i = 1f;
+            while (i > -0.01f)
+            {
+                text.color = new Color(1, 0, 0, i);
+                i -= 0.01f;
+                yield return null;
             }
         }
     }

@@ -32,7 +32,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 .transform.Find("ServerError").GetComponent<RectTransform>().gameObject
                 .transform.Find("TryAgain").GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    selectController.HttpService.OnClickDataReload(4);
+                    selectController.HttpService.ReloadConfigured();
                     if (selectController.HttpService.ConfiguredRobots.Count <= 0) return;
                     ServerFailure(false);
                     InitListLogic();
@@ -159,15 +159,17 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 http = selectController.HttpService.ConfiguredRobots[index];
             }
 
+            var mod = index;
             switch (selectController.ElementClicked)
             {
                 case ButtonType.IpAddress:
+                    mod  %= selectController.HttpService.AvailableIps.Count;
                     parent.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
-                        .Find("Label").GetComponent<TMP_Text>().text = http.IpAddress;
+                        .Find("Label").GetComponent<TMP_Text>().text = selectController.HttpService.AvailableIps[mod];
                     break;
                 case ButtonType.Category:
                 {
-                    var mod = index % selectController.HttpService.CategoryNames.Count;
+                    mod %= selectController.HttpService.CategoryNames.Count;
                     parent.Find("ChosenCategory").GetComponent<RectTransform>().gameObject.transform
                             .Find("CategoryLabel").GetComponent<TMP_Text>().text =
                         selectController.HttpService.CategoryNames[mod];
@@ -204,10 +206,11 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 {
                     item.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
                 }
-                if (selectController.ElementClicked == ButtonType.Category &&
-                    index > selectController.HttpService.CategoryNames.Count - 1)
+                if ((selectController.ElementClicked == ButtonType.Category &&
+                    index > selectController.HttpService.CategoryNames.Count - 1) || 
+                    (selectController.ElementClicked == ButtonType.IpAddress &&
+                     index > selectController.HttpService.AvailableIps.Count - 1))
                 {
-                    item.gameObject.SetActive(false);
                     temp = null;
                     yield return null;
                 }
@@ -221,7 +224,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                     {
                         temp = selectController.ElementClicked switch
                         {
-                            ButtonType.IpAddress => selectController.HttpService.ConfiguredRobots[index].IpAddress,
+                            ButtonType.IpAddress => selectController.HttpService.AvailableIps[index],
                             ButtonType.Category => selectController.HttpService.CategoryNames[index],
                             ButtonType.RobotName => selectController.HttpService.ConfiguredRobots[index].RobotName,
                             _ => throw new ArgumentOutOfRangeException()
