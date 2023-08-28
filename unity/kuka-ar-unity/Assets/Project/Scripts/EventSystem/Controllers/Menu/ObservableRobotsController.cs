@@ -6,12 +6,12 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
     public class ObservableRobotsController : MonoBehaviour
     {
         public GameObject parentGrid;
-        internal HttpService HttpService;
+        internal HttpClientWrapper HttpService;
         internal SelectableStylingService StylingService;
 
         private void Start()
         {
-            HttpService = HttpService.Instance;
+            HttpService = HttpClientWrapper.Instance;
             StylingService = SelectableStylingService.Instance;
         
             HttpService.OnClickDataReload(4);

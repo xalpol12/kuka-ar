@@ -9,10 +9,10 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public GameObject moreOptions;
         internal GameObject InternetText;
         internal Button BugReportButton;
-        internal HttpService HttpService;
+        internal HttpClientWrapper HttpService;
         private void Start()
         {
-            HttpService = HttpService.Instance;
+            HttpService = HttpClientWrapper.Instance;
         
             InternetText = moreOptions.transform.parent.Find("InternetLabel").GetComponent<RectTransform>().gameObject;
             BugReportButton = moreOptions.GetComponent<Button>();

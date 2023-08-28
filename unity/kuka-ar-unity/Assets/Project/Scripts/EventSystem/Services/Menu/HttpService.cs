@@ -13,10 +13,10 @@ using UnityEngine.Networking;
 
 namespace Project.Scripts.EventSystem.Services.Menu
 {
-    public class HttpService : MonoBehaviour
+    public class HttpClientWrapper : MonoBehaviour
     {
         public int id;
-        public static HttpService Instance;
+        public static HttpClientWrapper Instance;
         internal string ConfiguredIp;
         internal ConnectionStatus RobotConnectionStatus;
         internal List<AddRobotData> ConfiguredRobots;

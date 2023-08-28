@@ -7,6 +7,7 @@ using Project.Scripts.EventSystem.Services.ServerConfig;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using HttpClientWrapper = Project.Scripts.Connectivity.Http.HttpClientWrapper;
 
 namespace Project.Scripts.EventSystem.Controllers
 {
