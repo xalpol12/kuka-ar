@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Models.KRLValues
 {
-    public class KRLFrame : KRLValue
+    public struct KRLFrame : KRLValue
     {
         private Vector3 position;
     
