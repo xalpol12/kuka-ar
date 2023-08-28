@@ -1,3 +1,4 @@
+using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.EventSystem.Enums;
@@ -6,7 +7,6 @@ using Project.Scripts.EventSystem.Services.Menu;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using HttpClientWrapper = Project.Scripts.Connectivity.Http.HttpClientWrapper;
 
 namespace Project.Scripts.EventSystem.Controllers.Menu
 {
@@ -59,7 +59,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             if (id != uid) return;
             DialogState = LogicStates.Running;
-            httpService.OnClickDataReload(4);
+            InvokeAllRequests(null);
         }
 
         private void OnSave(int uid)
@@ -108,12 +108,13 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             InvokeAllRequests(content);
         }
 
-        private void InvokeAllRequests(Robot newRobot)
+        private void InvokeAllRequests(Robot? newRobot)
         {
-            httpClient.ExecuteRequest(new PostNewRobotRequest(newRobot));
             httpClient.ExecuteRequest(new GetSavedRobotsRequest());
             httpClient.ExecuteRequest(new GetRobotConfigDataRequest());
             httpClient.ExecuteRequest(new GetTargetImagesRequest());
+            if (newRobot == null) return;
+            httpClient.ExecuteRequest(new PostNewRobotRequest(newRobot.Value));
         }
 
         private void ReleaseSlider(int uid)
