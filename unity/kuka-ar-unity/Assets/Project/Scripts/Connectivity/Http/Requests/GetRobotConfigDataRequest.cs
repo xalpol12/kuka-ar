@@ -6,15 +6,15 @@ using Project.Scripts.Connectivity.Models;
 
 namespace Project.Scripts.Connectivity.Http.Requests
 {
-    public class GetRobotConfigDataRequest : IHttpRequest<Dictionary<string, RobotData>>
+    public class GetRobotConfigDataRequest : IHttpRequest<Dictionary<string, Dictionary<string, RobotData>>>
     {
         private string URL => "/configured";
         
-        public async Task<Dictionary<string, RobotData>> Execute(HttpClient httpClient)
+        public async Task<Dictionary<string, Dictionary<string, RobotData>>> Execute(HttpClient httpClient)
         {
             var response = await httpClient.GetAsync(httpClient.BaseAddress + URL);
             var json = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<Dictionary<string, RobotData>>(json);
+            return JsonConvert.DeserializeObject<Dictionary<string, Dictionary<string, RobotData>>>(json);
         }
     }
 }
