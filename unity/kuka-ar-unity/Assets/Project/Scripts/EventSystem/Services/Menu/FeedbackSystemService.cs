@@ -11,8 +11,8 @@ namespace Project.Scripts.EventSystem.Services.Menu
         public GameObject feedbackSystem;
         
         private SelectableStylingService stylingService;
-        private GameObject popupConfirm;
-        private GameObject popupError;
+        [SerializeField] private GameObject popupConfirm;
+        [SerializeField] private GameObject popupError;
         private TMP_Text popupTitle;
         private TMP_Text popupHeader;
         private TMP_Text popupMessage;

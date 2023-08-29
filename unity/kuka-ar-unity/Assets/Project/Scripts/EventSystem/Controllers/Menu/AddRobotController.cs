@@ -1,4 +1,3 @@
-using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.EventSystem.Enums;
@@ -24,7 +23,6 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         internal AddNewRobotService AddNewRobotService;
 
         private Robot data;
-        private HttpClientWrapper httpClient;
         private SelectableStylingService stylingService;
         private Image ipImage;
         private Image categoryImage;
@@ -33,8 +31,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             TransformFactor = 3000;
             DialogState = LogicStates.Waiting;
-        
-            httpClient = HttpClientWrapper.Instance;
+            
             AddNewRobotService = AddNewRobotService.Instance;
             stylingService = SelectableStylingService.Instance;
         
@@ -59,7 +56,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             if (id != uid) return;
             DialogState = LogicStates.Running;
-            InvokeAllRequests(null);
+            ServerInvoker.Invoker.GetFullData();
         }
 
         private void OnSave(int uid)
@@ -105,16 +102,8 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             }
             DialogState = LogicStates.Hiding;
             AddNewRobotService.ResetSelectState = true;
-            InvokeAllRequests(content);
-        }
-
-        private void InvokeAllRequests(Robot? newRobot)
-        {
-            httpClient.ExecuteRequest(new GetSavedRobotsRequest());
-            httpClient.ExecuteRequest(new GetRobotConfigDataRequest());
-            httpClient.ExecuteRequest(new GetTargetImagesRequest());
-            if (newRobot == null) return;
-            httpClient.ExecuteRequest(new PostNewRobotRequest(newRobot.Value));
+            ServerInvoker.Invoker.GetFullData();
+            ServerInvoker.Invoker.PostRobot(content);
         }
 
         private void ReleaseSlider(int uid)

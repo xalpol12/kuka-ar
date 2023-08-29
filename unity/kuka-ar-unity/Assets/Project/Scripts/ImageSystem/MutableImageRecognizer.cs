@@ -79,7 +79,7 @@ namespace Project.Scripts.ImageSystem
                 yield return null;
             }
             
-            // SetNewTargets(newTargetsTask);
+            SetNewTargets(newTargetsTask.Result);
         }
 
         private void SetNewTargets(Dictionary<string, byte[]> targets)

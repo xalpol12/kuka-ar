@@ -19,8 +19,9 @@ namespace Project.Scripts.Connectivity.Http.Requests
         
         public async Task<object> Execute(HttpClient httpClient)
         {
-            var stringContent = new StringContent(JsonConvert.SerializeObject(newRobot), Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(httpClient.BaseAddress + URL, stringContent);
+            var stringContent = new StringContent(
+                JsonConvert.SerializeObject(newRobot), Encoding.UTF8, "application/json");
+            await httpClient.PostAsync(httpClient.BaseAddress + URL, stringContent);
             return HttpStatusCode.OK;
         }
     }

@@ -186,23 +186,23 @@
 //             return request;
 //         }
 //
-//         private List<AddRobotData> MapConfiguredResponse(Dictionary<string, Dictionary<string, RobotData>> response)
-//         {
-//             var list = new List<AddRobotData>();
-//             foreach (var group in response)
-//             {
-//                 foreach (var entry in group.Value)
-//                 {
-//                     var robot = new AddRobotData
-//                     {
-//                         RobotName = entry.Value.Name,
-//                         RobotCategory = group.Key, 
-//                     };
-//                     list.Add(robot);
-//                 }
-//             }
-//             return list;
-//         }
+         // private List<AddRobotData> MapConfiguredResponse(Dictionary<string, Dictionary<string, RobotData>> response)
+         // {
+         //     var list = new List<AddRobotData>();
+         //     foreach (var group in response)
+         //     {
+         //         foreach (var entry in group.Value)
+         //         {
+         //             var robot = new AddRobotData
+         //             {
+         //                 RobotName = entry.Value.Name,
+         //                 RobotCategory = group.Key, 
+         //             };
+         //             list.Add(robot);
+         //         }
+         //     }
+         //     return list;
+         // }
 //
 //         private static Dictionary<string, Sprite> MapStickers(Dictionary<string, byte[]> response)
 //         {

@@ -61,16 +61,9 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
             {
                 httpClient.BaseAddress = ipInputField.GetComponent<TMP_InputField>().text;
             }
-            InvokeAllEndpoints();
+            ServerInvoker.Invoker.GetFullData();
         }
-
-        private void InvokeAllEndpoints()
-        {
-            httpClient.ExecuteRequest(new GetTargetImagesRequest());
-            httpClient.ExecuteRequest(new GetRobotConfigDataRequest());
-            httpClient.ExecuteRequest(new GetSavedRobotsRequest());
-        }
-
+        
         private void ClearPlaceholder(string arg)
         {
             ipInputField.transform.Find("Text Area").GetComponent<RectTransform>()

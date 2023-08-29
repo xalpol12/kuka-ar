@@ -13,7 +13,6 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public int id;
         public GameObject ipSelector;
         internal SelectableStylingService StylingService;
-        internal HttpClientWrapper HttpClient;
         internal WebDataStorage DataStorage;
         internal ButtonType ElementClicked;
         internal ButtonType PrevElementClicked;
@@ -30,7 +29,6 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 
         private void Start()
         {
-            HttpClient = HttpClientWrapper.Instance;
             StylingService = SelectableStylingService.Instance;
             AddNewRobotService = AddNewRobotService.Instance;
             PositioningService = PositioningService.Instance;
