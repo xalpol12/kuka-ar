@@ -150,6 +150,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             panelRef.Find("CoordSystemPicker").GetComponent<Image>().sprite = GetSticker(ipAddress);
             statusText.text = observableRobotsController.WebDataStorage.RobotConnectionStatus.ToString();
             observableRobotsController.LogicService.IsAfterItemSelect = true;
+            observableRobotsController.LogicService.SelectedIpAddress = ipAddress;
             observableRobotsController.LogicService.SliderState = LogicStates.Hiding;
         }
 

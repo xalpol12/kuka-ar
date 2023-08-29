@@ -8,6 +8,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
         public static SelectableLogicService Instance;
         
         internal LogicStates SliderState;
+        internal string SelectedIpAddress;
         internal bool IsAfterItemSelect;
         internal bool IsAfterNewRobotSave;
 

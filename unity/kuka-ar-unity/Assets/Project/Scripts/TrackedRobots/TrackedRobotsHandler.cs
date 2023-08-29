@@ -20,7 +20,7 @@ namespace Project.Scripts.TrackedRobots
         [Range(0f, 360f)]
         public float rotationThreshold = 1f;
         
-        private Dictionary<string, TrackedRobotModel> trackedRobots;
+        public Dictionary<string, TrackedRobotModel> trackedRobots;
         private HashSet<string> enqueuedIps;
 
 
