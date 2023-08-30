@@ -15,12 +15,12 @@ namespace Project.Scripts.Connectivity.Http
             Instance = this;
         }
 
-        public readonly int ConnectionTimeOutSel = 1; 
-        public List<Robot> ConfiguredRobots {get; set; }
-        public List<Robot> Robots { get; set; }
-        public List<string> AvailableIps { get; set; }
-        public Dictionary<string, Sprite> Stickers { get; set; }
-        public List<string> CategoryNames { get; set; }
+        public readonly int ConnectionTimeOutSel = 1;
+        public List<Robot> ConfiguredRobots { get; set; } = new List<Robot>();
+        public List<Robot> Robots { get; set; } = new List<Robot>();
+        public List<string> AvailableIps { get; set; } = new List<string>();
+        public Dictionary<string, Sprite> Stickers { get; set; } = new Dictionary<string, Sprite>();
+        public List<string> CategoryNames { get; set; } = new List<string>();
         public ConnectionStatus RobotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
         internal Robot Response;
         internal ExceptionMessagePair PostError;

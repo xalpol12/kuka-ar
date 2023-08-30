@@ -11,6 +11,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
     {
         public static ServerInvoker Invoker;
 
+        private const int Timeout = 1;
         private HttpClientWrapper http;
         private WebDataStorage storage;
         private RobotsMapper robotsMapper;
@@ -41,7 +42,6 @@ namespace Project.Scripts.Connectivity.Http.Requests
         public IEnumerator GetRobots()
         {
             var newRobotsTask = http.ExecuteRequest(new GetSavedRobotsRequest());
-
             while (!newRobotsTask.IsCompleted)
             {
                 yield return null;

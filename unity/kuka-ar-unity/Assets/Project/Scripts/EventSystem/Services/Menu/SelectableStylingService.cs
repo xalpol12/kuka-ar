@@ -17,6 +17,8 @@ namespace Project.Scripts.EventSystem.Services.Menu
         internal Sprite InvalidSelectable;
         internal Sprite DefaultInputField;
 
+        private Sprite defaultSelectableSprite;
+
         private void Awake()
         {
             Instance = this;
@@ -30,13 +32,15 @@ namespace Project.Scripts.EventSystem.Services.Menu
             PressedAddIcon = Resources.Load<Sprite>("Icons/circlePress");
             InvalidSelectable = Resources.Load<Sprite>("Fields/SelectFieldInvalid");
             DefaultInputField = Resources.Load<Sprite>("Fields/InputField");
+
+            defaultSelectableSprite = Resources.Load<Sprite>("Fields/InputField");
         }
 
         public void MarkAsUnselected(List<GameObject> allGridItems)
         {
             foreach (var item in allGridItems)
             {
-                item.transform.GetComponent<Image>().sprite = DefaultSprite;
+                item.transform.GetComponent<Image>().sprite = defaultSelectableSprite;
             }
         }
 

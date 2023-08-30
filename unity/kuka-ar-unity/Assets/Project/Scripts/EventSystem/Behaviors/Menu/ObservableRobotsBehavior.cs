@@ -28,15 +28,15 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             allGridItems = new List<GameObject>();
             grid = scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject;
             gridItem = grid.transform.Find("GridElement").GetComponent<Image>().gameObject;
-            
-            ServerInvoker.Invoker.GetRobots();
+
+            StartCoroutine(ServerInvoker.Invoker.GetRobots());
             
             StartCoroutine(InitObservableRobots());
         
             scrollList.transform.parent.Find("ServerError").GetComponent<Image>().transform.Find("TryAgain")
                 .GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    ServerInvoker.Invoker.GetStickers();
+                    StartCoroutine(ServerInvoker.Invoker.GetStickers());
                     if (observableRobotsController.WebDataStorage.Stickers.Count <= 0) return;
                     ConnectionFailed(false);
                     StartCoroutine(InitObservableRobots());

@@ -14,8 +14,7 @@ namespace Project.Scripts.Connectivity.Http
         public string BaseAddress
         {
             get => baseAddress;
-            set
-            {
+            set { 
                 baseAddress = string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")) ?
                     value : PlayerPrefs.GetString("serverIp");
                 httpClient.BaseAddress = new Uri($"http://{baseAddress}:8080/kuka-variables");
@@ -30,6 +29,7 @@ namespace Project.Scripts.Connectivity.Http
         private void Start()
         {
             httpClient = new HttpClient();
+            BaseAddress = "255.255.255.255";
         }
 
         public async Task<TResult> ExecuteRequest<TResult>(IHttpRequest<TResult> command)

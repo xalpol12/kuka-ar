@@ -9,6 +9,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
         
         internal LogicStates SliderState;
         internal string SelectedIpAddress;
+        internal string PreviousSelectedIpAddress;
         internal bool IsAfterItemSelect;
         internal bool IsAfterNewRobotSave;
 
@@ -21,6 +22,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
         {
             IsAfterItemSelect = false;
             IsAfterNewRobotSave = false;
+            PreviousSelectedIpAddress = "placeholder";
             SliderState = LogicStates.Waiting;
         }
     }

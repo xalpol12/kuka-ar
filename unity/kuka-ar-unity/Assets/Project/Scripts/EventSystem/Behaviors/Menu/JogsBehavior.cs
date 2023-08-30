@@ -4,6 +4,7 @@ using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Services.Menu;
+using Project.Scripts.TrackedRobots;
 using TMPro;
 using UnityEngine;
 
@@ -11,32 +12,33 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 {
     public class JogsBehavior : MonoBehaviour
     {
+        [SerializeField] private GameObject robotHandler;
         private JogsController jogsController;
         private GameObject jogsValues;
         private GameObject jogsDisplay;
         private SelectableLogicService logicService;
-    
         private Vector3 jogsHomePosition;
-    
+        private TrackedRobotsHandler handler;
+        
         private int distance;
         private void Start()
         {
             jogsController = GetComponent<JogsController>();
+            handler = robotHandler.GetComponent<TrackedRobotsHandler>();
             logicService = SelectableLogicService.Instance;
-            
+
             jogsValues = jogsController.jogs.GetComponent<RectTransform>().Find("JogsValues").gameObject;
             jogsDisplay = jogsController.jogs.GetComponent<RectTransform>().Find("JogDisplay").gameObject;
-        
+            
             jogsDisplay.SetActive(true);
             jogsValues.SetActive(false);
             jogsHomePosition = jogsDisplay.transform.position;
         
             distance = (int)((Screen.height * 0.115f) + PositioningService.Instance.PositioningError);
 
-            jogsController.RobotsHandler.trackedRobots[logicService.SelectedIpAddress].ActiveJointsUpdated +=
-                (sender,e) => UpdateJogsDisplayedValues(e);
+            ConfigureTrackedRobotJogsData();
         }
-    
+
         private void Update()
         {
             if (jogsController.JogsTrigger == LogicStates.Running &&
@@ -48,6 +50,12 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             else if (jogsController.JogsTrigger == LogicStates.Hiding)
             {
                 StartCoroutine(HideJogs());
+            }
+
+            if (logicService.SelectedIpAddress != logicService.PreviousSelectedIpAddress)
+            {
+                ConfigureTrackedRobotJogsData();
+                logicService.PreviousSelectedIpAddress = logicService.SelectedIpAddress;
             }
         }
 
@@ -89,11 +97,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 child.Translate(translation);
             }
 
-            if (toggleActive)
-            {
-                jogsDisplay.SetActive(true);
-                jogsValues.SetActive(false);
-            }
+            if (!toggleActive) yield break;
+            jogsDisplay.SetActive(true);
+            jogsValues.SetActive(false);
         }
 
         private IEnumerator ShowJogs()
@@ -139,10 +145,30 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             {
                 if (child.name != "HideJogs" )
                 {
-                    child.transform.GetComponent<TMP_Text>().text =
+                    child.transform.Find("JogValue").GetComponent<TMP_Text>().text =
                         temp[child.GetSiblingIndex() - 1].ToString(CultureInfo.InvariantCulture);
                 }
             }
+        }
+
+        private void ConfigureTrackedRobotJogsData()
+        {
+            if (!string.IsNullOrWhiteSpace(logicService.SelectedIpAddress) && 
+                handler.trackedRobots.TryGetValue(logicService.SelectedIpAddress, out var robot))
+            {
+                robot.ActiveJointsUpdated += (sender,e) => UpdateJogsDisplayedValues(e);
+                return;
+            }
+            
+            UpdateJogsDisplayedValues(new KRLJoints
+            {
+                J1 = 0,
+                J2 = 0,
+                J3 = 0,
+                J4 = 0,
+                J5 = 0,
+                J6 = 0
+            });
         }
     }
 }

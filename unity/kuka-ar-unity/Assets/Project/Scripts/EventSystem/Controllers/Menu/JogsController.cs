@@ -1,7 +1,6 @@
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
-using Project.Scripts.TrackedRobots;
 using UnityEngine;
 
 namespace Project.Scripts.EventSystem.Controllers.Menu
@@ -15,12 +14,10 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         private int defaultTransformFactor;
         internal JogsControlService Service;
         internal LogicStates JogsTrigger;
-        internal TrackedRobotsHandler RobotsHandler;
 
         private void Start()
         {
             Service = JogsControlService.Instance;
-            RobotsHandler = GetComponent<TrackedRobotsHandler>();
         
             showJogs = false;
             JogsTrigger = LogicStates.Waiting;
