@@ -47,10 +47,6 @@ namespace Project.Scripts.Connectivity.Http.Requests
             }
 
             storage.Robots = newRobotsTask.Result;
-            if (displayable)
-            {
-                storage.IsAfterRobotSave = true;
-            }
             yield return null;
         }
 
@@ -92,7 +88,6 @@ namespace Project.Scripts.Connectivity.Http.Requests
         public IEnumerator PostRobot(Robot? robot)
         {
             if (robot != null) http.ExecuteRequest(new PostNewRobotRequest(robot.Value));
-            StartCoroutine(GetRobots(true));
             yield return null;
         }
     }
