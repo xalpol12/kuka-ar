@@ -11,7 +11,6 @@ namespace Project.Scripts.EventSystem.Services.Menu
         internal string SelectedIpAddress;
         internal string PreviousSelectedIpAddress;
         internal bool IsAfterItemSelect;
-        internal bool IsAfterNewRobotSave;
 
         private void Awake()
         {
@@ -21,7 +20,6 @@ namespace Project.Scripts.EventSystem.Services.Menu
         void Start()
         {
             IsAfterItemSelect = false;
-            IsAfterNewRobotSave = false;
             PreviousSelectedIpAddress = "placeholder";
             SliderState = LogicStates.Waiting;
         }

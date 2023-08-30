@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Http;
+using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
@@ -61,7 +62,9 @@ namespace Project.Scripts.EventSystem.Controllers
                 menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 1;
                 serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 0;
             }
-        
+            
+            ServerInvoker.Invoker.GetFullData();
+            
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
             ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;
             ServerConfigEvents.Events.OnClickBackToMenu += AbortServerReconfiguration;

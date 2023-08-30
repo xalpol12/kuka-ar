@@ -1,3 +1,4 @@
+using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.EventSystem.Enums;
@@ -19,6 +20,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         internal int TransformFactor;
         internal bool IsSliderHold;
         internal bool IsAddRobotPressed;
+        private WebDataStorage webDataStorage;
         internal LogicStates DialogState;
         internal AddNewRobotService AddNewRobotService;
 
@@ -34,6 +36,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             
             AddNewRobotService = AddNewRobotService.Instance;
             stylingService = SelectableStylingService.Instance;
+            webDataStorage = WebDataStorage.Instance;
         
             ipImage = addDialog.transform.Find("IpAddress").GetComponent<Image>();
             categoryImage = addDialog.transform.Find("ChosenCategory").GetComponent<Image>();
@@ -102,8 +105,8 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             }
             DialogState = LogicStates.Hiding;
             AddNewRobotService.ResetSelectState = true;
-            ServerInvoker.Invoker.GetFullData();
-            ServerInvoker.Invoker.PostRobot(content);
+            StartCoroutine(ServerInvoker.Invoker.PostRobot(content));
+            webDataStorage.IsAfterRobotSave = true;
         }
 
         private void ReleaseSlider(int uid)
