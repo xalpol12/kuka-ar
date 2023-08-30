@@ -10,13 +10,15 @@ namespace Project.Scripts.Connectivity.Http
         private HttpClient httpClient;
         public static HttpClientWrapper Instance;
 
-        public string BaseAddress {
-            get => BaseAddress;
+        private string baseAddress;
+        public string BaseAddress
+        {
+            get => baseAddress;
             set
             {
-                string ipAddress = string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")) ?
+                baseAddress = string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")) ?
                     value : PlayerPrefs.GetString("serverIp");
-                httpClient.BaseAddress = new Uri($"http://{ipAddress}:8080/kuka-variables");
+                httpClient.BaseAddress = new Uri($"http://{baseAddress}:8080/kuka-variables");
             }
         }
 

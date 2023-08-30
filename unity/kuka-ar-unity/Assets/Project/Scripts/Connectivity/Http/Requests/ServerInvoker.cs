@@ -24,7 +24,6 @@ namespace Project.Scripts.Connectivity.Http.Requests
             robotsMapper = RobotsMapper.Instance;
             configuredRobotsMapper = ConfiguredRobotsMapper.Instance;
             stickersMapper = StickersMapper.Instance;
-
         }
 
         private void Awake()
@@ -41,24 +40,44 @@ namespace Project.Scripts.Connectivity.Http.Requests
         
         public IEnumerator GetRobots()
         {
-            storage.Robots = http.ExecuteRequest(new GetSavedRobotsRequest()).Result;
+            var newRobotsTask = http.ExecuteRequest(new GetSavedRobotsRequest());
+
+            while (!newRobotsTask.IsCompleted)
+            {
+                yield return null;
+            }
+
+            storage.Robots = newRobotsTask.Result;
             yield return null;
         }
 
         public IEnumerator GetConfiguredRobots()
         {
-            var res = http.ExecuteRequest(new GetRobotConfigDataRequest()).Result;
-            storage.ConfiguredRobots = configuredRobotsMapper.MapToConfiguredRobots(res);
+            var newConfiguredRobotsTask = http.ExecuteRequest(new GetRobotConfigDataRequest());
+
+            while (!newConfiguredRobotsTask.IsCompleted)
+            {
+                yield return null;
+            }
+
+            var configured = newConfiguredRobotsTask.Result;
+            storage.ConfiguredRobots = configuredRobotsMapper.MapToConfiguredRobots(configured);
             storage.CategoryNames = configuredRobotsMapper.MapStringsToUniqueNames(storage.ConfiguredRobots);
             yield return null;
         }
 
         public IEnumerator GetStickers()
         {
-            var res = http.ExecuteRequest(new GetTargetImagesRequest()).Result;
-            storage.Stickers = stickersMapper.MapBytesToSprite(res);
+            var newStickersTask = http.ExecuteRequest(new GetTargetImagesRequest());
 
-            storage.AvailableIps = robotsMapper.MapStringToIpAddress(res);
+            while (!newStickersTask.IsCompleted)
+            {
+                yield return null;
+            }
+
+            var stickers = newStickersTask.Result;
+            storage.Stickers = stickersMapper.MapBytesToSprite(stickers);
+            storage.AvailableIps = robotsMapper.MapStringToIpAddress(stickers);
             yield return null;
         }
 
