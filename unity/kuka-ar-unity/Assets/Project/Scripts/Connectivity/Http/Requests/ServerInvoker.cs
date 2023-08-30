@@ -1,8 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using Project.Scripts.Connectivity.Mapping;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
-using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Http.Requests
@@ -16,7 +14,8 @@ namespace Project.Scripts.Connectivity.Http.Requests
         private RobotsMapper robotsMapper;
         private ConfiguredRobotsMapper configuredRobotsMapper;
         private StickersMapper stickersMapper;
-
+        [SerializeField] private float timeout = 1000f;
+        
         private void Awake()
         {
             Invoker = this;
@@ -80,9 +79,16 @@ namespace Project.Scripts.Connectivity.Http.Requests
             yield return null;
         }
 
-        public IEnumerator<ConnectionStatus> PingRobot(string ip)
+        public IEnumerator PingRobot(string ip)
         {
-            yield return http.ExecuteRequest(new PingChosenIpRequest(ip)).Result;
+            var status = http.ExecuteRequest(new PingChosenIpRequest(ip));
+            Debug.Log("Ping sending///" + ip );
+            while (!status.IsCompleted)
+            {
+                yield return null;
+            }
+
+            yield return null;
         }
 
         public IEnumerator PostRobot(Robot? robot)

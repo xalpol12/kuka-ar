@@ -21,7 +21,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
             var time = 0;
             while (!ping.isDone)
             {
-                if (time > storage.ConnectionTimeOutSel)
+                if (time > WebDataStorage.ConnectionTimeOutSel)
                 {
                     break;
                 }
@@ -30,7 +30,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
                 storage.RobotConnectionStatus = ConnectionStatus.Connecting;
             }
         
-            storage.RobotConnectionStatus = time > storage.ConnectionTimeOutSel ?
+            storage.RobotConnectionStatus = time > WebDataStorage.ConnectionTimeOutSel ?
                 ConnectionStatus.Disconnected : ConnectionStatus.Connected;
             return storage.RobotConnectionStatus;
         }

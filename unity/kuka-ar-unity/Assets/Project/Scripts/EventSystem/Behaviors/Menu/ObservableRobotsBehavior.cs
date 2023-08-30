@@ -80,7 +80,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
             gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
-                observableRobotsController.StylingService.MarkAsUnselected(allGridItems);
+                observableRobotsController.StylingService.MarkAsUnselected(allGridItems, true);
                 OnSelectActions(constantPanelRef, gridItem.transform.GetSiblingIndex());
                 gridItem.transform.GetComponent<Image>().sprite = observableRobotsController.StylingService.SelectedSprite;
             });
@@ -109,7 +109,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
                 newGridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    observableRobotsController.StylingService.MarkAsUnselected(allGridItems);
+                    observableRobotsController.StylingService.MarkAsUnselected(allGridItems, true);
                     if (gridItem.transform.GetSiblingIndex() >
                         observableRobotsController.WebDataStorage.Robots.Count + 1)
                     {
@@ -131,15 +131,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             var ipAddress = observableRobotsController.WebDataStorage.Robots[index].IpAddress;
             var statusText = panelRef.Find("ConnectionStatus").GetComponent<TMP_Text>();
 
-            ServerInvoker.Invoker.PingRobot(ipAddress);
-
-            statusText.color = observableRobotsController.WebDataStorage.RobotConnectionStatus switch
-            {
-                ConnectionStatus.Connected => new Color(0.176f, 0.78f, 0.439f),
-                ConnectionStatus.Connecting => new Color(0.94f, 0.694f, 0.188f),
-                ConnectionStatus.Disconnected => new Color(0.949f, 0.247f, 0.259f),
-                _ => statusText.color
-            };
+            StartCoroutine(ConnectionStatusCheckHandler(statusText, ipAddress));
 
             if (index > observableRobotsController.WebDataStorage.Robots.Count - 1)
             {
@@ -168,6 +160,20 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             }
     
             StartCoroutine(InitObservableRobots());
+            yield return null;
+        }
+
+        private IEnumerator ConnectionStatusCheckHandler(TMP_Text statusText, string ipAddress)
+        {
+            StartCoroutine(ServerInvoker.Invoker.PingRobot(ipAddress));
+            Debug.Log("IT");
+            statusText.color = observableRobotsController.WebDataStorage.RobotConnectionStatus switch
+            {
+                ConnectionStatus.Connected => new Color(0.176f, 0.78f, 0.439f),
+                ConnectionStatus.Connecting => new Color(0.94f, 0.694f, 0.188f),
+                ConnectionStatus.Disconnected => new Color(0.949f, 0.247f, 0.259f),
+                _ => statusText.color
+            };
             yield return null;
         }
         

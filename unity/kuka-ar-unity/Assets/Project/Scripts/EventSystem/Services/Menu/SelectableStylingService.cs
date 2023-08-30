@@ -18,6 +18,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
         internal Sprite DefaultInputField;
 
         private Sprite defaultSelectableSprite;
+        private Sprite defaultNoFrame;
 
         private void Awake()
         {
@@ -34,13 +35,14 @@ namespace Project.Scripts.EventSystem.Services.Menu
             DefaultInputField = Resources.Load<Sprite>("Fields/InputField");
 
             defaultSelectableSprite = Resources.Load<Sprite>("Fields/InputField");
+            defaultNoFrame = Resources.Load<Sprite>("Gradients/GreyListBar");
         }
 
-        public void MarkAsUnselected(List<GameObject> allGridItems)
+        public void MarkAsUnselected(List<GameObject> allGridItems, bool noFrame = false)
         {
             foreach (var item in allGridItems)
             {
-                item.transform.GetComponent<Image>().sprite = defaultSelectableSprite;
+                item.transform.GetComponent<Image>().sprite = noFrame ? defaultNoFrame : defaultSelectableSprite;
             }
         }
 
