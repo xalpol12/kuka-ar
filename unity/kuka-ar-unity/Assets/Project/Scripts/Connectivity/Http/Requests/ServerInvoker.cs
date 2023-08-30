@@ -10,14 +10,18 @@ namespace Project.Scripts.Connectivity.Http.Requests
     public class ServerInvoker : MonoBehaviour
     {
         public static ServerInvoker Invoker;
-
-        private const int Timeout = 1;
+        
         private HttpClientWrapper http;
         private WebDataStorage storage;
         private RobotsMapper robotsMapper;
         private ConfiguredRobotsMapper configuredRobotsMapper;
         private StickersMapper stickersMapper;
 
+        private void Awake()
+        {
+            Invoker = this;
+        }
+        
         private void Start()
         {
             http = HttpClientWrapper.Instance;
@@ -27,11 +31,6 @@ namespace Project.Scripts.Connectivity.Http.Requests
             stickersMapper = StickersMapper.Instance;
         }
 
-        private void Awake()
-        {
-            Invoker = this;
-        }
-
         public void GetFullData()
         {
             StartCoroutine(GetRobots());
@@ -39,7 +38,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
             StartCoroutine(GetStickers());
         }
         
-        public IEnumerator GetRobots()
+        public IEnumerator GetRobots(bool displayable = false)
         {
             var newRobotsTask = http.ExecuteRequest(new GetSavedRobotsRequest());
             while (!newRobotsTask.IsCompleted)
@@ -48,6 +47,10 @@ namespace Project.Scripts.Connectivity.Http.Requests
             }
 
             storage.Robots = newRobotsTask.Result;
+            if (displayable)
+            {
+                storage.IsAfterRobotSave = true;
+            }
             yield return null;
         }
 
@@ -89,6 +92,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
         public IEnumerator PostRobot(Robot? robot)
         {
             if (robot != null) http.ExecuteRequest(new PostNewRobotRequest(robot.Value));
+            StartCoroutine(GetRobots(true));
             yield return null;
         }
     }

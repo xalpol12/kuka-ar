@@ -22,6 +22,7 @@ namespace Project.Scripts.Connectivity.Http
         public Dictionary<string, Sprite> Stickers { get; set; } = new Dictionary<string, Sprite>();
         public List<string> CategoryNames { get; set; } = new List<string>();
         public ConnectionStatus RobotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
+        public bool IsAfterRobotSave { get; set; } = false;
         internal Robot Response;
         internal ExceptionMessagePair PostError;
     }

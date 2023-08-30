@@ -45,9 +45,11 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private void Update()
         {
-            if (!observableRobotsController.LogicService.IsAfterNewRobotSave) return;
-            StartCoroutine(DestroyListEntries());
-            observableRobotsController.LogicService.IsAfterNewRobotSave = false;
+            if (observableRobotsController.WebDataStorage.IsAfterRobotSave)
+            { 
+                StartCoroutine(DestroyListEntries()); 
+                observableRobotsController.WebDataStorage.IsAfterRobotSave = false;
+            }
         }
 
         private IEnumerator InitObservableRobots()
