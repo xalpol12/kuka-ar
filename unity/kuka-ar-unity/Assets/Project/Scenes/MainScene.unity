@@ -667,6 +667,7 @@ GameObject:
   - component: {fileID: 318450785}
   - component: {fileID: 318450784}
   - component: {fileID: 318450782}
+  - component: {fileID: 318450786}
   m_Layer: 0
   m_Name: SceneDataStorage
   m_TagString: Untagged
@@ -723,6 +724,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 82035843d0cfc254ca41e53dd212b009, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &318450786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318450781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1587d1388bf7a944fb3d95e49b814254, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &524307598 stripped

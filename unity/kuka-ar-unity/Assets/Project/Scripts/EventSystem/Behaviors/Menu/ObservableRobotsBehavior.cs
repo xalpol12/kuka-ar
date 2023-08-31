@@ -43,6 +43,12 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 });
         }
 
+        private void OnEnable()
+        {
+            StartCoroutine(ServerInvoker.Invoker.GetRobots());
+            StartCoroutine(InitObservableRobots());
+        }
+
         private void Update()
         {
             if (observableRobotsController.WebDataStorage.IsAfterRobotSave)
@@ -54,15 +60,15 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private IEnumerator InitObservableRobots()
         {
+            if (scrollList is null) yield break;
             var constantPanelRef = scrollList.transform.parent.GetComponent<Image>()
                 .gameObject.transform.Find("ConstantPanel").GetComponent<Image>()
                 .gameObject.transform;
             var storage = observableRobotsController.WebDataStorage;
-            
+
             if (storage.Robots.Count == 0)
             {
                 gridItem.SetActive(false);   
-                yield break;
             }
             gridItem.SetActive(true);
             
@@ -166,7 +172,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private IEnumerator ConnectionStatusCheckHandler(TMP_Text statusText, string ipAddress)
         {
             StartCoroutine(ServerInvoker.Invoker.PingRobot(ipAddress));
-            Debug.Log("IT");
             statusText.color = observableRobotsController.WebDataStorage.RobotConnectionStatus switch
             {
                 ConnectionStatus.Connected => new Color(0.176f, 0.78f, 0.439f),

@@ -1,6 +1,7 @@
 using System.Collections;
 using Project.Scripts.Connectivity.Mapping;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.EventSystem.Extensions;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Http.Requests
@@ -14,7 +15,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
         private RobotsMapper robotsMapper;
         private ConfiguredRobotsMapper configuredRobotsMapper;
         private StickersMapper stickersMapper;
-        [SerializeField] private float timeout = 1000f;
+        private Popup popup;
         
         private void Awake()
         {
@@ -28,6 +29,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
             robotsMapper = RobotsMapper.Instance;
             configuredRobotsMapper = ConfiguredRobotsMapper.Instance;
             stickersMapper = StickersMapper.Instance;
+            popup = Popup.Window;
         }
 
         public void GetFullData()
@@ -37,15 +39,15 @@ namespace Project.Scripts.Connectivity.Http.Requests
             StartCoroutine(GetStickers());
         }
         
-        public IEnumerator GetRobots(bool displayable = false)
+        public IEnumerator GetRobots()
         {
             var newRobotsTask = http.ExecuteRequest(new GetSavedRobotsRequest());
             while (!newRobotsTask.IsCompleted)
             {
                 yield return null;
             }
-
-            storage.Robots = newRobotsTask.Result;
+            
+            popup.Try(() => storage.Robots = newRobotsTask.Result);
             yield return null;
         }
 
@@ -57,10 +59,13 @@ namespace Project.Scripts.Connectivity.Http.Requests
             {
                 yield return null;
             }
-
-            var configured = newConfiguredRobotsTask.Result;
-            storage.ConfiguredRobots = configuredRobotsMapper.MapToConfiguredRobots(configured);
-            storage.CategoryNames = configuredRobotsMapper.MapStringsToUniqueNames(storage.ConfiguredRobots);
+            
+            popup.Try(() =>
+            {
+                var configured = newConfiguredRobotsTask.Result;
+                storage.ConfiguredRobots = configuredRobotsMapper.MapToConfiguredRobots(configured);
+                storage.CategoryNames = configuredRobotsMapper.MapStringsToUniqueNames(storage.ConfiguredRobots);
+            });
             yield return null;
         }
 
@@ -73,27 +78,29 @@ namespace Project.Scripts.Connectivity.Http.Requests
                 yield return null;
             }
 
-            var stickers = newStickersTask.Result;
-            storage.Stickers = stickersMapper.MapBytesToSprite(stickers);
-            storage.AvailableIps = robotsMapper.MapStringToIpAddress(stickers);
+            popup.Try(() =>
+            {
+                var stickers = newStickersTask.Result;
+                storage.Stickers = stickersMapper.MapBytesToSprite(stickers);
+                storage.AvailableIps = robotsMapper.MapStringToIpAddress(stickers);
+            });
             yield return null;
         }
 
         public IEnumerator PingRobot(string ip)
         {
             var status = http.ExecuteRequest(new PingChosenIpRequest(ip));
-            Debug.Log("Ping sending///" + ip );
             while (!status.IsCompleted)
             {
                 yield return null;
             }
-
+            
             yield return null;
         }
 
         public IEnumerator PostRobot(Robot? robot)
         {
-            if (robot != null) http.ExecuteRequest(new PostNewRobotRequest(robot.Value));
+            if (robot != null) popup.Try(() => http.ExecuteRequest(new PostNewRobotRequest(robot.Value))); 
             yield return null;
         }
     }
