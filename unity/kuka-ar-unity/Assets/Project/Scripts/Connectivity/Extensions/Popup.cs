@@ -31,7 +31,7 @@ namespace Project.Scripts.EventSystem.Extensions
             {
                 if (e is WebException or HttpRequestException or SocketException or AggregateException)
                 {
-                    Debug.Log("FUTURE POPUP INFO DISPLAY");
+                    // Debug.Log("FUTURE POPUP INFO DISPLAY");
                 }
             }
         }

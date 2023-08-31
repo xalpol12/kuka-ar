@@ -46,7 +46,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
             {
                 yield return null;
             }
-            
+
             popup.Try(() => storage.Robots = newRobotsTask.Result);
             yield return null;
         }
@@ -77,7 +77,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
             {
                 yield return null;
             }
-
+            
             popup.Try(() =>
             {
                 var stickers = newStickersTask.Result;

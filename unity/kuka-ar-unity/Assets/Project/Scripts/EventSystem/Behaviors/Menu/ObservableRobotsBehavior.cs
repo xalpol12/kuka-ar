@@ -36,6 +36,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             scrollList.transform.parent.Find("ServerError").GetComponent<Image>().transform.Find("TryAgain")
                 .GetComponent<Button>().onClick.AddListener(() =>
                 {
+                    StartCoroutine(ServerInvoker.Invoker.GetRobots());
                     StartCoroutine(ServerInvoker.Invoker.GetStickers());
                     if (observableRobotsController.WebDataStorage.Stickers.Count <= 0) return;
                     ConnectionFailed(false);
@@ -65,12 +66,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 .gameObject.transform.Find("ConstantPanel").GetComponent<Image>()
                 .gameObject.transform;
             var storage = observableRobotsController.WebDataStorage;
-
-            if (storage.Robots.Count == 0)
-            {
-                gridItem.SetActive(false);   
-            }
-            gridItem.SetActive(true);
+            gridItem.SetActive(storage.Robots.Count != 0);
             
             if (storage.Stickers.Count <= 0)
             {
