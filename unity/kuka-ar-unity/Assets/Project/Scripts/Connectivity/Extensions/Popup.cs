@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -16,7 +15,7 @@ namespace Project.Scripts.Connectivity.Extensions
         public static Popup Window;
         public PopupContent Content;
         [SerializeField] 
-        private GameObject popupWindow;
+        private GameObject notification;
         
         [SerializeField]
         [Range(0.01f, 1)]
@@ -32,10 +31,10 @@ namespace Project.Scripts.Connectivity.Extensions
 
         private void Start()
         {
-            dialogWindow = popupWindow.transform.GetComponent<RectTransform>();
+            dialogWindow = notification.transform.GetComponent<RectTransform>();
             scaleFactor = 0.01f;
             error = Resources.Load<Sprite>("Icons/cloudFailedIcon");
-            popupWindow.SetActive(false);
+            notification.SetActive(false);
         }
 
         /// <summary>
@@ -58,29 +57,9 @@ namespace Project.Scripts.Connectivity.Extensions
                         Message = e.Message,
                         Icon = error
                     };
-                    StartCoroutine(ScaleUp());
+                    //StartCoroutine(ScaleUp());
                 }
             }
-        }
-
-        private IEnumerator ScaleUp()
-        {
-            popupWindow.SetActive(true);
-            while (dialogWindow.transform.localScale.y < 1)
-            {
-                dialogWindow.transform.localScale += new Vector3(scaleFactor, scaleFactor);
-                yield return null;
-            }
-        }
-        
-        public IEnumerator ScaleDown()
-        {
-            while (popupWindow.transform.localScale.y > 0.01)
-            {
-                popupWindow.transform.localScale -= new Vector3(scaleFactor, scaleFactor);
-                yield return null;
-            }
-            popupWindow.SetActive(false);
         }
     }
 }
