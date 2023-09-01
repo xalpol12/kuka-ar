@@ -1,7 +1,7 @@
 using System.Collections;
+using Project.Scripts.Connectivity.Extensions;
 using Project.Scripts.Connectivity.Mapping;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
-using Project.Scripts.EventSystem.Extensions;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Http.Requests

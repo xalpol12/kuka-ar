@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Project.Scripts.EventSystem.Events
@@ -9,6 +10,14 @@ namespace Project.Scripts.EventSystem.Events
         private void Awake()
         {
             Events = this;
+        }
+
+        public event Action<int> OnClickHidePopup;
+
+        public void HidePopup(int id)
+        {
+            Debug.Log("invoke");
+            OnClickHidePopup?.Invoke(id);
         }
     }
 }

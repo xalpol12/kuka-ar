@@ -66,12 +66,19 @@ namespace Project.Scripts.EventSystem.Controllers
             ServerInvoker.Invoker.GetFullData();
             
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
+            MenuEvents.Event.OnClickReloadServerData += RequestData;
             ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;
             ServerConfigEvents.Events.OnClickBackToMenu += AbortServerReconfiguration;
             MoreOptionsEvents.Events.OnClickBack += GoToMainScreen;
             MoreOptionsEvents.Events.OnClickDisplayServer += ReconfigureServer;
             MoreOptionsEvents.Events.OnClickDisplayBrowser += SubmitAnIssue;
             FocusModeEvents.Events.OnClickDisplayMoreOptions += FocusModeHandler;
+        }
+
+        private void RequestData(int uid)
+        {
+            if (id != uid) return;
+            ServerInvoker.Invoker.GetFullData();
         }
 
         private void OnEnable()

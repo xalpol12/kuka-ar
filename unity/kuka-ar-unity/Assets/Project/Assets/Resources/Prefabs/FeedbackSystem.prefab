@@ -1298,7 +1298,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &3622604340441964255
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1401,7 +1401,20 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1938233408092699302}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 271481804430918094}
+        m_TargetAssemblyTypeName: Project.Scripts.EventSystem.Events.FeedbackSystemEvents,
+          Scripts.EventSystem
+        m_MethodName: HidePopup
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 7
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &7771149669998416361
 GameObject:
   m_ObjectHideFlags: 0
@@ -1593,6 +1606,8 @@ GameObject:
   - component: {fileID: 5945947141543065608}
   - component: {fileID: 8489320744990179780}
   - component: {fileID: 5688792179257224118}
+  - component: {fileID: 4252306706505294880}
+  - component: {fileID: 2464699984120055070}
   m_Layer: 0
   m_Name: Popup
   m_TagString: Untagged
@@ -1616,8 +1631,8 @@ RectTransform:
   - {fileID: 7322525910367769339}
   - {fileID: 1445246780816313330}
   - {fileID: 10932593092296387}
-  - {fileID: 3622604340441964255}
   - {fileID: 7263478651639953481}
+  - {fileID: 3622604340441964255}
   m_Father: {fileID: 7382973043225395158}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1664,3 +1679,28 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4252306706505294880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7890335281426864394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 868b962f44b36854f977d2a263025d41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 7
+--- !u!114 &2464699984120055070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7890335281426864394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b559390cd98db541a8fc1d0775fe57d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
