@@ -46,6 +46,11 @@ namespace Project.Scripts.Utils
             {
                 textField.text += exception.ToString();
             }
+
+            if (textField.text.Length > 300)
+            {
+                messages.Clear();
+            }
         }
 
         void OnDestroy()

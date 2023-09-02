@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
+using Project.Scripts.Connectivity.WebSocket;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
@@ -132,7 +133,9 @@ namespace Project.Scripts.EventSystem.Controllers
             ServerConfigAnim = AnimationStates.FadeOut;
             NextAnim.Add(AnimationFilter.MenuIn);
             PlayerPrefs.SetInt("firstRun", 1);
-            PlayerPrefs.SetString("serverIp", HttpClientWrapper.Instance.BaseAddress);
+            var savedAddress = HttpClientWrapper.Instance.BaseAddress;
+            PlayerPrefs.SetString("serverIp", savedAddress);
+            WebSocketClient.Instance.ConnectToWebsocket($"ws://{savedAddress}:8080/kuka-variables");
         }
 
         private void GoToMainScreen(int uid)

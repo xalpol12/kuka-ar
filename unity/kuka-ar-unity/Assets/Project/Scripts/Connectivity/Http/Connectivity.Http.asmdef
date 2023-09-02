@@ -2,7 +2,8 @@
     "name": "Connectivity.Http",
     "rootNamespace": "",
     "references": [
-        "GUID:c33d397f998e1d141b74148276071b9d"
+        "GUID:c33d397f998e1d141b74148276071b9d",
+        "GUID:378bd5616a56dad4f91ebfcbec2194c0"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

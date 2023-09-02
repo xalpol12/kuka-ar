@@ -64,7 +64,9 @@ namespace Project.Scripts.AnchorSystem
                 var anchor = PlaceNewAnchor(imageTransform, configData);
                 trackedAnchors.Add(robotIp, anchor);
 
-                WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp));
+                WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "BASE"));
+                WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "POSITION"));
+                WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "JOINTS"));
 
                 trackedRobotsHandler.InstantiateTrackedRobot(robotIp, anchor.transform);
 
@@ -87,7 +89,7 @@ namespace Project.Scripts.AnchorSystem
             return arAnchorManager.AddAnchor(new Pose(position, rotation)); //TODO: replace obsolete method
         }
 
-        private static string ComposeWebSocketServerRequest(string robotIp)
+        private static string ComposeWebSocketServerRequest(string robotIp, string variable)
         {
             return $"{{ \"host\": \"{robotIp}\", \"var\": \"BASE\" }}"; //TODO: add joints request
         }

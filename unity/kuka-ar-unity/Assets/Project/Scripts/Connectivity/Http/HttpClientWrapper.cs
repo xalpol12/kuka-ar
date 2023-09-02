@@ -1,6 +1,7 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Project.Scripts.Connectivity.WebSocket;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Http
@@ -14,9 +15,16 @@ namespace Project.Scripts.Connectivity.Http
         public string BaseAddress
         {
             get => baseAddress;
-            set { 
-                baseAddress = string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")) ?
-                    value : PlayerPrefs.GetString("serverIp");
+            set {
+                if (string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")))
+                {
+                    baseAddress = value;
+                }
+                else
+                {
+                    baseAddress = PlayerPrefs.GetString("serverIp");
+                    WebSocketClient.Instance.ConnectToWebsocket($"ws://{baseAddress}:8080/kuka-variables");
+                }
                 httpClient.BaseAddress = new Uri($"http://{baseAddress}:8080/kuka-variables");
             }
         }
