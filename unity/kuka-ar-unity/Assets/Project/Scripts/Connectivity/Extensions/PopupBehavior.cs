@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Text;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using TMPro;
 using UnityEngine;
@@ -25,39 +23,24 @@ namespace Project.Scripts.Connectivity.Extensions
             };
         }
 
-        private void TimeStampHandler(PopupContent content)
-        {
-            content.Timestamp = content.DateTimeMark - DateTime.Now + "ago";
-        }
-
         internal IEnumerator SlideIn(GameObject notification, PopupContent content)
         {
-            while (notification.transform.position.y > Screen.height - TravelDistance)
+            var stop = notification.transform.GetSiblingIndex() > 1
+                ? Screen.height + (220 * (notification.transform.GetSiblingIndex() - 2))
+                : Screen.height - 220 * notification.transform.GetSiblingIndex() - 1;
+            
+            while (notification.transform.position.y > stop)
             {
-                TimeStampHandler(content);
                 AssignContent(notification, content);
                 notification.transform.Translate((Time.deltaTime * transformFactor) * Vector3.down);
                 yield return null;
             }
-
-            notification.transform.position = new Vector3(notification.transform.position.x,
-                Screen.height - TravelDistance);
+            
+            notification.transform.position = new Vector3(notification.transform.position.x, stop);
         }
 
         private void AssignContent(GameObject notification, PopupContent content)
         {
-            var noAscii = Encoding.ASCII.GetString(
-                Encoding.Convert(
-                    Encoding.UTF8,
-                    Encoding.GetEncoding(
-                        Encoding.ASCII.EncodingName,
-                        new EncoderReplacementFallback(string.Empty),
-                        new DecoderExceptionFallback()
-                    ),
-                    Encoding.UTF8.GetBytes(content.Message)
-                )
-            );
-            
             notification.transform.Find("Header").GetComponent<TMP_Text>().text = content.Header;
             notification.transform.Find("Message").GetComponent<TMP_Text>().text = content.Message.RemoveDiacritics();
             notification.transform.Find("Timestamp").GetComponent<TMP_Text>().text = content.Timestamp;

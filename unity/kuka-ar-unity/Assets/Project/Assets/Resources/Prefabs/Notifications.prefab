@@ -570,6 +570,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4533070184556383642}
+  - component: {fileID: 6319202632405460614}
   m_Layer: 0
   m_Name: NotificationEvents
   m_TagString: Untagged
@@ -592,6 +593,18 @@ Transform:
   m_Father: {fileID: 6393560070204092350}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6319202632405460614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6363192490400095963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0342781d9e42514468670f0ee91f98b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6917529864738580762
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,6 +616,9 @@ GameObject:
   - component: {fileID: 1887304180340504402}
   - component: {fileID: 8369978431769770607}
   - component: {fileID: 3574454127977715409}
+  - component: {fileID: 5153126957594525352}
+  - component: {fileID: 6290564624453429210}
+  - component: {fileID: 4343073198795749498}
   m_Layer: 0
   m_Name: Bar
   m_TagString: Untagged
@@ -672,6 +688,80 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &5153126957594525352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6917529864738580762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 2
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6319202632405460614}
+          m_TargetAssemblyTypeName: Project.Scripts.Connectivity.Extensions.NotificationEvents,
+            Scripts.Connectivity
+          m_MethodName: OnDragNotification
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 7
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 3
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6319202632405460614}
+          m_TargetAssemblyTypeName: Project.Scripts.Connectivity.Extensions.NotificationEvents,
+            Scripts.Connectivity
+          m_MethodName: OnDropNotification
+          m_Mode: 3
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 7
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &6290564624453429210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6917529864738580762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1587d1388bf7a944fb3d95e49b814254, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 7
+  notification: {fileID: 6917529864738580762}
+--- !u!114 &4343073198795749498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6917529864738580762}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcc6acae41cae1f42aa8fe4ee662c975, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transformFactor: 100
 --- !u!1 &8250048149105986241
 GameObject:
   m_ObjectHideFlags: 0
