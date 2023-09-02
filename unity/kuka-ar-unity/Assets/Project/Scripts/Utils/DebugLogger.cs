@@ -21,6 +21,10 @@ namespace Project.Scripts.Utils
             DontDestroyOnLoad(gameObject);
             
             messages = new ConcurrentQueue<string>();
+        }
+
+        private void Start()
+        {
             globalExceptionStorage = GlobalExceptionStorage.Instance;
         }
 

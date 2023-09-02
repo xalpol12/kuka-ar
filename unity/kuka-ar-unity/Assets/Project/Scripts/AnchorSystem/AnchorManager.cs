@@ -44,6 +44,7 @@ namespace Project.Scripts.AnchorSystem
                 RotationShift = Vector3.zero
             };
             robotConfigData.Add("192.168.1.50", newRobotConfigData);
+            robotConfigData.Add("192.168.1.51", newRobotConfigData);
         }
 
         public IEnumerator StartNewAnchorTracking(ARTrackedImage foundImage)

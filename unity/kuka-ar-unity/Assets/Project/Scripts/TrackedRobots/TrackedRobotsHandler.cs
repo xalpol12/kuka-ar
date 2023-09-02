@@ -73,8 +73,7 @@ namespace Project.Scripts.TrackedRobots
             }
             #endif
         }
-
-        //TODO: add this method to UpdateTrackedPoint so that Unity Editor uses it
+        
         #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN //called from AnchorManager
         public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
         {
@@ -83,6 +82,7 @@ namespace Project.Scripts.TrackedRobots
                 UnityMainThreadDispatcher.Instance.Enqueue(() =>
                 {
                     trackedRobots.Add(ipAddress, new TrackedRobotModel(
+                        Instantiate(prefab, basePoint.position, basePoint.rotation),
                         Instantiate(prefab, basePoint.position, basePoint.rotation),
                         positionThreshold,
                         rotationThreshold));
