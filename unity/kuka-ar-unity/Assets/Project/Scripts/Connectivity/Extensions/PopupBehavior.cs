@@ -10,7 +10,18 @@ namespace Project.Scripts.Connectivity.Extensions
     {
         [SerializeField] [Range(1, 10000)] private int transformFactor = 100;
         
-        private const int TravelDistance = 250;
+        private const int TravelDistance = 220;
+        private Popup controller;
+
+        private void Start()
+        {
+            controller = GetComponent<Popup>();
+        }
+
+        private void Update()
+        {
+            
+        }
 
         internal PopupContent ResetContent()
         {
@@ -26,12 +37,12 @@ namespace Project.Scripts.Connectivity.Extensions
         internal IEnumerator SlideIn(GameObject notification, PopupContent content)
         {
             var stop = notification.transform.GetSiblingIndex() > 1
-                ? Screen.height + (220 * (notification.transform.GetSiblingIndex() - 2))
-                : Screen.height - 220 * notification.transform.GetSiblingIndex() - 1;
+                ? Screen.height + (TravelDistance * (notification.transform.GetSiblingIndex() - 2))
+                : Screen.height - TravelDistance * notification.transform.GetSiblingIndex() - 1;
             
+            AssignContent(notification, content);
             while (notification.transform.position.y > stop)
             {
-                AssignContent(notification, content);
                 notification.transform.Translate((Time.deltaTime * transformFactor) * Vector3.down);
                 yield return null;
             }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -18,12 +17,12 @@ namespace Project.Scripts.Connectivity.Extensions
         
         [SerializeField] 
         private GameObject notification;
+
+        internal LogicStates GrabState;
         
         private PopupContent content;
         private NotificationAssetWatcher watcher;
         private PopupBehavior popupBehavior;
-        internal List<GameObject> NotificationList;
-        private Vector3 homePosition;
 
         private void Awake()
         {
@@ -34,8 +33,6 @@ namespace Project.Scripts.Connectivity.Extensions
         {
             watcher = NotificationAssetWatcher.Watcher;
             popupBehavior = GetComponent<PopupBehavior>();
-            homePosition = notification.transform.position;
-            NotificationList = new List<GameObject>();
 
             content = popupBehavior.ResetContent();
 
@@ -56,7 +53,6 @@ namespace Project.Scripts.Connectivity.Extensions
             {
                 var newPopup = Instantiate(notification, notification.transform.parent, true);
                 
-                NotificationList.Add(newPopup);
                 DefaultErrorContent(e.Message);
                 
                 if (e is WebException or HttpRequestException or SocketException or AggregateException)
@@ -74,7 +70,8 @@ namespace Project.Scripts.Connectivity.Extensions
             {
                 Header = "Error",
                 Message = message,
-                Timestamp = DateTime.Now.Hour + ":" + DateTime.Now.Minute,
+                Timestamp = DateTime.Now.ToString("HH:mm"),
+                DateTimeMark = DateTime.Now,
                 Icon = watcher.Wifi,
             };
         }

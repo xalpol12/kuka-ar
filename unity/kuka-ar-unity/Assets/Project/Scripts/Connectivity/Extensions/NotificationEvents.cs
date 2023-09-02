@@ -17,7 +17,6 @@ namespace Project.Scripts.Connectivity.Extensions
 
         public void OnDragNotification(int id)
         {
-            Debug.Log("invoke");
             DragNotification?.Invoke(id);
         }
 
