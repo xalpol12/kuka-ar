@@ -13,17 +13,15 @@ namespace Project.Scripts.Connectivity.Extensions
     public class Popup : MonoBehaviour
     {
         public static Popup Window;
-        public PopupContent Content;
+        
         [SerializeField] 
         private GameObject notification;
         
-        [SerializeField]
-        [Range(0.01f, 1)]
-        private float scaleFactor;
+        private PopupContent content;
+        private NotificationAssetWatcher watcher;
+        private PopupBehavior popupBehavior;
+        private Vector3 homePosition;
 
-        private Sprite error;
-        
-        private RectTransform dialogWindow;
         private void Awake()
         {
             Window = this;
@@ -31,10 +29,11 @@ namespace Project.Scripts.Connectivity.Extensions
 
         private void Start()
         {
-            dialogWindow = notification.transform.GetComponent<RectTransform>();
-            scaleFactor = 0.01f;
-            error = Resources.Load<Sprite>("Icons/cloudFailedIcon");
-            notification.SetActive(false);
+            watcher = NotificationAssetWatcher.Watcher;
+            popupBehavior = GetComponent<PopupBehavior>();
+            homePosition = notification.transform.position;
+
+            content = popupBehavior.ResetContent();
         }
 
         /// <summary>
@@ -48,18 +47,28 @@ namespace Project.Scripts.Connectivity.Extensions
             }
             catch (Exception e)
             {
+                var newPopup = Instantiate(notification, notification.transform.parent, false);
+                DefaultErrorContent(e.Message);
+                
                 if (e is WebException or HttpRequestException or SocketException or AggregateException)
                 {
-                    Content = new PopupContent
-                    {
-                        Title = "Error",
-                        Header = "Data fetch error",
-                        Message = e.Message,
-                        Icon = error
-                    };
-                    //StartCoroutine(ScaleUp());
+                    content.Message = e.InnerException?.InnerException?.Message.Split("(")[1];
+                    content.Icon = watcher.NoWifi;
                 }
+                StartCoroutine(popupBehavior.SlideIn(newPopup, content));
             }
+        }
+
+        private void DefaultErrorContent(string message)
+        {
+            content = new PopupContent
+            {
+                Header = "Error",
+                Message = message,
+                DateTimeMark = DateTime.Now,
+                Timestamp = "now",
+                Icon = watcher.Wifi,
+            };
         }
     }
 }
