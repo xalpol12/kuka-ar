@@ -3,6 +3,7 @@ package com.wawrzyniak.testsocket.Service;
 import com.wawrzyniak.testsocket.Exceptions.RobotNotConfiguredException;
 import com.wawrzyniak.testsocket.Model.ModelReading.ConfiguredRobotDTO;
 import com.wawrzyniak.testsocket.Model.Types.RobotClasses;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
