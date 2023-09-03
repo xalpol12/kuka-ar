@@ -55,39 +55,49 @@ namespace Project.Scripts.Connectivity.Extensions
 
         /// <summary>
         /// Tries to execute the given action. If it fails, shows popup window with error message.
+        /// @param action - task to execute
+        /// @param @param customMessage - overrides system generated notification content message
+        /// @param @optional firstIteration - param to avoid error where first item of notification was static
         /// </summary>
-        public void Try(Action action)
+        public void Try(Action action, string customMessage = "",bool firstIteration = true)
         {
+            var newPopup = Instantiate(notification, notification.transform.parent, true);
+            Notifications.Add(newPopup);
+            if (Notifications.Count == 1 && firstIteration)
+            {
+                Notifications = new List<GameObject>();
+                Try(action, customMessage, false);
+            }
+
             try
             {
                 action();
+                DefaultContent("Success","Robot has been added to server", watcher.Added);
             }
             catch (Exception e)
             {
-                var newPopup = Instantiate(notification, notification.transform.parent, true);
-                Notifications.Add(newPopup);
-                DefaultErrorContent(e.Message);
+                DefaultContent("Error",e.Message, watcher.Wifi);
                 
                 if (e is WebException or HttpRequestException or SocketException or AggregateException)
                 {
                     content.Message = e.InnerException?.InnerException?.Message.Split("(")[1];
                     content.Icon = watcher.NoWifi;
                 }
-                NotificationsContent.Add(content);
-                
-                StartCoroutine(popupBehavior.SlideIn(newPopup, content));
             }
+            
+            NotificationsContent.Add(content);
+            StartCoroutine(popupBehavior.SlideIn(newPopup, content));
         }
-
-        private void DefaultErrorContent(string message)
+        
+        private void DefaultContent(string header,string message, Sprite icon)
         {
             content = new PopupContent
             {
-                Header = "Error",
+                Header = header,
                 Message = message,
                 Timestamp = DateTime.Now.ToString("HH:mm"),
                 DateTimeMark = DateTime.Now,
-                Icon = watcher.Wifi,
+                Icon = icon,
             };
         }
 

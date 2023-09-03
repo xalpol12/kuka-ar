@@ -360,6 +360,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e03d6daa81ea0c84fb682ef7f93ac864, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &41727131 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6319202632405460614, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+    type: 3}
+  m_PrefabInstance: {fileID: 1167251881}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0342781d9e42514468670f0ee91f98b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &94363248
 GameObject:
   m_ObjectHideFlags: 0
@@ -1566,8 +1578,33 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5153126957594525352, guid: 15deaabe1d5fda24eab734b41ae1ce09,
         type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5153126957594525352, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+        type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5153126957594525352, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+        type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 41727131}
+    - target: {fileID: 5153126957594525352, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+        type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: OnDragNotification
+      objectReference: {fileID: 0}
+    - target: {fileID: 5153126957594525352, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+        type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: Project.Scripts.Connectivity.Extensions.NotificationEvents, Scripts.Connectivity
+      objectReference: {fileID: 0}
+    - target: {fileID: 5153126957594525352, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+        type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5153126957594525352, guid: 15deaabe1d5fda24eab734b41ae1ce09,
         type: 3}

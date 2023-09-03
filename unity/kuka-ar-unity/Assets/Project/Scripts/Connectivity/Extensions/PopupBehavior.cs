@@ -86,8 +86,7 @@ namespace Project.Scripts.Connectivity.Extensions
             var frac = Input.mousePosition.x / (Screen.width - 80 - 
                                                 (controller.HomePosition.x -
                                                  Math.Abs(controller.PressedObject.transform.position.x)));
-            var pivot = new Vector2(frac ,0.5f);
-            controller.PressedObject.transform.GetComponent<RectTransform>().pivot = pivot;
+            controller.PressedObject.transform.GetComponent<RectTransform>().pivot = new Vector2(frac ,0.5f);
             
             while (controller.InternalGrabState == 1)
             {
@@ -98,6 +97,7 @@ namespace Project.Scripts.Connectivity.Extensions
 
             controller.GrabState = 0;
             controller.InternalGrabState = 2;
+            yield return null;
         }
 
         private IEnumerator AutoPull()
@@ -125,8 +125,9 @@ namespace Project.Scripts.Connectivity.Extensions
             }
 
             var deleteObject = controller.PressedObject;
-            var index = controller.Notifications.IndexOf(deleteObject);
-            
+            var index = controller.Notifications.IndexOf(deleteObject) == -1 ?
+                0 : controller.Notifications.IndexOf(deleteObject);
+
             controller.PressedObject = null;
             controller.InternalGrabState = 0;
             controller.Notifications.Remove(deleteObject);
