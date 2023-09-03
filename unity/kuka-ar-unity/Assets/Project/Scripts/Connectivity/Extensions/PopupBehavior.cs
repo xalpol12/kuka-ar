@@ -20,7 +20,16 @@ namespace Project.Scripts.Connectivity.Extensions
 
         private void Update()
         {
-            
+            if (controller.GrabState == 1)
+            {
+                controller.InternalGrabState = 1;
+                StartCoroutine(UserSlideHandler());
+                controller.GrabState = 2;
+            } else if (controller.GrabState == 0)
+            {
+                StartCoroutine(AutoPull());
+                controller.GrabState = 2;
+            } 
         }
 
         internal PopupContent ResetContent()
@@ -57,6 +66,47 @@ namespace Project.Scripts.Connectivity.Extensions
             notification.transform.Find("Timestamp").GetComponent<TMP_Text>().text = content.Timestamp;
             notification.transform.Find("Background").GetComponent<Image>().gameObject.transform
                 .Find("Icon").GetComponent<Image>().sprite = content.Icon;
+        }
+        
+        private IEnumerator UserSlideHandler()
+        {
+            var pivot = new Vector2(Input.mousePosition.x / (Screen.width - 80), 0.5f);
+            controller.Notifications[0].transform.GetComponent<RectTransform>().pivot = pivot;
+            
+            while (controller.InternalGrabState == 1)
+            {
+                controller.Notifications[0].transform.position = new Vector3(Input.mousePosition.x,
+                                controller.Notifications[0].transform.position.y);
+                yield return null;
+            }
+
+            controller.GrabState = 0;
+            controller.InternalGrabState = 2;
+        }
+
+        private IEnumerator AutoPull()
+        {
+            while (controller.InternalGrabState == 2)
+            {
+                Vector3 pullInto;
+                if (controller.Notifications[0].transform.position.x < Screen.width * 0.25)
+                {
+                    pullInto = Vector3.left;
+                } else if (controller.Notifications[0].transform.position.x > Screen.width * 0.75)
+                {
+                    pullInto = Vector3.right;
+                }
+                else
+                {
+                    yield return null;
+                    continue;
+                }
+                
+                controller.Notifications[0].transform.Translate(Time.deltaTime * transformFactor * pullInto);
+                yield return null;
+            }
+
+            controller.InternalGrabState = 0;
         }
     }
 }

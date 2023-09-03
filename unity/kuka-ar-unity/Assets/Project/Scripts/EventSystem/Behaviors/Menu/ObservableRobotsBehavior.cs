@@ -18,17 +18,18 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private List<GameObject> allGridItems;
         private GameObject grid;
         private GameObject gridItem;
+        private int lastSelected;
 
         private void Start()
         {
             observableRobotsController = GetComponent<ObservableRobotsController>();
             fileNotFound = Resources.Load<Sprite>("Icons/FileNotFound");
-        
+            
             scrollList = observableRobotsController.parentGrid;
             allGridItems = new List<GameObject>();
             grid = scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject;
             gridItem = grid.transform.Find("GridElement").GetComponent<Image>().gameObject;
-
+            
             StartCoroutine(ServerInvoker.Invoker.GetRobots());
             
             StartCoroutine(InitObservableRobots());
@@ -44,12 +45,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 });
         }
 
-        private void OnEnable()
-        {
-            StartCoroutine(ServerInvoker.Invoker.GetRobots());
-            StartCoroutine(InitObservableRobots());
-        }
-
         private void Update()
         {
             if (observableRobotsController.WebDataStorage.IsAfterRobotSave)
@@ -61,16 +56,23 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private IEnumerator InitObservableRobots()
         {
+            Debug.Log("init");
             if (scrollList is null) yield break;
             var constantPanelRef = scrollList.transform.parent.GetComponent<Image>()
                 .gameObject.transform.Find("ConstantPanel").GetComponent<Image>()
                 .gameObject.transform;
             var storage = observableRobotsController.WebDataStorage;
-            gridItem.SetActive(storage.Robots.Count != 0);
+            
             
             if (storage.Stickers.Count <= 0)
             {
                 ConnectionFailed(true);
+                yield break;
+            }
+
+            if (storage.Robots.Count < 1)
+            {
+                gridItem.SetActive(false);
                 yield break;
             }
             
@@ -84,7 +86,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             {
                 observableRobotsController.StylingService.MarkAsUnselected(allGridItems, true);
                 OnSelectActions(constantPanelRef, gridItem.transform.GetSiblingIndex());
-                gridItem.transform.GetComponent<Image>().sprite = observableRobotsController.StylingService.SelectedSprite;
+                gridItem.transform.GetComponent<Image>().sprite = 
+                    observableRobotsController.StylingService.SelectedSprite;
             });
             allGridItems.Add(gridItem);
 
@@ -101,6 +104,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 }
                 else
                 {
+                    newGridItem.transform.GetComponent<Image>().sprite = i == lastSelected
+                            ? observableRobotsController.StylingService.SelectedSprite
+                            : observableRobotsController.StylingService.DefaultNoFrame;
                     newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
                         storage.Robots[i].Name;
                     newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
@@ -118,7 +124,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                         return;
                     }
                     OnSelectActions(constantPanelRef, newGridItem.transform.GetSiblingIndex());
-                    newGridItem.transform.GetComponent<Image>().sprite = observableRobotsController.StylingService.SelectedSprite;
+                    newGridItem.transform.GetComponent<Image>().sprite =
+                        observableRobotsController.StylingService.SelectedSprite;
                 });
                 allGridItems.Add(newGridItem);
             }
@@ -148,6 +155,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             observableRobotsController.LogicService.IsAfterItemSelect = true;
             observableRobotsController.LogicService.SelectedIpAddress = ipAddress;
             observableRobotsController.LogicService.SliderState = LogicStates.Hiding;
+            lastSelected = index;
         }
 
         private IEnumerator DestroyListEntries()

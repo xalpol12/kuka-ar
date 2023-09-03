@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
@@ -18,7 +19,10 @@ namespace Project.Scripts.Connectivity.Extensions
         [SerializeField] 
         private GameObject notification;
 
-        internal LogicStates GrabState;
+        internal int GrabState;
+        internal int InternalGrabState;
+        internal List<GameObject> Notifications;
+        internal List<PopupContent> NotificationsContent;
         
         private PopupContent content;
         private NotificationAssetWatcher watcher;
@@ -33,7 +37,11 @@ namespace Project.Scripts.Connectivity.Extensions
         {
             watcher = NotificationAssetWatcher.Watcher;
             popupBehavior = GetComponent<PopupBehavior>();
-
+            Notifications = new List<GameObject>();
+            NotificationsContent = new List<PopupContent>();
+            GrabState = 2;
+            InternalGrabState = 2;
+            
             content = popupBehavior.ResetContent();
 
             NotificationEvents.Events.DragNotification += DragPopup;
@@ -52,7 +60,7 @@ namespace Project.Scripts.Connectivity.Extensions
             catch (Exception e)
             {
                 var newPopup = Instantiate(notification, notification.transform.parent, true);
-                
+                Notifications.Add(newPopup);
                 DefaultErrorContent(e.Message);
                 
                 if (e is WebException or HttpRequestException or SocketException or AggregateException)
@@ -80,7 +88,7 @@ namespace Project.Scripts.Connectivity.Extensions
         {
             if (id == uid)
             {
-                Debug.Log("drag");
+                GrabState = 1;
             }
         }
 
@@ -88,7 +96,7 @@ namespace Project.Scripts.Connectivity.Extensions
         {
             if (id == uid)
             {
-                Debug.Log("drop");
+                GrabState = 0;
             }
         }
     }

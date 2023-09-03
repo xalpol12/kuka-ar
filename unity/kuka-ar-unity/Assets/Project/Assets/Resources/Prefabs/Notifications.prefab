@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 3897059490050360180}
   - component: {fileID: 4331426635107612482}
   - component: {fileID: 8889177355366187081}
+  - component: {fileID: 8348261946081768878}
+  - component: {fileID: 6704004482031553440}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -103,6 +105,33 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &8348261946081768878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2431161599095295486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1587d1388bf7a944fb3d95e49b814254, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 7
+  notification: {fileID: 6917529864738580762}
+--- !u!114 &6704004482031553440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2431161599095295486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcc6acae41cae1f42aa8fe4ee662c975, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transformFactor: 100
 --- !u!1 &3503582710116746105
 GameObject:
   m_ObjectHideFlags: 0
@@ -617,8 +646,6 @@ GameObject:
   - component: {fileID: 8369978431769770607}
   - component: {fileID: 3574454127977715409}
   - component: {fileID: 5153126957594525352}
-  - component: {fileID: 6290564624453429210}
-  - component: {fileID: 4343073198795749498}
   m_Layer: 0
   m_Name: Bar
   m_TagString: Untagged
@@ -735,33 +762,6 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
---- !u!114 &6290564624453429210
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6917529864738580762}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1587d1388bf7a944fb3d95e49b814254, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 7
-  notification: {fileID: 6917529864738580762}
---- !u!114 &4343073198795749498
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6917529864738580762}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bcc6acae41cae1f42aa8fe4ee662c975, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  transformFactor: 100
 --- !u!1 &8250048149105986241
 GameObject:
   m_ObjectHideFlags: 0
