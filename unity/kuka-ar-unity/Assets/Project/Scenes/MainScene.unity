@@ -384,7 +384,6 @@ GameObject:
   - component: {fileID: 94363249}
   - component: {fileID: 94363251}
   - component: {fileID: 94363252}
-  - component: {fileID: 94363253}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -437,7 +436,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AnchorPrefab: {fileID: 0}
+  m_AnchorPrefab: {fileID: 9145115598657890696, guid: 3e253fa44769527418c6f3dd49aaef6d,
+    type: 3}
 --- !u!114 &94363252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -453,19 +453,6 @@ MonoBehaviour:
   runtimeImageLibrary: {fileID: 11400000, guid: fd03ce1f52e13064e91e9137f48714ff,
     type: 2}
   arPrefab: {fileID: 0}
---- !u!114 &94363253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 94363248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d18cbf4d53fe660498ebb23e572cd6b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  trackedRobotsHandler: {fileID: 1022678924}
 --- !u!1 &99730721 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1375861511463737996, guid: bb99c9b60ab49054cb0b683cec49861f,
@@ -782,7 +769,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cebaf8798401d9f408f5fa81bc130b31, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeout: 1000
 --- !u!114 &318450785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1924,16 +1910,6 @@ PrefabInstance:
       propertyPath: m_Interactable
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 978890405352864077, guid: 31cdb5f2baf0fb544af05580a8382134,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -145
-      objectReference: {fileID: 0}
-    - target: {fileID: 1272728574938429971, guid: 31cdb5f2baf0fb544af05580a8382134,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -145
-      objectReference: {fileID: 0}
     - target: {fileID: 2570626376017324176, guid: 31cdb5f2baf0fb544af05580a8382134,
         type: 3}
       propertyPath: m_IsActive
@@ -1943,11 +1919,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Color.a
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5197682216070413499, guid: 31cdb5f2baf0fb544af05580a8382134,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -145
       objectReference: {fileID: 0}
     - target: {fileID: 5599843314959079847, guid: 31cdb5f2baf0fb544af05580a8382134,
         type: 3}
@@ -2038,11 +2009,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7583620410209755648, guid: 31cdb5f2baf0fb544af05580a8382134,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -145
       objectReference: {fileID: 0}
     - target: {fileID: 7821254083480301153, guid: 31cdb5f2baf0fb544af05580a8382134,
         type: 3}
@@ -2309,20 +2275,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3506435938213818104, guid: 2dec6bad165255e45942ae03de04b2b0,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -150
-      objectReference: {fileID: 0}
     - target: {fileID: 3913081913780332710, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4061777616539564681, guid: 2dec6bad165255e45942ae03de04b2b0,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -150
       objectReference: {fileID: 0}
     - target: {fileID: 4312796452124506343, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
@@ -2493,11 +2449,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6599526297842420391, guid: 2dec6bad165255e45942ae03de04b2b0,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -150
       objectReference: {fileID: 0}
     - target: {fileID: 7100495805471895554, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
