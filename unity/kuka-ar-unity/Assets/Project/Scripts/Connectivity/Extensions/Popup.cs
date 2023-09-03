@@ -21,6 +21,8 @@ namespace Project.Scripts.Connectivity.Extensions
 
         internal int GrabState;
         internal int InternalGrabState;
+        internal GameObject PressedObject;
+        internal Vector3 HomePosition;
         internal List<GameObject> Notifications;
         internal List<PopupContent> NotificationsContent;
         
@@ -39,14 +41,17 @@ namespace Project.Scripts.Connectivity.Extensions
             popupBehavior = GetComponent<PopupBehavior>();
             Notifications = new List<GameObject>();
             NotificationsContent = new List<PopupContent>();
+            HomePosition = notification.transform.position;
             GrabState = 2;
             InternalGrabState = 2;
+            PressedObject = null;
             
             content = popupBehavior.ResetContent();
 
             NotificationEvents.Events.DragNotification += DragPopup;
             NotificationEvents.Events.DropNotification += DropPopup;
         }
+
 
         /// <summary>
         /// Tries to execute the given action. If it fails, shows popup window with error message.
@@ -68,6 +73,8 @@ namespace Project.Scripts.Connectivity.Extensions
                     content.Message = e.InnerException?.InnerException?.Message.Split("(")[1];
                     content.Icon = watcher.NoWifi;
                 }
+                NotificationsContent.Add(content);
+                
                 StartCoroutine(popupBehavior.SlideIn(newPopup, content));
             }
         }
@@ -84,12 +91,10 @@ namespace Project.Scripts.Connectivity.Extensions
             };
         }
 
-        private void DragPopup(int uid)
+        private void DragPopup(GameObject pressed)
         {
-            if (id == uid)
-            {
-                GrabState = 1;
-            }
+            GrabState = 1;
+            PressedObject = pressed;
         }
 
         private void DropPopup(int uid)

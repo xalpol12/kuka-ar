@@ -12,10 +12,10 @@ namespace Project.Scripts.Connectivity.Extensions
             Events = this;
         }
 
-        public event Action<int> DragNotification;
+        public event Action<GameObject> DragNotification;
         public event Action<int> DropNotification;
 
-        public void OnDragNotification(int id)
+        public void OnDragNotification(GameObject id)
         {
             DragNotification?.Invoke(id);
         }

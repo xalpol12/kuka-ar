@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using TMPro;
@@ -25,7 +26,7 @@ namespace Project.Scripts.Connectivity.Extensions
                 controller.InternalGrabState = 1;
                 StartCoroutine(UserSlideHandler());
                 controller.GrabState = 2;
-            } else if (controller.GrabState == 0)
+            } else if (controller.GrabState == 0 && controller.PressedObject is not null)
             {
                 StartCoroutine(AutoPull());
                 controller.GrabState = 2;
@@ -43,11 +44,19 @@ namespace Project.Scripts.Connectivity.Extensions
             };
         }
 
-        internal IEnumerator SlideIn(GameObject notification, PopupContent content)
+        internal IEnumerator SlideIn(GameObject notification, PopupContent content, int? index = null)
         {
-            var stop = notification.transform.GetSiblingIndex() > 1
-                ? Screen.height + (TravelDistance * (notification.transform.GetSiblingIndex() - 2))
-                : Screen.height - TravelDistance * notification.transform.GetSiblingIndex() - 1;
+            int stop;
+            if (index is null)
+            {
+                stop = notification.transform.GetSiblingIndex() > 1
+                    ? Screen.height + (TravelDistance * (notification.transform.GetSiblingIndex() - 2))
+                    : Screen.height - TravelDistance * notification.transform.GetSiblingIndex() - 1;
+            }
+            else
+            {
+                stop = Screen.height - TravelDistance * (controller.Notifications.Count - index.Value);
+            }
             
             AssignContent(notification, content);
             while (notification.transform.position.y > stop)
@@ -70,13 +79,20 @@ namespace Project.Scripts.Connectivity.Extensions
         
         private IEnumerator UserSlideHandler()
         {
-            var pivot = new Vector2(Input.mousePosition.x / (Screen.width - 80), 0.5f);
-            controller.Notifications[0].transform.GetComponent<RectTransform>().pivot = pivot;
+            if (controller.PressedObject is null)
+            {
+                yield break;
+            }
+            var frac = Input.mousePosition.x / (Screen.width - 80 - 
+                                                (controller.HomePosition.x -
+                                                 Math.Abs(controller.PressedObject.transform.position.x)));
+            var pivot = new Vector2(frac ,0.5f);
+            controller.PressedObject.transform.GetComponent<RectTransform>().pivot = pivot;
             
             while (controller.InternalGrabState == 1)
             {
-                controller.Notifications[0].transform.position = new Vector3(Input.mousePosition.x,
-                                controller.Notifications[0].transform.position.y);
+                controller.PressedObject.transform.position = new Vector3(Input.mousePosition.x,
+                                controller.PressedObject.transform.position.y);
                 yield return null;
             }
 
@@ -86,27 +102,48 @@ namespace Project.Scripts.Connectivity.Extensions
 
         private IEnumerator AutoPull()
         {
+            var save = controller.PressedObject.GetComponent<RectTransform>().pivot;
+            controller.PressedObject.GetComponent<RectTransform>().pivot = new Vector2(0.5f, 0.5f);
             while (controller.InternalGrabState == 2)
             {
                 Vector3 pullInto;
-                if (controller.Notifications[0].transform.position.x < Screen.width * 0.25)
+                if (controller.PressedObject.transform.position.x < Screen.width * 0.25)
                 {
                     pullInto = Vector3.left;
-                } else if (controller.Notifications[0].transform.position.x > Screen.width * 0.75)
+                } else if (controller.PressedObject.transform.position.x > Screen.width * 0.75)
                 {
                     pullInto = Vector3.right;
                 }
                 else
                 {
-                    yield return null;
-                    continue;
+                    controller.PressedObject.GetComponent<RectTransform>().pivot = save;
+                    yield break;
                 }
                 
-                controller.Notifications[0].transform.Translate(Time.deltaTime * transformFactor * pullInto);
+                controller.PressedObject.transform.Translate(Time.deltaTime * transformFactor * pullInto);
                 yield return null;
             }
 
+            var deleteObject = controller.PressedObject;
+            var index = controller.Notifications.IndexOf(deleteObject);
+            
+            controller.PressedObject = null;
             controller.InternalGrabState = 0;
+            controller.Notifications.Remove(deleteObject);
+            controller.NotificationsContent.RemoveAt(index);
+            
+            Destroy(deleteObject);
+            StartCoroutine(SlideDownAfterDelete(index));
+            yield return null;
+        }
+
+        private IEnumerator SlideDownAfterDelete(int index)
+        {
+            for (var i = 0; i < controller.Notifications.Count; i++)
+            {
+                StartCoroutine(SlideIn(controller.Notifications[i], controller.NotificationsContent[i], i));
+                yield return null;
+            }
         }
     }
 }

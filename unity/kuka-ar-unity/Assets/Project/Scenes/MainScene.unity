@@ -333,6 +333,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: DebugLogger
       objectReference: {fileID: 0}
+    - target: {fileID: 3087783458083860396, guid: 8e7be4efed6c55d4a8b6512a56577111,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4665656086292718226, guid: 8e7be4efed6c55d4a8b6512a56577111,
         type: 3}
       propertyPath: textField
@@ -1093,6 +1098,12 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &888297005 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6917529864738580762, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+    type: 3}
+  m_PrefabInstance: {fileID: 1167251881}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &892714835
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1552,6 +1563,21 @@ PrefabInstance:
         type: 3}
       propertyPath: transformFactor
       value: 2001
+      objectReference: {fileID: 0}
+    - target: {fileID: 5153126957594525352, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+        type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5153126957594525352, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+        type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 888297005}
+    - target: {fileID: 5153126957594525352, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+        type: 3}
+      propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.GameObject, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5608635512401205186, guid: 15deaabe1d5fda24eab734b41ae1ce09,
         type: 3}
