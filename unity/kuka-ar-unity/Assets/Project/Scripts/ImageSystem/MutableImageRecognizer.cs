@@ -37,6 +37,7 @@ namespace Project.Scripts.ImageSystem
             downloadedImages = new HashSet<string>();
             trackedImages = new Dictionary<string, ARTrackedImage>();
             
+            
             httpClientWrapper = HttpClientWrapper.Instance;
 
             imageManager = gameObject.AddComponent<ARTrackedImageManager>();
