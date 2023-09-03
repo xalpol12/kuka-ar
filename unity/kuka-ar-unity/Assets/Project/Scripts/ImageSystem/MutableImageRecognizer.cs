@@ -19,6 +19,7 @@ namespace Project.Scripts.ImageSystem
         
         private AnchorManager anchorManager;
         private ARTrackedImageManager imageManager;
+        private HashSet<string> downloadedImages;
         private Dictionary<string, ARTrackedImage> trackedImages;
 
         private HttpClientWrapper httpClientWrapper;
@@ -33,6 +34,7 @@ namespace Project.Scripts.ImageSystem
 
         private void Start()
         {
+            downloadedImages = new HashSet<string>();
             trackedImages = new Dictionary<string, ARTrackedImage>();
             
             httpClientWrapper = HttpClientWrapper.Instance;
@@ -40,9 +42,10 @@ namespace Project.Scripts.ImageSystem
             imageManager = gameObject.AddComponent<ARTrackedImageManager>();
             ConfigureMutableLibrary();
             imageManager.trackedImagesChanged += OnChange;
-            
-            DebugLogger.Instance.AddLog("Device supports mutable tracked image library: " + 
-                                        imageManager.subsystem.subsystemDescriptor.supportsMutableLibrary + "; ");
+
+            DebugLogger.Instance.AddLog(imageManager.subsystem.subsystemDescriptor.supportsMutableLibrary ? 
+                "Device supports mutable tracked image library" : 
+                "Device does not support mutable tracked image library");
         }
 
         private void ConfigureMutableLibrary()
@@ -88,10 +91,17 @@ namespace Project.Scripts.ImageSystem
 
             foreach (var entry in targets)
             {
-                Texture2D texture = new Texture2D(512, 512);
-                texture.LoadImage(entry.Value);
-                texture.Apply();
-                textureDict.Add(entry.Key, texture);
+                if (downloadedImages.Contains(entry.Key))
+                {
+                    textureDict.Remove(entry.Key);
+                }
+                else
+                {
+                    Texture2D texture = new Texture2D(512, 512);
+                    texture.LoadImage(entry.Value);
+                    texture.Apply();
+                    textureDict.Add(entry.Key, texture);
+                }
             }
 
             foreach (var entry in textureDict)
@@ -105,14 +115,14 @@ namespace Project.Scripts.ImageSystem
             yield return null;
 
             var mutableLib = imageManager.referenceLibrary as MutableRuntimeReferenceImageLibrary;
-
             var jobHandler = mutableLib.ScheduleAddImageWithValidationJob(image.Value, image.Key, 0.1f);
-            
             while (jobHandler.status == AddReferenceImageJobStatus.Pending)
             {
-                DebugLogger.Instance.AddLog("Waiting for image to add... ;");
+                DebugLogger.Instance.AddLog($"Waiting for image {image.Key} to add... ;");
                 yield return null;
             }
+
+            downloadedImages.Add(image.Key);
             DebugLogger.Instance.AddLog($"New image {image.Key} added; ");
         }
     }
