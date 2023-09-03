@@ -57,22 +57,22 @@ namespace Project.Scripts.Connectivity.Extensions
         /// Tries to execute the given action. If it fails, shows popup window with error message.
         /// @param action - task to execute
         /// @param @param customMessage - overrides system generated notification content message
+        /// @param @param withSuccess - allows to display message on action success
         /// @param @optional firstIteration - param to avoid error where first item of notification was static
         /// </summary>
-        public void Try(Action action, string customMessage = "",bool firstIteration = true)
+        public void Try(Action action, string customMessage = "", bool firstIteration = true)
         {
             var newPopup = Instantiate(notification, notification.transform.parent, true);
             Notifications.Add(newPopup);
             if (Notifications.Count == 1 && firstIteration)
             {
                 Notifications = new List<GameObject>();
-                Try(action, customMessage, false);
+                Try(action, customMessage,  false);
             }
 
             try
             {
                 action();
-                DefaultContent("Success","Robot has been added to server", watcher.Added);
             }
             catch (Exception e)
             {
@@ -83,6 +83,25 @@ namespace Project.Scripts.Connectivity.Extensions
                     content.Message = e.InnerException?.InnerException?.Message.Split("(")[1];
                     content.Icon = watcher.NoWifi;
                 }
+            }
+            
+            NotificationsContent.Add(content);
+            StartCoroutine(popupBehavior.SlideIn(newPopup, content));
+        }
+
+        public void TryWithSuccessExpected(Action action, string customMessage = "")
+        {
+            var newPopup = Instantiate(notification, notification.transform.parent, true);
+            Notifications.Add(newPopup);
+            DefaultContent("Success", "Robot added to database", watcher.AddedSuccess);
+            
+           try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                DefaultContent("Error", e.Message, watcher.AddedFailed);
             }
             
             NotificationsContent.Add(content);

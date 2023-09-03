@@ -56,7 +56,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private IEnumerator InitObservableRobots()
         {
-            Debug.Log("init");
             if (scrollList is null) yield break;
             var constantPanelRef = scrollList.transform.parent.GetComponent<Image>()
                 .gameObject.transform.Find("ConstantPanel").GetComponent<Image>()
@@ -85,7 +84,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
                 observableRobotsController.StylingService.MarkAsUnselected(allGridItems, true);
-                OnSelectActions(constantPanelRef, gridItem.transform.GetSiblingIndex());
+                StartCoroutine(OnSelectActions(constantPanelRef, gridItem.transform.GetSiblingIndex()));
                 gridItem.transform.GetComponent<Image>().sprite = 
                     observableRobotsController.StylingService.SelectedSprite;
             });
@@ -123,7 +122,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                     {
                         return;
                     }
-                    OnSelectActions(constantPanelRef, newGridItem.transform.GetSiblingIndex());
+                    StartCoroutine(OnSelectActions(constantPanelRef, newGridItem.transform.GetSiblingIndex()));
                     newGridItem.transform.GetComponent<Image>().sprite =
                         observableRobotsController.StylingService.SelectedSprite;
                 });
@@ -133,7 +132,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             yield return null;
         }
 
-        private void OnSelectActions(Transform panelRef, int index)
+        private IEnumerator OnSelectActions(Transform panelRef, int index)
         {
             // TODO: fix coroutine wait time to display proper status
             // wrap into coroutine then put the code into WHILE LOOP and let it run inside
@@ -151,11 +150,11 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             panelRef.Find("CurrentRobotName").GetComponent<TMP_Text>().text = 
                 observableRobotsController.WebDataStorage.Robots[index].Name;
             panelRef.Find("CoordSystemPicker").GetComponent<Image>().sprite = GetSticker(ipAddress);
-            statusText.text = observableRobotsController.WebDataStorage.RobotConnectionStatus.ToString();
             observableRobotsController.LogicService.IsAfterItemSelect = true;
             observableRobotsController.LogicService.SelectedIpAddress = ipAddress;
             observableRobotsController.LogicService.SliderState = LogicStates.Hiding;
             lastSelected = index;
+            yield return null;
         }
 
         private IEnumerator DestroyListEntries()
@@ -175,15 +174,19 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private IEnumerator ConnectionStatusCheckHandler(TMP_Text statusText, string ipAddress)
         {
-            StartCoroutine(ServerInvoker.Invoker.PingRobot(ipAddress));
-            statusText.color = observableRobotsController.WebDataStorage.RobotConnectionStatus switch
+            while (statusText.text == ConnectionStatus.Connected.ToString())
             {
-                ConnectionStatus.Connected => new Color(0.176f, 0.78f, 0.439f),
-                ConnectionStatus.Connecting => new Color(0.94f, 0.694f, 0.188f),
-                ConnectionStatus.Disconnected => new Color(0.949f, 0.247f, 0.259f),
-                _ => statusText.color
-            };
-            yield return null;
+                StartCoroutine(ServerInvoker.Invoker.PingRobot(ipAddress));
+                statusText.text = observableRobotsController.WebDataStorage.RobotConnectionStatus.ToString();
+                statusText.color = observableRobotsController.WebDataStorage.RobotConnectionStatus switch
+                {
+                    ConnectionStatus.Connected => new Color(0.176f, 0.78f, 0.439f),
+                    ConnectionStatus.Connecting => new Color(0.94f, 0.694f, 0.188f),
+                    ConnectionStatus.Disconnected => new Color(0.949f, 0.247f, 0.259f),
+                    _ => statusText.color
+                };
+                yield return null;
+            }
         }
         
         private void ConnectionFailed(bool state)

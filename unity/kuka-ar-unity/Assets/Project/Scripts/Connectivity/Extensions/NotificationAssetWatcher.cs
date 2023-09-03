@@ -7,7 +7,8 @@ namespace Project.Scripts.Connectivity.Extensions
         public static NotificationAssetWatcher Watcher;
         internal Sprite Wifi;
         internal Sprite NoWifi;
-        internal Sprite Added;
+        internal Sprite AddedSuccess;
+        internal Sprite AddedFailed;
         private void Awake()
         {
             Watcher = this;
@@ -17,7 +18,8 @@ namespace Project.Scripts.Connectivity.Extensions
         {
             Wifi = Resources.Load<Sprite>("Icons/wifi");
             NoWifi = Resources.Load<Sprite>("Icons/noWifi");
-            Added = Resources.Load<Sprite>("Icons/add");
+            AddedSuccess = Resources.Load<Sprite>("Icons/success");
+            AddedFailed = Resources.Load<Sprite>("Icons/fail");
         }
     }
 }
