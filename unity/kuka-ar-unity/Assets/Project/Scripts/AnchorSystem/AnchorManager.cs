@@ -92,7 +92,7 @@ namespace Project.Scripts.AnchorSystem
 
         private static string ComposeWebSocketServerRequest(string robotIp, string variable)
         {
-            return $"{{ \"host\": \"{robotIp}\", \"var\": \"BASE\" }}"; //TODO: add joints request
+            return $"{{ \"host\": \"{robotIp}\", \"var\": \"{variable}\" }}"; //TODO: add joints request
         }
     }
 }

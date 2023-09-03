@@ -437,8 +437,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AnchorPrefab: {fileID: 6293013295111765086, guid: 877dde30e10b707418ddaff74938d9ff,
-    type: 3}
+  m_AnchorPrefab: {fileID: 0}
 --- !u!114 &94363252
 MonoBehaviour:
   m_ObjectHideFlags: 0
