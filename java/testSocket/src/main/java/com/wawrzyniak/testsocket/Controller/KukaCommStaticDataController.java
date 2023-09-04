@@ -49,7 +49,7 @@ public class KukaCommStaticDataController {
             summary = "Returns all stickers",
             description = "Stickers are located in /RobotStickers folder",
             tags = {"Stickers"})
-    @GetMapping("Stickers")
+    @GetMapping("stickers")
     public Map<String, byte[]> getAllStickers() throws IOException {
         logger.debug("Called endpoint: GET /stickers");
         return imageService.getAllStickers();

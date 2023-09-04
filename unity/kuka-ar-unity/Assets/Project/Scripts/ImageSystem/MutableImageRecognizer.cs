@@ -119,12 +119,13 @@ namespace Project.Scripts.ImageSystem
             var jobHandler = mutableLib.ScheduleAddImageWithValidationJob(image.Value, image.Key, 0.1f);
             while (jobHandler.status == AddReferenceImageJobStatus.Pending)
             {
-                DebugLogger.Instance.AddLog($"Waiting for image {image.Key} to add... ;");
+                DebugLogger.Instance.AddLog($"Waiting for image {image.Key} to add... ; ");
                 yield return null;
             }
 
             downloadedImages.Add(image.Key);
-            DebugLogger.Instance.AddLog($"New image {image.Key} added; ");
+            DebugLogger.Instance.AddLog($"New image {image.Key} added; " +
+                                        $"Currently in library: {downloadedImages.Count.ToString()} images; ");
         }
     }
 }

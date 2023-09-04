@@ -45,6 +45,7 @@ namespace Project.Scripts.AnchorSystem
             };
             robotConfigData.Add("192.168.1.50", newRobotConfigData);
             robotConfigData.Add("192.168.1.51", newRobotConfigData);
+            robotConfigData.Add("192.168.1.52", newRobotConfigData);
         }
 
         public IEnumerator StartNewAnchorTracking(ARTrackedImage foundImage)
