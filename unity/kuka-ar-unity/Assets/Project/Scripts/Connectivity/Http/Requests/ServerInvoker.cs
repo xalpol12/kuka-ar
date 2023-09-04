@@ -100,9 +100,9 @@ namespace Project.Scripts.Connectivity.Http.Requests
 
         public IEnumerator PostRobot(Robot? robot)
         {
-            Debug.Log("count");
             if (robot != null) popup.TryWithSuccessExpected(
-                () => http.ExecuteRequest(new PostNewRobotRequest(robot.Value))); 
+                () => http.ExecuteRequest(new PostNewRobotRequest(robot.Value)),
+                "Robot has been added");
             yield return null;
         }
     }

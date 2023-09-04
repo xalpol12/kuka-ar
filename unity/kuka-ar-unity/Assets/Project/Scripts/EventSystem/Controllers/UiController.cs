@@ -37,7 +37,7 @@ namespace Project.Scripts.EventSystem.Controllers
         private int serverConfigDisplayState;
         private bool isAfterBugReport;
         private bool isQuitting;
-
+        
         private void Start()
         {
             validationService = IpValidationService.Instance;
