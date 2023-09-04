@@ -1,7 +1,7 @@
 using System.Net.Http;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 using Project.Scripts.EventSystem.Enums;
-using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Http.Requests
 {
@@ -17,21 +17,33 @@ namespace Project.Scripts.Connectivity.Http.Requests
 
         public async Task<ConnectionStatus> Execute(HttpClient client)
         {
-            var ping = new Ping(Ip);
-            var time = 0;
-            while (!ping.isDone)
+            var ping = new Ping();
+            await Task.Run(() =>
             {
-                if (time > WebDataStorage.ConnectionTimeOutSel)
-                {
-                    break;
-                }
+                var reply = ping.Send(Ip);
 
-                time -= ping.time;
-                storage.RobotConnectionStatus = ConnectionStatus.Connecting;
-            }
+                storage.RobotConnectionStatus = reply switch
+                {
+                    { Status: IPStatus.Success } => ConnectionStatus.Connected,
+                    { Status: IPStatus.TimedOut or IPStatus.TimeExceeded } => ConnectionStatus.Connecting,
+                    _ => ConnectionStatus.Disconnected
+                };
+            });
+            // var ping = new Ping(Ip);
+            // var time = 0;
+            // while (!ping.isDone)
+            // {
+            //     if (time > WebDataStorage.ConnectionTimeOutSel)
+            //     {
+            //         break;
+            //     }
+            //
+            //     time -= ping.time;
+            //     storage.RobotConnectionStatus = ConnectionStatus.Connecting;
+            // }
         
-            storage.RobotConnectionStatus = time > WebDataStorage.ConnectionTimeOutSel ?
-                ConnectionStatus.Disconnected : ConnectionStatus.Connected;
+            // storage.RobotConnectionStatus = time > WebDataStorage.ConnectionTimeOut ?
+                // ConnectionStatus.Disconnected : ConnectionStatus.Connected;
             return storage.RobotConnectionStatus;
         }
     }

@@ -1,7 +1,10 @@
+using System;
 using System.Collections;
+using System.Net.NetworkInformation;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 using UnityEngine.UI;
+using Ping = System.Net.NetworkInformation.Ping;
 
 namespace Project.Scripts.EventSystem.Services.ServerConfig
 {
@@ -25,27 +28,44 @@ namespace Project.Scripts.EventSystem.Services.ServerConfig
             pingSuccessIcon = Resources.Load<Sprite>("Icons/cloudSuccessIcon");
             pingWaitIcon = Resources.Load<Sprite>("Icons/cloudWaiting");
             pingFailedIcon = Resources.Load<Sprite>("Icons/cloudFailedIcon");
-        
-            timeout /= 1000;
         }
 
         internal IEnumerator PingOperation(string ip)
         {
-            var ping = new Ping(ip);
-            var time = 0;
-            while (!ping.isDone)
+            try
             {
-                if (time > timeout)
-                {
-                    break;
-                }
-
-                time -= ping.time;
+                var ping = new Ping();
                 SwapCloud(ConnectionStatus.Connecting);
-                yield return new WaitForSeconds(0.05f);
+                var reply = ping.Send(ip, timeout);
+                var status = reply is { Status: IPStatus.Success };
+                Debug.Log("attempt");
+
+                Debug.Log("conn");
+                SwapCloud(ConnectionStatus.Connected);
+                yield break;
             }
-        
-            SwapCloud(time > timeout ? ConnectionStatus.Disconnected : ConnectionStatus.Connected);
+            catch (Exception)
+            {
+                Debug.Log("discon");
+                SwapCloud(ConnectionStatus.Disconnected);
+            }
+
+            yield return null;
+            // var ping = new Ping(ip);
+            // var time = 0;
+            // while (!ping.isDone)
+            // {
+            //     if (time > timeout)
+            //     {
+            //         break;
+            //     }
+            //
+            //     time -= ping.time;
+            //     SwapCloud(ConnectionStatus.Connecting);
+            //     yield return new WaitForSeconds(0.05f);
+            // }
+            //
+            // SwapCloud(time > timeout ? ConnectionStatus.Disconnected : ConnectionStatus.Connected);
         }
 
         private void SwapCloud(ConnectionStatus pingStatus)
