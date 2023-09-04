@@ -93,9 +93,10 @@ namespace Project.Scripts.Connectivity.Http.Requests
             var status = http.ExecuteRequest(new PingChosenIpRequest(ip));
             while (!status.IsCompleted)
             {
+                Debug.Log("waiting");
                 yield return null;
             }
-            
+            Debug.Log(status.Result);
             yield return null;
         }
 
