@@ -1585,6 +1585,12 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 200
       objectReference: {fileID: 0}
+    - target: {fileID: 4298516770538260417, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7acfaae6dd1130a42b4d9e554b42d2dd,
+        type: 3}
     - target: {fileID: 4343073198795749498, guid: 15deaabe1d5fda24eab734b41ae1ce09,
         type: 3}
       propertyPath: transformFactor
@@ -1699,6 +1705,16 @@ PrefabInstance:
         type: 3}
       propertyPath: transformFactor
       value: 2096
+      objectReference: {fileID: 0}
+    - target: {fileID: 8949387136369149710, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+        type: 3}
+      propertyPath: m_text
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 9061233987130735111, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+        type: 3}
+      propertyPath: m_text
+      value: Placeholder text goes here
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
