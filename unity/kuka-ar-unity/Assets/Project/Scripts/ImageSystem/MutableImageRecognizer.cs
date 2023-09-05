@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.AnchorSystem;
 using Project.Scripts.Connectivity.Http;
-using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -22,27 +21,22 @@ namespace Project.Scripts.ImageSystem
         private HashSet<string> downloadedImages;
         private Dictionary<string, ARTrackedImage> trackedImages;
 
-        private HttpClientWrapper httpClientWrapper;
-
         private void Awake()
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
             
             anchorManager = gameObject.GetComponent<AnchorManager>();
+            
+            imageManager = gameObject.AddComponent<ARTrackedImageManager>();
+            ConfigureMutableLibrary();
+            imageManager.trackedImagesChanged += OnChange;
         }
 
         private void Start()
         {
             downloadedImages = new HashSet<string>();
             trackedImages = new Dictionary<string, ARTrackedImage>();
-            
-            
-            httpClientWrapper = HttpClientWrapper.Instance;
-
-            imageManager = gameObject.AddComponent<ARTrackedImageManager>();
-            ConfigureMutableLibrary();
-            imageManager.trackedImagesChanged += OnChange;
 
             DebugLogger.Instance.AddLog(imageManager.subsystem.subsystemDescriptor.supportsMutableLibrary ? 
                 "Device supports mutable tracked image library" : 
@@ -69,63 +63,86 @@ namespace Project.Scripts.ImageSystem
             }
         }
 
-        public void LoadNewTargets()
+        // public void LoadNewTargets()
+        // {
+        //     StartCoroutine(LoadTargetsFromServer());
+        // }
+
+        public void LoadTargetsFromGlobalCache()
         {
-            StartCoroutine(LoadTargetsFromServer());
+            StartCoroutine(ExecuteLoadingTargets());
         }
 
-        private IEnumerator LoadTargetsFromServer()
+        private IEnumerator ExecuteLoadingTargets()
         {
-            var newTargetsTask = httpClientWrapper.ExecuteRequest(new GetTargetImagesRequest());
-
-            while (!newTargetsTask.IsCompleted)
+            while (WebDataStorage.Instance.Stickers.Count == 0) //TODO: change later to something better
             {
                 yield return null;
             }
             
-            SetNewTargets(newTargetsTask.Result);
-        }
-
-        private void SetNewTargets(Dictionary<string, byte[]> targets)
-        {
-            var textureDict = new Dictionary<string, Texture2D>();
-
-            foreach (var entry in targets)
+            foreach (var entry in WebDataStorage.Instance.Stickers)
             {
-                if (downloadedImages.Contains(entry.Key))
+                if (!downloadedImages.Contains(entry.Key))
                 {
-                    textureDict.Remove(entry.Key);
-                }
-                else
-                {
-                    Texture2D texture = new Texture2D(512, 512);
-                    texture.LoadImage(entry.Value);
-                    texture.Apply();
-                    textureDict.Add(entry.Key, texture);
+                    KeyValuePair<string, Texture2D> cachedImage = new KeyValuePair<string, Texture2D>(entry.Key, entry.Value.texture);
+                    StartCoroutine(AddImageToTrackingLibrary(cachedImage));
                 }
             }
 
-            foreach (var entry in textureDict)
-            {
-                StartCoroutine(AddImageToTrackingLibrary(entry));
-            }
+            yield return null;
         }
+
+        // private IEnumerator LoadTargetsFromServer()
+        // {
+        //     var newTargetsTask = httpClientWrapper.ExecuteRequest(new GetTargetImagesRequest());
+        //
+        //     while (!newTargetsTask.IsCompleted)
+        //     {
+        //         yield return null;
+        //     }
+        //     
+        //     SetNewTargets(newTargetsTask.Result);
+        // }
+        //
+        // private void SetNewTargets(Dictionary<string, byte[]> targets)
+        // {
+        //     var textureDict = new Dictionary<string, Texture2D>();
+        //
+        //     foreach (var entry in targets)
+        //     {
+        //         if (downloadedImages.Contains(entry.Key))
+        //         {
+        //             textureDict.Remove(entry.Key);
+        //         }
+        //         else
+        //         {
+        //             Texture2D texture = new Texture2D(512, 512);
+        //             texture.LoadImage(entry.Value);
+        //             texture.Apply();
+        //             textureDict.Add(entry.Key, texture);
+        //         }
+        //     }
+        //
+        //     foreach (var entry in textureDict)
+        //     {
+        //         StartCoroutine(AddImageToTrackingLibrary(entry));
+        //     }
+        // }
 
         private IEnumerator AddImageToTrackingLibrary(KeyValuePair<string, Texture2D> image)
         {
-            yield return null;
-
             var mutableLib = imageManager.referenceLibrary as MutableRuntimeReferenceImageLibrary;
             var jobHandler = mutableLib.ScheduleAddImageWithValidationJob(image.Value, image.Key, 0.1f);
             while (jobHandler.status == AddReferenceImageJobStatus.Pending)
             {
-                DebugLogger.Instance.AddLog($"Waiting for image {image.Key} to add... ; ");
                 yield return null;
             }
 
             downloadedImages.Add(image.Key);
             DebugLogger.Instance.AddLog($"New image {image.Key} added; " +
                                         $"Currently in library: {downloadedImages.Count.ToString()} images; ");
+            
+            yield return null;
         }
     }
 }

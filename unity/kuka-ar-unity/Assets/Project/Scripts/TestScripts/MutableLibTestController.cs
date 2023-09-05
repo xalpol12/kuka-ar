@@ -18,7 +18,7 @@ namespace Project.Scripts.TestScripts
         {
             if (ImagesDownloaded) return;
             DebugLogger.Instance.AddLog("Clicked download images button!; ");
-            MutableImageRecognizer.Instance.LoadNewTargets();
+            // MutableImageRecognizer.Instance.LoadNewTargets();
             ImagesDownloaded = true;
         }
     }

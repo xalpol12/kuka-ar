@@ -66,8 +66,8 @@ namespace Project.Scripts.EventSystem.Controllers
             }
             
             ServerInvoker.Invoker.GetFullData();
-            MutableImageRecognizer.Instance.LoadNewTargets();
-            
+            MutableImageRecognizer.Instance.LoadTargetsFromGlobalCache();
+
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
             MenuEvents.Event.OnClickReloadServerData += RequestData;
             ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;

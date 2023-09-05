@@ -84,6 +84,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
                 storage.Stickers = stickersMapper.MapBytesToSprite(stickers);
                 storage.AvailableIps = robotsMapper.MapStringToIpAddress(stickers);
             });
+
             yield return null;
         }
 

@@ -1346,7 +1346,7 @@ PrefabInstance:
     - target: {fileID: 55412494847196622, guid: af40055b8bdfdf24091bbab03471ab98,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: LoadNewTargets
+      value: LoadTargetsFromGlobalCache
       objectReference: {fileID: 0}
     - target: {fileID: 55412494847196622, guid: af40055b8bdfdf24091bbab03471ab98,
         type: 3}
