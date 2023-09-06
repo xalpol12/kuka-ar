@@ -2,6 +2,7 @@ using System.Collections;
 using Project.Scripts.Connectivity.Extensions;
 using Project.Scripts.Connectivity.Mapping;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Http.Requests
@@ -89,13 +90,16 @@ namespace Project.Scripts.Connectivity.Http.Requests
 
         public IEnumerator PingRobot(string ip)
         {
+            Debug.Log("pinging");
             var status = http.ExecuteRequest(new PingChosenIpRequest(ip));
             while (!status.IsCompleted)
             {
-                Debug.Log("waiting");
+                storage.RobotConnectionStatus = ConnectionStatus.Connecting;
                 yield return null;
             }
-            Debug.Log(status.Result);
+
+            storage.RobotConnectionStatus = status.Result ? ConnectionStatus.Connected : ConnectionStatus.Disconnected;
+            Debug.Log("DONE: " + status.Result);
             yield return null;
         }
 

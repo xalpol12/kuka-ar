@@ -15,7 +15,7 @@ namespace Project.Scripts.Connectivity.Http
             Instance = this;
         }
 
-        public const int ConnectionTimeOut = 1000;
+        public readonly int ConnectionTimeOut = 1000;
         public List<Robot> ConfiguredRobots { get; set; } = new List<Robot>();
         public List<Robot> Robots { get; set; } = new List<Robot>();
         public List<string> AvailableIps { get; set; } = new List<string>();

@@ -1,34 +1,45 @@
+using System;
 using System.Net.Http;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using Project.Scripts.EventSystem.Enums;
 
 namespace Project.Scripts.Connectivity.Http.Requests
 {
-    public class PingChosenIpRequest : IHttpRequest<ConnectionStatus>
+    public class PingChosenIpRequest : IHttpRequest<bool>
     {
         private readonly WebDataStorage storage = WebDataStorage.Instance;
-        private readonly string Ip;
+        private readonly string ip;
 
         public PingChosenIpRequest(string ip)
         {
-            Ip = ip;
+            this.ip = ip;
         }
 
-        public async Task<ConnectionStatus> Execute(HttpClient client)
+        public async Task<bool> Execute(HttpClient client)
         {
-            var ping = new Ping();
-            await Task.Run(() =>
+            using var tcpClient = new TcpClient();
+            var connectTask = tcpClient.ConnectAsync(ip, 8080);
+            var timeoutTask = Task.Delay(storage.ConnectionTimeOut);
+                
+            var completedTask = await Task.WhenAny(connectTask, timeoutTask);
+            try
             {
-                var reply = ping.Send(Ip);
+                await completedTask;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
 
-                storage.RobotConnectionStatus = reply switch
-                {
-                    { Status: IPStatus.Success } => ConnectionStatus.Connected,
-                    { Status: IPStatus.TimedOut or IPStatus.TimeExceeded } => ConnectionStatus.Connecting,
-                    _ => ConnectionStatus.Disconnected
-                };
-            });
+            if (timeoutTask.IsCompleted)
+            {
+                return false;
+            }
+
+            return connectTask.Status == TaskStatus.RanToCompletion && tcpClient.Connected;
             // var ping = new Ping(Ip);
             // var time = 0;
             // while (!ping.isDone)
@@ -44,7 +55,26 @@ namespace Project.Scripts.Connectivity.Http.Requests
         
             // storage.RobotConnectionStatus = time > WebDataStorage.ConnectionTimeOut ?
                 // ConnectionStatus.Disconnected : ConnectionStatus.Connected;
-            return storage.RobotConnectionStatus;
+            // return storage.RobotConnectionStatus;
+        }
+
+        private void PingCompleted(object sender, PingCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                storage.RobotConnectionStatus = ConnectionStatus.Disconnected;
+            }
+            else
+            {
+                storage.RobotConnectionStatus = ConnectionStatus.Connected;
+            }
+            
+            ((AutoResetEvent)e.UserState).Set();
+        }
+
+        private void PingCompleted()
+        {
+                
         }
     }
 }

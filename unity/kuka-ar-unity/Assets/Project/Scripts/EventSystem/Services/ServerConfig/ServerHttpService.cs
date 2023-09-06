@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
-using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Threading.Tasks;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 using UnityEngine.UI;
-using Ping = System.Net.NetworkInformation.Ping;
 
 namespace Project.Scripts.EventSystem.Services.ServerConfig
 {
@@ -32,40 +32,15 @@ namespace Project.Scripts.EventSystem.Services.ServerConfig
 
         internal IEnumerator PingOperation(string ip)
         {
-            try
+            var state = PingHostAndPort(ip);
+            while (!state.IsCompleted)
             {
-                var ping = new Ping();
                 SwapCloud(ConnectionStatus.Connecting);
-                var reply = ping.Send(ip, timeout);
-                var status = reply is { Status: IPStatus.Success };
-                Debug.Log("attempt");
-
-                Debug.Log("conn");
-                SwapCloud(ConnectionStatus.Connected);
-                yield break;
+                yield return null;
             }
-            catch (Exception)
-            {
-                Debug.Log("discon");
-                SwapCloud(ConnectionStatus.Disconnected);
-            }
-
+            
+            SwapCloud(state.Result ? ConnectionStatus.Connected : ConnectionStatus.Disconnected);
             yield return null;
-            // var ping = new Ping(ip);
-            // var time = 0;
-            // while (!ping.isDone)
-            // {
-            //     if (time > timeout)
-            //     {
-            //         break;
-            //     }
-            //
-            //     time -= ping.time;
-            //     SwapCloud(ConnectionStatus.Connecting);
-            //     yield return new WaitForSeconds(0.05f);
-            // }
-            //
-            // SwapCloud(time > timeout ? ConnectionStatus.Disconnected : ConnectionStatus.Connected);
         }
 
         private void SwapCloud(ConnectionStatus pingStatus)
@@ -82,6 +57,30 @@ namespace Project.Scripts.EventSystem.Services.ServerConfig
                     cloudIcon.sprite = pingFailedIcon;
                     break;
             }
+        }
+        
+        private async Task<bool> PingHostAndPort(string host)
+        {
+            using var tcpClient = new TcpClient();
+            var connectTask = tcpClient.ConnectAsync(host, 8080);
+            var timeoutTask = Task.Delay(timeout);
+                
+            var completedTask = await Task.WhenAny(connectTask, timeoutTask);
+            try
+            {
+                await completedTask;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            if (timeoutTask.IsCompleted)
+            {
+                return false;
+            }
+
+            return connectTask.Status == TaskStatus.RanToCompletion && tcpClient.Connected;
         }
     }
 }
