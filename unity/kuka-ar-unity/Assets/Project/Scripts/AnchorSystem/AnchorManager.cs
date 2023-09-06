@@ -1,5 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using Project.Scripts.Connectivity.Http;
+using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.Connectivity.Models;
 using Project.Scripts.Connectivity.WebSocket;
 using Project.Scripts.TrackedRobots;
@@ -17,7 +20,10 @@ namespace Project.Scripts.AnchorSystem
         [SerializeField] private TrackedRobotsHandler trackedRobotsHandler;
     
         private Dictionary<string, ARAnchor> trackedAnchors;
-        private Dictionary<string, RobotData> robotConfigData;
+        private Dictionary<string, RobotData> robotConfigData; // contains IP : config pairs
+
+        private HttpClientWrapper httpClientWrapper;
+        private Dictionary<string, RobotData> cachedRobotConfig;
     
         private void Awake()
         {
@@ -28,24 +34,66 @@ namespace Project.Scripts.AnchorSystem
         {
             trackedAnchors = new Dictionary<string, ARAnchor>();
             robotConfigData = new Dictionary<string, RobotData>();
-        
-            //TODO: delete later, debug purposes
-            CreateMockData();
+            cachedRobotConfig = new Dictionary<string, RobotData>();
+            
+            httpClientWrapper = HttpClientWrapper.Instance;
         }
 
-        //TODO: Implement downloading config data for each ip,
-        //if not found, default: Vector3.zero
-        private void CreateMockData()
+        public IEnumerator LoadRequiredData()
         {
-            RobotData newRobotConfigData = new RobotData()
+            if (cachedRobotConfig.Count == 0)
             {
-                Name = "kuka-test-config",
-                PositionShift = new Vector3(0, -0.1f, 0),
-                RotationShift = Vector3.zero
-            };
-            robotConfigData.Add("192.168.1.50", newRobotConfigData);
-            robotConfigData.Add("192.168.1.51", newRobotConfigData);
-            robotConfigData.Add("192.168.1.52", newRobotConfigData);
+                StartCoroutine(ExecuteLoadingConfigData());
+
+                while (cachedRobotConfig.Count == 0)
+                {
+                    yield return null;
+                }
+
+                StartCoroutine(ExecuteLoadingSavedRobots());
+            }
+            else
+            {
+                StartCoroutine(ExecuteLoadingSavedRobots());
+            }
+        }
+        
+        private IEnumerator ExecuteLoadingConfigData()
+        {
+            var newConfigDataTask = httpClientWrapper.ExecuteRequest(new GetRobotConfigDataRequest());
+
+            while (!newConfigDataTask.IsCompleted)
+            {
+                yield return null;
+            }
+
+            foreach (var category in newConfigDataTask.Result)
+            {
+                foreach (var subcategory in category.Value)
+                {
+                    cachedRobotConfig.Add(subcategory.Key, subcategory.Value);
+                }
+            }
+        }
+
+        private IEnumerator ExecuteLoadingSavedRobots()
+        {
+            var newSavedRobotsTask = httpClientWrapper.ExecuteRequest(new GetSavedRobotsRequest());
+
+            while (!newSavedRobotsTask.IsCompleted)
+            {
+                yield return null;
+            }
+
+            foreach (var robot in newSavedRobotsTask.Result)
+            {
+                if (!robotConfigData.ContainsKey(robot.IpAddress))
+                {
+                    cachedRobotConfig.TryGetValue(robot.Name, out var robotData);
+                    robotConfigData.Add(robot.IpAddress, robotData);
+                    DebugLogger.Instance.AddLog($"Added new config for ip {robot.IpAddress}, with value pos shift x: {robotData.PositionShift.x.ToString(CultureInfo.InvariantCulture)}; ");
+                }
+            }
         }
 
         public IEnumerator StartNewAnchorTracking(ARTrackedImage foundImage)
@@ -55,7 +103,14 @@ namespace Project.Scripts.AnchorSystem
             #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
             var imageTransform = foundImage.transform;
             var robotIp = foundImage.referenceImage.name;
-            var configData = robotConfigData[robotIp];
+            var configData = robotConfigData.TryGetValue(robotIp, out var value)
+                ? value
+                : new RobotData()
+                {
+                    Name = "kuka-default-config",
+                    PositionShift = Vector3.zero,
+                    RotationShift = Vector3.zero
+                };
 
             bool isCreated = false;
             while (!isCreated)
