@@ -84,6 +84,7 @@ namespace Project.Scripts.TrackedRobots
                 {
                     trackedRobots.Add(ipAddress, new TrackedRobotModel(
                         Instantiate(prefab, basePoint.position, basePoint.rotation),
+                        Instantiate(prefab, basePoint.position, basePoint.rotation),
                         positionThreshold,
                         rotationThreshold));
                     DebugLogger.Instance.AddLog($"Object for ip {ipAddress} instantiated; ");
