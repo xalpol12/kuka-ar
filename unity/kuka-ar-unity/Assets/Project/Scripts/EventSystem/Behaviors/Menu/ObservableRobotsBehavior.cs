@@ -174,9 +174,14 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private IEnumerator ConnectionStatusCheckHandler(TMP_Text statusText, string ipAddress)
         {
-            while (statusText.text == ConnectionStatus.Connected.ToString())
+            var isFinalRefresh = true;
+            observableRobotsController.WebDataStorage.RobotConnectionStatus = ConnectionStatus.Connecting;
+            StartCoroutine(ServerInvoker.Invoker.PingRobot(ipAddress));
+            
+            while (observableRobotsController.WebDataStorage.RobotConnectionStatus == ConnectionStatus.Connecting ||
+                   isFinalRefresh)
             {
-                StartCoroutine(ServerInvoker.Invoker.PingRobot(ipAddress));
+                Debug.Log("iteration:"  + observableRobotsController.WebDataStorage.RobotConnectionStatus);
                 statusText.text = observableRobotsController.WebDataStorage.RobotConnectionStatus.ToString();
                 statusText.color = observableRobotsController.WebDataStorage.RobotConnectionStatus switch
                 {
@@ -185,8 +190,12 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                     ConnectionStatus.Disconnected => new Color(0.949f, 0.247f, 0.259f),
                     _ => statusText.color
                 };
+
+                isFinalRefresh = observableRobotsController.WebDataStorage.RobotConnectionStatus ==
+                                 ConnectionStatus.Connecting;
                 yield return null;
             }
+            Debug.Log(observableRobotsController.WebDataStorage.RobotConnectionStatus);
         }
         
         private void ConnectionFailed(bool state)
