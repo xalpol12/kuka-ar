@@ -27,7 +27,7 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
                 inputTextBox.text = PlayerPrefs.GetString("serverIp");
             }
         
-            ipInputField.transform.parent.Find("SaveButton").GetComponent<Button>().onClick.AddListener(ValidateIp);
+            ipInputField.transform.parent.Find("SaveButton").GetComponent<Button>().onClick.AddListener(SaveConfigurationIp);
             inputTextBox.onValueChanged.AddListener(ResetInvalidState);
             inputTextBox.onSelect.AddListener(ClearPlaceholder);
             inputTextBox.onEndEdit.AddListener(UpdateState);
@@ -47,10 +47,11 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
             }
         }
 
-        private void ValidateIp()
+        private void SaveConfigurationIp()
         {
             ipInputField.GetComponent<Image>().sprite =
                 validationService.IpAddressValidation(ipInputField.GetComponent<TMP_InputField>().text);
+            httpService.ReloadAll();
         }
 
         private void UpdateState(string arg)

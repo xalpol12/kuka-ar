@@ -1431,7 +1431,7 @@ PrefabInstance:
     - target: {fileID: 6296100972460472928, guid: af40055b8bdfdf24091bbab03471ab98,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6591631246729887220, guid: af40055b8bdfdf24091bbab03471ab98,
         type: 3}
@@ -2601,6 +2601,7 @@ MonoBehaviour:
   moreOptions: {fileID: 931878588}
   serverConfig: {fileID: 2130753306}
   focusMode: {fileID: 99730721}
+  noInternet: {fileID: 262626937}
   abortServerConfigArrow: {fileID: 239668983}
   focusModeToggle: {fileID: 1768528310}
   noInternetText: {fileID: 524307598}

@@ -26,6 +26,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 
         private Robot data;
         private SelectableStylingService stylingService;
+        private SelectableLogicService logicService;
         private Image ipImage;
         private Image categoryImage;
         private Image nameImage;

@@ -46,6 +46,7 @@ namespace Project.Scripts.EventSystem.Controllers
             
             NextAnim = new List<AnimationFilter>();
             selectedMode = focusModeToggle.GetComponent<Toggle>();
+            noInternetText = noInternet.GetComponent<TMP_Text>();
             isQuitting = false;
         
             SetFadeController();
@@ -116,11 +117,6 @@ namespace Project.Scripts.EventSystem.Controllers
                 PlayerPrefs.SetString("isAfterBugReport", false.ToString());
             }
         }
-    
-        internal void CallAbort()
-        {
-            AbortServerReconfiguration(5);
-        }
 
         private void ShowMoreOptions(int uid)
         {
@@ -162,6 +158,7 @@ namespace Project.Scripts.EventSystem.Controllers
             {
                 SceneManager.LoadScene("WebViewScene");
                 isAfterBugReport = true;
+                return;
             }
             noInternetText.color = internet ? Color.red : Color.clear;
             StartCoroutine(stylingService.FadeOutText(noInternetText));
