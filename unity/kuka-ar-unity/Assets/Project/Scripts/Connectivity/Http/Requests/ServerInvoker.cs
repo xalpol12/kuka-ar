@@ -91,16 +91,16 @@ namespace Project.Scripts.Connectivity.Http.Requests
 
         public IEnumerator PingRobot(string ip)
         {
-            Debug.Log("pinging");
+            // Debug.Log("pinging");
             var status = http.ExecuteRequest(new PingChosenIpRequest(ip));
             while (!status.IsCompleted)
             {
                 storage.RobotConnectionStatus = ConnectionStatus.Connecting;
+                // Debug.Log("connecting: ");
                 yield return null;
             }
 
             storage.RobotConnectionStatus = status.Result ? ConnectionStatus.Connected : ConnectionStatus.Disconnected;
-            Debug.Log("DONE: " + status.Result);
             yield return null;
         }
 
