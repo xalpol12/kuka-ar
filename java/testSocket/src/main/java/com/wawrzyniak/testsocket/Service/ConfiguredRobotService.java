@@ -1,5 +1,6 @@
 package com.wawrzyniak.testsocket.Service;
 
+import com.wawrzyniak.testsocket.Exceptions.RobotAlredyConfiguredException;
 import com.wawrzyniak.testsocket.Exceptions.RobotNotConfiguredException;
 import com.wawrzyniak.testsocket.Model.ModelReading.ConfiguredRobotDTO;
 import com.wawrzyniak.testsocket.Model.Types.RobotClasses;
@@ -23,7 +24,10 @@ public class ConfiguredRobotService {
         populateRobots();
     }
 
-    public ConfiguredRobotDTO save(ConfiguredRobotDTO robot) {
+    public ConfiguredRobotDTO save(ConfiguredRobotDTO robot) throws RobotAlredyConfiguredException {
+        if (robots.containsKey(robot.getIpAddress())) {
+            throw new RobotAlredyConfiguredException("Robot with this ip is already configured, if you want to change it's parameters update it instead of saving new one.");
+        }
         robot.setId(id++);
         robots.put(robot.getIpAddress(), robot);
         return robot;

@@ -1,6 +1,7 @@
 package com.wawrzyniak.kukaComm.Controller;
 
 
+import com.wawrzyniak.kukaComm.Exceptions.RobotAlredyConfiguredException;
 import com.wawrzyniak.kukaComm.Exceptions.RobotNotConfiguredException;
 import com.wawrzyniak.kukaComm.Exceptions.WrongIpException;
 import com.wawrzyniak.kukaComm.Model.Records.ExceptionMessagePair;
@@ -52,5 +53,13 @@ public class GeneralExceptionHandler {
                 e.getMessage());
 
         return new ResponseEntity<>(nameMessagePair, HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(value = RobotAlredyConfiguredException.class)
+    public ResponseEntity<ExceptionMessagePair> robotAlreadySaved(Exception e){
+        ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
+                e.getClass().getSimpleName(),
+                e.getMessage());
+        return new ResponseEntity<>(nameMessagePair, HttpStatus.BAD_REQUEST);
     }
 }

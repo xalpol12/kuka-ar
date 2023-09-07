@@ -1,5 +1,6 @@
 package com.wawrzyniak.kukaComm.Service.RobotData;
 
+import com.wawrzyniak.kukaComm.Exceptions.RobotAlredyConfiguredException;
 import com.wawrzyniak.kukaComm.Exceptions.RobotNotConfiguredException;
 import com.wawrzyniak.kukaComm.Exceptions.WrongIpException;
 import com.wawrzyniak.kukaComm.Model.ModelReading.ConfiguredRobotDTO;
@@ -28,7 +29,7 @@ class ConfiguredRobotServiceTest {
     }
 
     @Test
-    void save() throws WrongIpException {
+    void save() throws WrongIpException, RobotAlredyConfiguredException {
         //given
         ConfiguredRobotDTO robotDTO = new ConfiguredRobotDTO();
         robotDTO.setId(1L);
@@ -59,11 +60,13 @@ class ConfiguredRobotServiceTest {
         } catch (WrongIpException e) {
             // then
             assertEquals("Wrong IP address format", e.getMessage());
+        } catch (RobotAlredyConfiguredException e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Test
-    void update() throws RobotNotConfiguredException, WrongIpException {
+    void update() throws RobotNotConfiguredException, WrongIpException, RobotAlredyConfiguredException {
         //given
         ConfiguredRobotDTO robotDTO = new ConfiguredRobotDTO();
         robotDTO.setId(1L);
@@ -89,7 +92,7 @@ class ConfiguredRobotServiceTest {
     }
 
     @Test
-    void deleteByIp() throws WrongIpException{
+    void deleteByIp() throws WrongIpException, RobotAlredyConfiguredException {
         //given
         ConfiguredRobotDTO robotDTO = new ConfiguredRobotDTO();
         robotDTO.setId(1L);
@@ -108,7 +111,7 @@ class ConfiguredRobotServiceTest {
     }
 
     @Test
-    void getRobotByIp() throws RobotNotConfiguredException, WrongIpException {
+    void getRobotByIp() throws RobotNotConfiguredException, WrongIpException, RobotAlredyConfiguredException {
         //given
         ConfiguredRobotDTO robotDTO = new ConfiguredRobotDTO();
         robotDTO.setId(1L);
@@ -127,7 +130,7 @@ class ConfiguredRobotServiceTest {
     }
 
     @Test
-    void getAllConfiguredRobots() throws WrongIpException{
+    void getAllConfiguredRobots() throws WrongIpException, RobotAlredyConfiguredException {
         //given
         ConfiguredRobotDTO robotDTO_0 = new ConfiguredRobotDTO();
         robotDTO_0.setId(1L);

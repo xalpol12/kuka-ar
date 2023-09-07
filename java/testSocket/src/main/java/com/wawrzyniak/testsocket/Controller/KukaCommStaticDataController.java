@@ -1,6 +1,7 @@
 package com.wawrzyniak.testsocket.Controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.wawrzyniak.testsocket.Exceptions.RobotAlredyConfiguredException;
 import com.wawrzyniak.testsocket.Exceptions.RobotNotConfiguredException;
 import com.wawrzyniak.testsocket.Exceptions.WrongRequestException;
 import com.wawrzyniak.testsocket.Model.ExceptionMockingRequests.ClearExceptionRequest;

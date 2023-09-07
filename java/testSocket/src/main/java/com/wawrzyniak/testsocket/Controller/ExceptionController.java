@@ -1,5 +1,6 @@
 package com.wawrzyniak.testsocket.Controller;
 
+import com.wawrzyniak.testsocket.Exceptions.RobotAlredyConfiguredException;
 import com.wawrzyniak.testsocket.Exceptions.RobotNotConfiguredException;
 import com.wawrzyniak.testsocket.Exceptions.WrongRequestException;
 import com.wawrzyniak.testsocket.Model.Records.ExceptionMessagePair;
@@ -34,6 +35,14 @@ public class ExceptionController {
                 e.getClass().getSimpleName(),
                 e.getMessage());
 
+        return new ResponseEntity<>(nameMessagePair, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = RobotAlredyConfiguredException.class)
+    public ResponseEntity<ExceptionMessagePair> robotAlreadySaved(Exception e){
+        ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
+                e.getClass().getSimpleName(),
+                e.getMessage());
         return new ResponseEntity<>(nameMessagePair, HttpStatus.BAD_REQUEST);
     }
 }
