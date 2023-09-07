@@ -3,13 +3,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.wawrzyniak.testsocket.Exceptions.ExceptionTypes;
 import com.wawrzyniak.testsocket.Exceptions.WrongRequestException;
 import com.wawrzyniak.testsocket.Model.KRLVar;
+import com.wawrzyniak.testsocket.Model.MotionDescription;
 import com.wawrzyniak.testsocket.Model.Records.RobotData;
 import com.wawrzyniak.testsocket.Model.Types.RobotClasses;
 import com.wawrzyniak.testsocket.Model.Types.VarType;
 import com.wawrzyniak.testsocket.Model.Value.KRLValue;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,13 +19,16 @@ import java.util.logging.Logger;
 public class KukaMockService {
     private final static Logger logger = Logger.getLogger(KukaMockService.class.getName());
 
-    private Map<String, Map<VarType, KRLVar>> variables;
+    private final Map<String, Map<VarType, KRLVar>> variables;
+    private final Map<String, MotionHandlerThread> robotMotions;
+
     @Setter
     @Getter
     private boolean randomizing;
 
     public KukaMockService() {
         variables = new HashMap<>();
+        robotMotions = new HashMap<>();
         randomizing = false;
         randomize();
     }
@@ -108,4 +111,17 @@ public class KukaMockService {
         }
     }
 
+    public void addMotion(MotionDescription md) throws WrongRequestException {
+        if (!variables.containsKey(md.getIpAddress())) {
+            throw new WrongRequestException("Robot with chosen ip is not connected to websocket at the moment. Try to reach it through websocket first.");
+        }
+        if (!variables.get(md.getIpAddress()).containsKey(VarType.POSITION)) {
+            throw new WrongRequestException("Requested variable does not exists. It would be appropriate to firstly request reading fo chosen variable through websocket.");
+        }
+        if (!robotMotions.containsKey(md.getIpAddress())) {
+            robotMotions.put(md.getIpAddress(), new MotionHandlerThread(variables.get(md.getIpAddress()).get(VarType.POSITION)));
+            robotMotions.get(md.getIpAddress()).start();
+        }
+        robotMotions.get(md.getIpAddress()).addMotion(md);
+    }
 }

@@ -7,6 +7,7 @@ import com.wawrzyniak.testsocket.Model.ExceptionMockingRequests.ClearExceptionRe
 import com.wawrzyniak.testsocket.Model.ExceptionMockingRequests.DisconnectRequest;
 import com.wawrzyniak.testsocket.Model.ExceptionMockingRequests.ExceptionToVariable;
 import com.wawrzyniak.testsocket.Model.ModelReading.ConfiguredRobotDTO;
+import com.wawrzyniak.testsocket.Model.MotionDescription;
 import com.wawrzyniak.testsocket.Model.Records.RobotData;
 import com.wawrzyniak.testsocket.Model.Value.KRLValue;
 import com.wawrzyniak.testsocket.Model.ValueSetRequest;
@@ -96,5 +97,11 @@ public class KukaCommStaticDataController {
     @PostMapping("exception/disconnect")
     public void disconnectRobot(@RequestBody DisconnectRequest request) throws WrongRequestException {
         kukaService.disconnectRobot(request.getHostIP());
+    }
+
+    @PostMapping("move")
+    public void addMotion(@RequestBody MotionDescription md) throws WrongRequestException {
+        logger.debug("Called endpoint: POST /move, request body: " + md);
+        kukaService.addMotion(md);
     }
 }
