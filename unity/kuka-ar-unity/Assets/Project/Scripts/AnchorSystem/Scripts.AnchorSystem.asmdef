@@ -8,7 +8,9 @@
         "WebSocket",
         "Scripts.TrackedRobots",
         "Scripts.Connectivity",
-        "Scripts.Utils"
+        "Scripts.Utils",
+        "Connectivity.Http",
+        "RestAPI.Commands"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

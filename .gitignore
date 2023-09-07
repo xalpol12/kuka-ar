@@ -153,22 +153,16 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 **/.idea
-<<<<<<< refs/remotes/origin/main
-<<<<<<< refs/remotes/origin/main
-=======
->>>>>>> Feature/testsocket setting data (#2)
-
-**/.idea
 
 # Ignore Java generated files in all directories
 **/*.class
 **/*.jar
 
-<<<<<<< refs/remotes/origin/main
 **/.idea
 =======
 *.jar
->>>>>>> add debug logging in websocket controller
-=======
-**/.idea
->>>>>>> Feature/testsocket setting data (#2)
+
+RobotData/
+RobotStickers/
+
+java/kukaComm/pom.xml

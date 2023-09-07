@@ -1,5 +1,6 @@
+using Project.Scripts.Connectivity.Http;
+using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.EventSystem.Enums;
-using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.EventSystem.Services.ServerConfig;
 using TMPro;
 using UnityEngine;
@@ -11,12 +12,12 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
     {
         [SerializeField] private GameObject ipInputField;
         private IpValidationService validationService;
-        private HttpService httpService;
+        private HttpClientWrapper httpClient;
         private Sprite cloudIcon;
         private void Start()
         {
             validationService = IpValidationService.Instance;
-            httpService = HttpService.Instance;
+            httpClient = HttpClientWrapper.Instance;
             cloudIcon = Resources.Load<Sprite>("Icons/cloudIcon");
         
             var inputTextBox = ipInputField.GetComponent<TMP_InputField>();
@@ -48,7 +49,7 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
 
         private void SaveConfigurationIp()
         {
-            ipInputField.GetComponent<Image>().sprite = 
+            ipInputField.GetComponent<Image>().sprite =
                 validationService.IpAddressValidation(ipInputField.GetComponent<TMP_InputField>().text);
             httpService.ReloadAll();
         }
@@ -59,10 +60,11 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
 
             if (validationService.ValidationResult)
             {
-                httpService.ConfiguredIp = ipInputField.GetComponent<TMP_InputField>().text;
+                httpClient.BaseAddress = ipInputField.GetComponent<TMP_InputField>().text;
             }
+            ServerInvoker.Invoker.GetFullData();
         }
-
+        
         private void ClearPlaceholder(string arg)
         {
             ipInputField.transform.Find("Text Area").GetComponent<RectTransform>()

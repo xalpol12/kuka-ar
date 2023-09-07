@@ -21,6 +21,10 @@ namespace Project.Scripts.Utils
             DontDestroyOnLoad(gameObject);
             
             messages = new ConcurrentQueue<string>();
+        }
+
+        private void Start()
+        {
             globalExceptionStorage = GlobalExceptionStorage.Instance;
         }
 
@@ -45,6 +49,11 @@ namespace Project.Scripts.Utils
             if (globalExceptionStorage.TryPopException(out var exception))
             {
                 textField.text += exception.ToString();
+            }
+
+            if (textField.text.Length > 30)
+            {
+                messages.Clear();
             }
         }
 

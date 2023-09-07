@@ -8,18 +8,12 @@ namespace Project.Scripts.Connectivity.Http.Requests
 {
     public class GetTargetImagesRequest : IHttpRequest<Dictionary<String, byte[]>>
     {
-        private readonly string url;
-        
-        public GetTargetImagesRequest()
-        {
-            url = "/stickers";
-        }
+        private string URL => "/stickers";
         
         public async Task<Dictionary<string, byte[]>> Execute(HttpClient httpClient)
         {
-            var response = await httpClient.GetAsync(httpClient.BaseAddress + url);
+            var response = await httpClient.GetAsync(httpClient.BaseAddress + URL);
             var json = await response.Content.ReadAsStringAsync();
-
             return JsonConvert.DeserializeObject<Dictionary<String, byte[]>>(json);
         }
     }

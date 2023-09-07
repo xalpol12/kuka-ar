@@ -19,7 +19,6 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             Service = JogsControlService.Instance;
         
-        
             showJogs = false;
             JogsTrigger = LogicStates.Waiting;
             defaultTransformFactor = 10;

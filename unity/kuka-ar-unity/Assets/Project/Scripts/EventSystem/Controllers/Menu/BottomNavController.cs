@@ -1,3 +1,4 @@
+using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
@@ -7,8 +8,6 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 {
     public class BottomNavController : MonoBehaviour
     {
-        public static BottomNavController Instance;
-    
         public int id;
         public GameObject bottomNavPanel;
         internal SelectableStylingService StylingService;
@@ -16,8 +15,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
     
         internal bool IsCirclePressed;
         internal int TransformFactor;
-
-        private HttpService httpService;
+        
         private void Start()
         {
             StylingService = SelectableStylingService.Instance;
@@ -48,19 +46,15 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 
         private void CirclePress(int uid)
         {
-            if (id == uid)
-            {
-                IsCirclePressed = true;
-                httpService.ReloadConfigured();
-            }
+            if (id != uid) return;
+            IsCirclePressed = true;
+            ServerInvoker.Invoker.GetConfiguredRobots();
         }
 
         private void CirclePressed(int uid)
         {
-            if (id == uid)
-            {
-                IsCirclePressed = false;
-            }
+            if (uid != id) return;
+            IsCirclePressed = false;
         }
     }
 }

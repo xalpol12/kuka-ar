@@ -34,6 +34,7 @@ public class ExceptionController {
         ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
                 e.getClass().getSimpleName(),
                 e.getMessage());
+
         return new ResponseEntity<>(nameMessagePair, HttpStatus.BAD_REQUEST);
     }
 

@@ -32,7 +32,7 @@ public class KukaCommController extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) {
         sessionService.addSession(session);
 
-        logger.info("New session started: " + session.getRemoteAddress().toString());
+        logger.info("New session started: {}", session.getRemoteAddress().toString());
     }
 
     @Override
@@ -46,19 +46,19 @@ public class KukaCommController extends TextWebSocketHandler {
                             ExceptionTypes.WRONG_IP.getException().getClass().getSimpleName(),
                             ExceptionTypes.WRONG_IP.getException().getMessage())
                     ))));
-            logger.info("Mocked exception send to:1 " + session.getRemoteAddress().toString());
+            logger.info("Mocked exception sent to: {}", session.getRemoteAddress().toString());
             return;
         }
         kukaService.addVariable(data.host(), data.var());
         sessionService.addVariable(session, data.host(), kukaService.getVariable(data.host(), data.var()));
 
-        logger.info("Created connection to variable: " + data.var().name() + " ip: " + data.host());
+        logger.info("Created connection to variable: {} ip: {}", data.var().name(), data.host());
     }
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
         sessionService.removeSession(session);
 
-        logger.info("Session terminated: " + session.getRemoteAddress().toString() + " " + status.toString());
+        logger.info("Session terminated: {} {}", session.getRemoteAddress().toString(), status.toString());
     }
 }

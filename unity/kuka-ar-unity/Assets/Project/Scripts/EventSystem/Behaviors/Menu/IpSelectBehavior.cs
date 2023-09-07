@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Enums;
+using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
@@ -32,8 +33,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 .transform.Find("ServerError").GetComponent<RectTransform>().gameObject
                 .transform.Find("TryAgain").GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    selectController.HttpService.ReloadConfigured();
-                    if (selectController.HttpService.ConfiguredRobots.Count <= 0) return;
+                    ServerInvoker.Invoker.GetConfiguredRobots();
+                    if (selectController.DataStorage.ConfiguredRobots.Count <= 0) return;
                     ServerFailure(false);
                     InitListLogic();
                 });
@@ -70,14 +71,14 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             var grid = ipList.transform.Find("IpAddressGrid").GetComponent<RectTransform>().gameObject;
             var gridItem = grid.transform.Find("IpAddressGridElement").GetComponent<RectTransform>().gameObject;
 
-            if (selectController.HttpService.ConfiguredRobots.Count == 0)
+            if (selectController.DataStorage.ConfiguredRobots.Count == 0)
             {
                 ServerFailure(true);
                 return;
             }
         
             gridItem.transform.Find("RobotIp").GetComponent<TMP_Text>().text =
-                selectController.HttpService.ConfiguredRobots[0].IpAddress;
+                selectController.DataStorage.ConfiguredRobots[0].IpAddress;
             gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
                 selectController.StylingService.MarkAsUnselected(allIpAddresses);
@@ -86,23 +87,23 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             });
             allIpAddresses.Add(gridItem);
         
-            for (var i = 1; i < selectController.HttpService.ConfiguredRobots.Count + 2; i++)
+            for (var i = 1; i < selectController.DataStorage.ConfiguredRobots.Count + 2; i++)
             {
                 var newIpAddress = Instantiate(gridItem, grid.transform, false);
-                if (i > selectController.HttpService.ConfiguredRobots.Count - 1)
+                if (i > selectController.DataStorage.ConfiguredRobots.Count - 1)
                 {
                     newIpAddress.transform.GetComponent<Image>().color = Color.clear;
                 }
                 else
                 {
                     newIpAddress.transform.Find("RobotIp").GetComponent<TMP_Text>().text =
-                        selectController.HttpService.ConfiguredRobots[i].IpAddress;
+                        selectController.DataStorage.ConfiguredRobots[i].IpAddress;
                 }
             
                 newIpAddress.transform.GetComponent<Button>().onClick.AddListener(() =>
                 {
                     selectController.StylingService.MarkAsUnselected(allIpAddresses);
-                    if (gridItem.transform.GetSiblingIndex() > selectController.HttpService.ConfiguredRobots.Count + 1)
+                    if (gridItem.transform.GetSiblingIndex() > selectController.DataStorage.ConfiguredRobots.Count + 1)
                     {
                         return;
                     }
@@ -153,31 +154,31 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private void OnIpSelect(Transform parent, int index)
         {
-            var http = new AddRobotData();
-            if (index < selectController.HttpService.ConfiguredRobots.Count)
+            var http = new Robot();
+            if (index < selectController.DataStorage.ConfiguredRobots.Count)
             {
-                http = selectController.HttpService.ConfiguredRobots[index];
+                http = selectController.DataStorage.ConfiguredRobots[index];
             }
 
             var mod = index;
             switch (selectController.ElementClicked)
             {
                 case ButtonType.IpAddress:
-                    mod  %= selectController.HttpService.AvailableIps.Count;
+                    mod  %= selectController.DataStorage.AvailableIps.Count;
                     parent.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
-                        .Find("Label").GetComponent<TMP_Text>().text = selectController.HttpService.AvailableIps[mod];
+                        .Find("Label").GetComponent<TMP_Text>().text = selectController.DataStorage.AvailableIps[mod];
                     break;
                 case ButtonType.Category:
                 {
-                    mod %= selectController.HttpService.CategoryNames.Count;
+                    mod %= selectController.DataStorage.CategoryNames.Count;
                     parent.Find("ChosenCategory").GetComponent<RectTransform>().gameObject.transform
                             .Find("CategoryLabel").GetComponent<TMP_Text>().text =
-                        selectController.HttpService.CategoryNames[mod];
+                        selectController.DataStorage.CategoryNames[mod];
                     break;
                 }
                 case ButtonType.RobotName:
                     parent.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
-                        .Find("NameLabel").GetComponent<TMP_Text>().text = http.RobotName;
+                        .Find("NameLabel").GetComponent<TMP_Text>().text = http.Name;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -207,16 +208,16 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                     item.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
                 }
                 if ((selectController.ElementClicked == ButtonType.Category &&
-                    index > selectController.HttpService.CategoryNames.Count - 1) || 
+                    index > selectController.DataStorage.CategoryNames.Count - 1) || 
                     (selectController.ElementClicked == ButtonType.IpAddress &&
-                     index > selectController.HttpService.AvailableIps.Count - 1))
+                     index > selectController.DataStorage.AvailableIps.Count - 1))
                 {
                     temp = null;
                     yield return null;
                 }
                 else
                 {
-                    if (index > selectController.HttpService.ConfiguredRobots.Count - 1)
+                    if (index > selectController.DataStorage.ConfiguredRobots.Count - 1)
                     {
                         temp = "";
                     }
@@ -224,9 +225,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                     {
                         temp = selectController.ElementClicked switch
                         {
-                            ButtonType.IpAddress => selectController.HttpService.AvailableIps[index],
-                            ButtonType.Category => selectController.HttpService.CategoryNames[index],
-                            ButtonType.RobotName => selectController.HttpService.ConfiguredRobots[index].RobotName,
+                            ButtonType.IpAddress => selectController.DataStorage.AvailableIps[index],
+                            ButtonType.Category => selectController.DataStorage.CategoryNames[index],
+                            ButtonType.RobotName => selectController.DataStorage.ConfiguredRobots[index].Name,
                             _ => throw new ArgumentOutOfRangeException()
                         };
                     }

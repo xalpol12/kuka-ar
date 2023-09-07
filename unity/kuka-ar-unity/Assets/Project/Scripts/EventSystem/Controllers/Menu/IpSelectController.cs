@@ -1,4 +1,5 @@
 using Project.Scripts.Connectivity.Enums;
+using Project.Scripts.Connectivity.Http;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
@@ -12,7 +13,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public int id;
         public GameObject ipSelector;
         internal SelectableStylingService StylingService;
-        internal HttpService HttpService;
+        internal WebDataStorage DataStorage;
         internal ButtonType ElementClicked;
         internal ButtonType PrevElementClicked;
         internal AddNewRobotService AddNewRobotService;
@@ -28,10 +29,10 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 
         private void Start()
         {
-            HttpService = HttpService.Instance;
             StylingService = SelectableStylingService.Instance;
             AddNewRobotService = AddNewRobotService.Instance;
             PositioningService = PositioningService.Instance;
+            DataStorage = WebDataStorage.Instance;
         
             showOptions = false;
             ShowOptionsController = LogicStates.Waiting;
