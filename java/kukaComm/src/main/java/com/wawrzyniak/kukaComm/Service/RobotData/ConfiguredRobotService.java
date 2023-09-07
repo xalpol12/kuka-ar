@@ -1,5 +1,6 @@
 package com.wawrzyniak.kukaComm.Service.RobotData;
 
+import com.wawrzyniak.kukaComm.Exceptions.RobotAlredyConfiguredException;
 import com.wawrzyniak.kukaComm.Exceptions.RobotNotConfiguredException;
 import com.wawrzyniak.kukaComm.Exceptions.WrongIpException;
 import com.wawrzyniak.kukaComm.Model.ModelReading.ConfiguredRobot;
@@ -21,12 +22,15 @@ public class ConfiguredRobotService {
     private final RobotMapper mapper;
     private final ConfiguredRobotsRepository robotRepository;
 
-    public ConfiguredRobotDTO save(ConfiguredRobotDTO robotDTO) throws WrongIpException {
+    public ConfiguredRobotDTO save(ConfiguredRobotDTO robotDTO) throws WrongIpException, RobotAlredyConfiguredException {
         ConfiguredRobot robotToSave = mapper.dtoToRobot(robotDTO);
         if (!validate(robotToSave.getIpAddress())) {
             throw new WrongIpException("Wrong IP address format");
         }
-
+        Optional<ConfiguredRobot> robot = robotRepository.findByIpAddress(robotDTO.getIpAddress());
+        if (robot.isPresent()) {
+            throw new RobotAlredyConfiguredException("Robot with this ip is already configured, if you want to change it's parameters update it instead of saving new one.");
+        }
         ConfiguredRobot savedRobot = robotRepository.save(robotToSave);
         return this.mapper.robotToDto(savedRobot);
     }
