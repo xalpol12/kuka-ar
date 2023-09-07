@@ -13,7 +13,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
         private TMP_Text ip;
         private TMP_Text category;
         private TMP_Text robotName;
-        private AddRobotData defaultValues;
+        private Robot defaultValues;
         private void Awake()
         {
             Instance = this;
@@ -31,11 +31,11 @@ namespace Project.Scripts.EventSystem.Services.Menu
             robotName = parent.transform.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
                 .Find("NameLabel").GetComponent<TMP_Text>();
         
-            defaultValues = new AddRobotData
+            defaultValues = new Robot
             {
                 IpAddress = "IP Address",
-                RobotCategory = "Category",
-                RobotName = "Name"
+                Category = "Category",
+                Name = "Name"
             };
         }
 
@@ -43,8 +43,8 @@ namespace Project.Scripts.EventSystem.Services.Menu
         {
             if (!ResetSelectState) return;
             ip.text = defaultValues.IpAddress;
-            category.text = defaultValues.RobotCategory;
-            robotName.text = defaultValues.RobotName;
+            category.text = defaultValues.Category;
+            robotName.text = defaultValues.Name;
             ResetSelectState = false;
         }
     }

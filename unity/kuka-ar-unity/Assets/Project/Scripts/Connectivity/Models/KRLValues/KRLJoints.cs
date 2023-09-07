@@ -19,7 +19,7 @@ namespace Project.Scripts.Connectivity.Models.KRLValues
 
         public static KRLJoints operator -(KRLJoints left, KRLJoints right)
         {
-            KRLJoints result = new KRLJoints()
+            KRLJoints result = new KRLJoints
             {
                 J1 = left.J1 - right.J1,
                 J2 = left.J2 - right.J2,

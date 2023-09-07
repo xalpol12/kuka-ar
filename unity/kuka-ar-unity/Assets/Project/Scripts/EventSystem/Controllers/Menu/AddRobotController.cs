@@ -1,3 +1,5 @@
+using Project.Scripts.Connectivity.Http;
+using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
@@ -18,11 +20,11 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         internal int TransformFactor;
         internal bool IsSliderHold;
         internal bool IsAddRobotPressed;
+        private WebDataStorage webDataStorage;
         internal LogicStates DialogState;
         internal AddNewRobotService AddNewRobotService;
 
-        private AddRobotData data;
-        private HttpService httpService;
+        private Robot data;
         private SelectableStylingService stylingService;
         private SelectableLogicService logicService;
         private Image ipImage;
@@ -32,21 +34,20 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             TransformFactor = 3000;
             DialogState = LogicStates.Waiting;
-        
-            httpService = HttpService.Instance;
+            
             AddNewRobotService = AddNewRobotService.Instance;
             stylingService = SelectableStylingService.Instance;
-            logicService = SelectableLogicService.Instance;
+            webDataStorage = WebDataStorage.Instance;
         
             ipImage = addDialog.transform.Find("IpAddress").GetComponent<Image>();
             categoryImage = addDialog.transform.Find("ChosenCategory").GetComponent<Image>();
             nameImage = addDialog.transform.Find("RobotName").GetComponent<Image>();
         
-            data = new AddRobotData
+            data = new Robot
             {
                 IpAddress = "IP Address",
-                RobotCategory = "Category",
-                RobotName = "Name"
+                Category = "Category",
+                Name = "Name"
             };
         
             MenuEvents.Event.OnClickAddNewRobot += OnClickDisplayDialog;
@@ -59,18 +60,19 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             if (id != uid) return;
             DialogState = LogicStates.Running;
+            ServerInvoker.Invoker.GetFullData();
         }
 
         private void OnSave(int uid)
         {
-            var content = new AddRobotData
+            var content = new Robot
             {
                 IpAddress = addDialog.transform.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
                     .Find("Label").GetComponent<TMP_Text>().text,
-                RobotCategory = addDialog.transform.Find("ChosenCategory").GetComponent<RectTransform>().gameObject
+                Category = addDialog.transform.Find("ChosenCategory").GetComponent<RectTransform>().gameObject
                     .transform
                     .Find("CategoryLabel").GetComponent<TMP_Text>().text,
-                RobotName = addDialog.transform.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
+                Name = addDialog.transform.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
                     .Find("NameLabel").GetComponent<TMP_Text>().text
             };
 
@@ -82,20 +84,20 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             }
 
             if (string.IsNullOrWhiteSpace(content.IpAddress) || content.IpAddress == data.IpAddress ||
-                string.IsNullOrWhiteSpace(content.RobotCategory) || content.RobotCategory == data.RobotCategory ||
-                string.IsNullOrWhiteSpace(content.RobotName) || content.RobotName == data.RobotName)
+                string.IsNullOrWhiteSpace(content.Category) || content.Category == data.Category ||
+                string.IsNullOrWhiteSpace(content.Name) || content.Name == data.Name)
             {
                 if (string.IsNullOrWhiteSpace(content.IpAddress) || content.IpAddress == data.IpAddress)
                 {
                     ipImage.sprite = stylingService.InvalidSelectable;
                 }
 
-                if (string.IsNullOrWhiteSpace(content.RobotCategory) || content.RobotCategory == data.RobotCategory)
+                if (string.IsNullOrWhiteSpace(content.Category) || content.Category == data.Category)
                 {
                     categoryImage.sprite = stylingService.InvalidSelectable;
                 }
 
-                if (string.IsNullOrWhiteSpace(content.RobotName) || content.RobotName == data.RobotName)
+                if (string.IsNullOrWhiteSpace(content.Name) || content.Name == data.Name)
                 {
                     nameImage.sprite = stylingService.InvalidSelectable;
                 }
@@ -104,13 +106,9 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             }
             DialogState = LogicStates.Hiding;
             AddNewRobotService.ResetSelectState = true;
-            httpService.PostNewRobot(content);
-            if (httpService.Response.IpAddress != null)
-            {
-                httpService.ReloadRobots();
-                logicService.IsAfterNewRobotSave = true;
-            }
-            
+            StartCoroutine(ServerInvoker.Invoker.PostRobot(content));
+            webDataStorage.Robots.Add(content);
+            webDataStorage.IsAfterRobotSave = true;
         }
 
         private void ReleaseSlider(int uid)

@@ -1,8 +1,12 @@
 using System.Collections.Generic;
+using Project.Scripts.Connectivity.Http;
+using Project.Scripts.Connectivity.Http.Requests;
+using Project.Scripts.Connectivity.WebSocket;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.EventSystem.Services.ServerConfig;
+using Project.Scripts.ImageSystem;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,8 +22,7 @@ namespace Project.Scripts.EventSystem.Controllers
         public GameObject moreOptions;
         public GameObject serverConfig;
         public GameObject focusMode;
-        public GameObject noInternet;
-    
+        
         internal AnimationStates ServerConfigAnim;
         internal AnimationStates MenuAnim;
         internal AnimationStates MoreOptionsAnim;
@@ -28,11 +31,9 @@ namespace Project.Scripts.EventSystem.Controllers
     
         [SerializeField] private GameObject abortServerConfigArrow;
         [SerializeField] private GameObject focusModeToggle;
-    
+        [SerializeField] private TMP_Text noInternetText;
         private IpValidationService validationService;
-        private HttpService httpService;
         private SelectableStylingService stylingService;
-        private TMP_Text noInternetText;
         private Toggle selectedMode;
         private int serverConfigDisplayState;
         private bool isAfterBugReport;
@@ -41,9 +42,8 @@ namespace Project.Scripts.EventSystem.Controllers
         private void Start()
         {
             validationService = IpValidationService.Instance;
-            httpService= HttpService.Instance;
             stylingService = SelectableStylingService.Instance;
-        
+            
             NextAnim = new List<AnimationFilter>();
             selectedMode = focusModeToggle.GetComponent<Toggle>();
             noInternetText = noInternet.GetComponent<TMP_Text>();
@@ -65,14 +65,24 @@ namespace Project.Scripts.EventSystem.Controllers
                 menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 1;
                 serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 0;
             }
-        
+            
+            ServerInvoker.Invoker.GetFullData();
+            MutableImageRecognizer.Instance.LoadNewTargets();
+
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
+            MenuEvents.Event.OnClickReloadServerData += RequestData;
             ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;
             ServerConfigEvents.Events.OnClickBackToMenu += AbortServerReconfiguration;
             MoreOptionsEvents.Events.OnClickBack += GoToMainScreen;
             MoreOptionsEvents.Events.OnClickDisplayServer += ReconfigureServer;
             MoreOptionsEvents.Events.OnClickDisplayBrowser += SubmitAnIssue;
             FocusModeEvents.Events.OnClickDisplayMoreOptions += FocusModeHandler;
+        }
+
+        private void RequestData(int uid)
+        {
+            if (id != uid) return;
+            ServerInvoker.Invoker.GetFullData();
         }
 
         private void OnEnable()
@@ -121,7 +131,9 @@ namespace Project.Scripts.EventSystem.Controllers
             ServerConfigAnim = AnimationStates.FadeOut;
             NextAnim.Add(AnimationFilter.MenuIn);
             PlayerPrefs.SetInt("firstRun", 1);
-            PlayerPrefs.SetString("serverIp", httpService.ConfiguredIp);
+            var savedAddress = HttpClientWrapper.Instance.BaseAddress;
+            PlayerPrefs.SetString("serverIp", savedAddress);
+            WebSocketClient.Instance.ConnectToWebsocket($"ws://{savedAddress}:8080/kuka-variables");
         }
 
         private void GoToMainScreen(int uid)
