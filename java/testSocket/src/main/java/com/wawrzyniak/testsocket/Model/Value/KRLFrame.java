@@ -51,4 +51,20 @@ public class KRLFrame extends JsonFormatter implements KRLValue {
         position = new Vector3(rand.nextDouble(50, 250), rand.nextDouble(50, 250), rand.nextDouble(50, 250));
         rotation = new Vector3(rand.nextDouble(50, 250), rand.nextDouble(50, 250), rand.nextDouble(50, 250));
     }
+
+    public void transform(Vector3 move){
+        position = position.add(move);
+    }
+
+    public void rotate(Vector3 rotate){
+        rotation = rotation.add(rotate);
+    }
+
+    public Vector3 calculatePositionShift(Vector3 goal) {
+        return position.difference(goal);
+    }
+
+    public Vector3 calculateRotationShift(Vector3 goal) {
+        return rotation.difference(goal);
+    }
 }
