@@ -74,7 +74,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                         toggleActive = true;
                         yield return null;
 
-                        jogsController.JogsTrigger = LogicStates.Waiting; 
+                        jogsController.JogsTrigger = LogicStates.Waiting;
+                        jogsController.ShowJogs = false;
                         break;
                     }
                 }
@@ -89,6 +90,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                         yield return null;
                     
                         jogsController.JogsTrigger = LogicStates.Waiting;
+                        jogsController.ShowJogs = false;
                         break;
                     }  
                 }
