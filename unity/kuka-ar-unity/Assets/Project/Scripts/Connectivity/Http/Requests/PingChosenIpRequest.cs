@@ -2,6 +2,8 @@ using System;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Project.Scripts.Connectivity.Extensions;
+using Project.Scripts.EventSystem.Enums;
 
 namespace Project.Scripts.Connectivity.Http.Requests
 {
@@ -28,11 +30,13 @@ namespace Project.Scripts.Connectivity.Http.Requests
             }
             catch (Exception)
             {
+                LabelOverride.Label.OverrideStatusLabel(ConnectionStatus.Disconnected.ToString());
                 return false;
             }
 
             if (timeoutTask.IsCompleted)
             {
+                LabelOverride.Label.OverrideStatusLabel(ConnectionStatus.Disconnected.ToString());
                 return false;
             }
 
