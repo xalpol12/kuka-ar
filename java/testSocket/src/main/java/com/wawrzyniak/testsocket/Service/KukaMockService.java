@@ -87,7 +87,7 @@ public class KukaMockService {
             throw new WrongRequestException("Robot with chosen ip is not connected to websocket at the moment. Try to reach it through websocket first.");
         }
         if (!variables.get(hostIp).containsKey(variable)) {
-            throw new WrongRequestException("Requested variable does not exists. It would be appropriate to firstly request reading fo chosen variable through websocket.");
+            throw new WrongRequestException("Requested variable does not exist. It would be appropriate to firstly request reading of chosen variable through websocket.");
         }
         variables.get(hostIp).get(variable).addReadException(exception.getException());
     }
@@ -97,7 +97,7 @@ public class KukaMockService {
             throw new WrongRequestException("Robot with chosen ip is not connected to websocket at the moment. Try to reach it through websocket first.");
         }
         if (!variables.get(hostIp).containsKey(variable)) {
-            throw new WrongRequestException("Requested variable does not exists. It would be appropriate to firstly request reading fo chosen variable through websocket.");
+            throw new WrongRequestException("Requested variable does not exist. It would be appropriate to firstly request reading of chosen variable through websocket.");
         }
         variables.get(hostIp).get(variable).clearExceptions();
     }
@@ -116,7 +116,7 @@ public class KukaMockService {
             throw new WrongRequestException("Robot with chosen ip is not connected to websocket at the moment. Try to reach it through websocket first.");
         }
         if (!variables.get(md.getIpAddress()).containsKey(VarType.POSITION)) {
-            throw new WrongRequestException("Requested variable does not exists. It would be appropriate to firstly request reading fo chosen variable through websocket.");
+            throw new WrongRequestException("Requested variable does not exist. It would be appropriate to firstly request reading of chosen variable through websocket.");
         }
         if (!robotMotions.containsKey(md.getIpAddress())) {
             robotMotions.put(md.getIpAddress(), new MotionHandlerThread(variables.get(md.getIpAddress()).get(VarType.POSITION)));
