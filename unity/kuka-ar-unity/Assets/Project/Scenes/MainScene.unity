@@ -384,7 +384,6 @@ GameObject:
   - component: {fileID: 94363249}
   - component: {fileID: 94363251}
   - component: {fileID: 94363252}
-  - component: {fileID: 94363253}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -454,19 +453,6 @@ MonoBehaviour:
   runtimeImageLibrary: {fileID: 11400000, guid: fd03ce1f52e13064e91e9137f48714ff,
     type: 2}
   arPrefab: {fileID: 0}
---- !u!114 &94363253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 94363248}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d18cbf4d53fe660498ebb23e572cd6b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  trackedRobotsHandler: {fileID: 1022678924}
 --- !u!1 &99730721 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1375861511463737996, guid: bb99c9b60ab49054cb0b683cec49861f,
@@ -1443,7 +1429,7 @@ PrefabInstance:
     - target: {fileID: 6296100972460472928, guid: af40055b8bdfdf24091bbab03471ab98,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6591631246729887220, guid: af40055b8bdfdf24091bbab03471ab98,
         type: 3}
@@ -1540,7 +1526,7 @@ PrefabInstance:
         type: 3}
       propertyPath: prefab
       value: 
-      objectReference: {fileID: 9145115598657890696, guid: 3e253fa44769527418c6f3dd49aaef6d,
+      objectReference: {fileID: 1273508384157506, guid: 22b5884c8772b654489e4ed1d6987802,
         type: 3}
     - target: {fileID: 8110452565766130815, guid: 4e2223c16e3d26043b3c8b6009b6932b,
         type: 3}
@@ -1697,11 +1683,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Notifications
-      objectReference: {fileID: 0}
-    - target: {fileID: 5608635512401205186, guid: 15deaabe1d5fda24eab734b41ae1ce09,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6393560070204092350, guid: 15deaabe1d5fda24eab734b41ae1ce09,
         type: 3}
@@ -2397,41 +2378,6 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -40
       objectReference: {fileID: 0}
-    - target: {fileID: 4695813352972568319, guid: 2dec6bad165255e45942ae03de04b2b0,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 4695813352972568319, guid: 2dec6bad165255e45942ae03de04b2b0,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4695813352972568319, guid: 2dec6bad165255e45942ae03de04b2b0,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
-      value: 
-      objectReference: {fileID: 94363253}
-    - target: {fileID: 4695813352972568319, guid: 2dec6bad165255e45942ae03de04b2b0,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 4695813352972568319, guid: 2dec6bad165255e45942ae03de04b2b0,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
-      value: LoadSavedRobots
-      objectReference: {fileID: 0}
-    - target: {fileID: 4695813352972568319, guid: 2dec6bad165255e45942ae03de04b2b0,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
-      value: Project.Scripts.AnchorSystem.AnchorManager, AnchorSystem
-      objectReference: {fileID: 0}
-    - target: {fileID: 4695813352972568319, guid: 2dec6bad165255e45942ae03de04b2b0,
-        type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 4720093946367242009, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_RootOrder
@@ -2492,20 +2438,15 @@ PrefabInstance:
       propertyPath: m_MatchWidthOrHeight
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5418756793672313875, guid: 2dec6bad165255e45942ae03de04b2b0,
+    - target: {fileID: 5445336312893272748, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
-      propertyPath: m_SizeDelta.x
-      value: -700
+      propertyPath: m_Type
+      value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 5418756793672313875, guid: 2dec6bad165255e45942ae03de04b2b0,
+    - target: {fileID: 5445336312893272748, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 5418756793672313875, guid: 2dec6bad165255e45942ae03de04b2b0,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
+      propertyPath: m_RaycastTarget
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5675344240891989482, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
@@ -2674,7 +2615,6 @@ MonoBehaviour:
   moreOptions: {fileID: 931878588}
   serverConfig: {fileID: 2130753306}
   focusMode: {fileID: 99730721}
-  noInternet: {fileID: 262626937}
   abortServerConfigArrow: {fileID: 239668983}
   focusModeToggle: {fileID: 1768528310}
   noInternetText: {fileID: 524307598}
