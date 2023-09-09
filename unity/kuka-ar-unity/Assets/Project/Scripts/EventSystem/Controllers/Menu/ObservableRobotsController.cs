@@ -11,7 +11,6 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         internal SelectableLogicService LogicService;
         internal WebDataStorage WebDataStorage;
         internal GameObject Spinner;
-
         private void Start()
         {
             StylingService = SelectableStylingService.Instance;
