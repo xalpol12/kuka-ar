@@ -232,7 +232,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private IEnumerator DisplayLoadingSpinner()
         {
-            var t = DateTime.Now;
             serverError.gameObject.SetActive(false);
             observableRobotsController.Spinner.SetActive(true);
             while (observableRobotsController.WebDataStorage.
