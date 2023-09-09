@@ -23,6 +23,15 @@ namespace Project.Scripts.Connectivity.Http
         public List<string> CategoryNames { get; set; } = new List<string>();
         public ConnectionStatus RobotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
         public bool IsAfterRobotSave { get; set; } = false;
+
+        public Dictionary<string, bool> LoadingSpinner { get; set; } = new Dictionary<string, bool>()
+        {
+            { "GetRobots", false },
+            { "GetConfigured", false },
+            { "GetStickers", false },
+            { "PostNewRobot", false },
+        };
+        
         internal Robot Response;
         internal ExceptionMessagePair PostError;
     }

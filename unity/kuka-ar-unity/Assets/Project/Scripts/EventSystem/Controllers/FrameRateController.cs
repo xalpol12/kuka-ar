@@ -9,7 +9,7 @@ namespace Project.Scripts.EventSystem.Controllers
         [Header("Frame settings")] 
         private const int MaxRate = 9999;
 
-        private const float targetFrameRate = 60.0f;
+        private const float TargetFrameRate = 60.0f;
         private float currentFrameTime;
 
         private void Awake()
@@ -25,7 +25,7 @@ namespace Project.Scripts.EventSystem.Controllers
             while (true)
             {
                 yield return new WaitForEndOfFrame();
-                currentFrameTime += 1.0f / targetFrameRate;
+                currentFrameTime += 1.0f / TargetFrameRate;
                 var t = Time.realtimeSinceStartup;
                 var sleepTime = currentFrameTime - t - 0.01f;
 
