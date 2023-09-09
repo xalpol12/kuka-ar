@@ -24,7 +24,6 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             TransformFactor = 5000;
             IsCirclePressed = false;
             PositioningService.Instance.BestFitPosition = bottomNavPanel.transform.position;
-            httpService = HttpService.Instance;
         
             MenuEvents.Event.OnPressConstantSelectorSlider += BottomNavOnMove;
             MenuEvents.Event.OnReleaseConstantSelectorSlider += BottomNavToDockPosition;

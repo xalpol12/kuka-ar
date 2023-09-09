@@ -46,7 +46,6 @@ namespace Project.Scripts.EventSystem.Controllers
             
             NextAnim = new List<AnimationFilter>();
             selectedMode = focusModeToggle.GetComponent<Toggle>();
-            noInternetText = noInternet.GetComponent<TMP_Text>();
             isQuitting = false;
         
             SetFadeController();

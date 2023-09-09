@@ -51,7 +51,6 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
         {
             ipInputField.GetComponent<Image>().sprite =
                 validationService.IpAddressValidation(ipInputField.GetComponent<TMP_InputField>().text);
-            httpService.ReloadAll();
         }
 
         private void UpdateState(string arg)
