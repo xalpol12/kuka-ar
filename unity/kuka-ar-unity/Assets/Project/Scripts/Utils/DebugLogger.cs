@@ -50,11 +50,6 @@ namespace Project.Scripts.Utils
             {
                 textField.text += exception.ToString();
             }
-
-            if (textField.text.Length > 30)
-            {
-                messages.Clear();
-            }
         }
 
         void OnDestroy()

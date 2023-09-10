@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
@@ -7,6 +8,7 @@ using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.EventSystem.Services.ServerConfig;
 using Project.Scripts.ImageSystem;
+using Project.Scripts.Utils;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -39,6 +41,8 @@ namespace Project.Scripts.EventSystem.Controllers
         private bool isAfterBugReport;
         private bool isQuitting;
         
+        private bool dataNeedsToBeLoaded;
+        
         private void Start()
         {
             validationService = IpValidationService.Instance;
@@ -56,6 +60,8 @@ namespace Project.Scripts.EventSystem.Controllers
             else if (isAfterBugReport)
             {
                 SetPrefabsActiveState(false,false,true);
+
+                dataNeedsToBeLoaded = true;
             }
             else
             {
@@ -63,10 +69,9 @@ namespace Project.Scripts.EventSystem.Controllers
 
                 menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 1;
                 serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 0;
+
+                dataNeedsToBeLoaded = true;
             }
-            
-            ServerInvoker.Invoker.GetFullData();
-            MutableImageRecognizer.Instance.LoadNewTargets();
 
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
             MenuEvents.Event.OnClickReloadServerData += RequestData;
@@ -201,6 +206,14 @@ namespace Project.Scripts.EventSystem.Controllers
                 AnimationStates.StandBy : AnimationStates.FadeIn;
             MoreOptionsAnim = AnimationStates.StandBy;
             FocusModeAnim = AnimationStates.StandBy;
+        }
+
+        private void Update()
+        {
+            if (!dataNeedsToBeLoaded) return;
+            ServerInvoker.Invoker.GetFullData();
+            MutableImageRecognizer.Instance.LoadNewTargets();
+            dataNeedsToBeLoaded = false;
         }
     }
 }
