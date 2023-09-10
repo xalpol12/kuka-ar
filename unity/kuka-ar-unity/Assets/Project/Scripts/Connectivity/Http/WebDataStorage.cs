@@ -9,6 +9,7 @@ namespace Project.Scripts.Connectivity.Http
     public class WebDataStorage : MonoBehaviour
     {
         public static WebDataStorage Instance;
+        public int AnimationTimeout;
         
         private void Awake()
         {

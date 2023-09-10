@@ -744,6 +744,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4048b8e79655af479c1f68816b85080, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  AnimationTimeout: 3
 --- !u!4 &318450783
 Transform:
   m_ObjectHideFlags: 0

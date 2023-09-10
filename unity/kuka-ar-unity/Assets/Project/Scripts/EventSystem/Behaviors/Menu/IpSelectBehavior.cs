@@ -262,10 +262,15 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private IEnumerator HandleDataRefresh()
         {
+            var time = 0f;
+            
             serverError.SetActive(false);
             selectController.HexSpinner.SetActive(true);
             while (selectController.DataStorage.LoadingSpinner.Any(spinner => spinner.Value))
             {
+                if (time > selectController.DataStorage.AnimationTimeout) break;
+                time += Time.deltaTime;
+                
                 yield return null;
             }
             selectController.HexSpinner.SetActive(false);

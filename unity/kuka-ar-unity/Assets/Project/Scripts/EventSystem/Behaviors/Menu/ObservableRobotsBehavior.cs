@@ -246,11 +246,16 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private IEnumerator DisplayLoadingSpinner()
         {
+            var time = 0f;
+            
             serverError.gameObject.SetActive(false);
             observableRobotsController.Spinner.SetActive(true);
             while (observableRobotsController.WebDataStorage.
                    LoadingSpinner.Any(spinner => spinner.Value))
             {
+                if (time > observableRobotsController.WebDataStorage.AnimationTimeout) break;
+                time += Time.deltaTime;
+
                 yield return null;
             }
             observableRobotsController.Spinner.SetActive(false);
