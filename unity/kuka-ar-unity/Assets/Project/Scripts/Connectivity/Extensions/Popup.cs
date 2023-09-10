@@ -57,13 +57,17 @@ namespace Project.Scripts.Connectivity.Extensions
         /// <summary>
         /// Tries to execute the given action. If it fails, shows popup window with error message.
         /// @param action - task to execute
-        /// @param @param customMessage - overrides system generated notification content message
         /// </summary>
-        public void Try(Action action, string customMessage = "")
+        public void Try(Action action,bool withPopup = false)
         {
             try
             {
                 action();
+                if (withPopup)
+                {
+                    
+                    StartCoroutine(ShowNotification());
+                }
                 return;
             }
             catch (Exception e)
@@ -78,32 +82,10 @@ namespace Project.Scripts.Connectivity.Extensions
                 }
             }
 
-            StartCoroutine(ShowNotification(action, content.Message));
-        }
-        
-        /// <summary>
-        /// Tries to execute the given action. Action is expected to success. Displays notification window.
-        /// @param action - task to execute
-        /// @param @param customMessage - overrides system generated notification content message
-        /// </summary>
-        public void TryWithSuccessExpected(Action action, string customMessage = "")
-        { 
-            var message = customMessage != "" ? customMessage : "Action completed";
-            try
-            {
-                action();
-                DefaultContent("Success", message, watcher.AddedSuccess);
-            }
-            catch (Exception e)
-            {
-                message = e.Message;
-                DefaultContent("Error", message, watcher.AddedFailed);
-            }
-           
-            StartCoroutine(ShowNotification(action, message));
+            StartCoroutine(ShowNotification());
         }
 
-        private IEnumerator ShowNotification(Action action, string customMessage)
+        private IEnumerator ShowNotification()
         {
             var newPopup = Instantiate(notification, notification.transform.parent, true);
             Notifications.Add(newPopup);
@@ -150,6 +132,11 @@ namespace Project.Scripts.Connectivity.Extensions
             }
 
             return false;
+        }
+
+        private void DetectOperationResult()
+        {
+            
         }
     }
 }

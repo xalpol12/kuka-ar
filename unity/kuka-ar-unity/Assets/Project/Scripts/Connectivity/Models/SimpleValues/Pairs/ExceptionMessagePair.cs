@@ -1,9 +1,8 @@
-using System;
-
 namespace Project.Scripts.Connectivity.Models.SimpleValues.Pairs
 {
     public struct ExceptionMessagePair
     {
+        public uint ExceptionCode { get; set; }
         public string ExceptionName { get; set; }
         public string ExceptionMessage { get; set; }
 

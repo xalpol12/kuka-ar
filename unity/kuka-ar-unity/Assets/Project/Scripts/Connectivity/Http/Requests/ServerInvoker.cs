@@ -2,6 +2,7 @@ using System.Collections;
 using Project.Scripts.Connectivity.Extensions;
 using Project.Scripts.Connectivity.Mapping;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
@@ -111,11 +112,34 @@ namespace Project.Scripts.Connectivity.Http.Requests
         public IEnumerator PostRobot(Robot? robot)
         {
             storage.LoadingSpinner["PostNewRobot"] = true;
-            if (robot != null) popup.TryWithSuccessExpected(
-                () => http.ExecuteRequest(new PostNewRobotRequest(robot.Value)),
-                "Robot has been added");
+            if (robot != null)
+            {
+                var status = http.ExecuteRequest(new PostNewRobotRequest(robot.Value));
+
+                while (!status.IsCompleted)
+                {
+                    yield return null;
+                }
+                
+                popup.Try(() =>
+                {
+                    var response = status.Result;
+                    if (response is ExceptionMessagePair exception)
+                    {
+                        if (exception.ExceptionCode == 400)
+                        {
+                            Debug.Log("update robot");
+                        }
+                    }
+                }, true);
+            }
             
             storage.LoadingSpinner["PostNewRobot"] = false;
+            yield return null;
+        }
+
+        public IEnumerator UpdateRobot()
+        {
             yield return null;
         }
     }
