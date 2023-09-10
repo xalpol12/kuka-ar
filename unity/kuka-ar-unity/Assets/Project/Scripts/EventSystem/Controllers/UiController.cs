@@ -40,9 +40,8 @@ namespace Project.Scripts.EventSystem.Controllers
         private int serverConfigDisplayState;
         private bool isAfterBugReport;
         private bool isQuitting;
-
-        //TODO: Figure out other solution to issue #27
-        private bool isStartingUpFromPlayerPrefs;
+        
+        private bool dataNeedsToBeLoaded;
         
         private void Start()
         {
@@ -61,6 +60,8 @@ namespace Project.Scripts.EventSystem.Controllers
             else if (isAfterBugReport)
             {
                 SetPrefabsActiveState(false,false,true);
+
+                dataNeedsToBeLoaded = true;
             }
             else
             {
@@ -69,7 +70,7 @@ namespace Project.Scripts.EventSystem.Controllers
                 menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 1;
                 serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 0;
 
-                isStartingUpFromPlayerPrefs = true;
+                dataNeedsToBeLoaded = true;
             }
 
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
@@ -209,10 +210,10 @@ namespace Project.Scripts.EventSystem.Controllers
 
         private void Update()
         {
-            if (!isStartingUpFromPlayerPrefs) return;
+            if (!dataNeedsToBeLoaded) return;
             ServerInvoker.Invoker.GetFullData();
             MutableImageRecognizer.Instance.LoadNewTargets();
-            isStartingUpFromPlayerPrefs = false;
+            dataNeedsToBeLoaded = false;
         }
     }
 }
