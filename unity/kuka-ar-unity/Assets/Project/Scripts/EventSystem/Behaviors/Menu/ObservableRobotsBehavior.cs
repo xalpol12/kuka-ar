@@ -25,9 +25,12 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private TMP_Text ipText;
         private TMP_Text nameText;
         private TMP_Text statusText;
+        private TMP_Text statusHintText;
+        private TMP_Text appName;
 
         private List<GameObject> allGridItems;
         private int lastSelected;
+        private bool isRobotChosen;
 
         private void Start()
         {
@@ -47,8 +50,11 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             ipText = constantPanel.Find("CurrentIpAddress").GetComponent<TMP_Text>();
             nameText = constantPanel.Find("CurrentRobotName").GetComponent<TMP_Text>();
             statusText = constantPanel.Find("ConnectionStatus").GetComponent<TMP_Text>();
+            statusHintText = constantPanel.Find("ConnectionStatusHint").GetComponent<TMP_Text>();
+            appName = constantPanel.Find("AppName").GetComponent<TMP_Text>();
             
             allGridItems = new List<GameObject>();
+            isRobotChosen = false;
 
             StartCoroutine(ServerInvoker.Invoker.GetRobots());
             
@@ -147,6 +153,14 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private IEnumerator OnSelectActions(int index)
         {
+            if (!isRobotChosen)
+            {
+                isRobotChosen = true;
+                statusText.gameObject.SetActive(isRobotChosen);
+                statusHintText.gameObject.SetActive(isRobotChosen);
+                appName.gameObject.SetActive(!isRobotChosen);
+            }
+            
             var ipAddress = observableRobotsController.WebDataStorage.Robots[index].IpAddress;
 
             StartCoroutine(ConnectionStatusCheckHandler(ipAddress));

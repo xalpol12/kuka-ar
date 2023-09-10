@@ -47,7 +47,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             if (id != uid) return;
             IsCirclePressed = true;
-            ServerInvoker.Invoker.GetConfiguredRobots();
+            StartCoroutine(ServerInvoker.Invoker.GetConfiguredRobots());
         }
 
         private void CirclePressed(int uid)

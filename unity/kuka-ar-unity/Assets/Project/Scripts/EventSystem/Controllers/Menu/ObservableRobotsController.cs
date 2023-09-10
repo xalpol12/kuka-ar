@@ -7,6 +7,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
     public class ObservableRobotsController : MonoBehaviour
     {
         public GameObject parentGrid;
+        
         internal SelectableStylingService StylingService;
         internal SelectableLogicService LogicService;
         internal WebDataStorage WebDataStorage;
