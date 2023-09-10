@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -57,63 +58,67 @@ namespace Project.Scripts.Connectivity.Extensions
         /// Tries to execute the given action. If it fails, shows popup window with error message.
         /// @param action - task to execute
         /// @param @param customMessage - overrides system generated notification content message
-        /// @param @param withSuccess - allows to display message on action success
-        /// @param @optional firstIteration - param to avoid error where first item of notification was static
         /// </summary>
-        public void Try(Action action, string customMessage = "", bool firstIteration = true)
+        public void Try(Action action, string customMessage = "")
         {
-            var newPopup = Instantiate(notification, notification.transform.parent, true);
-            Notifications.Add(newPopup);
-            if (Notifications.Count == 1 && firstIteration)
-            {
-                Notifications = new List<GameObject>();
-                Try(action, customMessage,  false);
-            }
-
             try
             {
                 action();
+                return;
             }
             catch (Exception e)
             {
-                DefaultContent("Error",e.Message, watcher.Wifi);
+                DefaultContent("Error", e.Message, watcher.Wifi);
                 
                 if (e is WebException or HttpRequestException or SocketException or AggregateException)
                 {
                     content.Message = e.InnerException?.InnerException?.Message.Split("(")[1];
                     content.Icon = watcher.NoWifi;
+                    if (HasDuplicates()) return;
                 }
             }
-            
-            NotificationsContent.Add(content);
-            StartCoroutine(popupBehavior.SlideIn(newPopup, content));
-        }
 
+            StartCoroutine(ShowNotification(action, content.Message));
+        }
+        
+        /// <summary>
+        /// Tries to execute the given action. Action is expected to success. Displays notification window.
+        /// @param action - task to execute
+        /// @param @param customMessage - overrides system generated notification content message
+        /// </summary>
         public void TryWithSuccessExpected(Action action, string customMessage = "")
-        {
-            var newPopup = Instantiate(notification, notification.transform.parent, true);
-            Notifications.Add(newPopup);
-            DefaultContent("Success", "Robot added to database", watcher.AddedSuccess);
-            
-           try
+        { 
+            var message = customMessage != "" ? customMessage : "Action completed";
+            try
             {
                 action();
+                DefaultContent("Success", message, watcher.AddedSuccess);
             }
             catch (Exception e)
             {
-                DefaultContent("Error", e.Message, watcher.AddedFailed);
+                message = e.Message;
+                DefaultContent("Error", message, watcher.AddedFailed);
             }
+           
+            StartCoroutine(ShowNotification(action, message));
+        }
+
+        private IEnumerator ShowNotification(Action action, string customMessage)
+        {
+            var newPopup = Instantiate(notification, notification.transform.parent, true);
+            Notifications.Add(newPopup);
             
             NotificationsContent.Add(content);
             StartCoroutine(popupBehavior.SlideIn(newPopup, content));
+            yield return null;
         }
-        
+
         private void DefaultContent(string header,string message, Sprite icon)
         {
             content = new PopupContent
             {
-                Header = header,
-                Message = message,
+                Header = header.RemoveDiacritics(),
+                Message = message.RemoveDiacritics(),
                 Timestamp = DateTime.Now.ToString("HH:mm"),
                 DateTimeMark = DateTime.Now,
                 Icon = icon,
@@ -132,6 +137,19 @@ namespace Project.Scripts.Connectivity.Extensions
             {
                 GrabState = 0;
             }
+        }
+
+        private bool HasDuplicates()
+        {
+            for (var i = 0; i < NotificationsContent.Count - 1; i++)
+            {
+                if (NotificationsContent[^1].Message == content.Message)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

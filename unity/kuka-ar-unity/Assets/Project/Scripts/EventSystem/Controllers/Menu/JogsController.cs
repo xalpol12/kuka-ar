@@ -8,10 +8,9 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
     public class JogsController : MonoBehaviour
     {
         public int id;
-        public float transformFactor;
+        [Range(0f,200f)] public float transformFactor;
         public GameObject jogs;
-        private bool showJogs;
-        private int defaultTransformFactor;
+        internal bool ShowJogs;
         internal JogsControlService Service;
         internal LogicStates JogsTrigger;
 
@@ -19,11 +18,8 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             Service = JogsControlService.Instance;
         
-            showJogs = false;
+            ShowJogs = false;
             JogsTrigger = LogicStates.Waiting;
-            defaultTransformFactor = 10;
-        
-            ValueCheck();
         
             MenuEvents.Event.OnClickJog += OnClickJog;
         }
@@ -31,16 +27,8 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         private void OnClickJog(int gui)
         {
             if (id != gui) return;
-            showJogs = !showJogs;
-            JogsTrigger = showJogs ? LogicStates.Running : LogicStates.Hiding;
-        }
-
-        private void ValueCheck()
-        {
-            if (transformFactor is > 200f or < 0f)
-            {
-                transformFactor = defaultTransformFactor;
-            }
+            ShowJogs = !ShowJogs;
+            JogsTrigger = ShowJogs ? LogicStates.Running : LogicStates.Hiding;
         }
     }
 }

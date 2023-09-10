@@ -68,7 +68,8 @@ namespace Project.Scripts.EventSystem.Behaviors
                     controller.MoreOptionsAnim = AnimationStates.FadeOut;
                     controller.NextAnim.Add(AnimationFilter.MenuIn);
                     StartCoroutine(FadeOut(moreOptionsCanvasGroup));
-                } else if (controller.serverConfig.activeSelf)
+                } else if (controller.serverConfig.activeSelf &&
+                           !string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")))
                 {
                     controller.ServerConfigAnim = AnimationStates.FadeOut;
                     controller.NextAnim.Add(AnimationFilter.MoreOptionsIn);

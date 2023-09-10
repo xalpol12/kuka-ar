@@ -166,3 +166,4 @@ RobotData/
 RobotStickers/
 
 java/kukaComm/pom.xml
+java/kukaComm/src/main/resources/application.properties

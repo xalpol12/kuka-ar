@@ -9,13 +9,14 @@ namespace Project.Scripts.Connectivity.Http
     public class WebDataStorage : MonoBehaviour
     {
         public static WebDataStorage Instance;
+        public int AnimationTimeout;
         
         private void Awake()
         {
             Instance = this;
         }
 
-        public const int ConnectionTimeOutSel = 1000;
+        public readonly int ConnectionTimeOut = 1000;
         public List<Robot> ConfiguredRobots { get; set; } = new List<Robot>();
         public List<Robot> Robots { get; set; } = new List<Robot>();
         public List<string> AvailableIps { get; set; } = new List<string>();
@@ -23,6 +24,15 @@ namespace Project.Scripts.Connectivity.Http
         public List<string> CategoryNames { get; set; } = new List<string>();
         public ConnectionStatus RobotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
         public bool IsAfterRobotSave { get; set; } = false;
+
+        public Dictionary<string, bool> LoadingSpinner { get; set; } = new Dictionary<string, bool>()
+        {
+            { "GetRobots", false },
+            { "GetConfigured", false },
+            { "GetStickers", false },
+            { "PostNewRobot", false },
+        };
+        
         internal Robot Response;
         internal ExceptionMessagePair PostError;
     }

@@ -1,38 +1,46 @@
+using System;
 using System.Net.Http;
+using System.Net.Sockets;
 using System.Threading.Tasks;
+using Project.Scripts.Connectivity.Extensions;
 using Project.Scripts.EventSystem.Enums;
-using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Http.Requests
 {
-    public class PingChosenIpRequest : IHttpRequest<ConnectionStatus>
+    public class PingChosenIpRequest : IHttpRequest<bool>
     {
         private readonly WebDataStorage storage = WebDataStorage.Instance;
-        private readonly string Ip;
+        private readonly string ip;
 
         public PingChosenIpRequest(string ip)
         {
-            Ip = ip;
+            this.ip = ip;
         }
 
-        public async Task<ConnectionStatus> Execute(HttpClient client)
+        public async Task<bool> Execute(HttpClient client)
         {
-            var ping = new Ping(Ip);
-            var time = 0;
-            while (!ping.isDone)
+            using var tcpClient = new TcpClient();
+            var connectTask = tcpClient.ConnectAsync(ip, 8080);
+            var timeoutTask = Task.Delay(storage.ConnectionTimeOut);
+                
+            var completedTask = await Task.WhenAny(connectTask, timeoutTask);
+            try
             {
-                if (time > WebDataStorage.ConnectionTimeOutSel)
-                {
-                    break;
-                }
-
-                time -= ping.time;
-                storage.RobotConnectionStatus = ConnectionStatus.Connecting;
+                await completedTask;
             }
-        
-            storage.RobotConnectionStatus = time > WebDataStorage.ConnectionTimeOutSel ?
-                ConnectionStatus.Disconnected : ConnectionStatus.Connected;
-            return storage.RobotConnectionStatus;
+            catch (Exception)
+            {
+                LabelOverride.Label.OverrideStatusLabel(ConnectionStatus.Disconnected.ToString());
+                return false;
+            }
+
+            if (timeoutTask.IsCompleted)
+            {
+                LabelOverride.Label.OverrideStatusLabel(ConnectionStatus.Disconnected.ToString());
+                return false;
+            }
+
+            return connectTask.Status == TaskStatus.RanToCompletion && tcpClient.Connected;
         }
     }
 }

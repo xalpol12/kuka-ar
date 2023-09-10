@@ -47,16 +47,15 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             {
                 StartCoroutine(ShowJogs());
             }
-            else if (jogsController.JogsTrigger == LogicStates.Hiding)
+            else if (jogsController.JogsTrigger == LogicStates.Hiding || 
+                     !jogsController.Service.IsBottomNavDocked || jogsController.Service.IsAddRobotDialogOpen)
             {
                 StartCoroutine(HideJogs());
             }
 
-            if (logicService.SelectedIpAddress != logicService.PreviousSelectedIpAddress)
-            {
-                ConfigureTrackedRobotJogsData();
-                logicService.PreviousSelectedIpAddress = logicService.SelectedIpAddress;
-            }
+            if (logicService.SelectedIpAddress == logicService.PreviousSelectedIpAddress) return;
+            ConfigureTrackedRobotJogsData();
+            logicService.PreviousSelectedIpAddress = logicService.SelectedIpAddress;
         }
 
         private IEnumerator HideJogs()
@@ -75,7 +74,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                         toggleActive = true;
                         yield return null;
 
-                        jogsController.JogsTrigger = LogicStates.Waiting; 
+                        jogsController.JogsTrigger = LogicStates.Waiting;
+                        jogsController.ShowJogs = false;
                         break;
                     }
                 }
@@ -90,6 +90,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                         yield return null;
                     
                         jogsController.JogsTrigger = LogicStates.Waiting;
+                        jogsController.ShowJogs = false;
                         break;
                     }  
                 }

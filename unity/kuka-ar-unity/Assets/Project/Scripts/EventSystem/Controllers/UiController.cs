@@ -38,7 +38,7 @@ namespace Project.Scripts.EventSystem.Controllers
         private int serverConfigDisplayState;
         private bool isAfterBugReport;
         private bool isQuitting;
-
+        
         private void Start()
         {
             validationService = IpValidationService.Instance;
@@ -46,7 +46,6 @@ namespace Project.Scripts.EventSystem.Controllers
             
             NextAnim = new List<AnimationFilter>();
             selectedMode = focusModeToggle.GetComponent<Toggle>();
-            noInternetText = noInternet.GetComponent<TMP_Text>();
             isQuitting = false;
         
             SetFadeController();

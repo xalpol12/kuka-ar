@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Project.Scripts.Connectivity.Models.AggregationClasses
 {
     public static class Diacritics
     {
-        private static readonly Dictionary<string, string> foreign_characters = new Dictionary<string, string> {
+        private static readonly Dictionary<string, string> ForeignCharacters = new Dictionary<string, string> {
         { "äæǽ", "ae" },
         { "öœ", "oe" },
         { "ü", "ue" },
@@ -96,34 +97,30 @@ namespace Project.Scripts.Connectivity.Models.AggregationClasses
         { "я", "ya" },
     };
 
-        public static char RemoveDiacritics(this char c){
-            foreach(KeyValuePair<string, string> entry in foreign_characters)
+        public static char RemoveDiacritics(this char c)
+        {
+            foreach (var entry in ForeignCharacters
+                         .Where(entry => entry.Key.IndexOf (c) != -1))
             {
-                if(entry.Key.IndexOf (c) != -1)
-                {
-                    return entry.Value[0];
-                }
+                return entry.Value[0];
             }
+
             return c;
         }
 
         public static string RemoveDiacritics(this string s) 
         {
-            //StringBuilder sb = new StringBuilder ();
-            string text = "";
+            var text = "";
 
-
-            foreach (char c in s)
+            foreach (var c in s)
             {
-                int len = text.Length;
+                var len = text.Length;
 
-                foreach(KeyValuePair<string, string> entry in foreign_characters)
+                foreach (var entry in ForeignCharacters
+                             .Where(entry => entry.Key.IndexOf (c) != -1))
                 {
-                    if(entry.Key.IndexOf (c) != -1)
-                    {
-                        text += entry.Value;
-                        break;
-                    }
+                    text += entry.Value;
+                    break;
                 }
 
                 if (len == text.Length) {

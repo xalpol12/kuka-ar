@@ -24,7 +24,6 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             TransformFactor = 5000;
             IsCirclePressed = false;
             PositioningService.Instance.BestFitPosition = bottomNavPanel.transform.position;
-            httpService = HttpService.Instance;
         
             MenuEvents.Event.OnPressConstantSelectorSlider += BottomNavOnMove;
             MenuEvents.Event.OnReleaseConstantSelectorSlider += BottomNavToDockPosition;
@@ -48,7 +47,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             if (id != uid) return;
             IsCirclePressed = true;
-            ServerInvoker.Invoker.GetConfiguredRobots();
+            StartCoroutine(ServerInvoker.Invoker.GetConfiguredRobots());
         }
 
         private void CirclePressed(int uid)

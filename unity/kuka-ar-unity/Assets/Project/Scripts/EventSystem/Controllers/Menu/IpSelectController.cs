@@ -12,12 +12,14 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
     {
         public int id;
         public GameObject ipSelector;
+
         internal SelectableStylingService StylingService;
+        internal AddNewRobotService AddNewRobotService;
+        internal PositioningService PositioningService;
         internal WebDataStorage DataStorage;
         internal ButtonType ElementClicked;
         internal ButtonType PrevElementClicked;
-        internal AddNewRobotService AddNewRobotService;
-        internal PositioningService PositioningService;
+        internal GameObject HexSpinner;
         internal LogicStates ShowOptionsController;
         internal int TransformFactor;
 
@@ -33,11 +35,12 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             AddNewRobotService = AddNewRobotService.Instance;
             PositioningService = PositioningService.Instance;
             DataStorage = WebDataStorage.Instance;
-        
+
             showOptions = false;
+            HexSpinner = ipSelector.transform.Find("LoadingProgress").GetComponent<Transform>().gameObject;
             ShowOptionsController = LogicStates.Waiting;
             TransformFactor = 7500;
-        
+
             var parent = ipSelector.transform.parent;
             ipField = parent.Find("IpAddress").GetComponent<Image>();
             categoryField = parent.Find("ChosenCategory").GetComponent<Image>();

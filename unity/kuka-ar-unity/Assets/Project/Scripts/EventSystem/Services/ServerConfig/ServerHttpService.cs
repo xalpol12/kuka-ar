@@ -1,4 +1,7 @@
+using System;
 using System.Collections;
+using System.Net.Sockets;
+using System.Threading.Tasks;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,27 +28,19 @@ namespace Project.Scripts.EventSystem.Services.ServerConfig
             pingSuccessIcon = Resources.Load<Sprite>("Icons/cloudSuccessIcon");
             pingWaitIcon = Resources.Load<Sprite>("Icons/cloudWaiting");
             pingFailedIcon = Resources.Load<Sprite>("Icons/cloudFailedIcon");
-        
-            timeout /= 1000;
         }
 
         internal IEnumerator PingOperation(string ip)
         {
-            var ping = new Ping(ip);
-            var time = 0;
-            while (!ping.isDone)
+            var state = PingHostAndPort(ip);
+            while (!state.IsCompleted)
             {
-                if (time > timeout)
-                {
-                    break;
-                }
-
-                time -= ping.time;
                 SwapCloud(ConnectionStatus.Connecting);
-                yield return new WaitForSeconds(0.05f);
+                yield return null;
             }
-        
-            SwapCloud(time > timeout ? ConnectionStatus.Disconnected : ConnectionStatus.Connected);
+            
+            SwapCloud(state.Result ? ConnectionStatus.Connected : ConnectionStatus.Disconnected);
+            yield return null;
         }
 
         private void SwapCloud(ConnectionStatus pingStatus)
@@ -62,6 +57,30 @@ namespace Project.Scripts.EventSystem.Services.ServerConfig
                     cloudIcon.sprite = pingFailedIcon;
                     break;
             }
+        }
+        
+        private async Task<bool> PingHostAndPort(string host)
+        {
+            using var tcpClient = new TcpClient();
+            var connectTask = tcpClient.ConnectAsync(host, 8080);
+            var timeoutTask = Task.Delay(timeout);
+                
+            var completedTask = await Task.WhenAny(connectTask, timeoutTask);
+            try
+            {
+                await completedTask;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            if (timeoutTask.IsCompleted)
+            {
+                return false;
+            }
+
+            return connectTask.Status == TaskStatus.RanToCompletion && tcpClient.Connected;
         }
     }
 }

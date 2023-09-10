@@ -98,7 +98,7 @@ namespace Project.Scripts.ImageSystem
                 }
                 else
                 {
-                    Texture2D texture = new Texture2D(512, 512);
+                    var texture = new Texture2D(512, 512);
                     texture.LoadImage(entry.Value);
                     texture.Apply();
                     textureDict.Add(entry.Key, texture);

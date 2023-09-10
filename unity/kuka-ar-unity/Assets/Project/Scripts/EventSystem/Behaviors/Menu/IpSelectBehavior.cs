@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
@@ -16,27 +17,49 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
     public class IpSelectBehavior : MonoBehaviour
     {
         private IpSelectController selectController;
+        private GameObject ipList;
+        private GameObject grid;
+        private GameObject gridItem;
+        private GameObject serverError;
+
+        private TMP_Text buttonText;
+        private TMP_Text chosenIpText;
+        private TMP_Text chosenNameText;
+        private TMP_Text chosenCategoryText;
+
         private List<GameObject> allIpAddresses;
         private Vector3 selectIpHomePosition;
         private bool isDialogOpen;
         private void Start()
         {
             selectController = GetComponent<IpSelectController>();
+            ipList = selectController.ipSelector.transform.Find("IpAddressList").GetComponent<RectTransform>()
+                .gameObject;
+            grid = ipList.transform.Find("IpAddressGrid").GetComponent<RectTransform>().gameObject;
+            gridItem = grid.transform.Find("IpAddressGridElement").GetComponent<RectTransform>().gameObject;
+            serverError = grid.transform.Find("ServerError").gameObject;
+
+            var parent = selectController.ipSelector.transform.parent;
+            buttonText = parent.transform.gameObject
+                .transform.Find("Button").GetComponent<Button>().gameObject
+                .transform.Find("SaveCloseButton").GetComponent<TMP_Text>();
+            chosenIpText = parent.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
+                .Find("Label").GetComponent<TMP_Text>();
+            chosenNameText = parent.Find("ChosenCategory").GetComponent<RectTransform>().gameObject.transform
+                .Find("CategoryLabel").GetComponent<TMP_Text>();
+            chosenCategoryText = parent.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
+                .Find("NameLabel").GetComponent<TMP_Text>();
+
             allIpAddresses = new List<GameObject>();
             isDialogOpen = false;
         
             InitListLogic();
 
             selectIpHomePosition = selectController.ipSelector.transform.position;
-            selectController.ipSelector.transform.Find("IpAddressList").GetComponent<RectTransform>()
-                .transform.Find("IpAddressGrid").GetComponent<RectTransform>().gameObject
-                .transform.Find("ServerError").GetComponent<RectTransform>().gameObject
-                .transform.Find("TryAgain").GetComponent<Button>().onClick.AddListener(() =>
+            serverError.transform.Find("TryAgain").GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    ServerInvoker.Invoker.GetConfiguredRobots();
-                    if (selectController.DataStorage.ConfiguredRobots.Count <= 0) return;
-                    ServerFailure(false);
-                    InitListLogic();
+                    StartCoroutine(ServerInvoker.Invoker.GetConfiguredRobots());
+                    StartCoroutine(HandleDataRefresh());
                 });
         }
 
@@ -55,22 +78,15 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             {
                 StartCoroutine(HideIpSelectDialog());
             }
-        
-            if (Input.GetKey(KeyCode.Escape) && isDialogOpen)
-            {
-                selectController.ShowOptionsController = LogicStates.Hiding;
-                StartCoroutine(HideIpSelectDialog());
-            }
-        
+
+            if (!Input.GetKey(KeyCode.Escape) || !isDialogOpen) return;
+            selectController.ShowOptionsController = LogicStates.Hiding;
+            StartCoroutine(HideIpSelectDialog());
+
         }
 
         private void InitListLogic()
         {
-            var parentComponent = selectController.ipSelector.transform.parent;
-            var ipList = selectController.ipSelector.transform.Find("IpAddressList").GetComponent<RectTransform>();
-            var grid = ipList.transform.Find("IpAddressGrid").GetComponent<RectTransform>().gameObject;
-            var gridItem = grid.transform.Find("IpAddressGridElement").GetComponent<RectTransform>().gameObject;
-
             if (selectController.DataStorage.ConfiguredRobots.Count == 0)
             {
                 ServerFailure(true);
@@ -82,7 +98,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
                 selectController.StylingService.MarkAsUnselected(allIpAddresses);
-                OnIpSelect(parentComponent,gridItem.transform.GetSiblingIndex());
+                OnIpSelect(gridItem.transform.GetSiblingIndex());
                 gridItem.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
             });
             allIpAddresses.Add(gridItem);
@@ -107,7 +123,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                     {
                         return;
                     }
-                    OnIpSelect(parentComponent, newIpAddress.transform.GetSiblingIndex() - 1);
+                    OnIpSelect(newIpAddress.transform.GetSiblingIndex() - 1);
                     newIpAddress.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
                 });
             
@@ -152,7 +168,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             yield return null;
         }
 
-        private void OnIpSelect(Transform parent, int index)
+        private void OnIpSelect(int index)
         {
             var http = new Robot();
             if (index < selectController.DataStorage.ConfiguredRobots.Count)
@@ -165,20 +181,16 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             {
                 case ButtonType.IpAddress:
                     mod  %= selectController.DataStorage.AvailableIps.Count;
-                    parent.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
-                        .Find("Label").GetComponent<TMP_Text>().text = selectController.DataStorage.AvailableIps[mod];
+                    chosenIpText.text = selectController.DataStorage.AvailableIps[mod];
                     break;
                 case ButtonType.Category:
                 {
                     mod %= selectController.DataStorage.CategoryNames.Count;
-                    parent.Find("ChosenCategory").GetComponent<RectTransform>().gameObject.transform
-                            .Find("CategoryLabel").GetComponent<TMP_Text>().text =
-                        selectController.DataStorage.CategoryNames[mod];
+                    chosenNameText.text = selectController.DataStorage.CategoryNames[mod];
                     break;
                 }
                 case ButtonType.RobotName:
-                    parent.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
-                        .Find("NameLabel").GetComponent<TMP_Text>().text = http.Name;
+                    chosenCategoryText.text = http.Name;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -187,7 +199,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private IEnumerator UpdateListData()
         {
-            var parentComponent = selectController.ipSelector.transform.parent;
             if (selectController.PrevElementClicked != selectController.ElementClicked)
             {
                 selectController.StylingService.MarkAsUnselected(allIpAddresses);
@@ -196,14 +207,10 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
             foreach (var (item, index) in allIpAddresses.WithIndex())
             {
-                var temp = "";
+                string temp;
                 var currentText = item.transform.Find("RobotIp").GetComponent<TMP_Text>().text;
-                if (currentText == parentComponent.Find("IpAddress").GetComponent<RectTransform>()
-                        .gameObject.transform.Find("Label").GetComponent<TMP_Text>().text || 
-                    currentText == parentComponent.Find("ChosenCategory").GetComponent<RectTransform>()
-                        .gameObject.transform.Find("CategoryLabel").GetComponent<TMP_Text>().text ||
-                    currentText == parentComponent.Find("RobotName").GetComponent<RectTransform>()
-                        .gameObject.transform.Find("NameLabel").GetComponent<TMP_Text>().text)
+                if (currentText == chosenIpText.text || currentText == chosenNameText.text ||
+                    currentText == chosenCategoryText.text)
                 {
                     item.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
                 }
@@ -248,13 +255,30 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private void ServerFailure(bool state)
         {
-            var view = selectController.ipSelector.transform.Find("IpAddressList").GetComponent<RectTransform>()
-                .transform.Find("IpAddressGrid").GetComponent<RectTransform>().gameObject;
-            view.transform.Find("IpAddressGridElement").GetComponent<RectTransform>().gameObject.SetActive(!state);
-            selectController.ipSelector.transform.parent.transform.gameObject
-                .transform.Find("Button").GetComponent<Button>().gameObject
-                .transform.Find("SaveCloseButton").GetComponent<TMP_Text>().text = state ? "Close" : "Save";
-            view.transform.Find("ServerError").GetComponent<RectTransform>().gameObject.SetActive(state);
+            gridItem.SetActive(!state);
+            buttonText.text = state ? "Close" : "Save";
+            serverError.SetActive(state);
+        }
+
+        private IEnumerator HandleDataRefresh()
+        {
+            var time = 0f;
+            
+            serverError.SetActive(false);
+            selectController.HexSpinner.SetActive(true);
+            while (selectController.DataStorage.LoadingSpinner.Any(spinner => spinner.Value))
+            {
+                if (time > selectController.DataStorage.AnimationTimeout) break;
+                time += Time.deltaTime;
+                
+                yield return null;
+            }
+            selectController.HexSpinner.SetActive(false);
+            serverError.SetActive(true);
+            
+            if (selectController.DataStorage.ConfiguredRobots.Count == 0) yield break;
+            ServerFailure(false);
+            InitListLogic();
         }
 
         private IEnumerator ResetStates()
