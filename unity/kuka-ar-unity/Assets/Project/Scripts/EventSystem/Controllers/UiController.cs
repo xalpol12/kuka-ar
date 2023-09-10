@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
@@ -7,6 +8,7 @@ using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.EventSystem.Services.ServerConfig;
 using Project.Scripts.ImageSystem;
+using Project.Scripts.Utils;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -38,6 +40,9 @@ namespace Project.Scripts.EventSystem.Controllers
         private int serverConfigDisplayState;
         private bool isAfterBugReport;
         private bool isQuitting;
+
+        //TODO: Figure out other solution to issue #27
+        private bool isStartingUpFromPlayerPrefs;
         
         private void Start()
         {
@@ -63,10 +68,9 @@ namespace Project.Scripts.EventSystem.Controllers
 
                 menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 1;
                 serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 0;
+
+                isStartingUpFromPlayerPrefs = true;
             }
-            
-            ServerInvoker.Invoker.GetFullData();
-            MutableImageRecognizer.Instance.LoadNewTargets();
 
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
             MenuEvents.Event.OnClickReloadServerData += RequestData;
@@ -201,6 +205,14 @@ namespace Project.Scripts.EventSystem.Controllers
                 AnimationStates.StandBy : AnimationStates.FadeIn;
             MoreOptionsAnim = AnimationStates.StandBy;
             FocusModeAnim = AnimationStates.StandBy;
+        }
+
+        private void Update()
+        {
+            if (!isStartingUpFromPlayerPrefs) return;
+            ServerInvoker.Invoker.GetFullData();
+            MutableImageRecognizer.Instance.LoadNewTargets();
+            isStartingUpFromPlayerPrefs = false;
         }
     }
 }
