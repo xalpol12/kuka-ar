@@ -44,6 +44,11 @@ namespace Project.Scripts.Connectivity.Extensions
             };
         }
 
+        internal void DeleteItem(GameObject deleteGameObject)
+        {
+            Destroy(deleteGameObject);
+        }
+
         internal IEnumerator SlideIn(GameObject notification, PopupContent content, int? index = null)
         {
             int stop;

@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
+using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Extensions
@@ -58,14 +61,14 @@ namespace Project.Scripts.Connectivity.Extensions
         /// Tries to execute the given action. If it fails, shows popup window with error message.
         /// @param action - task to execute
         /// </summary>
-        public void Try(Action action,bool withPopup = false)
+        public void Try(Action action,Robot result = default, RequestType type = RequestType.PATCH)
         {
             try
             {
                 action();
-                if (withPopup)
+                if (!Equals(result, default(Robot)))
                 {
-                    
+                    DetectOperationType(result, type);
                     StartCoroutine(ShowNotification());
                 }
                 return;
@@ -74,15 +77,45 @@ namespace Project.Scripts.Connectivity.Extensions
             {
                 DefaultContent("Error", e.Message, watcher.Wifi);
                 
-                if (e is WebException or HttpRequestException or SocketException or AggregateException)
+                if (e is WebException or SocketException or AggregateException)
                 {
                     content.Message = e.InnerException?.InnerException?.Message.Split("(")[1];
                     content.Icon = watcher.NoWifi;
                     if (HasDuplicates()) return;
+                } else if (e is HttpRequestException)
+                {
+
+                    try
+                    {
+                        var error = JsonConvert.DeserializeObject<ExceptionMessagePair>(e.Message);
+                        content = new PopupContent
+                        {
+                            Header = $"{error.ExceptionName} {error.ExceptionCode}",
+                            Message = error.ExceptionMessage,
+                            Icon = type == RequestType.POST ? watcher.AddedFailed : watcher.NoWifi,
+                        };
+                    }
+                    catch (JsonReaderException jsonReaderException)
+                    {
+                        DefaultContent("Http request error", jsonReaderException.Message, watcher.AddedFailed);
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine($"Error occured. {exception.Message}");
+                    }
                 }
             }
-
+            
+            SetTimestamp();
             StartCoroutine(ShowNotification());
+        }
+
+        public void Discard(int index = -1)
+        {
+            var itemIndex = index == -1 ? NotificationsContent.Count - 1 : index;
+            popupBehavior.DeleteItem(Notifications[itemIndex]);
+            NotificationsContent.RemoveAt(itemIndex);
+            NotificationsContent.RemoveAt(itemIndex);
         }
 
         private IEnumerator ShowNotification()
@@ -101,10 +134,10 @@ namespace Project.Scripts.Connectivity.Extensions
             {
                 Header = header.RemoveDiacritics(),
                 Message = message.RemoveDiacritics(),
-                Timestamp = DateTime.Now.ToString("HH:mm"),
-                DateTimeMark = DateTime.Now,
                 Icon = icon,
             };
+            
+            SetTimestamp();
         }
 
         private void DragPopup(GameObject pressed)
@@ -134,9 +167,33 @@ namespace Project.Scripts.Connectivity.Extensions
             return false;
         }
 
-        private void DetectOperationResult()
+        private void DetectOperationType(Robot response, RequestType type)
         {
+            if (type == RequestType.POST)
+            {
+                content = new PopupContent
+                {
+                    Header = "Robot added",
+                    Message = $"Machine with name {response.Name} has been added",
+                    Icon = watcher.AddedSuccess
+                };
+            } else if (type == RequestType.PUT)
+            {
+                content = new PopupContent
+                {
+                    Header = "Robot",
+                    Message = $"Machine with name {response.Name} has been updated",
+                    Icon = watcher.AddedSuccess // TODO: future update icon
+                };
+            }
             
+            SetTimestamp();
+        }
+
+        private void SetTimestamp()
+        {
+            content.Timestamp = DateTime.Now.ToString("HH:mm");
+            content.DateTimeMark = DateTime.Now;
         }
     }
 }
