@@ -1,5 +1,6 @@
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.EventSystem.Services.Menu;
+using Project.Scripts.TrackedRobots;
 using UnityEngine;
 
 namespace Project.Scripts.EventSystem.Controllers.Menu
@@ -7,7 +8,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
     public class ObservableRobotsController : MonoBehaviour
     {
         public GameObject parentGrid;
-        
+        public TrackedRobotsHandler robotsHandler;
         internal SelectableStylingService StylingService;
         internal SelectableLogicService LogicService;
         internal WebDataStorage WebDataStorage;

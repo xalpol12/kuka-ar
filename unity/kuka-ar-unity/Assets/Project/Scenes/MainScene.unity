@@ -744,7 +744,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4048b8e79655af479c1f68816b85080, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AnimationTimeout: 3
+  animationTimeout: 0
 --- !u!4 &318450783
 Transform:
   m_ObjectHideFlags: 0
@@ -2296,6 +2296,11 @@ PrefabInstance:
       propertyPath: m_RaycastTarget
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: robotsHandler
+      value: 
+      objectReference: {fileID: 1022678924}
     - target: {fileID: 5675344240891989482, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_SizeDelta.y
@@ -2421,6 +2426,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8835759804573029597, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: robotHandler
+      value: 
+      objectReference: {fileID: 1022678924}
     - target: {fileID: 9094602471462284848, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: Logging
