@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.ExceptionHandling;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Parsing.OutputJson;
 using Project.Scripts.Multithreading;
 using Project.Scripts.Utils;
@@ -10,6 +12,7 @@ namespace Project.Scripts.TrackedRobots
 {
     public class TrackedRobotsHandler : MonoBehaviour
     {
+        [Tooltip("Prefab to be displayed as a robot's base and tcp representation")]
         public GameObject prefab;
         
         [Tooltip("Minimal difference between two position update values to be registered [in meters]")]
@@ -19,15 +22,29 @@ namespace Project.Scripts.TrackedRobots
         [Tooltip("Minimal difference between two rotation update values to be registered [in degrees]")]
         [Range(0f, 360f)]
         public float rotationThreshold = 1f;
+
+        public event EventHandler<KRLJoints> ActiveJointsUpdated;
         
-        public Dictionary<string, TrackedRobotModel> trackedRobots;
-        
+        private Dictionary<string, TrackedRobotModel> trackedRobots;
         private HashSet<string> enqueuedIps;
 
         void Start()
         {
             trackedRobots = new Dictionary<string, TrackedRobotModel>();
             enqueuedIps = new HashSet<string>();
+        }
+
+        public void ChangeCurrentlyActiveRobot(string robotIP)
+        {
+            if (trackedRobots.TryGetValue(robotIP, out var selectedRobot))
+            {
+                selectedRobot.JointsValueUpdated += OnJointsValueUpdated;
+            }
+        }
+        
+        private void OnJointsValueUpdated(object sender, KRLJoints e)
+        {
+            ActiveJointsUpdated?.Invoke(this, e);
         }
 
         public void ReceivePackageFromWebsocket(OutputWithErrors newData)
@@ -95,8 +112,8 @@ namespace Project.Scripts.TrackedRobots
             }
         }
         #endif
-        
-        void Update()
+
+        private void Update()
         {
             foreach (var trackedRobot in trackedRobots.Values)
             {

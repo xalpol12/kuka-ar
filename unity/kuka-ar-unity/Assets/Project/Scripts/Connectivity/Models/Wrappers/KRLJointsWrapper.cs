@@ -4,7 +4,7 @@ using Project.Scripts.Connectivity.Models.KRLValues;
 
 namespace Project.Scripts.Connectivity.Models.Wrappers
 {
-    public class KRLJointsWrapper : IKRLWrapper<KRLValue>
+    public class KRLJointsWrapper : IKRLWrapper
     {
         public event EventHandler<KRLJoints> ValueUpdated;
         
