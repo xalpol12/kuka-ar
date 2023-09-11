@@ -2,7 +2,9 @@
     "name": "DebugEventSystem",
     "rootNamespace": "",
     "references": [
-        "GUID:378bd5616a56dad4f91ebfcbec2194c0"
+        "GUID:378bd5616a56dad4f91ebfcbec2194c0",
+        "GUID:767269c2bcccae44bb11534738dda684",
+        "GUID:c33d397f998e1d141b74148276071b9d"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
