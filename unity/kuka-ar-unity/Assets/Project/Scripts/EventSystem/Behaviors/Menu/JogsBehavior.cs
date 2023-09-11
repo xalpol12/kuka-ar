@@ -154,22 +154,22 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private void ConfigureTrackedRobotJogsData()
         {
-            if (!string.IsNullOrWhiteSpace(logicService.SelectedIpAddress) && 
-                handler.trackedRobots.TryGetValue(logicService.SelectedIpAddress, out var robot))
-            {
-                robot.ActiveJointsUpdated += (sender,e) => UpdateJogsDisplayedValues(e);
-                return;
-            }
-            
-            UpdateJogsDisplayedValues(new KRLJoints
-            {
-                J1 = 0,
-                J2 = 0,
-                J3 = 0,
-                J4 = 0,
-                J5 = 0,
-                J6 = 0
-            });
+            // if (!string.IsNullOrWhiteSpace(logicService.SelectedIpAddress) && 
+            //     handler.trackedRobots.TryGetValue(logicService.SelectedIpAddress, out var robot))
+            // {
+            //     robot.JointsValueUpdated += (sender,e) => UpdateJogsDisplayedValues(e);
+            //     return;
+            // }
+            //
+            // UpdateJogsDisplayedValues(new KRLJoints
+            // {
+            //     J1 = 0,
+            //     J2 = 0,
+            //     J3 = 0,
+            //     J4 = 0,
+            //     J5 = 0,
+            //     J6 = 0
+            // });
         }
     }
 }

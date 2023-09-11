@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Project.Scripts.Connectivity.ExceptionHandling;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
@@ -13,9 +12,9 @@ namespace Project.Scripts.TrackedRobots
 {
     public class TrackedRobotModel
     {
-        public event EventHandler<KRLInt> ActiveBaseUpdated;
-        public event EventHandler<KRLInt> ActiveToolUpdated;
-        public event EventHandler<KRLJoints> ActiveJointsUpdated;
+        public event EventHandler<KRLInt> BaseValueUpdated;
+        public event EventHandler<KRLInt> ToolValueUpdated;
+        public event EventHandler<KRLJoints> JointsValueUpdated;
         
         private static class ValueName
         {
@@ -31,7 +30,7 @@ namespace Project.Scripts.TrackedRobots
         private readonly float posThresh;
         private readonly float rotThresh;
 
-        private readonly Dictionary<string, IKRLWrapper<KRLValue>> krlValues;
+        private readonly Dictionary<string, IKRLWrapper> krlValues;
 
         public TrackedRobotModel(GameObject baseObject, GameObject tcpObject, float posThresh, float rotThresh)
         {
@@ -40,7 +39,7 @@ namespace Project.Scripts.TrackedRobots
             this.posThresh = posThresh;
             this.rotThresh = rotThresh;
 
-            krlValues = new Dictionary<string, IKRLWrapper<KRLValue>>(5);
+            krlValues = new Dictionary<string, IKRLWrapper>(5);
 
             SetupRobotVariables();
             SubscribeToValueUpdatedEvents();
@@ -112,20 +111,25 @@ namespace Project.Scripts.TrackedRobots
 
         private void OnActiveBaseUpdated(object sender, KRLInt e)
         {
-            DebugLogger.Instance.AddLog($"Base number updated: {e.Value.ToString()}; ");
-            ActiveBaseUpdated?.Invoke(this, e);
+            // DebugLogger.Instance.AddLog($"Base number updated: {e.Value.ToString()}; ");
+            BaseValueUpdated?.Invoke(this, e);
         }
 
         private void OnActiveToolUpdated(object sender, KRLInt e)
         {
-            DebugLogger.Instance.AddLog($"TCP number updated: {e.Value.ToString()}; ");
-            ActiveToolUpdated?.Invoke(this, e);
+            // DebugLogger.Instance.AddLog($"TCP number updated: {e.Value.ToString()}; ");
+            ToolValueUpdated?.Invoke(this, e);
         }
 
         private void OnActiveJointsUpdated(object sender, KRLJoints e)
         {
-            DebugLogger.Instance.AddLog($"Joints updated: {e.J1.ToString(CultureInfo.InvariantCulture)}; ");
-            ActiveJointsUpdated?.Invoke(this, e);
+            // DebugLogger.Instance.AddLog($"Joints updated: {e.J1.ToString(CultureInfo.InvariantCulture)}; ");
+            JointsValueUpdated?.Invoke(this, e);
+        }
+
+        public KRLJoints GetJoints()
+        {
+            return ((KRLJointsWrapper)krlValues[ValueName.Joints]).KrlJoints;
         }
     }
 }

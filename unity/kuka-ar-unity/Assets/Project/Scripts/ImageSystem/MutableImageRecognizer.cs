@@ -44,8 +44,8 @@ namespace Project.Scripts.ImageSystem
             imageManager.trackedImagesChanged += OnChange;
             
             DebugLogger.Instance.AddLog(imageManager.subsystem.subsystemDescriptor.supportsMutableLibrary ? 
-                "Device supports mutable tracked image library" : 
-                "Device does not support mutable tracked image library");
+                "Device supports mutable tracked image library; " : 
+                "Device does not support mutable tracked image library; ");
         }
 
         private void ConfigureMutableLibrary()

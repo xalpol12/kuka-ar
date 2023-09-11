@@ -1,9 +1,10 @@
 using System;
+using Project.Scripts.Connectivity.Models.KRLValues;
 
 namespace Project.Scripts.Connectivity.Models.Wrappers
 {
-    public interface IKRLWrapper<in T>
+    public interface IKRLWrapper
     {
-        public void UpdateValue(T update);
+        public void UpdateValue(KRLValue update);
     }
 }

@@ -36,13 +36,13 @@ public class KRLValueDeserializer extends StdDeserializer<KRLValue> {
         if(node.get("valueInt") != null) {
             return new KRLInt(node.get("valueInt").asInt());
         }
-        if(node.get("J1") != null){
-            return new KRLJoints(node.get("J1").asDouble(),
-                    node.get("J2").asDouble(),
-                    node.get("J3").asDouble(),
-                    node.get("J4").asDouble(),
-                    node.get("J5").asDouble(),
-                    node.get("J6").asDouble());
+        if(node.get("j1") != null){
+            return new KRLJoints(node.get("j1").asDouble(),
+                    node.get("j2").asDouble(),
+                    node.get("j3").asDouble(),
+                    node.get("j4").asDouble(),
+                    node.get("j5").asDouble(),
+                    node.get("j6").asDouble());
         }
         return null;
     }
