@@ -127,18 +127,16 @@ namespace Project.Scripts.Connectivity.Http.Requests
                 popup.Try(() =>
                 {
                     var response = (HttpResponseMessage)status.Result;
-                    if (response.StatusCode != HttpStatusCode.OK)
+                    switch (response.StatusCode)
                     {
-                        if (response.StatusCode == HttpStatusCode.BadRequest)
-                        {
+                        case HttpStatusCode.OK:
+                            return;
+                        case HttpStatusCode.BadRequest:
                             discardPopup = true;
                             StartCoroutine(UpdateRobot(robot.Value));
-                        }
-
-                        if (response.StatusCode == HttpStatusCode.UnprocessableEntity)
-                        {
+                            break;
+                        case HttpStatusCode.UnprocessableEntity:
                             throw new HttpRequestException(response.Content.ReadAsStringAsync().Result);
-                        }
                     }
                 }, robot.Value, RequestType.POST);
 
@@ -169,7 +167,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
                     var response = (HttpResponseMessage)status.Result;
                     if (response.StatusCode != HttpStatusCode.OK)
                     {
-                        throw new HttpRequestException(response.Content.ReadAsStringAsync().Result); //
+                        throw new HttpRequestException(response.Content.ReadAsStringAsync().Result);
                     }
                 }, robot.Value, RequestType.PUT);
             }

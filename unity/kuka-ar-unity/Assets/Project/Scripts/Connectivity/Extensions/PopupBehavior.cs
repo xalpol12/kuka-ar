@@ -33,6 +33,11 @@ namespace Project.Scripts.Connectivity.Extensions
             } 
         }
 
+        public static void DeleteItem(GameObject deleteGameObject)
+        {
+            Destroy(deleteGameObject);
+        }
+
         internal PopupContent ResetContent()
         {
             return new PopupContent
@@ -42,11 +47,6 @@ namespace Project.Scripts.Connectivity.Extensions
                 Timestamp = "now",
                 Icon = null
             };
-        }
-
-        internal void DeleteItem(GameObject deleteGameObject)
-        {
-            Destroy(deleteGameObject);
         }
 
         internal IEnumerator SlideIn(GameObject notification, PopupContent content, int? index = null)
