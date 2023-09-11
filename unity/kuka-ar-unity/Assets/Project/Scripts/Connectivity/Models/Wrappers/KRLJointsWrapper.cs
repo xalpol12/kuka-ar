@@ -8,7 +8,10 @@ namespace Project.Scripts.Connectivity.Models.Wrappers
     {
         public event EventHandler<KRLJoints> ValueUpdated;
         
-        private KRLJoints krlJoints;
+        private KRLJoints krlJoints { get; set; }
+
+        public KRLJoints KrlJoints => krlJoints;
+
         private readonly float rotationThreshold;
 
         public KRLJointsWrapper(float rotationThreshold)

@@ -39,7 +39,7 @@ namespace Project.Scripts.TrackedRobots
             if (trackedRobots.TryGetValue(robotIP, out var selectedRobot))
             {
                 selectedRobot.JointsValueUpdated += OnJointsValueUpdated;
-                // ActiveJointsUpdated?.Invoke(this, e);
+                ActiveJointsUpdated?.Invoke(this, selectedRobot.GetJoints());
             }
         }
         
