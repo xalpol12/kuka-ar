@@ -1,8 +1,8 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
-using Unity.Plastic.Newtonsoft.Json;
 
 namespace Project.Scripts.Connectivity.Http.Requests
 {

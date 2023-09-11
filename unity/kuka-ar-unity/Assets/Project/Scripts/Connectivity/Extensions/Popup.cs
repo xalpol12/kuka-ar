@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
+using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
-using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Extensions
