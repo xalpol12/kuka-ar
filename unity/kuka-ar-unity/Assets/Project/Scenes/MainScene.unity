@@ -2301,6 +2301,11 @@ PrefabInstance:
       propertyPath: robotsHandler
       value: 
       objectReference: {fileID: 1022678924}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: gameObjectRobotsHandler
+      value: 
+      objectReference: {fileID: 1855572461}
     - target: {fileID: 5675344240891989482, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_SizeDelta.y
@@ -2431,6 +2436,11 @@ PrefabInstance:
       propertyPath: robotHandler
       value: 
       objectReference: {fileID: 1022678924}
+    - target: {fileID: 8835759804573029597, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: gameObjectRobotHandler
+      value: 
+      objectReference: {fileID: 1855572461}
     - target: {fileID: 9094602471462284848, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: Logging

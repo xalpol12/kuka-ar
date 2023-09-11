@@ -28,6 +28,8 @@ namespace Project.Scripts.TrackedRobots
         private Dictionary<string, TrackedRobotModel> trackedRobots;
         private HashSet<string> enqueuedIps;
 
+        private TrackedRobotModel currentlyTrackedRobot;
+
         void Start()
         {
             trackedRobots = new Dictionary<string, TrackedRobotModel>();
@@ -38,8 +40,14 @@ namespace Project.Scripts.TrackedRobots
         {
             if (trackedRobots.TryGetValue(robotIP, out var selectedRobot))
             {
-                selectedRobot.JointsValueUpdated += OnJointsValueUpdated;
-                ActiveJointsUpdated?.Invoke(this, selectedRobot.GetJoints());
+                if (currentlyTrackedRobot != null)
+                {
+                    currentlyTrackedRobot.JointsValueUpdated -= OnJointsValueUpdated;
+                }
+
+                currentlyTrackedRobot = selectedRobot;
+                currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
+                OnJointsValueUpdated(this, currentlyTrackedRobot.GetJoints());
             }
         }
         

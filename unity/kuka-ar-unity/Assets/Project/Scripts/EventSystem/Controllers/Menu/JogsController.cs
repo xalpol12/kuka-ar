@@ -1,9 +1,11 @@
+using System;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.TrackedRobots;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Project.Scripts.EventSystem.Controllers.Menu
 {
@@ -18,7 +20,13 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         internal LogicStates JogsTrigger;
         internal KRLJoints Joints;
 
-        [SerializeField] private TrackedRobotsHandler robotHandler;
+        [SerializeField] private GameObject gameObjectRobotHandler;
+        private TrackedRobotsHandler robotsHandler;
+
+        private void Awake()
+        {
+            robotsHandler = gameObjectRobotHandler.GetComponent<TrackedRobotsHandler>();
+        }
 
         private void Start()
         {
@@ -30,7 +38,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             Joints = new KRLJoints();
         
             MenuEvents.Event.OnClickJog += OnClickJog;
-            robotHandler.ActiveJointsUpdated += OnJointUpdate;
+            robotsHandler.ActiveJointsUpdated += OnJointUpdate;
         }
 
         private void OnClickJog(int gui)
