@@ -253,7 +253,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             while (observableRobotsController.WebDataStorage.
                    LoadingSpinner.Any(spinner => spinner.Value))
             {
-                if (time > observableRobotsController.WebDataStorage.AnimationTimeout) break;
+                if (time > observableRobotsController.WebDataStorage.animationTimeout) break;
                 time += Time.deltaTime;
 
                 yield return null;

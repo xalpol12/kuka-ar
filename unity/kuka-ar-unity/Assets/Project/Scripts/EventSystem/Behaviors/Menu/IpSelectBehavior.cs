@@ -268,7 +268,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             selectController.HexSpinner.SetActive(true);
             while (selectController.DataStorage.LoadingSpinner.Any(spinner => spinner.Value))
             {
-                if (time > selectController.DataStorage.AnimationTimeout) break;
+                if (time > selectController.DataStorage.animationTimeout) break;
                 time += Time.deltaTime;
                 
                 yield return null;

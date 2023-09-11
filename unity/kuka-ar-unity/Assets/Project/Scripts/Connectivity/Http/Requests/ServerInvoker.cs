@@ -1,8 +1,10 @@
 using System.Collections;
+using System.Net;
+using System.Net.Http;
+using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Extensions;
 using Project.Scripts.Connectivity.Mapping;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
-using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
@@ -112,9 +114,50 @@ namespace Project.Scripts.Connectivity.Http.Requests
         public IEnumerator PostRobot(Robot? robot)
         {
             storage.LoadingSpinner["PostNewRobot"] = true;
-            if (robot != null)
+            if (robot is not null)
             {
                 var status = http.ExecuteRequest(new PostNewRobotRequest(robot.Value));
+
+                while (!status.IsCompleted)
+                {
+                    yield return null;
+                }
+
+                var discardPopup = false;
+                popup.Try(() =>
+                {
+                    var response = (HttpResponseMessage)status.Result;
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        if (response.StatusCode == HttpStatusCode.BadRequest)
+                        {
+                            discardPopup = true;
+                            StartCoroutine(UpdateRobot(robot.Value));
+                        }
+
+                        if (response.StatusCode == HttpStatusCode.UnprocessableEntity)
+                        {
+                            throw new HttpRequestException(response.Content.ReadAsStringAsync().Result);
+                        }
+                    }
+                }, robot.Value, RequestType.POST);
+
+                if (discardPopup)
+                {
+                    popup.Discard();
+                };
+            }
+            
+            storage.LoadingSpinner["PostNewRobot"] = false;
+            yield return null;
+        }
+
+        public IEnumerator UpdateRobot(Robot? robot)
+        {
+            storage.LoadingSpinner["UpdateRobot"] = true;
+            if (robot is not null)
+            {
+                var status = http.ExecuteRequest(new UpdateRobotRequest(robot.Value));
 
                 while (!status.IsCompleted)
                 {
@@ -123,24 +166,14 @@ namespace Project.Scripts.Connectivity.Http.Requests
                 
                 popup.Try(() =>
                 {
-                    var response = status.Result;
-                    if (response is ExceptionMessagePair exception)
+                    var response = (HttpResponseMessage)status.Result;
+                    if (response.StatusCode != HttpStatusCode.OK)
                     {
-                        if (exception.ExceptionCode == 400)
-                        {
-                            Debug.Log("update robot");
-                        }
+                        throw new HttpRequestException(response.Content.ReadAsStringAsync().Result); //
                     }
-                }, true);
+                }, robot.Value, RequestType.PUT);
             }
-            
-            storage.LoadingSpinner["PostNewRobot"] = false;
-            yield return null;
-        }
-
-        public IEnumerator UpdateRobot()
-        {
-            yield return null;
+            storage.LoadingSpinner["UpdateRobot"] = false;
         }
     }
 }
