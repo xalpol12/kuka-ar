@@ -76,44 +76,52 @@ namespace Project.Scripts.Connectivity.Extensions
             catch (Exception e)
             {
                 DefaultContent("Error", e.Message, watcher.Wifi);
-                
-                if (e is WebException or SocketException or AggregateException)
-                {
-                    content.Message = e.InnerException?.InnerException?.Message.Split("(")[1];
-                    content.Icon = watcher.NoWifi;
-                    if (HasDuplicates()) return;
-                } else if (e is HttpRequestException)
-                {
 
-                    try
+                switch (e)
+                {
+                    case WebException or SocketException or AggregateException:
                     {
-                        var error = JsonConvert.DeserializeObject<ExceptionMessagePair>(e.Message);
-                        content = new PopupContent
+                        content.Message = e.InnerException?.InnerException?.Message.Split("(")[1];
+                        content.Icon = watcher.NoWifi;
+                        if (HasDuplicates()) return;
+                        break;
+                    }
+                    case HttpRequestException:
+                        try
                         {
-                            Header = $"{error.ExceptionName} {error.ExceptionCode}",
-                            Message = error.ExceptionMessage,
-                            Icon = type == RequestType.POST ? watcher.AddedFailed : watcher.NoWifi,
-                        };
-                    }
-                    catch (JsonReaderException jsonReaderException)
-                    {
-                        DefaultContent("Http request error", jsonReaderException.Message, watcher.AddedFailed);
-                    }
-                    catch (Exception exception)
-                    {
-                        Console.WriteLine($"Error occured. {exception.Message}");
-                    }
+                            var error = JsonConvert.DeserializeObject<ExceptionMessagePair>(e.Message);
+                            content = new PopupContent
+                            {
+                                Header = $"{error.ExceptionName} {error.ExceptionCode}",
+                                Message = error.ExceptionMessage,
+                                Icon = type == RequestType.POST ? watcher.AddedFailed : watcher.NoWifi,
+                            };
+                        }
+                        catch (JsonReaderException jsonReaderException)
+                        {
+                            DefaultContent("Http request error", jsonReaderException.Message, watcher.AddedFailed);
+                        }
+                        catch (Exception exception)
+                        {
+                            Console.WriteLine($"Error occured. {exception.Message}");
+                        }
+
+                        break;
                 }
             }
             
             SetTimestamp();
             StartCoroutine(ShowNotification());
         }
-
+        
+        /// <summary>
+        /// Allows to destroy popup.
+        /// @param @optional index - element index
+        /// </summary>
         public void Discard(int index = -1)
         {
             var itemIndex = index == -1 ? NotificationsContent.Count - 1 : index;
-            popupBehavior.DeleteItem(Notifications[itemIndex]);
+            PopupBehavior.DeleteItem(Notifications[itemIndex]);
             NotificationsContent.RemoveAt(itemIndex);
             NotificationsContent.RemoveAt(itemIndex);
         }
@@ -169,24 +177,23 @@ namespace Project.Scripts.Connectivity.Extensions
 
         private void DetectOperationType(Robot response, RequestType type)
         {
-            if (type == RequestType.POST)
+            content = type switch
             {
-                content = new PopupContent
+                RequestType.POST => new PopupContent
                 {
                     Header = "Robot added",
                     Message = $"Machine with name {response.Name} has been added",
                     Icon = watcher.AddedSuccess
-                };
-            } else if (type == RequestType.PUT)
-            {
-                content = new PopupContent
+                },
+                RequestType.PUT => new PopupContent
                 {
                     Header = "Robot",
                     Message = $"Machine with name {response.Name} has been updated",
                     Icon = watcher.AddedSuccess // TODO: future update icon
-                };
-            }
-            
+                },
+                _ => content
+            };
+
             SetTimestamp();
         }
 
