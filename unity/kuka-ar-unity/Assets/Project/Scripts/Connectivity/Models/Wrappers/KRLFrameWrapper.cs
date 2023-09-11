@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Models.Wrappers
 {
-    public class KRLFrameWrapper : IKRLWrapper<KRLValue>
+    public class KRLFrameWrapper : IKRLWrapper
     {
         private KRLFrame krlFrame;
 

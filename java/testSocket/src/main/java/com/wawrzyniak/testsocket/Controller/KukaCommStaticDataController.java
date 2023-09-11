@@ -82,7 +82,7 @@ public class KukaCommStaticDataController {
             description = "Saves new robot and returns DTO of the saved robot",
             tags = {"Robots"})
     @PostMapping("add")
-    public ConfiguredRobotDTO addRobot(@RequestBody ConfiguredRobotDTO robotDTO) {
+    public ConfiguredRobotDTO addRobot(@RequestBody ConfiguredRobotDTO robotDTO) throws RobotAlredyConfiguredException {
         logger.debug("Called: POST /add with request body: {}", robotDTO);
         return robotService.save(robotDTO);
     }

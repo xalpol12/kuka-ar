@@ -4,11 +4,14 @@ using Project.Scripts.Connectivity.Models.KRLValues;
 
 namespace Project.Scripts.Connectivity.Models.Wrappers
 {
-    public class KRLJointsWrapper : IKRLWrapper<KRLValue>
+    public class KRLJointsWrapper : IKRLWrapper
     {
         public event EventHandler<KRLJoints> ValueUpdated;
         
-        private KRLJoints krlJoints;
+        private KRLJoints krlJoints { get; set; }
+
+        public KRLJoints KrlJoints => krlJoints;
+
         private readonly float rotationThreshold;
 
         public KRLJointsWrapper(float rotationThreshold)
