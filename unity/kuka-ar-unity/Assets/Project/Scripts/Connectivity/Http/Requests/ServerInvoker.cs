@@ -143,6 +143,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
                 if (discardPopup)
                 {
                     popup.Discard();
+                    Debug.Log("discorad");
                 };
             }
             
