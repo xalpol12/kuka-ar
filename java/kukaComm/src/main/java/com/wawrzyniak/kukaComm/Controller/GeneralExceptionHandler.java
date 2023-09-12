@@ -24,7 +24,8 @@ public class GeneralExceptionHandler {
     public ResponseEntity<ExceptionMessagePair> robotModelReading(Exception e) {
         ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
                 e.getClass().getSimpleName(),
-                e.getMessage());
+                e.getMessage(),
+                500);
 
         logger.warn("Exception was thrown: {}, {}",
                 nameMessagePair.exceptionName(),
@@ -37,7 +38,8 @@ public class GeneralExceptionHandler {
     public ResponseEntity<ExceptionMessagePair> robotNorConfigured(Exception e) {
         ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
                 e.getClass().getSimpleName(),
-                e.getMessage());
+                e.getMessage(),
+                400);
 
         logger.warn("Exception was thrown: {}, {}",
                 nameMessagePair.exceptionName(),
@@ -50,8 +52,8 @@ public class GeneralExceptionHandler {
     public ResponseEntity<ExceptionMessagePair> saveRobotFail(Exception e) {
         ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
                 e.getClass().getSimpleName(),
-                e.getMessage());
-
+                e.getMessage(),
+                422);
         return new ResponseEntity<>(nameMessagePair, HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
@@ -59,7 +61,8 @@ public class GeneralExceptionHandler {
     public ResponseEntity<ExceptionMessagePair> robotAlreadySaved(Exception e){
         ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
                 e.getClass().getSimpleName(),
-                e.getMessage());
+                e.getMessage(),
+                400);
         return new ResponseEntity<>(nameMessagePair, HttpStatus.BAD_REQUEST);
     }
 }
