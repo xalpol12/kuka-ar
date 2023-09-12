@@ -16,7 +16,8 @@ public class ExceptionController {
     public ResponseEntity<ExceptionMessagePair> robotModelReading(Exception e) {
         ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
                 e.getClass().getSimpleName(),
-                e.getMessage());
+                e.getMessage(),
+                500);
 
         return new ResponseEntity<>(nameMessagePair, HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -24,7 +25,8 @@ public class ExceptionController {
     public ResponseEntity<ExceptionMessagePair> robotNorConfigured(Exception e) {
         ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
                 e.getClass().getSimpleName(),
-                e.getMessage());
+                e.getMessage(),
+                400);
 
         return new ResponseEntity<>(nameMessagePair, HttpStatus.BAD_REQUEST);
     }
@@ -33,7 +35,8 @@ public class ExceptionController {
     public ResponseEntity<ExceptionMessagePair> wrongRequest(Exception e){
         ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
                 e.getClass().getSimpleName(),
-                e.getMessage());
+                e.getMessage(),
+                400);
 
         return new ResponseEntity<>(nameMessagePair, HttpStatus.BAD_REQUEST);
     }
@@ -42,7 +45,8 @@ public class ExceptionController {
     public ResponseEntity<ExceptionMessagePair> robotAlreadySaved(Exception e){
         ExceptionMessagePair nameMessagePair = new ExceptionMessagePair(
                 e.getClass().getSimpleName(),
-                e.getMessage());
+                e.getMessage(),
+                400);
         return new ResponseEntity<>(nameMessagePair, HttpStatus.BAD_REQUEST);
     }
 }

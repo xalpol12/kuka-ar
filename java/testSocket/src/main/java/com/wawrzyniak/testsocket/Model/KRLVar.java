@@ -31,8 +31,8 @@ public class KRLVar {
         readExceptions = new HashSet<>();
     }
 
-    public void addReadException(Exception exception){
-        readExceptions.add(new ExceptionMessagePair(exception.getClass().getSimpleName(), exception.getMessage()));
+    public void addReadException(Exception exception, Integer code){
+        readExceptions.add(new ExceptionMessagePair(exception.getClass().getSimpleName(), exception.getMessage(), code));
     }
 
     public void clearExceptions(){

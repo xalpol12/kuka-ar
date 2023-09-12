@@ -1,4 +1,4 @@
 package com.wawrzyniak.testsocket.Model.Records;
 
-public record ExceptionMessagePair(String exceptionName, String exceptionMessage){
+public record ExceptionMessagePair(String exceptionName, String exceptionMessage, Integer errorCode){
 }

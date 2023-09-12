@@ -38,7 +38,7 @@ public class KukaClient extends Socket {
             output.flush();
             readResponse(var);
         } catch (WrongIdException | IOException | EmptyBaseOrToolException e) {
-            var.addReadException(e);
+            var.addReadException(e, 500);
         }
     }
 

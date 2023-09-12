@@ -52,7 +52,8 @@ public class KukaCommController extends TextWebSocketHandler {
                 session.sendMessage(new TextMessage(mapper.writeValueAsString(
                         new OutputWithErrors(
                                 new HashMap<>(), new ExceptionMessagePair(
-                                        e.getClass().getSimpleName(), e.getMessage())
+                                    e.getClass().getSimpleName(),
+                                    e.getMessage(), 400)
                         ))));
             } catch (JsonProcessingException ex) {
                 session.sendMessage(new TextMessage(e.getClass().getSimpleName() + e.getMessage()));
@@ -69,7 +70,7 @@ public class KukaCommController extends TextWebSocketHandler {
                 session.sendMessage(new TextMessage(mapper.writeValueAsString(
                         new OutputWithErrors(
                                 new HashMap<>(), new ExceptionMessagePair(
-                                e.getClass().getSimpleName(), e.getMessage())
+                                e.getClass().getSimpleName(), e.getMessage(), 500)
                         ))));
                 return null;
             } catch (JsonProcessingException ex) {
