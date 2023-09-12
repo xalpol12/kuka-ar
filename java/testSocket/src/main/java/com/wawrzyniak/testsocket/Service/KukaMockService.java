@@ -89,7 +89,7 @@ public class KukaMockService {
         if (!variables.get(hostIp).containsKey(variable)) {
             throw new WrongRequestException("Requested variable does not exist. It would be appropriate to firstly request reading of chosen variable through websocket.");
         }
-        variables.get(hostIp).get(variable).addReadException(exception.getException());
+        variables.get(hostIp).get(variable).addReadException(exception.getException(), 500);
     }
 
     public void removeExceptionFromVariable(String hostIp, VarType variable) throws WrongRequestException {
@@ -107,7 +107,7 @@ public class KukaMockService {
             throw new WrongRequestException("Robot with chosen ip is not connected to websocket at the moment. Try to reach it through websocket first.");
         }
         for (Map.Entry<VarType, KRLVar> entry : variables.get(hostIp).entrySet()) {
-            entry.getValue().addReadException(ExceptionTypes.DISCONNECTED.getException());
+            entry.getValue().addReadException(ExceptionTypes.DISCONNECTED.getException(), 500);
         }
     }
 

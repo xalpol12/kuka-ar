@@ -44,7 +44,8 @@ public class KukaCommController extends TextWebSocketHandler {
                     new OutputWithErrors(
                             new HashMap<>(), new ExceptionMessagePair(
                             ExceptionTypes.WRONG_IP.getException().getClass().getSimpleName(),
-                            ExceptionTypes.WRONG_IP.getException().getMessage())
+                            ExceptionTypes.WRONG_IP.getException().getMessage(),
+                            400)
                     ))));
             logger.info("Mocked exception sent to: {}", session.getRemoteAddress().toString());
             return;
