@@ -64,6 +64,7 @@ namespace Project.Scripts.Connectivity.Extensions
             }
             
             AssignContent(notification, content);
+            
             while (notification.transform.position.y > stop)
             {
                 notification.transform.Translate((Time.deltaTime * transformFactor) * Vector3.down);

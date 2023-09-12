@@ -94,7 +94,8 @@ namespace Project.Scripts.Connectivity.Extensions
                             {
                                 Header = $"{error.ExceptionName} {error.ExceptionCode}",
                                 Message = error.ExceptionMessage,
-                                Icon = type == RequestType.POST ? watcher.AddedFailed : watcher.NoWifi,
+                                Icon = type is RequestType.POST or RequestType.PUT 
+                                    ? watcher.AddedFailed : watcher.NoWifi,
                             };
                         }
                         catch (JsonReaderException jsonReaderException)
@@ -116,13 +117,13 @@ namespace Project.Scripts.Connectivity.Extensions
         
         /// <summary>
         /// Allows to destroy popup.
-        /// @param @optional index - element index
+        /// @param @optional index - element index in popup collection
         /// </summary>
         public void Discard(int index = -1)
         {
             var itemIndex = index == -1 ? NotificationsContent.Count - 1 : index;
             PopupBehavior.DeleteItem(Notifications[itemIndex]);
-            NotificationsContent.RemoveAt(itemIndex);
+            Notifications.RemoveAt(itemIndex);
             NotificationsContent.RemoveAt(itemIndex);
         }
 
@@ -187,9 +188,9 @@ namespace Project.Scripts.Connectivity.Extensions
                 },
                 RequestType.PUT => new PopupContent
                 {
-                    Header = "Robot",
-                    Message = $"Machine with name {response.Name} has been updated",
-                    Icon = watcher.AddedSuccess // TODO: future update icon
+                    Header = "Robots data updated",
+                    Message = $"Successfully updated robot with ip address {response.IpAddress}",
+                    Icon = watcher.EditSuccess
                 },
                 _ => content
             };
