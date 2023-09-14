@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Net;
 using System.Net.Http;
@@ -122,8 +123,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
                 {
                     yield return null;
                 }
-
-                var discardPopup = false;
+                
                 popup.Try(() =>
                 {
                     var response = (HttpResponseMessage)status.Result;
@@ -132,19 +132,12 @@ namespace Project.Scripts.Connectivity.Http.Requests
                         case HttpStatusCode.OK:
                             return;
                         case HttpStatusCode.BadRequest:
-                            discardPopup = true;
                             StartCoroutine(UpdateRobot(robot.Value));
-                            break;
+                            throw new InvalidOperationException();
                         case HttpStatusCode.UnprocessableEntity:
                             throw new HttpRequestException(response.Content.ReadAsStringAsync().Result);
                     }
                 }, robot.Value, RequestType.POST);
-
-                if (discardPopup)
-                {
-                    popup.Discard();
-                    Debug.Log("discorad");
-                };
             }
             
             storage.LoadingSpinner["PostNewRobot"] = false;

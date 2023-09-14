@@ -61,8 +61,9 @@ namespace Project.Scripts.Connectivity.Extensions
         /// Tries to execute the given action. If it fails, shows popup window with error message.
         /// @param action - task to execute
         /// </summary>
-        public void Try(Action action,Robot result = default, RequestType type = RequestType.PATCH)
+        public void Try(Action action, Robot result = default, RequestType type = RequestType.GET)
         {
+            var isInvalidOperation = false;
             try
             {
                 action();
@@ -106,13 +107,15 @@ namespace Project.Scripts.Connectivity.Extensions
                         {
                             Console.WriteLine($"Error occured. {exception.Message}");
                         }
-
+                        break;
+                    case InvalidOperationException:
+                        isInvalidOperation = true;
                         break;
                 }
             }
             
             SetTimestamp();
-            StartCoroutine(ShowNotification());
+             if (!isInvalidOperation) StartCoroutine(ShowNotification());
         }
         
         /// <summary>
