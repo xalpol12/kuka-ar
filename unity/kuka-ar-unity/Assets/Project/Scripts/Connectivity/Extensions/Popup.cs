@@ -29,7 +29,8 @@ namespace Project.Scripts.Connectivity.Extensions
         internal Vector3 HomePosition;
         internal List<GameObject> Notifications;
         internal List<PopupContent> NotificationsContent;
-        
+
+        private GameObject canvas;
         private PopupContent content;
         private NotificationAssetWatcher watcher;
         private PopupBehavior popupBehavior;
@@ -43,6 +44,7 @@ namespace Project.Scripts.Connectivity.Extensions
         {
             watcher = NotificationAssetWatcher.Watcher;
             popupBehavior = GetComponent<PopupBehavior>();
+            canvas = GetComponent<Canvas>().gameObject;
             Notifications = new List<GameObject>();
             NotificationsContent = new List<PopupContent>();
             HomePosition = notification.transform.position;
@@ -114,8 +116,9 @@ namespace Project.Scripts.Connectivity.Extensions
                 }
             }
             
+            if (isInvalidOperation || !canvas.activeInHierarchy) return;
             SetTimestamp();
-             if (!isInvalidOperation) StartCoroutine(ShowNotification());
+            StartCoroutine(ShowNotification());
         }
         
         /// <summary>
