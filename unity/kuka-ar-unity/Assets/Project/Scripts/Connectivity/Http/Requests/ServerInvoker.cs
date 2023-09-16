@@ -44,7 +44,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
             StartCoroutine(GetStickers());
         }
         
-        public IEnumerator GetRobots()
+        public IEnumerator GetRobots(Action action = null)
         {
             storage.LoadingSpinner["GetRobots"] = true;
             var newRobotsTask = http.ExecuteRequest(new GetSavedRobotsRequest());
@@ -54,6 +54,8 @@ namespace Project.Scripts.Connectivity.Http.Requests
             }
 
             popup.Try(() => storage.Robots = newRobotsTask.Result);
+            Debug.Log("aaa: " + newRobotsTask.Result.Count);
+            action?.Invoke();
             storage.LoadingSpinner["GetRobots"] = false;
             yield return null;
         }
@@ -115,6 +117,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
         public IEnumerator PostRobot(Robot? robot)
         {
             storage.LoadingSpinner["PostNewRobot"] = true;
+            StartCoroutine(GetRobots());
             if (robot is not null)
             {
                 var status = http.ExecuteRequest(new PostNewRobotRequest(robot.Value));
@@ -130,6 +133,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
                     switch (response.StatusCode)
                     {
                         case HttpStatusCode.OK:
+                            storage.Robots.Add(robot.Value);
                             return;
                         case HttpStatusCode.BadRequest:
                             StartCoroutine(UpdateRobot(robot.Value));

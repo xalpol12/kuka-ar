@@ -22,6 +22,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private Transform constantPanel;
         private Image serverError;
         private Image sticker;
+        private Button refresh;
         private TMP_Text ipText;
         private TMP_Text nameText;
         private TMP_Text statusText;
@@ -29,6 +30,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private TMP_Text appName;
 
         private List<GameObject> allGridItems;
+        private List<RectTransform> gridChildren;
         private int lastSelected;
         private bool isRobotChosen;
 
@@ -47,6 +49,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 .transform.Find("ConstantPanel").GetComponent<Image>().gameObject.transform;
             serverError = parent.Find("ServerError").GetComponent<Image>();
             sticker = constantPanel.Find("CoordSystemPicker").GetComponent<Image>();
+            refresh = scrollList.transform.Find("Refresh").GetComponent<Button>();
             ipText = constantPanel.Find("CurrentIpAddress").GetComponent<TMP_Text>();
             nameText = constantPanel.Find("CurrentRobotName").GetComponent<TMP_Text>();
             statusText = constantPanel.Find("ConnectionStatus").GetComponent<TMP_Text>();
@@ -54,6 +57,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             appName = constantPanel.Find("AppName").GetComponent<TMP_Text>();
             
             allGridItems = new List<GameObject>();
+            gridChildren = grid.GetComponentsInChildren<RectTransform>().ToList();
             isRobotChosen = false;
 
             StartCoroutine(ServerInvoker.Invoker.GetRobots());
@@ -67,6 +71,20 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                     StartCoroutine(ServerInvoker.Invoker.GetStickers());
                     StartCoroutine(DisplayLoadingSpinner());
                 });
+            
+            refresh.onClick.AddListener(() =>
+            {
+                StartCoroutine(ServerInvoker.Invoker.GetRobots(() =>
+                {
+                    gridChildren = grid.GetComponentsInChildren<RectTransform>().ToList();
+                    StartCoroutine(DestroyListEntries());
+                }));
+            });
+        }
+
+        private void OnEnable()
+        {
+            gridChildren = grid.GetComponentsInChildren<RectTransform>().ToList();
         }
 
         private void Update()
@@ -84,6 +102,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             
             if (storage.Stickers.Count <= 0)
             {
+                refresh.gameObject.SetActive(false);
                 ConnectionFailed(true);
                 yield break;
             }
@@ -107,6 +126,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 gridItem.transform.GetComponent<Image>().sprite = 
                     observableRobotsController.StylingService.SelectedSprite;
             });
+            gridItem.SetActive(true);
             allGridItems.Add(gridItem);
 
             for (var i = 1; i < observableRobotsController.WebDataStorage.Robots.Count + 2; i++)
@@ -185,18 +205,15 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private IEnumerator DestroyListEntries()
         {
             allGridItems = new List<GameObject>();
-            foreach (var child in grid.GetComponentsInChildren<RectTransform>())
+            foreach (var child in gridChildren.Where(child => child.name.Contains("(Clone)")))
             {
-                if (child.name.Contains("(Clone)"))
-                {
-                    Destroy(child.gameObject);
-                }
+                Destroy(child.gameObject);
             }
     
             StartCoroutine(InitObservableRobots());
             yield return null;
         }
-
+        
         private IEnumerator ConnectionStatusCheckHandler(string ipAddress)
         {
             var isFinalRefresh = true;
@@ -224,6 +241,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private void ConnectionFailed(bool state)
         {
             gridItem.SetActive(!state);
+            refresh.gameObject.SetActive(!state);
             serverError.gameObject.SetActive(state);
         }
 
