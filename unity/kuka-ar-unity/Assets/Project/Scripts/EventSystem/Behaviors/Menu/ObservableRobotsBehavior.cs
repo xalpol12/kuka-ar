@@ -30,9 +30,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private TMP_Text appName;
 
         private List<GameObject> allGridItems;
-        private List<RectTransform> gridChildren;
         private int lastSelected;
         private bool isRobotChosen;
+        private bool performExecution;
 
         private void Start()
         {
@@ -44,7 +44,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
             grid = scrollList.transform.Find("Grid").GetComponent<RectTransform>().gameObject;
             gridItem = grid.transform.Find("GridElement").GetComponent<Image>().gameObject;
-
+            
             constantPanel = parent.GetComponent<Image>().gameObject
                 .transform.Find("ConstantPanel").GetComponent<Image>().gameObject.transform;
             serverError = parent.Find("ServerError").GetComponent<Image>();
@@ -57,9 +57,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             appName = constantPanel.Find("AppName").GetComponent<TMP_Text>();
             
             allGridItems = new List<GameObject>();
-            gridChildren = grid.GetComponentsInChildren<RectTransform>().ToList();
             isRobotChosen = false;
-
+            performExecution = false;
+            
             StartCoroutine(ServerInvoker.Invoker.GetRobots());
             
             StartCoroutine(InitObservableRobots());
@@ -67,24 +67,24 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             serverError.transform.Find("TryAgain")
                 .GetComponent<Button>().onClick.AddListener(() =>
                 {
-                    StartCoroutine(ServerInvoker.Invoker.GetRobots());
-                    StartCoroutine(ServerInvoker.Invoker.GetStickers());
-                    StartCoroutine(DisplayLoadingSpinner());
+                    StartCoroutine(DisplayLoadingSpinner(() =>
+                    {
+                        performExecution = true;
+                        StartCoroutine(ServerInvoker.Invoker.GetRobots());
+                        StartCoroutine(ServerInvoker.Invoker.GetStickers(() =>
+                        {
+                            StartCoroutine(DestroyListEntries());
+                        }));
+                    }));
                 });
             
             refresh.onClick.AddListener(() =>
             {
                 StartCoroutine(ServerInvoker.Invoker.GetRobots(() =>
                 {
-                    gridChildren = grid.GetComponentsInChildren<RectTransform>().ToList();
                     StartCoroutine(DestroyListEntries());
                 }));
             });
-        }
-
-        private void OnEnable()
-        {
-            gridChildren = grid.GetComponentsInChildren<RectTransform>().ToList();
         }
 
         private void Update()
@@ -99,14 +99,13 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             if (scrollList is null) yield break;
             var storage = observableRobotsController.WebDataStorage;
             
-            
             if (storage.Stickers.Count <= 0)
             {
                 refresh.gameObject.SetActive(false);
                 ConnectionFailed(true);
                 yield break;
             }
-
+            
             if (storage.Robots.Count < 1)
             {
                 gridItem.SetActive(false);
@@ -167,7 +166,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 });
                 allGridItems.Add(newGridItem);
             }
-
+            
             yield return null;
         }
 
@@ -205,7 +204,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private IEnumerator DestroyListEntries()
         {
             allGridItems = new List<GameObject>();
-            foreach (var child in gridChildren.Where(child => child.name.Contains("(Clone)")))
+            foreach (var child in grid.GetComponentsInChildren<RectTransform>().ToList()
+                         .Where(child => child.name.Contains("(Clone)")))
             {
                 Destroy(child.gameObject);
             }
@@ -240,6 +240,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         
         private void ConnectionFailed(bool state)
         {
+            performExecution = false;
             gridItem.SetActive(!state);
             refresh.gameObject.SetActive(!state);
             serverError.gameObject.SetActive(state);
@@ -264,16 +265,18 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             return null;
         }
 
-        private IEnumerator DisplayLoadingSpinner()
+        private IEnumerator DisplayLoadingSpinner(Action action)
         {
             var time = 0f;
+            var webStore = observableRobotsController.WebDataStorage;
             
             serverError.gameObject.SetActive(false);
             observableRobotsController.Spinner.SetActive(true);
-            while (observableRobotsController.WebDataStorage.
-                   LoadingSpinner.Any(spinner => spinner.Value))
+            action();
+            
+            while (webStore.LoadingSpinner.Any(spinner => spinner.Value))
             {
-                if (time > observableRobotsController.WebDataStorage.animationTimeout) break;
+                if (time > webStore.animationTimeout || !performExecution) break;
                 time += Time.deltaTime;
 
                 yield return null;
@@ -281,7 +284,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             observableRobotsController.Spinner.SetActive(false);
             serverError.gameObject.SetActive(true);
             
-            if (observableRobotsController.WebDataStorage.Stickers.Count == 0) yield break;
+            if (webStore.Stickers.Count == 0) yield break;
             ConnectionFailed(false);
             StartCoroutine(InitObservableRobots());
         }

@@ -54,7 +54,6 @@ namespace Project.Scripts.Connectivity.Http.Requests
             }
 
             popup.Try(() => storage.Robots = newRobotsTask.Result);
-            Debug.Log("aaa: " + newRobotsTask.Result.Count);
             action?.Invoke();
             storage.LoadingSpinner["GetRobots"] = false;
             yield return null;
@@ -80,7 +79,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
             yield return null;
         }
 
-        public IEnumerator GetStickers()
+        public IEnumerator GetStickers(Action action = null)
         {
             storage.LoadingSpinner["GetStickers"] = true;
             var newStickersTask = http.ExecuteRequest(new GetTargetImagesRequest());
@@ -96,8 +95,8 @@ namespace Project.Scripts.Connectivity.Http.Requests
                 storage.Stickers = stickersMapper.MapBytesToSprite(stickers);
                 storage.AvailableIps = robotsMapper.MapStringToIpAddress(stickers);
             });
-
             storage.LoadingSpinner["GetStickers"] = false;
+            action?.Invoke();
             yield return null;
         }
 
