@@ -91,7 +91,7 @@ public class KukaCommStaticDataController {
             summary = "Updates already saved robot details",
             description = "Updates robot details and returns DTO of the updated robot",
             tags = {"Robots"})
-    @PostMapping("update")
+    @PutMapping("update")
     public ConfiguredRobotDTO updateRobot(@RequestBody ConfiguredRobotDTO robotDTO) throws RobotNotConfiguredException {
         logger.debug("Called: POST /update with request body: {}", robotDTO);
         return robotService.updateByIp(robotDTO);
