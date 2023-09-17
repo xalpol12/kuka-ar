@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
@@ -8,7 +7,6 @@ using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.EventSystem.Services.ServerConfig;
 using Project.Scripts.ImageSystem;
-using Project.Scripts.Utils;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -134,10 +132,14 @@ namespace Project.Scripts.EventSystem.Controllers
             if (id != uid || !validationService.ValidationResult) return;
             ServerConfigAnim = AnimationStates.FadeOut;
             NextAnim.Add(AnimationFilter.MenuIn);
-            PlayerPrefs.SetInt("firstRun", 1);
-            var savedAddress = HttpClientWrapper.Instance.BaseAddress;
-            PlayerPrefs.SetString("serverIp", savedAddress);
-            WebSocketClient.Instance.ConnectToWebsocket($"ws://{savedAddress}:8080/kuka-variables");
+
+            if (PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun)
+            {
+                PlayerPrefs.SetInt("firstRun", new PlayersPrefsStates().NthRun);
+            }
+            
+            WebSocketClient.Instance.ConnectToWebsocket(
+                $"ws://{HttpClientWrapper.Instance.BaseAddress}:8080/kuka-variables");
         }
 
         private void GoToMainScreen(int uid)

@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Globalization;
-using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Services.Menu;
-using Project.Scripts.TrackedRobots;
 using TMPro;
 using UnityEngine;
 
@@ -12,20 +10,15 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 {
     public class JogsBehavior : MonoBehaviour
     {
-        [SerializeField] private GameObject robotHandler;
         private JogsController jogsController;
         private GameObject jogsValues;
         private GameObject jogsDisplay;
-        private SelectableLogicService logicService;
         private Vector3 jogsHomePosition;
-        private TrackedRobotsHandler handler;
         
         private int distance;
         private void Start()
         {
             jogsController = GetComponent<JogsController>();
-            handler = robotHandler.GetComponent<TrackedRobotsHandler>();
-            logicService = SelectableLogicService.Instance;
 
             jogsValues = jogsController.jogs.GetComponent<RectTransform>().Find("JogsValues").gameObject;
             jogsDisplay = jogsController.jogs.GetComponent<RectTransform>().Find("JogDisplay").gameObject;
@@ -35,8 +28,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             jogsHomePosition = jogsDisplay.transform.position;
         
             distance = (int)((Screen.height * 0.115f) + PositioningService.Instance.PositioningError);
-
-            ConfigureTrackedRobotJogsData();
         }
 
         private void Update()
@@ -53,9 +44,11 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 StartCoroutine(HideJogs());
             }
 
-            if (logicService.SelectedIpAddress == logicService.PreviousSelectedIpAddress) return;
-            ConfigureTrackedRobotJogsData();
-            logicService.PreviousSelectedIpAddress = logicService.SelectedIpAddress;
+            if (jogsController.UpdateJogs)
+            {
+                UpdateJogsDisplayedValues();
+                jogsController.UpdateJogs = false;
+            }
         }
 
         private IEnumerator HideJogs()
@@ -139,9 +132,14 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             }
         }
 
-        private void UpdateJogsDisplayedValues(KRLJoints e)
+        private void UpdateJogsDisplayedValues()
         {
-            var temp = new[] { e.J1, e.J2, e.J3, e.J4, e.J5, e.J6 };
+            var temp = new[] { jogsController.Joints.J1,
+                jogsController.Joints.J2,
+                jogsController.Joints.J3,
+                jogsController.Joints.J4,
+                jogsController.Joints.J5,
+                jogsController.Joints.J6 };
             foreach (Transform child in jogsValues.transform)
             {
                 if (child.name != "HideJogs" )
@@ -152,24 +150,24 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             }
         }
 
-        private void ConfigureTrackedRobotJogsData()
-        {
-            // if (!string.IsNullOrWhiteSpace(logicService.SelectedIpAddress) && 
-            //     handler.trackedRobots.TryGetValue(logicService.SelectedIpAddress, out var robot))
-            // {
-            //     robot.JointsValueUpdated += (sender,e) => UpdateJogsDisplayedValues(e);
-            //     return;
-            // }
-            //
-            // UpdateJogsDisplayedValues(new KRLJoints
-            // {
-            //     J1 = 0,
-            //     J2 = 0,
-            //     J3 = 0,
-            //     J4 = 0,
-            //     J5 = 0,
-            //     J6 = 0
-            // });
-        }
+//        private void ConfigureTrackedRobotJogsData()
+//        {
+//             if (!string.IsNullOrWhiteSpace(logicService.SelectedIpAddress) &&
+//                 robotHandler.TryGetValue(logicService.SelectedIpAddress, out var robot))
+//             {
+//                 robot.JointsValueUpdated += (sender,e) => UpdateJogsDisplayedValues(e);
+//                 return;
+//             }
+//
+//             UpdateJogsDisplayedValues(new KRLJoints
+//             {
+//                 J1 = 0,
+//                 J2 = 0,
+//                 J3 = 0,
+//                 J4 = 0,
+//                 J5 = 0,
+//                 J6 = 0
+//             });
+//        }
     }
 }

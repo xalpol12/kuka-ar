@@ -336,7 +336,7 @@ PrefabInstance:
     - target: {fileID: 3087783458083860396, guid: 8e7be4efed6c55d4a8b6512a56577111,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4665656086292718226, guid: 8e7be4efed6c55d4a8b6512a56577111,
         type: 3}
@@ -744,7 +744,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4048b8e79655af479c1f68816b85080, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AnimationTimeout: 3
+  animationTimeout: 5
 --- !u!4 &318450783
 Transform:
   m_ObjectHideFlags: 0
@@ -1156,7 +1156,7 @@ PrefabInstance:
     - target: {fileID: 2671737355167603908, guid: 21c0b1f531a67c6478f902672a115329,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3255653308479845959, guid: 21c0b1f531a67c6478f902672a115329,
         type: 3}
@@ -2296,6 +2296,16 @@ PrefabInstance:
       propertyPath: m_RaycastTarget
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: robotsHandler
+      value: 
+      objectReference: {fileID: 1022678924}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: gameObjectRobotsHandler
+      value: 
+      objectReference: {fileID: 1855572461}
     - target: {fileID: 5675344240891989482, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_SizeDelta.y
@@ -2416,11 +2426,26 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8221556055881081174, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8284688345516404208, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8835759804573029597, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: robotHandler
+      value: 
+      objectReference: {fileID: 1022678924}
+    - target: {fileID: 8835759804573029597, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: gameObjectRobotHandler
+      value: 
+      objectReference: {fileID: 1855572461}
     - target: {fileID: 9094602471462284848, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: Logging
@@ -2433,6 +2458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 8003491578767291909, guid: 2dec6bad165255e45942ae03de04b2b0, type: 3}
+    - {fileID: 169919965202294499, guid: 2dec6bad165255e45942ae03de04b2b0, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -59,7 +59,9 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
 
             if (validationService.ValidationResult)
             {
-                httpClient.BaseAddress = ipInputField.GetComponent<TMP_InputField>().text;
+                var ipAddress = ipInputField.GetComponent<TMP_InputField>().text;
+                PlayerPrefs.SetString("serverIp", ipAddress);
+                httpClient.BaseAddress = ipAddress;
             }
             ServerInvoker.Invoker.GetFullData();
         }

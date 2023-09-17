@@ -1,4 +1,8 @@
+using System;
 using System.Collections;
+using System.Net;
+using System.Net.Http;
+using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Extensions;
 using Project.Scripts.Connectivity.Mapping;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
@@ -40,7 +44,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
             StartCoroutine(GetStickers());
         }
         
-        public IEnumerator GetRobots()
+        public IEnumerator GetRobots(Action action = null)
         {
             storage.LoadingSpinner["GetRobots"] = true;
             var newRobotsTask = http.ExecuteRequest(new GetSavedRobotsRequest());
@@ -50,6 +54,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
             }
 
             popup.Try(() => storage.Robots = newRobotsTask.Result);
+            action?.Invoke();
             storage.LoadingSpinner["GetRobots"] = false;
             yield return null;
         }
@@ -74,7 +79,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
             yield return null;
         }
 
-        public IEnumerator GetStickers()
+        public IEnumerator GetStickers(Action action = null)
         {
             storage.LoadingSpinner["GetStickers"] = true;
             var newStickersTask = http.ExecuteRequest(new GetTargetImagesRequest());
@@ -90,8 +95,8 @@ namespace Project.Scripts.Connectivity.Http.Requests
                 storage.Stickers = stickersMapper.MapBytesToSprite(stickers);
                 storage.AvailableIps = robotsMapper.MapStringToIpAddress(stickers);
             });
-
             storage.LoadingSpinner["GetStickers"] = false;
+            action?.Invoke();
             yield return null;
         }
 
@@ -111,12 +116,59 @@ namespace Project.Scripts.Connectivity.Http.Requests
         public IEnumerator PostRobot(Robot? robot)
         {
             storage.LoadingSpinner["PostNewRobot"] = true;
-            if (robot != null) popup.TryWithSuccessExpected(
-                () => http.ExecuteRequest(new PostNewRobotRequest(robot.Value)),
-                "Robot has been added");
+            StartCoroutine(GetRobots());
+            if (robot is not null)
+            {
+                var status = http.ExecuteRequest(new PostNewRobotRequest(robot.Value));
+
+                while (!status.IsCompleted)
+                {
+                    yield return null;
+                }
+                
+                popup.Try(() =>
+                {
+                    var response = (HttpResponseMessage)status.Result;
+                    switch (response.StatusCode)
+                    {
+                        case HttpStatusCode.OK:
+                            storage.Robots.Add(robot.Value);
+                            return;
+                        case HttpStatusCode.BadRequest:
+                            StartCoroutine(UpdateRobot(robot.Value));
+                            throw new InvalidOperationException();
+                        case HttpStatusCode.UnprocessableEntity:
+                            throw new HttpRequestException(response.Content.ReadAsStringAsync().Result);
+                    }
+                }, robot.Value, RequestType.POST);
+            }
             
             storage.LoadingSpinner["PostNewRobot"] = false;
             yield return null;
+        }
+
+        public IEnumerator UpdateRobot(Robot? robot)
+        {
+            storage.LoadingSpinner["UpdateRobot"] = true;
+            if (robot is not null)
+            {
+                var status = http.ExecuteRequest(new UpdateRobotRequest(robot.Value));
+
+                while (!status.IsCompleted)
+                {
+                    yield return null;
+                }
+                
+                popup.Try(() =>
+                {
+                    var response = (HttpResponseMessage)status.Result;
+                    if (response.StatusCode != HttpStatusCode.OK)
+                    {
+                        throw new HttpRequestException(response.Content.ReadAsStringAsync().Result);
+                    }
+                }, robot.Value, RequestType.PUT);
+            }
+            storage.LoadingSpinner["UpdateRobot"] = false;
         }
     }
 }

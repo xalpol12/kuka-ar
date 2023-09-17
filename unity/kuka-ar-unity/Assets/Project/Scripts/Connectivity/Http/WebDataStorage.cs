@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
-using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
@@ -9,7 +8,7 @@ namespace Project.Scripts.Connectivity.Http
     public class WebDataStorage : MonoBehaviour
     {
         public static WebDataStorage Instance;
-        public int AnimationTimeout;
+        public int animationTimeout;
         
         private void Awake()
         {
@@ -31,9 +30,7 @@ namespace Project.Scripts.Connectivity.Http
             { "GetConfigured", false },
             { "GetStickers", false },
             { "PostNewRobot", false },
+            { "UpdateRobot", false },
         };
-        
-        internal Robot Response;
-        internal ExceptionMessagePair PostError;
     }
 }

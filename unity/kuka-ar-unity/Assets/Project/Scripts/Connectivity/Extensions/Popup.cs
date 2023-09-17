@@ -4,7 +4,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Sockets;
+using Newtonsoft.Json;
+using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Extensions
@@ -26,7 +29,8 @@ namespace Project.Scripts.Connectivity.Extensions
         internal Vector3 HomePosition;
         internal List<GameObject> Notifications;
         internal List<PopupContent> NotificationsContent;
-        
+
+        private GameObject canvas;
         private PopupContent content;
         private NotificationAssetWatcher watcher;
         private PopupBehavior popupBehavior;
@@ -40,6 +44,7 @@ namespace Project.Scripts.Connectivity.Extensions
         {
             watcher = NotificationAssetWatcher.Watcher;
             popupBehavior = GetComponent<PopupBehavior>();
+            canvas = GetComponent<Canvas>().gameObject;
             Notifications = new List<GameObject>();
             NotificationsContent = new List<PopupContent>();
             HomePosition = notification.transform.position;
@@ -57,53 +62,78 @@ namespace Project.Scripts.Connectivity.Extensions
         /// <summary>
         /// Tries to execute the given action. If it fails, shows popup window with error message.
         /// @param action - task to execute
-        /// @param @param customMessage - overrides system generated notification content message
         /// </summary>
-        public void Try(Action action, string customMessage = "")
+        public void Try(Action action, Robot result = default, RequestType type = RequestType.GET)
         {
+            var isInvalidOperation = false;
             try
             {
                 action();
+                if (!Equals(result, default(Robot)))
+                {
+                    DetectOperationType(result, type);
+                    StartCoroutine(ShowNotification());
+                }
                 return;
             }
             catch (Exception e)
             {
                 DefaultContent("Error", e.Message, watcher.Wifi);
-                
-                if (e is WebException or HttpRequestException or SocketException or AggregateException)
+
+                switch (e)
                 {
-                    content.Message = e.InnerException?.InnerException?.Message.Split("(")[1];
-                    content.Icon = watcher.NoWifi;
-                    if (HasDuplicates()) return;
+                    case WebException or SocketException or AggregateException:
+                    {
+                        content.Message = e.InnerException?.InnerException?.Message.Split("(")[1];
+                        content.Icon = watcher.NoWifi;
+                        if (HasDuplicates()) return;
+                        break;
+                    }
+                    case HttpRequestException:
+                        try
+                        {
+                            var error = JsonConvert.DeserializeObject<ExceptionMessagePair>(e.Message);
+                            content = new PopupContent
+                            {
+                                Header = $"{error.ExceptionName} {error.ExceptionCode}",
+                                Message = error.ExceptionMessage,
+                                Icon = type is RequestType.POST or RequestType.PUT 
+                                    ? watcher.AddedFailed : watcher.NoWifi,
+                            };
+                        }
+                        catch (JsonReaderException jsonReaderException)
+                        {
+                            DefaultContent("Http request error", jsonReaderException.Message, watcher.AddedFailed);
+                        }
+                        catch (Exception exception)
+                        {
+                            Console.WriteLine($"Error occured. {exception.Message}");
+                        }
+                        break;
+                    case InvalidOperationException:
+                        isInvalidOperation = true;
+                        break;
                 }
             }
-
-            StartCoroutine(ShowNotification(action, content.Message));
+            
+            if (isInvalidOperation || !canvas.activeInHierarchy) return;
+            SetTimestamp();
+            StartCoroutine(ShowNotification());
         }
         
         /// <summary>
-        /// Tries to execute the given action. Action is expected to success. Displays notification window.
-        /// @param action - task to execute
-        /// @param @param customMessage - overrides system generated notification content message
+        /// Allows to destroy popup.
+        /// @param @optional index - element index in popup collection
         /// </summary>
-        public void TryWithSuccessExpected(Action action, string customMessage = "")
-        { 
-            var message = customMessage != "" ? customMessage : "Action completed";
-            try
-            {
-                action();
-                DefaultContent("Success", message, watcher.AddedSuccess);
-            }
-            catch (Exception e)
-            {
-                message = e.Message;
-                DefaultContent("Error", message, watcher.AddedFailed);
-            }
-           
-            StartCoroutine(ShowNotification(action, message));
+        public void Discard(int index = -1)
+        {
+            var itemIndex = index == -1 ? NotificationsContent.Count - 1 : index;
+            PopupBehavior.DeleteItem(Notifications[itemIndex]);
+            Notifications.RemoveAt(itemIndex);
+            NotificationsContent.RemoveAt(itemIndex);
         }
 
-        private IEnumerator ShowNotification(Action action, string customMessage)
+        private IEnumerator ShowNotification()
         {
             var newPopup = Instantiate(notification, notification.transform.parent, true);
             Notifications.Add(newPopup);
@@ -119,10 +149,10 @@ namespace Project.Scripts.Connectivity.Extensions
             {
                 Header = header.RemoveDiacritics(),
                 Message = message.RemoveDiacritics(),
-                Timestamp = DateTime.Now.ToString("HH:mm"),
-                DateTimeMark = DateTime.Now,
                 Icon = icon,
             };
+            
+            SetTimestamp();
         }
 
         private void DragPopup(GameObject pressed)
@@ -150,6 +180,34 @@ namespace Project.Scripts.Connectivity.Extensions
             }
 
             return false;
+        }
+
+        private void DetectOperationType(Robot response, RequestType type)
+        {
+            content = type switch
+            {
+                RequestType.POST => new PopupContent
+                {
+                    Header = "Robot added",
+                    Message = $"Machine with name {response.Name} has been added",
+                    Icon = watcher.AddedSuccess
+                },
+                RequestType.PUT => new PopupContent
+                {
+                    Header = "Robots data updated",
+                    Message = $"Successfully updated robot with ip address {response.IpAddress}",
+                    Icon = watcher.EditSuccess
+                },
+                _ => content
+            };
+
+            SetTimestamp();
+        }
+
+        private void SetTimestamp()
+        {
+            content.Timestamp = DateTime.Now.ToString("HH:mm");
+            content.DateTimeMark = DateTime.Now;
         }
     }
 }

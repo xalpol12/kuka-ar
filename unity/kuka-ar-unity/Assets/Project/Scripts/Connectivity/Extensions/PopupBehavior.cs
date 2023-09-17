@@ -33,6 +33,11 @@ namespace Project.Scripts.Connectivity.Extensions
             } 
         }
 
+        public static void DeleteItem(GameObject deleteGameObject)
+        {
+            Destroy(deleteGameObject);
+        }
+
         internal PopupContent ResetContent()
         {
             return new PopupContent
@@ -59,6 +64,7 @@ namespace Project.Scripts.Connectivity.Extensions
             }
             
             AssignContent(notification, content);
+            
             while (notification.transform.position.y > stop)
             {
                 notification.transform.Translate((Time.deltaTime * transformFactor) * Vector3.down);
