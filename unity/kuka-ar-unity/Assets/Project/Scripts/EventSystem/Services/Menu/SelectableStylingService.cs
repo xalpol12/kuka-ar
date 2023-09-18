@@ -12,6 +12,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
     
         internal Sprite DefaultSprite;
         internal Sprite SelectedSprite;
+        internal Sprite DefaultSticker;
         internal Sprite DefaultAddIcon;
         internal Sprite PressedAddIcon;
         internal Sprite InvalidSelectable;
@@ -29,6 +30,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
         {
             DefaultSprite = Resources.Load<Sprite>("Icons/cloudIcon");
             SelectedSprite = Resources.Load<Sprite>("Fields/Selected");
+            DefaultSticker = Resources.Load<Sprite>("Logos/robotIcon");
             DefaultAddIcon = Resources.Load<Sprite>("Icons/circle");
             PressedAddIcon = Resources.Load<Sprite>("Icons/circlePress");
             InvalidSelectable = Resources.Load<Sprite>("Fields/SelectFieldInvalid");

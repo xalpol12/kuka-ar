@@ -31,7 +31,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private List<GameObject> allGridItems;
         private int lastSelected;
-        private bool isRobotChosen;
         private bool performExecution;
 
         private void Start()
@@ -57,7 +56,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             appName = constantPanel.Find("AppName").GetComponent<TMP_Text>();
             
             allGridItems = new List<GameObject>();
-            isRobotChosen = false;
             performExecution = false;
             
             StartCoroutine(ServerInvoker.Invoker.GetRobots());
@@ -82,6 +80,14 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             {
                 StartCoroutine(ServerInvoker.Invoker.GetRobots(() =>
                 {
+                    if (!observableRobotsController.WebDataStorage.Robots
+                            .Any(robot => robot.IpAddress == observableRobotsController.LogicService.SelectedIpAddress
+                                          && robot.Name == observableRobotsController.LogicService.SelectedName))
+                    {
+                        observableRobotsController.StylingService.MarkAsUnselected(allGridItems, true);
+                        sticker.sprite = observableRobotsController.StylingService.DefaultSticker;
+                        ConstantPanelInfoText(false);
+                    }
                     StartCoroutine(DestroyListEntries());
                 }));
             });
@@ -155,8 +161,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 newGridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
                 {
                     observableRobotsController.StylingService.MarkAsUnselected(allGridItems, true);
-                    if (gridItem.transform.GetSiblingIndex() >
-                        observableRobotsController.WebDataStorage.Robots.Count + 1)
+                    if (newGridItem.transform.GetSiblingIndex() >
+                        observableRobotsController.WebDataStorage.Robots.Count - 1)
                     {
                         return;
                     }
@@ -172,16 +178,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private IEnumerator OnSelectActions(int index)
         {
-            if (!isRobotChosen)
-            {
-                isRobotChosen = true;
-                statusText.gameObject.SetActive(isRobotChosen);
-                statusHintText.gameObject.SetActive(isRobotChosen);
-                appName.gameObject.SetActive(!isRobotChosen);
-            }
-            
             var ipAddress = observableRobotsController.WebDataStorage.Robots[index].IpAddress;
-
+            ConstantPanelInfoText(true);
             StartCoroutine(ConnectionStatusCheckHandler(ipAddress));
 
             if (index > observableRobotsController.WebDataStorage.Robots.Count - 1)
@@ -196,6 +194,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
             observableRobotsController.LogicService.IsAfterItemSelect = true;
             observableRobotsController.LogicService.SelectedIpAddress = ipAddress;
+            observableRobotsController.LogicService.SelectedName = nameText.text;
             observableRobotsController.LogicService.SliderState = LogicStates.Hiding;
             lastSelected = index;
             yield return null;
@@ -212,6 +211,15 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
     
             StartCoroutine(InitObservableRobots());
             yield return null;
+        }
+
+        private void ConstantPanelInfoText(bool isRobotChosen)
+        {
+            nameText.gameObject.SetActive(isRobotChosen);
+            ipText.gameObject.SetActive(isRobotChosen);
+            statusText.gameObject.SetActive(isRobotChosen);
+            statusHintText.gameObject.SetActive(isRobotChosen);
+            appName.gameObject.SetActive(!isRobotChosen);
         }
         
         private IEnumerator ConnectionStatusCheckHandler(string ipAddress)
@@ -237,7 +245,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 yield return null;
             }
         }
-        
+
         private void ConnectionFailed(bool state)
         {
             performExecution = false;
@@ -254,12 +262,12 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             }
             catch (KeyNotFoundException e)
             {
-                Console.WriteLine(e.Message);
+                Debug.unityLogger.Log(e.Message);
                 return fileNotFound;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Debug.unityLogger.Log(e.Message);
             }
 
             return null;

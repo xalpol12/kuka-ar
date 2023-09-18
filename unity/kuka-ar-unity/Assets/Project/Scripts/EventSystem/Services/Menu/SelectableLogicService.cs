@@ -9,7 +9,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
         
         internal LogicStates SliderState;
         internal string SelectedIpAddress;
-        internal string PreviousSelectedIpAddress;
+        internal string SelectedName;
         internal bool IsAfterItemSelect;
 
         private void Awake()
@@ -17,10 +17,9 @@ namespace Project.Scripts.EventSystem.Services.Menu
             Instance = this;
         }
 
-        void Start()
+        private void Start()
         {
             IsAfterItemSelect = false;
-            PreviousSelectedIpAddress = "placeholder";
             SliderState = LogicStates.Waiting;
         }
     }
