@@ -195,7 +195,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             nameText.text = observableRobotsController.WebDataStorage.Robots[index].Name;
             sticker.sprite = GetSticker(ipAddress);
             AdjustImageMargin(false);
-            observableRobotsController.RobotsHandler.ChangeCurrentlyActiveRobot(ipAddress);
+            observableRobotsController.RobotsHandler.ChangeSelectedRobotIP(ipAddress);
 
             observableRobotsController.LogicService.IsAfterItemSelect = true;
             observableRobotsController.LogicService.SelectedIpAddress = ipAddress;
@@ -227,7 +227,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             appName.gameObject.SetActive(!isRobotChosen);
         }
 
-        private void AdjustImageMargin(bool inFrame = true)
+        private void AdjustImageMargin(bool inFrame)
         {
             var val = inFrame ? new[] { -15, 15, 35, 15 } : new[] { -10, -15, -10, -15 }; 
             stickerRect.offsetMax = new Vector2(val[1],val[0]) * -1;

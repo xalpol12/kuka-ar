@@ -2299,9 +2299,34 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
+      propertyPath: Spinner
+      value: 
+      objectReference: {fileID: 1859340664}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: LogicService
+      value: 
+      objectReference: {fileID: 1859340662}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: RobotsHandler
+      value: 
+      objectReference: {fileID: 1022678924}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
       propertyPath: robotsHandler
       value: 
       objectReference: {fileID: 1022678924}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: StylingService
+      value: 
+      objectReference: {fileID: 1859340663}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: WebDataStorage
+      value: 
+      objectReference: {fileID: 318450782}
     - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: gameObjectRobotsHandler
@@ -2464,6 +2489,36 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2dec6bad165255e45942ae03de04b2b0, type: 3}
+--- !u!114 &1859340662 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7920994802111269983, guid: 2dec6bad165255e45942ae03de04b2b0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1859340661}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d433d45751711f74c8159a96617817e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1859340663 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5811771572056655173, guid: 2dec6bad165255e45942ae03de04b2b0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1859340661}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7091350e79d07db429286a9f6a40045c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1859340664 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 642355113120162710, guid: 2dec6bad165255e45942ae03de04b2b0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1859340661}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1892031648
 GameObject:
   m_ObjectHideFlags: 0
@@ -2500,6 +2555,11 @@ MonoBehaviour:
   moreOptions: {fileID: 931878588}
   serverConfig: {fileID: 2130753306}
   focusMode: {fileID: 99730721}
+  ServerConfigAnim: 0
+  MenuAnim: 0
+  MoreOptionsAnim: 0
+  FocusModeAnim: 0
+  NextAnim: 
   abortServerConfigArrow: {fileID: 239668983}
   focusModeToggle: {fileID: 1768528310}
   noInternetText: {fileID: 524307598}
