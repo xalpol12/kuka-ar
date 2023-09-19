@@ -64,6 +64,7 @@ namespace Project.Scripts.Connectivity.WebSocket
 
         public void SendToWebSocketServer(string message)
         {
+            DebugLogger.Instance.AddLog($"Sent message with body: {message}; ");
             messagesToSend.Enqueue(message);
         }
 

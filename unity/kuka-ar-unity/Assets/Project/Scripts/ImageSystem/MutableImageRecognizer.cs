@@ -64,7 +64,7 @@ namespace Project.Scripts.ImageSystem
             {
                 trackedImages.Add(newImage.referenceImage.name, newImage);
                 StartCoroutine(anchorManager.StartNewAnchorTracking(newImage));
-                DebugLogger.Instance.AddLog($"Current tracked images count: {trackedImages.Count.ToString()}; ");
+                // DebugLogger.Instance.AddLog($"Current tracked images count: {trackedImages.Count.ToString()}; ");
             }
         }
 

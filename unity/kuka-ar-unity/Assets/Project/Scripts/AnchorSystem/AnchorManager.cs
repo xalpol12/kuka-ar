@@ -91,7 +91,6 @@ namespace Project.Scripts.AnchorSystem
                 {
                     cachedRobotConfig.TryGetValue(robot.Name, out var robotData);
                     robotConfigData.Add(robot.IpAddress, robotData);
-                    DebugLogger.Instance.AddLog($"Added new config for ip {robot.IpAddress}, with value pos shift x: {robotData.PositionShift.x.ToString(CultureInfo.InvariantCulture)}; ");
                 }
             }
         }
@@ -148,7 +147,9 @@ namespace Project.Scripts.AnchorSystem
 
         private static string ComposeWebSocketServerRequest(string robotIp, string variable)
         {
-            return $"{{ \"host\": \"{robotIp}\", \"var\": \"{variable}\" }}"; //TODO: add joints request
+            var request = $"{{ \"host\": \"{robotIp}\", \"var\": \"{variable}\" }}";
+            DebugLogger.Instance.AddLog($"{request}; ");
+            return request;
         }
     }
 }
