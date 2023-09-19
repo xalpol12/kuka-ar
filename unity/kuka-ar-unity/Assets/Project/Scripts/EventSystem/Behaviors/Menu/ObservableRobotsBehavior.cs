@@ -22,6 +22,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private Transform constantPanel;
         private Image serverError;
         private Image sticker;
+        private RectTransform stickerRect;
         private Button refresh;
         private TMP_Text ipText;
         private TMP_Text nameText;
@@ -47,7 +48,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             constantPanel = parent.GetComponent<Image>().gameObject
                 .transform.Find("ConstantPanel").GetComponent<Image>().gameObject.transform;
             serverError = parent.Find("ServerError").GetComponent<Image>();
-            sticker = constantPanel.Find("CoordSystemPicker").GetComponent<Image>();
+            sticker = constantPanel.Find("CoordSystemPicker").GetComponent<Image>().gameObject
+                .transform.Find("SelectedSticker").GetComponent<Image>();
+            stickerRect = sticker.GetComponent<RectTransform>();
             refresh = scrollList.transform.Find("Refresh").GetComponent<Button>();
             ipText = constantPanel.Find("CurrentIpAddress").GetComponent<TMP_Text>();
             nameText = constantPanel.Find("CurrentRobotName").GetComponent<TMP_Text>();
@@ -86,6 +89,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                     {
                         observableRobotsController.StylingService.MarkAsUnselected(allGridItems, true);
                         sticker.sprite = observableRobotsController.StylingService.DefaultSticker;
+                        AdjustImageMargin(true);
                         ConstantPanelInfoText(false);
                     }
                     StartCoroutine(DestroyListEntries());
@@ -190,7 +194,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             ipText.text = ipAddress;
             nameText.text = observableRobotsController.WebDataStorage.Robots[index].Name;
             sticker.sprite = GetSticker(ipAddress);
-            observableRobotsController.RobotsHandler.ChangeSelectedRobotIP(ipAddress);
+            AdjustImageMargin(false);
+            observableRobotsController.RobotsHandler.ChangeCurrentlyActiveRobot(ipAddress);
 
             observableRobotsController.LogicService.IsAfterItemSelect = true;
             observableRobotsController.LogicService.SelectedIpAddress = ipAddress;
@@ -220,6 +225,14 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             statusText.gameObject.SetActive(isRobotChosen);
             statusHintText.gameObject.SetActive(isRobotChosen);
             appName.gameObject.SetActive(!isRobotChosen);
+        }
+
+        private void AdjustImageMargin(bool inFrame = true)
+        {
+            var val = inFrame ? new[] { -15, 15, 35, 15 } : new[] { -10, -15, -10, -15 }; 
+            stickerRect.offsetMax = new Vector2(val[1],val[0]) * -1;
+            stickerRect.offsetMin = new Vector2(val[3],val[2]);
+            stickerRect.localScale = Vector3.one * (1 + Math.Abs(val[0] / 100));
         }
         
         private void ConnectionStatusCheckHandler()
