@@ -1,8 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.AnchorSystem;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
+using Project.Scripts.TrackedRobots;
 using Project.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -16,6 +18,7 @@ namespace Project.Scripts.ImageSystem
         
         [SerializeField] private XRReferenceImageLibrary runtimeImageLibrary;
         [SerializeField] private GameObject arPrefab;
+        [SerializeField] private TrackedRobotsHandler trackedRobotsHandler;
         
         private AnchorManager anchorManager;
         private ARTrackedImageManager imageManager;
@@ -38,6 +41,11 @@ namespace Project.Scripts.ImageSystem
             
             downloadedImages = new HashSet<string>();
             trackedImages = new Dictionary<string, ARTrackedImage>();
+
+            trackedRobotsHandler.RobotConnectionStatusConnected += ((_, b) =>
+            {
+                if (!b) DeleteAllTrackedImages();
+            }) ;
 
             imageManager = gameObject.AddComponent<ARTrackedImageManager>();
             ConfigureMutableLibrary();
@@ -125,6 +133,12 @@ namespace Project.Scripts.ImageSystem
                                         $"Currently in library: {downloadedImages.Count.ToString()} images; ");
             
             yield return null;
+        }
+
+        private void DeleteAllTrackedImages()
+        {
+            trackedImages.Clear();
+            DebugLogger.Instance.AddLog("Connection status: false, deleted all tracked images; ");
         }
     }
 }

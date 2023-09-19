@@ -190,7 +190,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             ipText.text = ipAddress;
             nameText.text = observableRobotsController.WebDataStorage.Robots[index].Name;
             sticker.sprite = GetSticker(ipAddress);
-            observableRobotsController.RobotsHandler.ChangeCurrentlyActiveRobot(ipAddress);
+            observableRobotsController.RobotsHandler.ChangeSelectedRobotIP(ipAddress);
 
             observableRobotsController.LogicService.IsAfterItemSelect = true;
             observableRobotsController.LogicService.SelectedIpAddress = ipAddress;

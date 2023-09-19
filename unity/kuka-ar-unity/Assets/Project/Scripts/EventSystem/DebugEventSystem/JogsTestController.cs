@@ -50,7 +50,7 @@ namespace Project.Scripts.EventSystem.DebugEventSystem
 
         private void SwitchCurrentlyTrackedVariable()
         {
-            handler.ChangeCurrentlyActiveRobot(currentlyTrackedRobot);
+            handler.ChangeSelectedRobotIP(currentlyTrackedRobot);
             currentlyTrackedRobot = currentlyTrackedRobot == firstIp ? secondIp : firstIp;
         }
 

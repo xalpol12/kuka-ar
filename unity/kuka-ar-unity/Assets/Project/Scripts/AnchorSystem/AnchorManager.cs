@@ -37,6 +37,11 @@ namespace Project.Scripts.AnchorSystem
             cachedRobotConfig = new Dictionary<string, RobotData>();
             
             httpClientWrapper = HttpClientWrapper.Instance;
+
+            trackedRobotsHandler.RobotConnectionStatusConnected += ((_, b) =>
+            {
+                if (!b) DeleteAllTrackedAnchors();
+            });
         }
 
         public IEnumerator LoadRequiredData()
@@ -143,6 +148,12 @@ namespace Project.Scripts.AnchorSystem
             Quaternion rotation = imageTransform.rotation * Quaternion.Euler(configData.RotationShift);
                 
             return arAnchorManager.AddAnchor(new Pose(position, rotation)); //TODO: replace obsolete method
+        }
+
+        private void DeleteAllTrackedAnchors()
+        {
+            trackedAnchors.Clear();
+            DebugLogger.Instance.AddLog("Connection status: false, deleted all anchors; ");
         }
 
         private static string ComposeWebSocketServerRequest(string robotIp, string variable)
