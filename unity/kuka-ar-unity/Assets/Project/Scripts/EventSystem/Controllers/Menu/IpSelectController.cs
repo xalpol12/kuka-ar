@@ -13,15 +13,15 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public int id;
         public GameObject ipSelector;
 
-        internal SelectableStylingService StylingService;
-        internal AddNewRobotService AddNewRobotService;
-        internal PositioningService PositioningService;
-        internal WebDataStorage DataStorage;
-        internal ButtonType ElementClicked;
-        internal ButtonType PrevElementClicked;
-        internal GameObject HexSpinner;
-        internal LogicStates ShowOptionsController;
-        internal int TransformFactor;
+        public SelectableStylingService StylingService;
+        public AddNewRobotService AddNewRobotService;
+        public PositioningService PositioningService;
+        public WebDataStorage DataStorage;
+        public ButtonType ElementClicked;
+        public ButtonType PrevElementClicked;
+        public GameObject HexSpinner;
+        public LogicStates ShowOptionsController;
+        public int TransformFactor;
 
         private const int GroupOffset = 1000;
         private bool showOptions;

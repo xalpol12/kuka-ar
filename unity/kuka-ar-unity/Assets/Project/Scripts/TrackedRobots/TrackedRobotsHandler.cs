@@ -5,6 +5,8 @@ using Project.Scripts.Connectivity.ExceptionHandling;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Parsing.OutputJson;
+using Project.Scripts.EventSystem.Enums;
+using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.Utils;
 using UnityEngine;
 
@@ -44,6 +46,7 @@ namespace Project.Scripts.TrackedRobots
                 DestroyPrefab();
             }
             selectedRobotIP = robotIP;
+            SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connecting;
             OnRobotConnectionStatusConnected(false);
         }
 
@@ -54,7 +57,6 @@ namespace Project.Scripts.TrackedRobots
 
         private void DestroyPrefab()
         {
-            currentlyTrackedRobot.JointsValueUpdated -= OnJointsValueUpdated;
             currentlyTrackedRobot = null;
             foreach (var instantiatedObject in instantiatedObjects)
             {
@@ -67,9 +69,15 @@ namespace Project.Scripts.TrackedRobots
         {
             foreach (var foundIp in newData.Values.Keys)
             {
-                if (foundIp != selectedRobotIP) continue;
-                var robotData = newData.Values[foundIp];
-                UpdateTrackedPoint(robotData);
+                if (foundIp == selectedRobotIP)
+                {
+                    SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connected;
+                    var robotData = newData.Values[foundIp];
+                    UpdateTrackedPoint(robotData);
+                } else
+                {
+                    SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Disconnected;
+                }
             }
 
             if (newData.Exception.HasValue)

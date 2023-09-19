@@ -1,11 +1,9 @@
-using System;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.TrackedRobots;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Project.Scripts.EventSystem.Controllers.Menu
 {
@@ -14,11 +12,11 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public int id;
         [Range(0f,200f)] public float transformFactor;
         public GameObject jogs;
-        internal bool ShowJogs;
-        internal bool UpdateJogs;
-        internal JogsControlService Service;
-        internal LogicStates JogsTrigger;
-        internal KRLJoints Joints;
+        public bool ShowJogs;
+        public bool UpdateJogs;
+        public JogsControlService Service;
+        public LogicStates JogsTrigger;
+        public KRLJoints Joints;
 
         [SerializeField] private GameObject gameObjectRobotHandler;
         private TrackedRobotsHandler robotsHandler;

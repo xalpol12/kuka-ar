@@ -1,0 +1,14 @@
+{
+    "name": "ServerConfigBehavior",
+    "rootNamespace": "",
+    "references": ["GUID:192bd1a9a255b4f4684d0ce01a13ad94"],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

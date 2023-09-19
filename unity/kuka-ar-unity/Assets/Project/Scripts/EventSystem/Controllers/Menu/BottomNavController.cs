@@ -10,11 +10,11 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
     {
         public int id;
         public GameObject bottomNavPanel;
-        internal SelectableStylingService StylingService;
-        internal SelectableLogicService LogicService;
-    
-        internal bool IsCirclePressed;
-        internal int TransformFactor;
+        public SelectableStylingService StylingService;
+        public SelectableLogicService LogicService;
+
+        public bool IsCirclePressed;
+        public int TransformFactor;
         
         private void Start()
         {

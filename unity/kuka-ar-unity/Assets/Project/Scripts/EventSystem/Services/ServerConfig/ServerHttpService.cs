@@ -30,7 +30,7 @@ namespace Project.Scripts.EventSystem.Services.ServerConfig
             pingFailedIcon = Resources.Load<Sprite>("Icons/cloudFailedIcon");
         }
 
-        internal IEnumerator PingOperation(string ip)
+        public IEnumerator PingOperation(string ip)
         {
             var state = PingHostAndPort(ip);
             while (!state.IsCompleted)

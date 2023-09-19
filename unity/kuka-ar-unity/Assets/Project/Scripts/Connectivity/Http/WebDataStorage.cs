@@ -16,15 +16,15 @@ namespace Project.Scripts.Connectivity.Http
         }
 
         public readonly int ConnectionTimeOut = 1000;
-        public List<Robot> ConfiguredRobots { get; set; } = new List<Robot>();
-        public List<Robot> Robots { get; set; } = new List<Robot>();
-        public List<string> AvailableIps { get; set; } = new List<string>();
-        public Dictionary<string, Sprite> Stickers { get; set; } = new Dictionary<string, Sprite>();
-        public List<string> CategoryNames { get; set; } = new List<string>();
+        public List<Robot> ConfiguredRobots { get; set; } = new();
+        public List<Robot> Robots { get; set; } = new();
+        public List<string> AvailableIps { get; set; } = new();
+        public Dictionary<string, Sprite> Stickers { get; set; } = new();
+        public List<string> CategoryNames { get; set; } = new();
         public ConnectionStatus RobotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
         public bool IsAfterRobotSave { get; set; } = false;
 
-        public Dictionary<string, bool> LoadingSpinner { get; set; } = new Dictionary<string, bool>()
+        public Dictionary<string, bool> LoadingSpinner { get; set; } = new()
         {
             { "GetRobots", false },
             { "GetConfigured", false },

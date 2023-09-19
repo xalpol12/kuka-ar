@@ -16,13 +16,13 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public GameObject bottomNav;
         public GameObject addDialog;
         [SerializeField] private GameObject saveButton;
-    
-        internal int TransformFactor;
-        internal bool IsSliderHold;
+
+        public int transformFactor;
+        public bool isSliderHold;
         internal bool IsAddRobotPressed;
         private WebDataStorage webDataStorage;
-        internal LogicStates DialogState;
-        internal AddNewRobotService AddNewRobotService;
+        public LogicStates DialogState;
+        public AddNewRobotService AddNewRobotService;
 
         private Robot data;
         private SelectableStylingService stylingService;
@@ -32,7 +32,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         private Image nameImage;
         private void Start()
         {
-            TransformFactor = 3000;
+            transformFactor = 3000;
             DialogState = LogicStates.Waiting;
             
             AddNewRobotService = AddNewRobotService.Instance;
@@ -114,7 +114,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             if (id == uid)
             {
-                IsSliderHold = false;
+                isSliderHold = false;
             }
         }
 
@@ -122,7 +122,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             if (id == uid)
             {
-                IsSliderHold = true;
+                isSliderHold = true;
             }
         }
     }

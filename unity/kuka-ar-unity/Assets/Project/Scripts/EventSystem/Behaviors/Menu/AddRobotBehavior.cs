@@ -34,7 +34,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private void Update()
         {   
-            if (robotController.IsSliderHold)
+            if (robotController.isSliderHold)
             {
                 StartCoroutine(DragSlider());
             }
@@ -64,7 +64,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         {
             robotController.addDialog.SetActive(true);
         
-            var translation = Vector3.up * (Time.deltaTime * robotController.TransformFactor);
+            var translation = Vector3.up * (Time.deltaTime * robotController.transformFactor);
             var newPose = robotController.addDialog.transform.position + translation;
             if (newPose.y > Screen.height * pullAddMenuMaxHeight)
             {
@@ -86,7 +86,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private IEnumerator HideAddDialog()
         {
-            var translation = Vector3.down * (Time.deltaTime * robotController.TransformFactor);
+            var translation = Vector3.down * (Time.deltaTime * robotController.transformFactor);
             var newPose = robotController.addDialog.transform.position + translation;
         
             if (newPose.y < homePosition.y)

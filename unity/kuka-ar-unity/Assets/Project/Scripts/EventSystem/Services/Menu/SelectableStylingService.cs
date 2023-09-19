@@ -11,13 +11,13 @@ namespace Project.Scripts.EventSystem.Services.Menu
         public static SelectableStylingService Instance;
     
         internal Sprite DefaultSprite;
-        internal Sprite SelectedSprite;
-        internal Sprite DefaultSticker;
-        internal Sprite DefaultAddIcon;
-        internal Sprite PressedAddIcon;
-        internal Sprite InvalidSelectable;
-        internal Sprite DefaultInputField;
-        internal Sprite DefaultNoFrame;
+        public Sprite SelectedSprite;
+        public Sprite DefaultSticker;
+        public Sprite DefaultAddIcon;
+        public Sprite PressedAddIcon;
+        public Sprite InvalidSelectable;
+        public Sprite DefaultInputField;
+        public Sprite DefaultNoFrame;
 
         private Sprite defaultSelectableSprite;
 

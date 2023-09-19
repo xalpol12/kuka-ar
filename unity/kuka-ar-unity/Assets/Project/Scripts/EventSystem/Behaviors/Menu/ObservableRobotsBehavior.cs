@@ -96,7 +96,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private void Update()
         {
             if (!observableRobotsController.WebDataStorage.IsAfterRobotSave) return;
-            StartCoroutine(DestroyListEntries()); 
+            StartCoroutine(DestroyListEntries());
+            ConnectionStatusCheckHandler();
             observableRobotsController.WebDataStorage.IsAfterRobotSave = false;
         }
 
@@ -180,7 +181,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         {
             var ipAddress = observableRobotsController.WebDataStorage.Robots[index].IpAddress;
             ConstantPanelInfoText(true);
-            StartCoroutine(ConnectionStatusCheckHandler(ipAddress));
 
             if (index > observableRobotsController.WebDataStorage.Robots.Count - 1)
             {
@@ -222,28 +222,16 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             appName.gameObject.SetActive(!isRobotChosen);
         }
         
-        private IEnumerator ConnectionStatusCheckHandler(string ipAddress)
+        private void ConnectionStatusCheckHandler()
         {
-            var isFinalRefresh = true;
-            observableRobotsController.WebDataStorage.RobotConnectionStatus = ConnectionStatus.Connecting;
-            StartCoroutine(ServerInvoker.Invoker.PingRobot(ipAddress));
-            
-            while (observableRobotsController.WebDataStorage.RobotConnectionStatus == ConnectionStatus.Connecting ||
-                   isFinalRefresh)
+            statusText.text = observableRobotsController.WebDataStorage.RobotConnectionStatus.ToString();
+            statusText.color = observableRobotsController.WebDataStorage.RobotConnectionStatus switch
             {
-                statusText.text = observableRobotsController.WebDataStorage.RobotConnectionStatus.ToString();
-                statusText.color = observableRobotsController.WebDataStorage.RobotConnectionStatus switch
-                {
-                    ConnectionStatus.Connected => new Color(0.176f, 0.78f, 0.439f),
-                    ConnectionStatus.Connecting => new Color(0.94f, 0.694f, 0.188f),
-                    ConnectionStatus.Disconnected => new Color(0.949f, 0.247f, 0.259f),
-                    _ => statusText.color
-                };
-
-                isFinalRefresh = observableRobotsController.WebDataStorage.RobotConnectionStatus ==
-                                 ConnectionStatus.Connecting;
-                yield return null;
-            }
+                ConnectionStatus.Connected => new Color(0.176f, 0.78f, 0.439f),
+                ConnectionStatus.Connecting => new Color(0.94f, 0.694f, 0.188f),
+                ConnectionStatus.Disconnected => new Color(0.949f, 0.247f, 0.259f),
+                _ => statusText.color
+            };
         }
 
         private void ConnectionFailed(bool state)

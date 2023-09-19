@@ -8,8 +8,8 @@ namespace Project.Scripts.EventSystem.Services.Menu
     {
         public static AddNewRobotService Instance;
         public GameObject parent;
-        internal bool ResetSelectState;
-        internal bool IsSelectDialogOpen;
+        public bool ResetSelectState;
+        public bool IsSelectDialogOpen;
         private TMP_Text ip;
         private TMP_Text category;
         private TMP_Text robotName;

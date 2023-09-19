@@ -8,10 +8,10 @@ namespace Project.Scripts.EventSystem.Controllers.Animations
         [SerializeField] private GameObject blueHex; 
         [SerializeField] private GameObject redHex; 
         [SerializeField] private GameObject greenHex;
-        
-        internal Image[] HexImages;
-        internal RectTransform[] HexRects;
-        internal Vector3[] Spin; 
+
+        public Image[] HexImages;
+        public RectTransform[] HexRects;
+        public Vector3[] Spin; 
         
         private void Start()
         {

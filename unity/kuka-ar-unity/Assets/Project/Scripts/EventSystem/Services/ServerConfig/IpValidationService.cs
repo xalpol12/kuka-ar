@@ -6,7 +6,7 @@ namespace Project.Scripts.EventSystem.Services.ServerConfig
     public class IpValidationService : MonoBehaviour
     {
         public static IpValidationService Instance;
-        internal bool ValidationResult;
+        public bool ValidationResult;
         private Sprite valid;
         private Sprite invalid;
 

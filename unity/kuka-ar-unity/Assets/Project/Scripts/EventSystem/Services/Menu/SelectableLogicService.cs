@@ -7,10 +7,12 @@ namespace Project.Scripts.EventSystem.Services.Menu
     {
         public static SelectableLogicService Instance;
         
-        internal LogicStates SliderState;
-        internal string SelectedIpAddress;
-        internal string SelectedName;
-        internal bool IsAfterItemSelect;
+        public ConnectionStatus RobotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
+
+        public LogicStates SliderState;
+        public string SelectedIpAddress;
+        public string SelectedName;
+        public bool IsAfterItemSelect;
 
         private void Awake()
         {

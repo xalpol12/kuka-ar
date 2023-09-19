@@ -22,12 +22,12 @@ namespace Project.Scripts.EventSystem.Controllers
         public GameObject moreOptions;
         public GameObject serverConfig;
         public GameObject focusMode;
-        
-        internal AnimationStates ServerConfigAnim;
-        internal AnimationStates MenuAnim;
-        internal AnimationStates MoreOptionsAnim;
-        internal AnimationStates FocusModeAnim;
-        internal List<AnimationFilter> NextAnim;
+
+        public AnimationStates ServerConfigAnim;
+        public AnimationStates MenuAnim;
+        public AnimationStates MoreOptionsAnim;
+        public AnimationStates FocusModeAnim;
+        public List<AnimationFilter> NextAnim;
     
         [SerializeField] private GameObject abortServerConfigArrow;
         [SerializeField] private GameObject focusModeToggle;

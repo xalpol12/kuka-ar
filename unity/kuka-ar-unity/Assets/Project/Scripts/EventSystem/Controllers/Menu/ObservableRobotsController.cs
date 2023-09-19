@@ -1,4 +1,3 @@
-using System;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.TrackedRobots;
@@ -10,11 +9,11 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
     {
         public GameObject parentGrid;
         [SerializeField] private GameObject gameObjectRobotsHandler;
-        internal TrackedRobotsHandler RobotsHandler;
-        internal SelectableStylingService StylingService;
-        internal SelectableLogicService LogicService;
-        internal WebDataStorage WebDataStorage;
-        internal GameObject Spinner;
+        public TrackedRobotsHandler RobotsHandler;
+        public SelectableStylingService StylingService;
+        public SelectableLogicService LogicService;
+        public WebDataStorage WebDataStorage;
+        public GameObject Spinner;
 
         private void Awake()
         {
