@@ -1,10 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.ExceptionHandling;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Parsing.OutputJson;
-using Project.Scripts.Multithreading;
 using Project.Scripts.Utils;
 using UnityEngine;
 
@@ -28,6 +28,12 @@ namespace Project.Scripts.TrackedRobots
 
         private string selectedRobotIP;
         private TrackedRobotModel currentlyTrackedRobot;
+        private List<GameObject> instantiatedObjects;
+
+        private void Start()
+        {
+            instantiatedObjects = new List<GameObject>();
+        }
 
         public void ChangeSelectedRobotIP(string robotIP)
         {
@@ -38,7 +44,7 @@ namespace Project.Scripts.TrackedRobots
                 DestroyPrefab();
             }
             selectedRobotIP = robotIP;
-            OnRobotConnectionStatusConnected(this, false);
+            OnRobotConnectionStatusConnected(false);
         }
 
         private void UnsubscribeFromWebsocket()
@@ -48,7 +54,13 @@ namespace Project.Scripts.TrackedRobots
 
         private void DestroyPrefab()
         {
+            currentlyTrackedRobot.JointsValueUpdated -= OnJointsValueUpdated;
             currentlyTrackedRobot = null;
+            foreach (var instantiatedObject in instantiatedObjects)
+            {
+                Destroy(instantiatedObject);
+            }
+            instantiatedObjects.Clear();
         }
 
         public void ReceivePackageFromWebsocket(OutputWithErrors newData)
@@ -75,32 +87,79 @@ namespace Project.Scripts.TrackedRobots
         private void OnJointsValueUpdated(object sender, KRLJoints e)
         {
             ActiveJointsUpdated?.Invoke(this, e);
+            DebugLogger.Instance.AddLog($"Updated joints for ip {selectedRobotIP}, j1: {e.J1.ToString()}; ");
         }
 
-        private void OnRobotConnectionStatusConnected(object sender, bool e)
+        private void OnRobotConnectionStatusConnected(bool e)
         {
             RobotConnectionStatusConnected?.Invoke(this, e);
+            DebugLogger.Instance.AddLog($"Updated connection status of ip {selectedRobotIP} to: {e.ToString()}; ");
         }
         
         public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
         {
             if (ipAddress == selectedRobotIP)
             {
-                UnityMainThreadDispatcher.Instance.Enqueue(() =>
-                {
-                    var position = basePoint.position;
-                    var rotation = basePoint.rotation;
-                    currentlyTrackedRobot = new TrackedRobotModel(
-                        Instantiate(prefab, position, rotation),
-                        Instantiate(prefab, position, rotation),
-                        positionThreshold,
-                        rotationThreshold);
-                
-                    DebugLogger.Instance.AddLog($"Object for ip {ipAddress} instantiated; ");
+                #if !UNITY_EDITOR || !UNITY_EDITOR_WIN
+                    StartCoroutine(InstantiateNewRobot(ipAddress, basePoint));
+                #endif
+                #if UNITY_EDITOR || UNITY_EDITOR_WIN
+                    StartCoroutine(InstantiateNewRobot(ipAddress));
+                #endif
+            }
+        }
 
-                    currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
-                    OnRobotConnectionStatusConnected(this, true);
-                });
+        //For use in app
+        private IEnumerator InstantiateNewRobot(string ipAddress, Transform basePoint)
+        {
+            bool isInstantiated = false;
+            while (!isInstantiated)
+            {
+                yield return null;
+                var position = basePoint.position;
+                var rotation = basePoint.rotation;
+                var baseObject = Instantiate(prefab, position, rotation);
+                var tcpObject = Instantiate(prefab, position, rotation);
+                currentlyTrackedRobot = new TrackedRobotModel(baseObject, tcpObject,
+                    positionThreshold,
+                    rotationThreshold);
+                
+                instantiatedObjects.Add(baseObject);
+                instantiatedObjects.Add(tcpObject);
+                
+                DebugLogger.Instance.AddLog($"Object for ip {ipAddress} instantiated; ");
+        
+                currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
+                OnRobotConnectionStatusConnected(true);
+        
+                isInstantiated = true;
+            }
+        }
+        
+        //For debug in editor only
+        private IEnumerator InstantiateNewRobot(string ipAddress)
+        {
+            bool isInstantiated = false;
+            while (!isInstantiated)
+            {
+                yield return null;
+                var position = Vector3.zero;
+                var rotation = Quaternion.identity;
+                var baseObject = Instantiate(prefab, position, rotation);
+                var tcpObject = Instantiate(prefab, position, rotation);
+                currentlyTrackedRobot = new TrackedRobotModel(baseObject, tcpObject, 
+                    positionThreshold, 
+                    rotationThreshold);
+                
+                instantiatedObjects.Add(baseObject);
+                instantiatedObjects.Add(tcpObject);
+                
+                DebugLogger.Instance.AddLog($"Object for ip {ipAddress} instantiated; ");
+             
+                currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
+                OnRobotConnectionStatusConnected(true);
+        
+                isInstantiated = true;
             }
         }
 

@@ -109,6 +109,11 @@ namespace Project.Scripts.TrackedRobots
                                         $"rot: {update.Rotation.ToString()}; ");
         }
 
+        public void DestroyGameObjects()
+        {
+            
+        }
+
         private void OnActiveBaseUpdated(object sender, KRLInt e)
         {
             // DebugLogger.Instance.AddLog($"Base number updated: {e.Value.ToString()}; ");
