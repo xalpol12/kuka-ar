@@ -31,6 +31,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private TMP_Text appName;
 
         private List<GameObject> allGridItems;
+        private int checkSum;
         private int lastSelected;
         private bool performExecution;
 
@@ -59,12 +60,11 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             appName = constantPanel.Find("AppName").GetComponent<TMP_Text>();
             
             allGridItems = new List<GameObject>();
+            checkSum = -1;
             performExecution = false;
             
-            StartCoroutine(ServerInvoker.Invoker.GetRobots());
-            
             StartCoroutine(InitObservableRobots());
-        
+            
             serverError.transform.Find("TryAgain")
                 .GetComponent<Button>().onClick.AddListener(() =>
                 {
@@ -177,6 +177,14 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 });
                 allGridItems.Add(newGridItem);
             }
+            if (storage.Robots.Count + 2 > allGridItems.Count)
+            {
+                for (var i = storage.Robots.Count + 2; i < allGridItems.Count; i++)
+                {
+                    Destroy(allGridItems[i]);
+                    allGridItems.RemoveAt(i);
+                }
+            }
             
             yield return null;
         }
@@ -213,7 +221,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             {
                 Destroy(child.gameObject);
             }
-    
+            
             StartCoroutine(InitObservableRobots());
             yield return null;
         }
@@ -295,7 +303,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             
             if (webStore.Stickers.Count == 0) yield break;
             ConnectionFailed(false);
-            StartCoroutine(InitObservableRobots());
         }
     }
 }
