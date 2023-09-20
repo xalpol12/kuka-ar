@@ -79,18 +79,24 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             
             refresh.onClick.AddListener(() =>
             {
-                StartCoroutine(ServerInvoker.Invoker.GetRobots(() =>
+                StartCoroutine(DisplayLoadingSpinner(() =>
                 {
-                    if (!observableRobotsController.WebDataStorage.Robots
-                            .Any(robot => robot.IpAddress == observableRobotsController.LogicService.SelectedIpAddress
-                                          && robot.Name == observableRobotsController.LogicService.SelectedName))
+                    performExecution = true;
+                    StartCoroutine(ServerInvoker.Invoker.GetRobots(() =>
                     {
-                        observableRobotsController.StylingService.MarkAsUnselected(allGridItems, true);
-                        sticker.sprite = observableRobotsController.StylingService.DefaultSticker;
-                        AdjustImageMargin(true);
-                        ConstantPanelInfoText(false);
-                    }
-                    StartCoroutine(DestroyListEntries());
+                        if (!observableRobotsController.WebDataStorage.Robots
+                                .Any(robot =>
+                                    robot.IpAddress == observableRobotsController.LogicService.SelectedIpAddress
+                                    && robot.Name == observableRobotsController.LogicService.SelectedName))
+                        {
+                            observableRobotsController.StylingService.MarkAsUnselected(allGridItems, true);
+                            sticker.sprite = observableRobotsController.StylingService.DefaultSticker;
+                            AdjustImageMargin(true);
+                            ConstantPanelInfoText(false);
+                        }
+
+                        StartCoroutine(DestroyListEntries());
+                    }));
                 }));
             });
         }
@@ -139,7 +145,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
             for (var i = 1; i < storage.Robots.Count + 2; i++)
             {
-                Debug.Log(allGridItems.Count);
                 if (allGridItems.Count > storage.Robots.Count + 2)
                 {
                     yield break;
@@ -180,8 +185,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 });
                 allGridItems.Add(newGridItem);
             }
-            
-            Debug.Log(storage.Robots.Count + 2 + " | " + allGridItems.Count);
             
             yield return null;
         }
@@ -284,6 +287,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             var webStore = observableRobotsController.WebDataStorage;
             
             serverError.gameObject.SetActive(false);
+            grid.SetActive(false);
             observableRobotsController.Spinner.SetActive(true);
             action();
             
@@ -295,6 +299,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 yield return null;
             }
             observableRobotsController.Spinner.SetActive(false);
+            grid.SetActive(true);
             serverError.gameObject.SetActive(true);
             
             if (webStore.Stickers.Count == 0) yield break;

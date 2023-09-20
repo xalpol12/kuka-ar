@@ -2,7 +2,7 @@ using System;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Project.Scripts.Connectivity.Extensions;
+using Project.Scripts.Connectivity.Extensions.Overriders;
 using Project.Scripts.EventSystem.Enums;
 
 namespace Project.Scripts.Connectivity.Http.Requests

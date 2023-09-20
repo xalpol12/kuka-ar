@@ -41,7 +41,7 @@ namespace Project.Scripts.Utils
 
         private void Update()
         {
-            if (messages.TryDequeue(out string message))
+            if (messages.TryDequeue(out var message))
             {
                 textField.text += message;
             }
@@ -52,7 +52,7 @@ namespace Project.Scripts.Utils
             }
         }
 
-        void OnDestroy()
+        private void OnDestroy()
         {
             Instance = null;
         }

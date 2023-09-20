@@ -5,11 +5,11 @@ namespace Project.Scripts.Connectivity.Extensions
     public class NotificationAssetWatcher : MonoBehaviour
     {
         public static NotificationAssetWatcher Watcher;
-        internal Sprite Wifi;
-        internal Sprite NoWifi;
-        internal Sprite AddedSuccess;
-        internal Sprite EditSuccess;
-        internal Sprite AddedFailed;
+        public Sprite Wifi;
+        public Sprite NoWifi;
+        public Sprite AddedSuccess;
+        public Sprite EditSuccess;
+        public Sprite AddedFailed;
 
         private void Awake()
         {

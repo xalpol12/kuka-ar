@@ -3,7 +3,7 @@ using System.Collections;
 using System.Net;
 using System.Net.Http;
 using Project.Scripts.Connectivity.Enums;
-using Project.Scripts.Connectivity.Extensions;
+using Project.Scripts.Connectivity.Extensions.Popup;
 using Project.Scripts.Connectivity.Mapping;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.EventSystem.Enums;
@@ -52,7 +52,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
             {
                 yield return null;
             }
-
+            
             popup.Try(() => storage.Robots = newRobotsTask.Result);
             action?.Invoke();
             storage.LoadingSpinner["GetRobots"] = false;

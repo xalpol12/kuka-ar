@@ -6,11 +6,12 @@ using System.Net.Http;
 using System.Net.Sockets;
 using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Enums;
+using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 using UnityEngine;
 
-namespace Project.Scripts.Connectivity.Extensions
+namespace Project.Scripts.Connectivity.Extensions.Popup
 {
     /// <summary>
     /// Popup display utility class.
@@ -86,6 +87,8 @@ namespace Project.Scripts.Connectivity.Extensions
                     {
                         content.Message = e.InnerException?.InnerException?.Message.Split("(")[1];
                         content.Icon = watcher.NoWifi;
+
+                        if (type == RequestType.GET) ClearWebStorageData(action.Method.Name);
                         if (HasDuplicates()) return;
                         break;
                     }
@@ -120,7 +123,7 @@ namespace Project.Scripts.Connectivity.Extensions
             SetTimestamp();
             StartCoroutine(ShowNotification());
         }
-        
+
         /// <summary>
         /// Allows to destroy popup.
         /// @param @optional index - element index in popup collection
@@ -153,6 +156,22 @@ namespace Project.Scripts.Connectivity.Extensions
             };
             
             SetTimestamp();
+        }
+
+        private static void ClearWebStorageData(string s)
+        {
+            switch (s)
+            {
+                case not null when s.Contains("GetRobots"): 
+                    WebDataStorage.Instance.Robots = new List<Robot>();
+                    break;
+                case not null when s.Contains("GetRobots"):
+                    WebDataStorage.Instance.ConfiguredRobots = new List<Robot>();
+                    break;
+                case not null when s.Contains("GetRobots"):
+                    WebDataStorage.Instance.Stickers = new Dictionary<string, Sprite>();
+                    break;
+            }
         }
 
         private void DragPopup(GameObject pressed)

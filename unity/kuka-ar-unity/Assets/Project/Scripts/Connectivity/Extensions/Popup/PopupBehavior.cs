@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Project.Scripts.Connectivity.Extensions
+namespace Project.Scripts.Connectivity.Extensions.Popup
 {
     public class PopupBehavior : MonoBehaviour
     {
@@ -91,7 +91,7 @@ namespace Project.Scripts.Connectivity.Extensions
             }
             var frac = Input.mousePosition.x / (Screen.width - 80 - 
                                                 (controller.HomePosition.x -
-                                                 Math.Abs(controller.PressedObject.transform.position.x)));
+                                                 Math.Abs((float)controller.PressedObject.transform.position.x)));
             controller.PressedObject.transform.GetComponent<RectTransform>().pivot = new Vector2(frac ,0.5f);
             
             while (controller.InternalGrabState == 1)
