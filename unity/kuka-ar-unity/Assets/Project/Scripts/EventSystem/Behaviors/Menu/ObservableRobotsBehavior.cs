@@ -249,8 +249,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         
         private void ConnectionStatusCheckHandler()
         {
-            statusText.text = observableRobotsController.WebDataStorage.RobotConnectionStatus.ToString();
-            statusText.color = observableRobotsController.WebDataStorage.RobotConnectionStatus switch
+            statusText.text = observableRobotsController.LogicService.RobotConnectionStatus.ToString();
+            statusText.color = observableRobotsController.LogicService.RobotConnectionStatus switch
             {
                 ConnectionStatus.Connected => new Color(0.176f, 0.78f, 0.439f),
                 ConnectionStatus.Connecting => new Color(0.94f, 0.694f, 0.188f),
