@@ -31,7 +31,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private TMP_Text appName;
 
         private List<GameObject> allGridItems;
-        private int checkSum;
         private int lastSelected;
         private bool performExecution;
 
@@ -60,7 +59,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             appName = constantPanel.Find("AppName").GetComponent<TMP_Text>();
             
             allGridItems = new List<GameObject>();
-            checkSum = -1;
             performExecution = false;
             
             StartCoroutine(InitObservableRobots());
@@ -139,11 +137,16 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             gridItem.SetActive(true);
             allGridItems.Add(gridItem);
 
-            for (var i = 1; i < observableRobotsController.WebDataStorage.Robots.Count + 2; i++)
+            for (var i = 1; i < storage.Robots.Count + 2; i++)
             {
+                Debug.Log(allGridItems.Count);
+                if (allGridItems.Count > storage.Robots.Count + 2)
+                {
+                    yield break;
+                }
                 var newGridItem = Instantiate(gridItem, grid.transform, false);
                 
-                if (i > observableRobotsController.WebDataStorage.Robots.Count - 1)
+                if (i >storage.Robots.Count - 1)
                 {
                     newGridItem.transform.GetComponent<Image>().color = Color.clear;
                     newGridItem.transform.Find("TemplateImg").GetComponent<Image>().color = Color.clear;
@@ -177,14 +180,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 });
                 allGridItems.Add(newGridItem);
             }
-            if (storage.Robots.Count + 2 > allGridItems.Count)
-            {
-                for (var i = storage.Robots.Count + 2; i < allGridItems.Count; i++)
-                {
-                    Destroy(allGridItems[i]);
-                    allGridItems.RemoveAt(i);
-                }
-            }
+            
+            Debug.Log(storage.Robots.Count + 2 + " | " + allGridItems.Count);
             
             yield return null;
         }
@@ -221,7 +218,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             {
                 Destroy(child.gameObject);
             }
-            
             StartCoroutine(InitObservableRobots());
             yield return null;
         }
@@ -303,6 +299,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             
             if (webStore.Stickers.Count == 0) yield break;
             ConnectionFailed(false);
+            StartCoroutine(InitObservableRobots());
         }
     }
 }
