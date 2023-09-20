@@ -104,9 +104,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private void Update()
         {
+            ConnectionStatusCheckHandler();
             if (!observableRobotsController.WebDataStorage.IsAfterRobotSave) return;
             StartCoroutine(DestroyListEntries());
-            ConnectionStatusCheckHandler();
             observableRobotsController.WebDataStorage.IsAfterRobotSave = false;
         }
 
