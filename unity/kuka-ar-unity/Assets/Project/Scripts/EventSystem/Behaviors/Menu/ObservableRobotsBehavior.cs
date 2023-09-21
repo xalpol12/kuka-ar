@@ -131,7 +131,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 storage.Robots[0].Name;
             gridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
                 storage.Robots[0].IpAddress;
-            gridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite = GetSticker(storage.Robots[0].IpAddress);
+            var img = gridItem.transform.Find("TemplateImgBounds").GetComponent<Image>().gameObject.transform
+                .Find("TemplateImg").GetComponent<Image>();
+            GetSticker(storage.Robots[0].IpAddress, img);
 
             gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
@@ -154,7 +156,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 if (i >storage.Robots.Count - 1)
                 {
                     newGridItem.transform.GetComponent<Image>().color = Color.clear;
-                    newGridItem.transform.Find("TemplateImg").GetComponent<Image>().color = Color.clear;
+                    newGridItem.transform.Find("TemplateImgBounds").GetComponent<Image>().gameObject.transform
+                        .Find("TemplateImg").GetComponent<Image>().color = Color.clear;
                     newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text = "";
                     newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text = "";
                 }
@@ -167,8 +170,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                         storage.Robots[i].Name;
                     newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
                         storage.Robots[i].IpAddress;
-                    newGridItem.transform.Find("TemplateImg").GetComponent<Image>().sprite =
-                        GetSticker(storage.Robots[i].IpAddress);
+                    img = newGridItem.transform.Find("TemplateImgBounds").GetComponent<Image>().gameObject.transform
+                        .Find("TemplateImg").GetComponent<Image>();
+                        GetSticker(storage.Robots[i].IpAddress, img);
                 }
 
                 newGridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
@@ -201,7 +205,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
             ipText.text = ipAddress;
             nameText.text = observableRobotsController.WebDataStorage.Robots[index].Name;
-            sticker.sprite = GetSticker(ipAddress);
+            
+            GetSticker(ipAddress, sticker);
             AdjustImageMargin(false);
             observableRobotsController.RobotsHandler.ChangeSelectedRobotIP(ipAddress);
 
@@ -236,10 +241,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private void AdjustImageMargin(bool inFrame)
         {
-            var val = inFrame ? new[] { -15, 15, 35, 15 } : new[] { -10, -15, -10, -15 }; 
+            var val = inFrame ? new[] { -20, 15, 20, 15 } : new[] { -10, -15, -10, -15 }; 
             stickerRect.offsetMax = new Vector2(val[1],val[0]) * -1;
-            stickerRect.offsetMin = new Vector2(val[3],val[2]);
-            stickerRect.localScale = Vector3.one * (1 + Math.Abs(val[0] / 100));
+            stickerRect.offsetMin = new Vector2(val[3], val[2]);
         }
         
         private void ConnectionStatusCheckHandler()
@@ -262,23 +266,22 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             serverError.gameObject.SetActive(state);
         }
 
-        private Sprite GetSticker(string ip)
+        private void GetSticker(string ip, Image image)
         {
             try
             {
-                 return observableRobotsController.WebDataStorage.Stickers[ip];
+                 image.sprite = observableRobotsController.WebDataStorage.Stickers[ip];
             }
             catch (KeyNotFoundException e)
             {
                 Debug.unityLogger.Log(e.Message);
-                return fileNotFound;
+                image.transform.localScale = Vector3.one * 0.815f;
+                image.sprite = fileNotFound;
             }
             catch (Exception e)
             {
                 Debug.unityLogger.Log(e.Message);
             }
-
-            return null;
         }
 
         private IEnumerator DisplayLoadingSpinner(Action action)
