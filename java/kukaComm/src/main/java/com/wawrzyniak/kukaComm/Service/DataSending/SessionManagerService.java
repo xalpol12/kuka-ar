@@ -38,4 +38,8 @@ public class SessionManagerService {
        }
        return robots;
     }
+
+    public void removeRobot(WebSocketSession session, String unsubscribeIp) {
+        threads.get(session).removeRobot(unsubscribeIp);
+    }
 }

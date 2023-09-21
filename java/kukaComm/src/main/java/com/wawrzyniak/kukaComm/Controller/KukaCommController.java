@@ -4,8 +4,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.wawrzyniak.kukaComm.Exceptions.WrongIpException;
 import com.wawrzyniak.kukaComm.Model.Records.ExceptionMessagePair;
-import com.wawrzyniak.kukaComm.Model.Records.IpVariablePair;
+import com.wawrzyniak.kukaComm.Model.SocketRequest.DataRequest;
 import com.wawrzyniak.kukaComm.Model.Records.OutputWithErrors;
+import com.wawrzyniak.kukaComm.Model.SocketRequest.SocketRequest;
+import com.wawrzyniak.kukaComm.Model.SocketRequest.UnsubscribeRequest;
 import com.wawrzyniak.kukaComm.Service.DataReading.KukaClientService;
 import com.wawrzyniak.kukaComm.Service.DataSending.SessionManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,14 +41,21 @@ public class KukaCommController extends TextWebSocketHandler {
     @Override
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         String request = message.getPayload();
-        IpVariablePair data = getIpVariablePair(session, request);
-        if (data == null) return;
+        SocketRequest socketRequest = unpackRequest(session, request);
+        if (socketRequest == null) return;
+        switch (socketRequest.getRequestType()) {
+            case UNSUBSCRIBE ->  handleDataRequest(session, (DataRequest) socketRequest);
+            case DATA -> handleUnsubscribeRequest(session, (UnsubscribeRequest) socketRequest);
+        }
+    }
+
+    private void handleDataRequest(WebSocketSession session, DataRequest data) throws IOException {
         try {
-            kukaService.readVariable(data.host(), data.var());
+            kukaService.readVariable(data.getHost(), data.getVar());
             sessionService.addVariable(
                     session,
-                    data.host(),
-                    kukaService.getVariable(data.host(), data.var()));
+                    data.getHost(),
+                    kukaService.getVariable(data.getHost(), data.getVar()));
         } catch (WrongIpException e) {
             try {
                 session.sendMessage(new TextMessage(mapper.writeValueAsString(
@@ -61,10 +70,14 @@ public class KukaCommController extends TextWebSocketHandler {
         }
     }
 
-    private IpVariablePair getIpVariablePair(WebSocketSession session, String request) throws IOException {
-        IpVariablePair data;
+    private void handleUnsubscribeRequest(WebSocketSession session, UnsubscribeRequest data){
+        sessionService.removeRobot(session, data.getUnsubscribeIp());
+    }
+
+    private SocketRequest unpackRequest(WebSocketSession session, String request) throws IOException {
+        SocketRequest data;
         try {
-            data = mapper.readValue(request, IpVariablePair.class);
+            data = mapper.readValue(request, SocketRequest.class);
         } catch (JsonProcessingException e) {
             try {
                 session.sendMessage(new TextMessage(mapper.writeValueAsString(
