@@ -63,6 +63,7 @@ public class KukaCommController extends TextWebSocketHandler {
             }
             case UNSUBSCRIBE:{
                 UnsubscribeRequest data = (UnsubscribeRequest) socketRequest;
+                sessionService.removeRobot(session, data.getUnsubscribeIp());
                 logger.info("Unsubscribe request for ip: {}", data.getUnsubscribeIp());
                 break;
             }

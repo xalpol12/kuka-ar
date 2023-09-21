@@ -36,6 +36,12 @@ public class ClientDataThread extends Thread {
         }
     }
 
+    public void removeRobot(String host) {
+        if(variables.containsKey(host)){
+            variables.remove(host);
+        }
+    }
+
     @Override
     @SneakyThrows
     public void run(){

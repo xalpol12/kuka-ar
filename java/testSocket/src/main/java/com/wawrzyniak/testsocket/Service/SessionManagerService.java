@@ -29,4 +29,8 @@ public class SessionManagerService {
         threads.get(session).addVariable(hostIp, var);
     }
 
+    public void removeRobot(WebSocketSession session, String host){
+        threads.get(session).removeRobot(host);
+    }
+
 }
