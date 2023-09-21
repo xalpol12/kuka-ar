@@ -18,6 +18,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 public class KukaCommController extends TextWebSocketHandler {
@@ -33,7 +34,6 @@ public class KukaCommController extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) {
         sessionService.addSession(session);
-
         logger.info("New session started: {}", session.getRemoteAddress().toString());
     }
 
@@ -41,34 +41,33 @@ public class KukaCommController extends TextWebSocketHandler {
     public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         String request = message.getPayload();
         SocketRequest socketRequest = mapper.readValue(request, SocketRequest.class);
-        switch (socketRequest.getRequestType()){
-            case DATA: {
-                DataRequest data = (DataRequest) socketRequest;
-                if (data.getVar() == VarType.WRONG) {
-                    session.sendMessage(new TextMessage(mapper.writeValueAsString(
-                            new OutputWithErrors(
-                                    new HashMap<>(), new ExceptionMessagePair(
-                                    ExceptionTypes.WRONG_IP.getException().getClass().getSimpleName(),
-                                    ExceptionTypes.WRONG_IP.getException().getMessage(),
-                                    400)
-                            ))));
-                    logger.info("Mocked exception sent to: {}", session.getRemoteAddress().toString());
-                    return;
-                }
-                kukaService.addVariable(data.getHost(), data.getVar());
-                sessionService.addVariable(session, data.getHost(), kukaService.getVariable(data.getHost(), data.getVar()));
-
-                logger.info("Created connection to variable: {} ip: {}", data.getVar().name(), data.getHost());
-                break;
-            }
-            case UNSUBSCRIBE:{
-                UnsubscribeRequest data = (UnsubscribeRequest) socketRequest;
-                sessionService.removeRobot(session, data.getUnsubscribeIp());
-                logger.info("Unsubscribe request for ip: {}", data.getUnsubscribeIp());
-                break;
-            }
+        switch (socketRequest.getRequestType()) {
+            case DATA -> handleDataRequest(session, (DataRequest) socketRequest);
+            case UNSUBSCRIBE -> handleUnsubscribeRequest(session, (UnsubscribeRequest) socketRequest;
         }
+    }
 
+    private void handleUnsubscribeRequest(WebSocketSession session, UnsubscribeRequest data) {
+        sessionService.removeRobot(session, data.getUnsubscribeIp());
+        logger.info("Unsubscribe request for ip: {}", data.getUnsubscribeIp());
+    }
+
+    private void handleDataRequest(WebSocketSession session, DataRequest data) throws IOException {
+        if (data.getVar() == VarType.WRONG) {
+            session.sendMessage(new TextMessage(mapper.writeValueAsString(
+                    new OutputWithErrors(
+                            new HashMap<>(), new ExceptionMessagePair(
+                            ExceptionTypes.WRONG_IP.getException().getClass().getSimpleName(),
+                            ExceptionTypes.WRONG_IP.getException().getMessage(),
+                            400)
+                    ))));
+            logger.info("Mocked exception sent to: {}", session.getRemoteAddress().toString());
+            return;
+        }
+        kukaService.addVariable(data.getHost(), data.getVar());
+        sessionService.addVariable(session, data.getHost(), kukaService.getVariable(data.getHost(), data.getVar()));
+
+        logger.info("Created connection to variable: {} ip: {}", data.getVar().name(), data.getHost());
     }
 
     @Override
