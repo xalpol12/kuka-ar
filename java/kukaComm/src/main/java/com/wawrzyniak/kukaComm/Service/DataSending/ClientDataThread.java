@@ -38,6 +38,12 @@ public class ClientDataThread extends Thread {
         }
     }
 
+    public void removeRobot(String unsubscribeIp) {
+        if(variables.containsKey(unsubscribeIp)){
+            variables.remove(unsubscribeIp);
+        }
+    }
+
     @SneakyThrows
     @Override
     public void run() {
