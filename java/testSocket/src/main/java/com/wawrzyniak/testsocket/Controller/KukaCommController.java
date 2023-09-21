@@ -43,7 +43,7 @@ public class KukaCommController extends TextWebSocketHandler {
         SocketRequest socketRequest = mapper.readValue(request, SocketRequest.class);
         switch (socketRequest.getRequestType()) {
             case DATA -> handleDataRequest(session, (DataRequest) socketRequest);
-            case UNSUBSCRIBE -> handleUnsubscribeRequest(session, (UnsubscribeRequest) socketRequest;
+            case UNSUBSCRIBE -> handleUnsubscribeRequest(session, (UnsubscribeRequest) socketRequest);
         }
     }
 
