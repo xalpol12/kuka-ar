@@ -1,3 +1,4 @@
+using System;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using TMPro;
 using UnityEngine;
@@ -8,8 +9,8 @@ namespace Project.Scripts.EventSystem.Services.Menu
     {
         public static AddNewRobotService Instance;
         public GameObject parent;
-        public bool ResetSelectState;
-        public bool IsSelectDialogOpen;
+        [NonSerialized] public bool ResetSelectState;
+        [NonSerialized] public bool IsSelectDialogOpen;
         private TMP_Text ip;
         private TMP_Text category;
         private TMP_Text robotName;

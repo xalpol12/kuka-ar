@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Sockets;
 using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Enums;
+using Project.Scripts.Connectivity.Extensions.Notifications;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
@@ -53,7 +54,7 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
             InternalGrabState = 2;
             PressedObject = null;
             
-            content = popupBehavior.ResetContent();
+            content = PopupBehavior.ResetContent();
 
             NotificationEvents.Events.DragNotification += DragPopup;
             NotificationEvents.Events.DropNotification += DropPopup;
@@ -64,7 +65,7 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
         /// Tries to execute the given action. If it fails, shows popup window with error message.
         /// @param action - task to execute
         /// </summary>
-        public void Try(Action action, Robot result = default, RequestType type = RequestType.GET)
+        public void Try(Action action, Robot result = default, RequestType type = RequestType.Get)
         {
             var isInvalidOperation = false;
             try
@@ -88,7 +89,7 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
                         content.Message = e.InnerException?.InnerException?.Message.Split("(")[1];
                         content.Icon = watcher.NoWifi;
 
-                        if (type == RequestType.GET) ClearWebStorageData(action.Method.Name);
+                        if (type == RequestType.Get) ClearWebStorageData(action.Method.Name);
                         if (HasDuplicates()) return;
                         break;
                     }
@@ -100,7 +101,7 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
                             {
                                 Header = $"{error.ExceptionName} {error.ExceptionCode}",
                                 Message = error.ExceptionMessage,
-                                Icon = type is RequestType.POST or RequestType.PUT 
+                                Icon = type is RequestType.Post or RequestType.Put 
                                     ? watcher.AddedFailed : watcher.NoWifi,
                             };
                         }
@@ -205,13 +206,13 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
         {
             content = type switch
             {
-                RequestType.POST => new PopupContent
+                RequestType.Post => new PopupContent
                 {
                     Header = "Robot added",
                     Message = $"Machine with name {response.Name} has been added",
                     Icon = watcher.AddedSuccess
                 },
-                RequestType.PUT => new PopupContent
+                RequestType.Put => new PopupContent
                 {
                     Header = "Robots data updated",
                     Message = $"Successfully updated robot with ip address {response.IpAddress}",

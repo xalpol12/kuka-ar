@@ -13,7 +13,7 @@ namespace Project.Scripts.Connectivity.Mapping
             Instance = this;
         }
 
-        public List<string> MapStringToIpAddress(Dictionary<string, byte[]> stickers)
+        public static List<string> MapStringToIpAddress(Dictionary<string, byte[]> stickers)
         {
             return stickers.Select(image => image.Key).ToList();
         }

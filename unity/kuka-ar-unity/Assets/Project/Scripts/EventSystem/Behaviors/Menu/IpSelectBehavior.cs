@@ -136,9 +136,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             var translation = Vector3.right * (Time.deltaTime * selectController.TransformFactor);
             var newPose = selectController.ipSelector.transform.position + translation;
         
-            if (newPose.x > selectController.PositioningService.BestFitPosition.x)
+            if (newPose.x > selectController.PositioningService.bestFitPosition.x)
             {
-                var finalPose = new Vector3(selectController.PositioningService.BestFitPosition.x, newPose.y);
+                var finalPose = new Vector3(selectController.PositioningService.bestFitPosition.x, newPose.y);
 
                 isDialogOpen = true;
                 selectController.AddNewRobotService.IsSelectDialogOpen = isDialogOpen;

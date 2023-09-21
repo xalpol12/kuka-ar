@@ -1,3 +1,4 @@
+using System;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
@@ -18,11 +19,11 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         [SerializeField] private GameObject saveButton;
 
         public int transformFactor;
-        public bool isSliderHold;
+        [NonSerialized] public bool IsSliderHold;
         internal bool IsAddRobotPressed;
         private WebDataStorage webDataStorage;
-        public LogicStates DialogState;
-        public AddNewRobotService AddNewRobotService;
+        [NonSerialized] public LogicStates DialogState;
+        [NonSerialized] public AddNewRobotService AddNewRobotService;
 
         private Robot data;
         private SelectableStylingService stylingService;
@@ -114,7 +115,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             if (id == uid)
             {
-                isSliderHold = false;
+                IsSliderHold = false;
             }
         }
 
@@ -122,7 +123,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         {
             if (id == uid)
             {
-                isSliderHold = true;
+                IsSliderHold = true;
             }
         }
     }

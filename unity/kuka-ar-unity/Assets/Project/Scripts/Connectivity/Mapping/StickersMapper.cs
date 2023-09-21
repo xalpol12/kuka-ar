@@ -12,7 +12,7 @@ namespace Project.Scripts.Connectivity.Mapping
             Instance = this;
         }
         
-        public Dictionary<string, Sprite> MapBytesToSprite(Dictionary<string, byte[]> img)
+        public static Dictionary<string, Sprite> MapBytesToSprite(Dictionary<string, byte[]> img)
         {
             var dict = new Dictionary<string, Sprite>();
             foreach (var sticker in img)

@@ -1,15 +1,16 @@
+using System;
 using UnityEngine;
 
-namespace Project.Scripts.Connectivity.Extensions
+namespace Project.Scripts.Connectivity.Extensions.Notifications
 {
     public class NotificationAssetWatcher : MonoBehaviour
     {
         public static NotificationAssetWatcher Watcher;
-        public Sprite Wifi;
-        public Sprite NoWifi;
-        public Sprite AddedSuccess;
-        public Sprite EditSuccess;
-        public Sprite AddedFailed;
+        [NonSerialized] public Sprite Wifi;
+        [NonSerialized] public Sprite NoWifi;
+        [NonSerialized] public Sprite AddedSuccess;
+        [NonSerialized] public Sprite EditSuccess;
+        [NonSerialized] public Sprite AddedFailed;
 
         private void Awake()
         {

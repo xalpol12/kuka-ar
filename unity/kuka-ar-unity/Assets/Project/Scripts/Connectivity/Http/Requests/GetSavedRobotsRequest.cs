@@ -8,7 +8,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
 {
     public class GetSavedRobotsRequest : IHttpRequest<List<Robot>>
     {
-        private string URL => "/robots";
+        private static string URL => "/robots";
 
         public async Task<List<Robot>> Execute(HttpClient httpClient)
         {

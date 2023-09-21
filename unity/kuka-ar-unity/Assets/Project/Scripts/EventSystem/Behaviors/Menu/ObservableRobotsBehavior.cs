@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
@@ -208,7 +209,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             
             GetSticker(ipAddress, sticker);
             AdjustImageMargin(false);
-            observableRobotsController.RobotsHandler.ChangeSelectedRobotIP(ipAddress);
+            observableRobotsController.robotsHandler.ChangeSelectedRobotIP(ipAddress);
 
             observableRobotsController.LogicService.IsAfterItemSelect = true;
             observableRobotsController.LogicService.SelectedIpAddress = ipAddress;

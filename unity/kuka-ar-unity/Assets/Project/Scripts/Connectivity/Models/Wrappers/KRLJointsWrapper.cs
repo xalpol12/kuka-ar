@@ -1,38 +1,35 @@
-
 using System;
 using Project.Scripts.Connectivity.Models.KRLValues;
 
 namespace Project.Scripts.Connectivity.Models.Wrappers
 {
-    public class KRLJointsWrapper : IKRLWrapper
+    public class KrlJointsWrapper : IKrlWrapper
     {
-        public event EventHandler<KRLJoints> ValueUpdated;
+        public event EventHandler<KrlJoints> ValueUpdated;
         
-        private KRLJoints krlJoints { get; set; }
+        private KrlJoints krlLocalJoints { get; set; }
 
-        public KRLJoints KrlJoints => krlJoints;
+        public KrlJoints KrlJoints => krlLocalJoints;
 
         private readonly float rotationThreshold;
 
-        public KRLJointsWrapper(float rotationThreshold)
+        public KrlJointsWrapper(float rotationThreshold)
         {
             this.rotationThreshold = rotationThreshold;
-            krlJoints = new KRLJoints();
+            krlLocalJoints = new KrlJoints();
         }
 
-        public void UpdateValue(KRLValue update)
+        public void UpdateValue(IKrlValue update)
         {
-            KRLJoints newValue = (KRLJoints)update;
-            if (IsNewValueGreaterThanRotationThreshold(newValue)) 
-            {
-                krlJoints = newValue;
-                OnValueUpdated(krlJoints);
-            }
+            var newValue = (KrlJoints)update;
+            if (!IsNewValueGreaterThanRotationThreshold(newValue)) return;
+            krlLocalJoints = newValue;
+            OnValueUpdated(krlLocalJoints);
         }
 
-        private bool IsNewValueGreaterThanRotationThreshold(KRLJoints newValue)
+        private bool IsNewValueGreaterThanRotationThreshold(KrlJoints newValue)
         {
-            var difference = newValue - krlJoints;
+            var difference = newValue - krlLocalJoints;
             return Math.Abs(difference.J1) > rotationThreshold ||
                    Math.Abs(difference.J2) > rotationThreshold ||
                    Math.Abs(difference.J3) > rotationThreshold ||
@@ -41,7 +38,7 @@ namespace Project.Scripts.Connectivity.Models.Wrappers
                    Math.Abs(difference.J6) > rotationThreshold;
         }
 
-        private void OnValueUpdated(KRLJoints e)
+        private void OnValueUpdated(KrlJoints e)
         {
             ValueUpdated?.Invoke(this, e);
         }

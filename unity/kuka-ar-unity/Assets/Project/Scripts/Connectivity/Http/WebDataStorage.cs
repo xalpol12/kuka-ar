@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
-using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Http
@@ -15,7 +15,7 @@ namespace Project.Scripts.Connectivity.Http
             Instance = this;
         }
 
-        public readonly int ConnectionTimeOut = 1000;
+        public const int ConnectionTimeOut = 1000;
         public List<Robot> ConfiguredRobots { get; set; } = new();
         public List<Robot> Robots { get; set; } = new();
         public List<string> AvailableIps { get; set; } = new();

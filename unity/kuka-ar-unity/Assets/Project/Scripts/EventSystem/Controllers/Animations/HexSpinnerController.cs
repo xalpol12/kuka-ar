@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,9 +10,9 @@ namespace Project.Scripts.EventSystem.Controllers.Animations
         [SerializeField] private GameObject redHex; 
         [SerializeField] private GameObject greenHex;
 
-        public Image[] HexImages;
-        public RectTransform[] HexRects;
-        public Vector3[] Spin; 
+        [NonSerialized] public Image[] HexImages;
+        [NonSerialized] public RectTransform[] HexRects;
+        [NonSerialized] public Vector3[] Spin; 
         
         private void Start()
         {

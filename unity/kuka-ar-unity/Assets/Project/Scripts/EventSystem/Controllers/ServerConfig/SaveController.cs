@@ -22,7 +22,7 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
         
             var inputTextBox = ipInputField.GetComponent<TMP_InputField>();
             inputTextBox.lineType = TMP_InputField.LineType.SingleLine;
-            if (PlayerPrefs.GetInt("firstRun") != new PlayersPrefsStates().FirstRun)
+            if (PlayerPrefs.GetInt("firstRun") != PlayersPrefsStates.FirstRun)
             {
                 inputTextBox.text = PlayerPrefs.GetString("serverIp");
             }

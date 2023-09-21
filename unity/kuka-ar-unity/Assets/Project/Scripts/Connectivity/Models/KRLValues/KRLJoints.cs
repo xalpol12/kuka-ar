@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Project.Scripts.Connectivity.Models.KRLValues
 {
-    public struct KRLJoints : KRLValue
+    public struct KrlJoints : IKrlValue
     {
         [JsonProperty("j1")]
         public double J1 { get; set; }
@@ -17,9 +17,9 @@ namespace Project.Scripts.Connectivity.Models.KRLValues
         [JsonProperty("j6")]
         public double J6 { get; set; }
 
-        public static KRLJoints operator -(KRLJoints left, KRLJoints right)
+        public static KrlJoints operator -(KrlJoints left, KrlJoints right)
         {
-            KRLJoints result = new KRLJoints
+            var result = new KrlJoints
             {
                 J1 = left.J1 - right.J1,
                 J2 = left.J2 - right.J2,

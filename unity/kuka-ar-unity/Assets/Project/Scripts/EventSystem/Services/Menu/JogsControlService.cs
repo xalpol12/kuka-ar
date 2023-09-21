@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Project.Scripts.EventSystem.Services.Menu
@@ -6,8 +7,8 @@ namespace Project.Scripts.EventSystem.Services.Menu
     {
         public static JogsControlService Instance;
 
-        public bool IsBottomNavDocked;
-        public bool IsAddRobotDialogOpen;
+        [NonSerialized] public bool IsBottomNavDocked;
+        [NonSerialized] public bool IsAddRobotDialogOpen;
         private void Awake()
         {
             Instance = this;

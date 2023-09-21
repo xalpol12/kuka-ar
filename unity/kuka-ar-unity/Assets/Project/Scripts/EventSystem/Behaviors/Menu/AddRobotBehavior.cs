@@ -34,7 +34,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private void Update()
         {   
-            if (robotController.isSliderHold)
+            if (robotController.IsSliderHold)
             {
                 StartCoroutine(DragSlider());
             }

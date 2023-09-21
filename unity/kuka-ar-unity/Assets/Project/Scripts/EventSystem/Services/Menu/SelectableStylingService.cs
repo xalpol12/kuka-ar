@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -11,13 +12,13 @@ namespace Project.Scripts.EventSystem.Services.Menu
         public static SelectableStylingService Instance;
     
         internal Sprite DefaultSprite;
-        public Sprite SelectedSprite;
-        public Sprite DefaultSticker;
-        public Sprite DefaultAddIcon;
-        public Sprite PressedAddIcon;
-        public Sprite InvalidSelectable;
-        public Sprite DefaultInputField;
-        public Sprite DefaultNoFrame;
+        [NonSerialized] public Sprite SelectedSprite;
+        [NonSerialized] public Sprite DefaultSticker;
+        [NonSerialized] public Sprite DefaultAddIcon;
+        [NonSerialized] public Sprite PressedAddIcon;
+        [NonSerialized] public Sprite InvalidSelectable;
+        [NonSerialized] public Sprite DefaultInputField;
+        [NonSerialized] public Sprite DefaultNoFrame;
 
         private Sprite defaultSelectableSprite;
 

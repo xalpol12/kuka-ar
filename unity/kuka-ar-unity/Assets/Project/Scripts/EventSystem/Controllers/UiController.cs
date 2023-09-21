@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
@@ -23,11 +24,11 @@ namespace Project.Scripts.EventSystem.Controllers
         public GameObject serverConfig;
         public GameObject focusMode;
 
-        public AnimationStates ServerConfigAnim;
-        public AnimationStates MenuAnim;
-        public AnimationStates MoreOptionsAnim;
-        public AnimationStates FocusModeAnim;
-        public List<AnimationFilter> NextAnim;
+        [NonSerialized] public AnimationStates ServerConfigAnim;
+        [NonSerialized] public AnimationStates MenuAnim;
+        [NonSerialized] public AnimationStates MoreOptionsAnim;
+        [NonSerialized] public AnimationStates FocusModeAnim;
+        [NonSerialized] public List<AnimationFilter> NextAnim;
     
         [SerializeField] private GameObject abortServerConfigArrow;
         [SerializeField] private GameObject focusModeToggle;
@@ -51,7 +52,7 @@ namespace Project.Scripts.EventSystem.Controllers
             isQuitting = false;
         
             SetFadeController();
-            if (PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun)
+            if (PlayerPrefs.GetInt("firstRun") == PlayersPrefsStates.FirstRun)
             {
                 SetPrefabsActiveState(false, true, false);
             }
@@ -133,9 +134,9 @@ namespace Project.Scripts.EventSystem.Controllers
             ServerConfigAnim = AnimationStates.FadeOut;
             NextAnim.Add(AnimationFilter.MenuIn);
 
-            if (PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun)
+            if (PlayerPrefs.GetInt("firstRun") == PlayersPrefsStates.FirstRun)
             {
-                PlayerPrefs.SetInt("firstRun", new PlayersPrefsStates().NthRun);
+                PlayerPrefs.SetInt("firstRun", PlayersPrefsStates.NthRun);
             }
             
             WebSocketClient.Instance.ConnectToWebsocket(
@@ -202,9 +203,9 @@ namespace Project.Scripts.EventSystem.Controllers
                 FocusModeAnim = AnimationStates.StandBy;
                 return;
             }
-            ServerConfigAnim = PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun ?
+            ServerConfigAnim = PlayerPrefs.GetInt("firstRun") == PlayersPrefsStates.FirstRun ?
                 AnimationStates.FadeIn : AnimationStates.StandBy;
-            MenuAnim = PlayerPrefs.GetInt("firstRun") == new PlayersPrefsStates().FirstRun ?
+            MenuAnim = PlayerPrefs.GetInt("firstRun") == PlayersPrefsStates.FirstRun ?
                 AnimationStates.StandBy : AnimationStates.FadeIn;
             MoreOptionsAnim = AnimationStates.StandBy;
             FocusModeAnim = AnimationStates.StandBy;

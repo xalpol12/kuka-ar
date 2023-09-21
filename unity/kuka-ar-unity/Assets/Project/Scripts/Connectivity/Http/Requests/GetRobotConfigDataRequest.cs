@@ -8,7 +8,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
 {
     public class GetRobotConfigDataRequest : IHttpRequest<Dictionary<string, Dictionary<string, RobotData>>>
     {
-        private string URL => "/configured";
+        private static string URL => "/configured";
         
         public async Task<Dictionary<string, Dictionary<string, RobotData>>> Execute(HttpClient httpClient)
         {

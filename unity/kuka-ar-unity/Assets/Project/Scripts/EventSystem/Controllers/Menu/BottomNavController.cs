@@ -1,3 +1,4 @@
+using System;
 using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
@@ -10,12 +11,13 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
     {
         public int id;
         public GameObject bottomNavPanel;
-        public SelectableStylingService StylingService;
-        public SelectableLogicService LogicService;
 
-        public bool IsCirclePressed;
-        public int TransformFactor;
-        
+        [NonSerialized] public SelectableStylingService StylingService;
+        [NonSerialized] public SelectableLogicService LogicService;
+
+        [NonSerialized] public bool IsCirclePressed;
+        [NonSerialized] public int TransformFactor;
+
         private void Start()
         {
             StylingService = SelectableStylingService.Instance;
@@ -23,7 +25,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             
             TransformFactor = 5000;
             IsCirclePressed = false;
-            PositioningService.Instance.BestFitPosition = bottomNavPanel.transform.position;
+            PositioningService.Instance.bestFitPosition = bottomNavPanel.transform.position;
         
             MenuEvents.Event.OnPressConstantSelectorSlider += BottomNavOnMove;
             MenuEvents.Event.OnReleaseConstantSelectorSlider += BottomNavToDockPosition;

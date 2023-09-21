@@ -12,7 +12,7 @@ namespace Project.Scripts.Multithreading
 		
 		private static readonly Queue<Action> ExecutionQueue = new();
 		
-		void Awake()
+		private void Awake()
 		{
 			Instance = this;
 		}
@@ -56,7 +56,10 @@ namespace Project.Scripts.Multithreading
 		public Task EnqueueAsync(Action action)
 		{
 			var tcs = new TaskCompletionSource<bool>();
-			
+
+			Enqueue(ActionWrapper(WrappedAction));
+			return tcs.Task;
+
 			void WrappedAction() 
 			{
 				try 
@@ -68,11 +71,9 @@ namespace Project.Scripts.Multithreading
 					tcs.TrySetException(ex);
 				}
 			}
-			Enqueue(ActionWrapper(WrappedAction));
-			return tcs.Task;
 		}
 
-		IEnumerator ActionWrapper(Action a)
+		private static IEnumerator ActionWrapper(Action a)
 		{
 			a();
 			yield return null;

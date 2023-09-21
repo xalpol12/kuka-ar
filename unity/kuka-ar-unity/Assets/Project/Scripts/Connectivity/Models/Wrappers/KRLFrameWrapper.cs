@@ -1,64 +1,60 @@
-
 using System;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Models.KRLValues;
-using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Models.Wrappers
 {
-    public class KRLFrameWrapper : IKRLWrapper
+    public class KrlFrameWrapper : IKrlWrapper
     {
-        private KRLFrame krlFrame;
+        private KrlFrame krlFrame;
 
-        private readonly Queue<KRLFrame> updates;
+        private readonly Queue<KrlFrame> updates;
 
         private readonly float positionThreshold;
         private readonly float rotationThreshold;
 
-        public KRLFrameWrapper(float positionThreshold, float rotationThreshold)
+        public KrlFrameWrapper(float positionThreshold, float rotationThreshold)
         {
             this.positionThreshold = positionThreshold;
             this.rotationThreshold = rotationThreshold;
             
-            krlFrame = new KRLFrame();
+            krlFrame = new KrlFrame();
             
-            updates = new Queue<KRLFrame>();
+            updates = new Queue<KrlFrame>();
         }
 
-        public void UpdateValue(KRLValue update)
+        public void UpdateValue(IKrlValue update)
         {
-            KRLFrame newValue = (KRLFrame)update;
-            
-            if (IsNewValueGreaterThanThreshold(newValue))
-            {
-                updates.Enqueue(newValue);
-                krlFrame = newValue;
-            }
+            var newValue = (KrlFrame)update;
+
+            if (!IsNewValueGreaterThanThreshold(newValue)) return;
+            updates.Enqueue(newValue);
+            krlFrame = newValue;
         }
 
-        public bool TryDequeue(out KRLFrame result)
+        public bool TryDequeue(out KrlFrame result)
         {
             return updates.TryDequeue(out result);
         }
 
-        private bool IsNewValueGreaterThanThreshold(KRLFrame newValue)
+        private bool IsNewValueGreaterThanThreshold(KrlFrame newValue)
         {
             return IsNewValueGreaterThanPositionThreshold(newValue) ||
                    IsNewValueGreaterThanRotationThreshold(newValue);
         }
         
-        private bool IsNewValueGreaterThanPositionThreshold(KRLFrame newValue)
+        private bool IsNewValueGreaterThanPositionThreshold(KrlFrame newValue)
         {
-            Vector3 difference = newValue.Position - krlFrame.Position;
+            var difference = newValue.Position - krlFrame.Position;
 
             return Math.Abs(difference.x) > positionThreshold ||
                    Math.Abs(difference.y) > positionThreshold ||
                    Math.Abs(difference.z) > positionThreshold;
         }
 
-        private bool IsNewValueGreaterThanRotationThreshold(KRLFrame newValue)
+        private bool IsNewValueGreaterThanRotationThreshold(KrlFrame newValue)
         {
-            Vector3 difference = newValue.Rotation - krlFrame.Rotation;
+            var difference = newValue.Rotation - krlFrame.Rotation;
 
             return Math.Abs(difference.x) > rotationThreshold ||
                    Math.Abs(difference.y) > rotationThreshold ||

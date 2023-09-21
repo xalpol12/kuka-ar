@@ -1,3 +1,4 @@
+using System;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.TrackedRobots;
@@ -8,11 +9,11 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
     public class ObservableRobotsController : MonoBehaviour
     {
         public GameObject parentGrid;
-        public TrackedRobotsHandler RobotsHandler;
-        public SelectableStylingService StylingService;
-        public SelectableLogicService LogicService;
-        public WebDataStorage WebDataStorage;
-        public GameObject Spinner;
+        public TrackedRobotsHandler robotsHandler;
+        [NonSerialized] public SelectableStylingService StylingService;
+        [NonSerialized] public SelectableLogicService LogicService;
+        [NonSerialized] public WebDataStorage WebDataStorage;
+        [NonSerialized] public GameObject Spinner;
 
         private void Start()
         {

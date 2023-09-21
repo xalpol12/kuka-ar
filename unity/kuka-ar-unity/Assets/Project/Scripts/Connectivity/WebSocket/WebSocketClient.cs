@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using NativeWebSocket;
@@ -27,12 +26,12 @@ namespace Project.Scripts.Connectivity.WebSocket
 
         private void Start()
         {
-            settings = new()
+            settings = new JsonSerializerSettings
             {
                 Formatting = Formatting.Indented,
                 Converters = new List<JsonConverter>
                 {
-                    new KRLValueJsonConverter()
+                    new KrlValueJsonConverter()
                 }
             };
 
@@ -70,7 +69,7 @@ namespace Project.Scripts.Connectivity.WebSocket
 
         private void OnWebsocketMessage(byte[] bytes)
         {
-            String message = System.Text.Encoding.UTF8.GetString(bytes);
+            var message = System.Text.Encoding.UTF8.GetString(bytes);
             var outputFrame = JsonConvert.DeserializeObject<OutputWithErrors>(message, settings);
             trackedRobotsHandlerScript.ReceivePackageFromWebsocket(outputFrame);
         }
@@ -79,7 +78,7 @@ namespace Project.Scripts.Connectivity.WebSocket
         {
             if (ws == null) return;
             if (ws.State == WebSocketState.Open && 
-                messagesToSend.TryDequeue(out string message))
+                messagesToSend.TryDequeue(out var message))
             {
                 ws.SendText(message);
             }

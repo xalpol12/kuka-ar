@@ -1,3 +1,4 @@
+using System;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Events;
@@ -12,11 +13,11 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public int id;
         [Range(0f,200f)] public float transformFactor;
         public GameObject jogs;
-        public bool ShowJogs;
-        public bool UpdateJogs;
-        public JogsControlService Service;
-        public LogicStates JogsTrigger;
-        public KRLJoints Joints;
+        [NonSerialized] public bool ShowJogs;
+        [NonSerialized] public bool UpdateJogs;
+        [NonSerialized] public JogsControlService Service;
+        [NonSerialized] public LogicStates JogsTrigger;
+        [NonSerialized] public KrlJoints Joints;
 
         [SerializeField] private GameObject gameObjectRobotHandler;
         private TrackedRobotsHandler robotsHandler;
@@ -33,7 +34,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             ShowJogs = false;
             UpdateJogs = false;
             JogsTrigger = LogicStates.Waiting;
-            Joints = new KRLJoints();
+            Joints = new KrlJoints();
         
             MenuEvents.Event.OnClickJog += OnClickJog;
             robotsHandler.ActiveJointsUpdated += OnJointUpdate;
@@ -46,7 +47,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             JogsTrigger = ShowJogs ? LogicStates.Running : LogicStates.Hiding;
         }
 
-        private void OnJointUpdate(object sender, KRLJoints e)
+        private void OnJointUpdate(object sender, KrlJoints e)
         {
             Joints = e;
             UpdateJogs = true;
