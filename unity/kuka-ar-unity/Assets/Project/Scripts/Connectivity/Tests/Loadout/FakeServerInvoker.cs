@@ -15,7 +15,7 @@ namespace Project.Scripts.Connectivity.Tests.Loadout
         
         private HttpClientWrapper http;
         private const string AbsPath =
-            "F:\\kuka-ar-all\\unity\\kuka-ar-unity\\Assets\\Project\\Scripts\\Connectivity\\Tests\\Results\\";
+            @"F:\kuka-ar-all\unity\kuka-ar-unity\Assets\Project\Scripts\Connectivity\Tests\Results\";
         private void Awake()
         {
             Invoker = this;
@@ -67,7 +67,7 @@ namespace Project.Scripts.Connectivity.Tests.Loadout
             yield return null;
         }
 
-        private void WriteRobots(ulong index, TimeSpan timeSpan, string file)
+        private static void WriteRobots(ulong index, TimeSpan timeSpan, string file)
         {
             using var sw = System.IO.File.AppendText(AbsPath + file);
             if (index == 0)

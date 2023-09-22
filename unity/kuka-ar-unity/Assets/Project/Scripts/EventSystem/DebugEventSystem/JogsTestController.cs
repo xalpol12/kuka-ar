@@ -14,16 +14,16 @@ namespace Project.Scripts.EventSystem.DebugEventSystem
         private bool ClientConnected { get; set; }
         private bool FirstRobotConnected { get; set; }
 
-        private readonly string firstIp = "192.168.1.50";
-        private readonly string secondIp = "192.168.1.51";
+        private const string FirstIp = "192.168.1.50";
+        private const string SecondIp = "192.168.1.51";
 
         private string currentlyTrackedRobot;
         
-        void Start()
+        private void Start()
         {
             handler = robotHandler.GetComponent<TrackedRobotsHandler>();
 
-            currentlyTrackedRobot = firstIp;
+            currentlyTrackedRobot = FirstIp;
             
             ClientConnected = false;
 
@@ -50,11 +50,11 @@ namespace Project.Scripts.EventSystem.DebugEventSystem
 
         private void SwitchCurrentlyTrackedVariable()
         {
-            handler.ChangeCurrentlyActiveRobot(currentlyTrackedRobot);
-            currentlyTrackedRobot = currentlyTrackedRobot == firstIp ? secondIp : firstIp;
+            handler.ChangeSelectedRobotIP(currentlyTrackedRobot);
+            currentlyTrackedRobot = currentlyTrackedRobot == FirstIp ? SecondIp : FirstIp;
         }
 
-        private void LogUpdate(object sender, KRLJoints joints)
+        private void LogUpdate(object sender, KrlJoints joints)
         {
             Debug.Log(currentlyTrackedRobot + " : " + joints.J1.ToString(CultureInfo.InvariantCulture));
         }

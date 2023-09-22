@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Project.Scripts.EventSystem.Enums;
+using Project.Scripts.Connectivity.Enums;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,7 +30,7 @@ namespace Project.Scripts.EventSystem.Services.ServerConfig
             pingFailedIcon = Resources.Load<Sprite>("Icons/cloudFailedIcon");
         }
 
-        internal IEnumerator PingOperation(string ip)
+        public IEnumerator PingOperation(string ip)
         {
             var state = PingHostAndPort(ip);
             while (!state.IsCompleted)
@@ -45,18 +45,13 @@ namespace Project.Scripts.EventSystem.Services.ServerConfig
 
         private void SwapCloud(ConnectionStatus pingStatus)
         {
-            switch (pingStatus)
+            cloudIcon.sprite = pingStatus switch
             {
-                case ConnectionStatus.Connected:
-                    cloudIcon.sprite = pingSuccessIcon;
-                    break;
-                case ConnectionStatus.Connecting:
-                    cloudIcon.sprite = pingWaitIcon;
-                    break;
-                case ConnectionStatus.Disconnected:
-                    cloudIcon.sprite = pingFailedIcon;
-                    break;
-            }
+                ConnectionStatus.Connected => pingSuccessIcon,
+                ConnectionStatus.Connecting => pingWaitIcon,
+                ConnectionStatus.Disconnected => pingFailedIcon,
+                _ => cloudIcon.sprite
+            };
         }
         
         private async Task<bool> PingHostAndPort(string host)

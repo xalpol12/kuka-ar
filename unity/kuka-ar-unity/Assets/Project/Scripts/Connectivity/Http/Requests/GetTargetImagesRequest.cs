@@ -6,9 +6,9 @@ using Newtonsoft.Json;
 
 namespace Project.Scripts.Connectivity.Http.Requests
 {
-    public class GetTargetImagesRequest : IHttpRequest<Dictionary<String, byte[]>>
+    public class GetTargetImagesRequest : IHttpRequest<Dictionary<string, byte[]>>
     {
-        private string URL => "/stickers";
+        private static string URL => "/stickers";
         
         public async Task<Dictionary<string, byte[]>> Execute(HttpClient httpClient)
         {

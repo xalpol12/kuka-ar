@@ -1,4 +1,4 @@
-namespace Project.Scripts.EventSystem.Enums
+namespace Project.Scripts.Connectivity.Enums
 {
     public enum ConnectionStatus
     {

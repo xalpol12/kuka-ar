@@ -3,10 +3,9 @@ using System.Collections;
 using System.Net;
 using System.Net.Http;
 using Project.Scripts.Connectivity.Enums;
-using Project.Scripts.Connectivity.Extensions;
+using Project.Scripts.Connectivity.Extensions.Popup;
 using Project.Scripts.Connectivity.Mapping;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
-using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Http.Requests
@@ -52,7 +51,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
             {
                 yield return null;
             }
-
+            
             popup.Try(() => storage.Robots = newRobotsTask.Result);
             action?.Invoke();
             storage.LoadingSpinner["GetRobots"] = false;
@@ -72,8 +71,8 @@ namespace Project.Scripts.Connectivity.Http.Requests
             popup.Try(() =>
             {
                 var configured = newConfiguredRobotsTask.Result;
-                storage.ConfiguredRobots = configuredRobotsMapper.MapToConfiguredRobots(configured);
-                storage.CategoryNames = configuredRobotsMapper.MapStringsToUniqueNames(storage.ConfiguredRobots);
+                storage.ConfiguredRobots = ConfiguredRobotsMapper.MapToConfiguredRobots(configured);
+                storage.CategoryNames = ConfiguredRobotsMapper.MapStringsToUniqueNames(storage.ConfiguredRobots);
             });
             storage.LoadingSpinner["GetConfigured"] = false;
             yield return null;
@@ -92,11 +91,11 @@ namespace Project.Scripts.Connectivity.Http.Requests
             popup.Try(() =>
             {
                 var stickers = newStickersTask.Result;
-                storage.Stickers = stickersMapper.MapBytesToSprite(stickers);
-                storage.AvailableIps = robotsMapper.MapStringToIpAddress(stickers);
+                storage.Stickers = StickersMapper.MapBytesToSprite(stickers);
+                storage.AvailableIps = RobotsMapper.MapStringToIpAddress(stickers);
             });
-            storage.LoadingSpinner["GetStickers"] = false;
             action?.Invoke();
+            storage.LoadingSpinner["GetStickers"] = false;
             yield return null;
         }
 
@@ -140,7 +139,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
                         case HttpStatusCode.UnprocessableEntity:
                             throw new HttpRequestException(response.Content.ReadAsStringAsync().Result);
                     }
-                }, robot.Value, RequestType.POST);
+                }, robot.Value, RequestType.Post);
             }
             
             storage.LoadingSpinner["PostNewRobot"] = false;
@@ -166,7 +165,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
                     {
                         throw new HttpRequestException(response.Content.ReadAsStringAsync().Result);
                     }
-                }, robot.Value, RequestType.PUT);
+                }, robot.Value, RequestType.Put);
             }
             storage.LoadingSpinner["UpdateRobot"] = false;
         }

@@ -1,3 +1,5 @@
+using System;
+using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.EventSystem.Enums;
 using UnityEngine;
 
@@ -7,20 +9,21 @@ namespace Project.Scripts.EventSystem.Services.Menu
     {
         public static SelectableLogicService Instance;
         
-        internal LogicStates SliderState;
-        internal string SelectedIpAddress;
-        internal string PreviousSelectedIpAddress;
-        internal bool IsAfterItemSelect;
+        public ConnectionStatus RobotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
+
+        [NonSerialized] public LogicStates SliderState;
+        [NonSerialized] public string SelectedIpAddress;
+        [NonSerialized] public string SelectedName;
+        [NonSerialized]public bool IsAfterItemSelect;
 
         private void Awake()
         {
             Instance = this;
         }
 
-        void Start()
+        private void Start()
         {
             IsAfterItemSelect = false;
-            PreviousSelectedIpAddress = "placeholder";
             SliderState = LogicStates.Waiting;
         }
     }

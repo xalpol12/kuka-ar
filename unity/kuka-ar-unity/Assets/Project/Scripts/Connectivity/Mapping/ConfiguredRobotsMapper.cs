@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Project.Scripts.Connectivity.Models;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using UnityEngine;
@@ -14,36 +15,21 @@ namespace Project.Scripts.Connectivity.Mapping
             Instance = this;
         }
 
-        public List<string> MapStringsToUniqueNames(List<Robot> names)
+        public static List<string> MapStringsToUniqueNames(IEnumerable<Robot> names)
         {
             var list = new List<string>();
-            foreach (var category in names)
+            foreach (var category in names.Where(category => !list.Contains(category.Category)))
             {
-                if (!list.Contains(category.Category))
-                {
-                    list.Add(category.Category);
-                }
+                list.Add(category.Category);
             }
 
             return list;
         }
         
-        public List<Robot> MapToConfiguredRobots(Dictionary<string, Dictionary<string, RobotData>> response)
+        public static List<Robot> MapToConfiguredRobots(Dictionary<string, Dictionary<string, RobotData>> response)
         {
-            var list = new List<Robot>();
-            foreach (var group in response)
-            {
-                foreach (var entry in group.Value)
-                {
-                    var robot = new Robot()
-                    {
-                        Name = entry.Value.Name,
-                        Category = group.Key, 
-                    };
-                    list.Add(robot);
-                }
-            }
-            return list;
+            return (from @group in response from entry 
+                in @group.Value select new Robot() { Name = entry.Value.Name, Category = @group.Key, }).ToList();
         }
     }
 }

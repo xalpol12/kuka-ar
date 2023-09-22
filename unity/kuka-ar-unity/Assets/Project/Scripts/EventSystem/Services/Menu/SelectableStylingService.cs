@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -11,12 +12,13 @@ namespace Project.Scripts.EventSystem.Services.Menu
         public static SelectableStylingService Instance;
     
         internal Sprite DefaultSprite;
-        internal Sprite SelectedSprite;
-        internal Sprite DefaultAddIcon;
-        internal Sprite PressedAddIcon;
-        internal Sprite InvalidSelectable;
-        internal Sprite DefaultInputField;
-        internal Sprite DefaultNoFrame;
+        [NonSerialized] public Sprite SelectedSprite;
+        [NonSerialized] public Sprite DefaultSticker;
+        [NonSerialized] public Sprite DefaultAddIcon;
+        [NonSerialized] public Sprite PressedAddIcon;
+        [NonSerialized] public Sprite InvalidSelectable;
+        [NonSerialized] public Sprite DefaultInputField;
+        [NonSerialized] public Sprite DefaultNoFrame;
 
         private Sprite defaultSelectableSprite;
 
@@ -29,6 +31,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
         {
             DefaultSprite = Resources.Load<Sprite>("Icons/cloudIcon");
             SelectedSprite = Resources.Load<Sprite>("Fields/Selected");
+            DefaultSticker = Resources.Load<Sprite>("Logos/robotIcon");
             DefaultAddIcon = Resources.Load<Sprite>("Icons/circle");
             PressedAddIcon = Resources.Load<Sprite>("Icons/circlePress");
             InvalidSelectable = Resources.Load<Sprite>("Fields/SelectFieldInvalid");

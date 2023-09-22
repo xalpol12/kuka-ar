@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Project.Scripts.Connectivity.Extensions
+namespace Project.Scripts.Connectivity.Extensions.Popup
 {
     public class PopupBehavior : MonoBehaviour
     {
@@ -21,16 +21,18 @@ namespace Project.Scripts.Connectivity.Extensions
 
         private void Update()
         {
-            if (controller.GrabState == 1)
+            switch (controller.GrabState)
             {
-                controller.InternalGrabState = 1;
-                StartCoroutine(UserSlideHandler());
-                controller.GrabState = 2;
-            } else if (controller.GrabState == 0 && controller.PressedObject is not null)
-            {
-                StartCoroutine(AutoPull());
-                controller.GrabState = 2;
-            } 
+                case 1:
+                    controller.InternalGrabState = 1;
+                    StartCoroutine(UserSlideHandler());
+                    controller.GrabState = 2;
+                    break;
+                case 0 when controller.PressedObject is not null:
+                    StartCoroutine(AutoPull());
+                    controller.GrabState = 2;
+                    break;
+            }
         }
 
         public static void DeleteItem(GameObject deleteGameObject)
@@ -38,7 +40,7 @@ namespace Project.Scripts.Connectivity.Extensions
             Destroy(deleteGameObject);
         }
 
-        internal PopupContent ResetContent()
+        internal static PopupContent ResetContent()
         {
             return new PopupContent
             {
@@ -74,7 +76,7 @@ namespace Project.Scripts.Connectivity.Extensions
             notification.transform.position = new Vector3(notification.transform.position.x, stop);
         }
 
-        private void AssignContent(GameObject notification, PopupContent content)
+        private static void AssignContent(GameObject notification, PopupContent content)
         {
             notification.transform.Find("Header").GetComponent<TMP_Text>().text = content.Header;
             notification.transform.Find("Message").GetComponent<TMP_Text>().text = content.Message.RemoveDiacritics();
@@ -140,11 +142,11 @@ namespace Project.Scripts.Connectivity.Extensions
             controller.NotificationsContent.RemoveAt(index);
             
             Destroy(deleteObject);
-            StartCoroutine(SlideDownAfterDelete(index));
+            StartCoroutine(SlideDownAfterDelete());
             yield return null;
         }
 
-        private IEnumerator SlideDownAfterDelete(int index)
+        private IEnumerator SlideDownAfterDelete()
         {
             for (var i = 0; i < controller.Notifications.Count; i++)
             {

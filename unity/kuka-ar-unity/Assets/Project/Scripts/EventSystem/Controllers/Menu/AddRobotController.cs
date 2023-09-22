@@ -1,3 +1,4 @@
+using System;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
@@ -16,13 +17,13 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public GameObject bottomNav;
         public GameObject addDialog;
         [SerializeField] private GameObject saveButton;
-    
-        internal int TransformFactor;
-        internal bool IsSliderHold;
+
+        public int transformFactor;
+        [NonSerialized] public bool IsSliderHold;
         internal bool IsAddRobotPressed;
         private WebDataStorage webDataStorage;
-        internal LogicStates DialogState;
-        internal AddNewRobotService AddNewRobotService;
+        [NonSerialized] public LogicStates DialogState;
+        [NonSerialized] public AddNewRobotService AddNewRobotService;
 
         private Robot data;
         private SelectableStylingService stylingService;
@@ -32,7 +33,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         private Image nameImage;
         private void Start()
         {
-            TransformFactor = 3000;
+            transformFactor = 3000;
             DialogState = LogicStates.Waiting;
             
             AddNewRobotService = AddNewRobotService.Instance;

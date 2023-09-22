@@ -336,7 +336,7 @@ PrefabInstance:
     - target: {fileID: 3087783458083860396, guid: 8e7be4efed6c55d4a8b6512a56577111,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4665656086292718226, guid: 8e7be4efed6c55d4a8b6512a56577111,
         type: 3}
@@ -425,8 +425,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AnchorPrefab: {fileID: 9145115598657890696, guid: 3e253fa44769527418c6f3dd49aaef6d,
-    type: 3}
+  m_AnchorPrefab: {fileID: 0}
 --- !u!114 &94363252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -441,7 +440,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runtimeImageLibrary: {fileID: 11400000, guid: fd03ce1f52e13064e91e9137f48714ff,
     type: 2}
-  arPrefab: {fileID: 0}
+  arPrefab: {fileID: 9145115598657890696, guid: 3e253fa44769527418c6f3dd49aaef6d,
+    type: 3}
+  trackedRobotsHandler: {fileID: 1022678924}
 --- !u!114 &94363253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -796,6 +797,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd4d275446b20884395b99ae456b666e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Wifi: {fileID: 0}
+  NoWifi: {fileID: 0}
+  AddedSuccess: {fileID: 0}
+  EditSuccess: {fileID: 0}
+  AddedFailed: {fileID: 0}
 --- !u!114 &524307598 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1999379267639670349, guid: 31cdb5f2baf0fb544af05580a8382134,
@@ -1523,7 +1529,7 @@ PrefabInstance:
         type: 3}
       propertyPath: prefab
       value: 
-      objectReference: {fileID: 1273508384157506, guid: 22b5884c8772b654489e4ed1d6987802,
+      objectReference: {fileID: 9145115598657890696, guid: 3e253fa44769527418c6f3dd49aaef6d,
         type: 3}
     - target: {fileID: 8110452565766130815, guid: 4e2223c16e3d26043b3c8b6009b6932b,
         type: 3}
@@ -2091,6 +2097,12 @@ PrefabInstance:
       propertyPath: m_RootOrder
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 2475684577608753812, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: cb5a91fef31b07e48bf15a9157f39a41,
+        type: 3}
     - target: {fileID: 2480717070461861123, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_PresetInfoIsWorld
@@ -2298,9 +2310,34 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
+      propertyPath: Spinner
+      value: 
+      objectReference: {fileID: 1859340664}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: LogicService
+      value: 
+      objectReference: {fileID: 1859340662}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: RobotsHandler
+      value: 
+      objectReference: {fileID: 1022678924}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
       propertyPath: robotsHandler
       value: 
       objectReference: {fileID: 1022678924}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: StylingService
+      value: 
+      objectReference: {fileID: 1859340663}
+    - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: WebDataStorage
+      value: 
+      objectReference: {fileID: 318450782}
     - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: gameObjectRobotsHandler
@@ -2463,6 +2500,36 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2dec6bad165255e45942ae03de04b2b0, type: 3}
+--- !u!114 &1859340662 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7920994802111269983, guid: 2dec6bad165255e45942ae03de04b2b0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1859340661}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d433d45751711f74c8159a96617817e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1859340663 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5811771572056655173, guid: 2dec6bad165255e45942ae03de04b2b0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1859340661}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7091350e79d07db429286a9f6a40045c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1859340664 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 642355113120162710, guid: 2dec6bad165255e45942ae03de04b2b0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1859340661}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1892031648
 GameObject:
   m_ObjectHideFlags: 0
@@ -2499,6 +2566,11 @@ MonoBehaviour:
   moreOptions: {fileID: 931878588}
   serverConfig: {fileID: 2130753306}
   focusMode: {fileID: 99730721}
+  ServerConfigAnim: 0
+  MenuAnim: 0
+  MoreOptionsAnim: 0
+  FocusModeAnim: 0
+  NextAnim: 
   abortServerConfigArrow: {fileID: 239668983}
   focusModeToggle: {fileID: 1768528310}
   noInternetText: {fileID: 524307598}

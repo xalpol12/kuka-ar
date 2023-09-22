@@ -6,11 +6,13 @@ using System.Net.Http;
 using System.Net.Sockets;
 using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Enums;
+using Project.Scripts.Connectivity.Extensions.Notifications;
+using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 using UnityEngine;
 
-namespace Project.Scripts.Connectivity.Extensions
+namespace Project.Scripts.Connectivity.Extensions.Popup
 {
     /// <summary>
     /// Popup display utility class.
@@ -52,7 +54,7 @@ namespace Project.Scripts.Connectivity.Extensions
             InternalGrabState = 2;
             PressedObject = null;
             
-            content = popupBehavior.ResetContent();
+            content = PopupBehavior.ResetContent();
 
             NotificationEvents.Events.DragNotification += DragPopup;
             NotificationEvents.Events.DropNotification += DropPopup;
@@ -63,7 +65,7 @@ namespace Project.Scripts.Connectivity.Extensions
         /// Tries to execute the given action. If it fails, shows popup window with error message.
         /// @param action - task to execute
         /// </summary>
-        public void Try(Action action, Robot result = default, RequestType type = RequestType.GET)
+        public void Try(Action action, Robot result = default, RequestType type = RequestType.Get)
         {
             var isInvalidOperation = false;
             try
@@ -86,6 +88,8 @@ namespace Project.Scripts.Connectivity.Extensions
                     {
                         content.Message = e.InnerException?.InnerException?.Message.Split("(")[1];
                         content.Icon = watcher.NoWifi;
+
+                        if (type == RequestType.Get) ClearWebStorageData(action.Method.Name);
                         if (HasDuplicates()) return;
                         break;
                     }
@@ -97,7 +101,7 @@ namespace Project.Scripts.Connectivity.Extensions
                             {
                                 Header = $"{error.ExceptionName} {error.ExceptionCode}",
                                 Message = error.ExceptionMessage,
-                                Icon = type is RequestType.POST or RequestType.PUT 
+                                Icon = type is RequestType.Post or RequestType.Put 
                                     ? watcher.AddedFailed : watcher.NoWifi,
                             };
                         }
@@ -120,7 +124,7 @@ namespace Project.Scripts.Connectivity.Extensions
             SetTimestamp();
             StartCoroutine(ShowNotification());
         }
-        
+
         /// <summary>
         /// Allows to destroy popup.
         /// @param @optional index - element index in popup collection
@@ -155,6 +159,22 @@ namespace Project.Scripts.Connectivity.Extensions
             SetTimestamp();
         }
 
+        private static void ClearWebStorageData(string s)
+        {
+            switch (s)
+            {
+                case not null when s.Contains("GetRobots"): 
+                    WebDataStorage.Instance.Robots = new List<Robot>();
+                    break;
+                case not null when s.Contains("GetRobots"):
+                    WebDataStorage.Instance.ConfiguredRobots = new List<Robot>();
+                    break;
+                case not null when s.Contains("GetRobots"):
+                    WebDataStorage.Instance.Stickers = new Dictionary<string, Sprite>();
+                    break;
+            }
+        }
+
         private void DragPopup(GameObject pressed)
         {
             GrabState = 1;
@@ -186,13 +206,13 @@ namespace Project.Scripts.Connectivity.Extensions
         {
             content = type switch
             {
-                RequestType.POST => new PopupContent
+                RequestType.Post => new PopupContent
                 {
                     Header = "Robot added",
                     Message = $"Machine with name {response.Name} has been added",
                     Icon = watcher.AddedSuccess
                 },
-                RequestType.PUT => new PopupContent
+                RequestType.Put => new PopupContent
                 {
                     Header = "Robots data updated",
                     Message = $"Successfully updated robot with ip address {response.IpAddress}",

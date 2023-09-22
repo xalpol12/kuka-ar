@@ -27,7 +27,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             jogsValues.SetActive(false);
             jogsHomePosition = jogsDisplay.transform.position;
         
-            distance = (int)((Screen.height * 0.115f) + PositioningService.Instance.PositioningError);
+            distance = (int)((Screen.height * 0.115f) + PositioningService.PositioningError);
         }
 
         private void Update()

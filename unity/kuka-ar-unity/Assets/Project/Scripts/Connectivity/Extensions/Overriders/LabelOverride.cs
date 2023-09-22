@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace Project.Scripts.Connectivity.Extensions
+namespace Project.Scripts.Connectivity.Extensions.Overriders
 {
     public class LabelOverride : MonoBehaviour
     {

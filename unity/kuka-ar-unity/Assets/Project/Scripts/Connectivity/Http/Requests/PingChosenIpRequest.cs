@@ -2,8 +2,8 @@ using System;
 using System.Net.Http;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-using Project.Scripts.Connectivity.Extensions;
-using Project.Scripts.EventSystem.Enums;
+using Project.Scripts.Connectivity.Enums;
+using Project.Scripts.Connectivity.Extensions.Overriders;
 
 namespace Project.Scripts.Connectivity.Http.Requests
 {
@@ -21,7 +21,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
         {
             using var tcpClient = new TcpClient();
             var connectTask = tcpClient.ConnectAsync(ip, 8080);
-            var timeoutTask = Task.Delay(storage.ConnectionTimeOut);
+            var timeoutTask = Task.Delay(WebDataStorage.ConnectionTimeOut);
                 
             var completedTask = await Task.WhenAny(connectTask, timeoutTask);
             try

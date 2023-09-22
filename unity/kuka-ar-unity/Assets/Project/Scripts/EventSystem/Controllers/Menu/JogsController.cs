@@ -5,7 +5,6 @@ using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.TrackedRobots;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Project.Scripts.EventSystem.Controllers.Menu
 {
@@ -14,11 +13,11 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public int id;
         [Range(0f,200f)] public float transformFactor;
         public GameObject jogs;
-        internal bool ShowJogs;
-        internal bool UpdateJogs;
-        internal JogsControlService Service;
-        internal LogicStates JogsTrigger;
-        internal KRLJoints Joints;
+        [NonSerialized] public bool ShowJogs;
+        [NonSerialized] public bool UpdateJogs;
+        [NonSerialized] public JogsControlService Service;
+        [NonSerialized] public LogicStates JogsTrigger;
+        [NonSerialized] public KrlJoints Joints;
 
         [SerializeField] private GameObject gameObjectRobotHandler;
         private TrackedRobotsHandler robotsHandler;
@@ -35,7 +34,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             ShowJogs = false;
             UpdateJogs = false;
             JogsTrigger = LogicStates.Waiting;
-            Joints = new KRLJoints();
+            Joints = new KrlJoints();
         
             MenuEvents.Event.OnClickJog += OnClickJog;
             robotsHandler.ActiveJointsUpdated += OnJointUpdate;
@@ -48,7 +47,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             JogsTrigger = ShowJogs ? LogicStates.Running : LogicStates.Hiding;
         }
 
-        private void OnJointUpdate(object sender, KRLJoints e)
+        private void OnJointUpdate(object sender, KrlJoints e)
         {
             Joints = e;
             UpdateJogs = true;

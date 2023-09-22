@@ -11,6 +11,7 @@ namespace Project.Scripts.EventSystem.Controllers
 
         private const float TargetFrameRate = 60.0f;
         private float currentFrameTime;
+        private bool quit = false;
 
         private void Awake()
         {
@@ -18,6 +19,11 @@ namespace Project.Scripts.EventSystem.Controllers
             Application.targetFrameRate = MaxRate;
             currentFrameTime = Time.realtimeSinceStartup;
             StartCoroutine(nameof(WaitForNextFrame));
+        }
+
+        private void OnApplicationQuit()
+        {
+            quit = true;
         }
 
         private IEnumerator WaitForNextFrame()
@@ -36,6 +42,8 @@ namespace Project.Scripts.EventSystem.Controllers
                 {
                     t = Time.realtimeSinceStartup;
                 }
+
+                if (quit) break;
             }
         }
     }

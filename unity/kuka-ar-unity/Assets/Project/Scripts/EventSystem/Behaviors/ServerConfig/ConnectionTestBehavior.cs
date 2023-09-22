@@ -1,4 +1,4 @@
-using Project.Scripts.EventSystem.Controllers.ServerConfig;
+using Project.Scripts.EventSystem.DebugEventSystem;
 using UnityEngine;
 
 namespace Project.Scripts.EventSystem.Behaviors.ServerConfig

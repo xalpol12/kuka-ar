@@ -9,17 +9,11 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
     public class ObservableRobotsController : MonoBehaviour
     {
         public GameObject parentGrid;
-        [SerializeField] private GameObject gameObjectRobotsHandler;
-        internal TrackedRobotsHandler RobotsHandler;
-        internal SelectableStylingService StylingService;
-        internal SelectableLogicService LogicService;
-        internal WebDataStorage WebDataStorage;
-        internal GameObject Spinner;
-
-        private void Awake()
-        {
-            RobotsHandler = gameObjectRobotsHandler.GetComponent<TrackedRobotsHandler>();
-        }
+        public TrackedRobotsHandler robotsHandler;
+        [NonSerialized] public SelectableStylingService StylingService;
+        [NonSerialized] public SelectableLogicService LogicService;
+        [NonSerialized] public WebDataStorage WebDataStorage;
+        [NonSerialized] public GameObject Spinner;
 
         private void Start()
         {

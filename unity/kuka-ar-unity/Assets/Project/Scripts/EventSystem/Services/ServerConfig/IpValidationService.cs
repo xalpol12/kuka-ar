@@ -1,3 +1,4 @@
+using System;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace Project.Scripts.EventSystem.Services.ServerConfig
     public class IpValidationService : MonoBehaviour
     {
         public static IpValidationService Instance;
-        internal bool ValidationResult;
+        [NonSerialized] public bool ValidationResult;
         private Sprite valid;
         private Sprite invalid;
 

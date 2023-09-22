@@ -1,3 +1,4 @@
+using System;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.EventSystem.Enums;
@@ -13,15 +14,15 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         public int id;
         public GameObject ipSelector;
 
-        internal SelectableStylingService StylingService;
-        internal AddNewRobotService AddNewRobotService;
-        internal PositioningService PositioningService;
-        internal WebDataStorage DataStorage;
-        internal ButtonType ElementClicked;
-        internal ButtonType PrevElementClicked;
-        internal GameObject HexSpinner;
-        internal LogicStates ShowOptionsController;
-        internal int TransformFactor;
+        [NonSerialized] public SelectableStylingService StylingService; 
+        [NonSerialized] public AddNewRobotService AddNewRobotService;
+        [NonSerialized] public PositioningService PositioningService;
+        [NonSerialized] public WebDataStorage DataStorage;
+        [NonSerialized] public ButtonType ElementClicked;
+        [NonSerialized] public ButtonType PrevElementClicked;
+        [NonSerialized] public GameObject HexSpinner;
+        [NonSerialized] public LogicStates ShowOptionsController;
+        [NonSerialized] public int TransformFactor;
 
         private const int GroupOffset = 1000;
         private bool showOptions;

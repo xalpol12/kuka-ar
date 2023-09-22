@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
@@ -18,9 +17,9 @@ namespace Project.Scripts.Connectivity.ExceptionHandling
             DontDestroyOnLoad(gameObject);
         }
         
-        void Start()
+        private void Start()
         {
-            registeredExceptions = new();
+            registeredExceptions = new ConcurrentStack<ExceptionMessagePair>();
         }
 
         public void AddExceptions(HashSet<ExceptionMessagePair> exceptions)
