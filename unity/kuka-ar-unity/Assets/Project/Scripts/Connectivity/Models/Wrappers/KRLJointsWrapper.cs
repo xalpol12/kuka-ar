@@ -5,29 +5,29 @@ namespace Project.Scripts.Connectivity.Models.Wrappers
 {
     public class KrlJointsWrapper : IKrlWrapper
     {
-        public event EventHandler<KrlJoints> ValueUpdated;
+        public event EventHandler<KRLJoints> ValueUpdated;
         
-        private KrlJoints krlLocalJoints { get; set; }
+        private KRLJoints krlLocalJoints { get; set; }
 
-        public KrlJoints KrlJoints => krlLocalJoints;
+        public KRLJoints KrlJoints => krlLocalJoints;
 
         private readonly float rotationThreshold;
 
         public KrlJointsWrapper(float rotationThreshold)
         {
             this.rotationThreshold = rotationThreshold;
-            krlLocalJoints = new KrlJoints();
+            krlLocalJoints = new KRLJoints();
         }
 
-        public void UpdateValue(IKrlValue update)
+        public void UpdateValue(IKRLValue update)
         {
-            var newValue = (KrlJoints)update;
+            var newValue = (KRLJoints)update;
             if (!IsNewValueGreaterThanRotationThreshold(newValue)) return;
             krlLocalJoints = newValue;
             OnValueUpdated(krlLocalJoints);
         }
 
-        private bool IsNewValueGreaterThanRotationThreshold(KrlJoints newValue)
+        private bool IsNewValueGreaterThanRotationThreshold(KRLJoints newValue)
         {
             var difference = newValue - krlLocalJoints;
             return Math.Abs(difference.J1) > rotationThreshold ||
@@ -38,7 +38,7 @@ namespace Project.Scripts.Connectivity.Models.Wrappers
                    Math.Abs(difference.J6) > rotationThreshold;
         }
 
-        private void OnValueUpdated(KrlJoints e)
+        private void OnValueUpdated(KRLJoints e)
         {
             ValueUpdated?.Invoke(this, e);
         }

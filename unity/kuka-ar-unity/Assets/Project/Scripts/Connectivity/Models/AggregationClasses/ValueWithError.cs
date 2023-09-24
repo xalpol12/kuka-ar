@@ -8,7 +8,7 @@ namespace Project.Scripts.Connectivity.Models.AggregationClasses
     public struct ValueWithError
     {
         [JsonProperty("value")]
-        public IKrlValue Value { get; set; }
+        public IKRLValue Value { get; set; }
         
         [JsonProperty("readExceptions")]
         public HashSet<ExceptionMessagePair> FoundExceptions { get; set; }

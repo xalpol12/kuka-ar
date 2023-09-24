@@ -4,6 +4,6 @@ namespace Project.Scripts.Connectivity.Models.Wrappers
 {
     public interface IKrlWrapper
     {
-        public void UpdateValue(IKrlValue update);
+        public void UpdateValue(IKRLValue update);
     }
 }

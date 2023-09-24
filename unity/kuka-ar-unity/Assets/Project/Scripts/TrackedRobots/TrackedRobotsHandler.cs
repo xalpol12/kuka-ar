@@ -1,12 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.ExceptionHandling;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Parsing.OutputJson;
-using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.Utils;
 using UnityEngine;
@@ -27,7 +26,8 @@ namespace Project.Scripts.TrackedRobots
         public float rotationThreshold = 1f;
 
         public event EventHandler<KRLJoints> ActiveJointsUpdated;
-        public event EventHandler<bool> RobotConnectionStatusConnected; 
+        public event EventHandler<bool> RobotConnectionStatusConnected;
+        public event EventHandler<string> UnsubscribeObsoleteRobotIssued;
 
         private string selectedRobotIP;
         private TrackedRobotModel currentlyTrackedRobot;
@@ -43,17 +43,12 @@ namespace Project.Scripts.TrackedRobots
             if (robotIP == selectedRobotIP) return;
             if (selectedRobotIP != null)
             {
-                UnsubscribeFromWebsocket();
+                OnUnsubscribeObsoleteRobot(selectedRobotIP);
                 DestroyPrefab();
             }
             selectedRobotIP = robotIP;
             SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connecting;
             OnRobotConnectionStatusConnected(false);
-        }
-
-        private void UnsubscribeFromWebsocket()
-        {
-            //TODO: implement method
         }
 
         private void DestroyPrefab()
@@ -70,7 +65,6 @@ namespace Project.Scripts.TrackedRobots
         {
             if (newData.Values.TryGetValue(selectedRobotIP, out var value))
             {
-                SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connected;
                 UpdateTrackedPoint(value);
             }
             else
@@ -86,21 +80,11 @@ namespace Project.Scripts.TrackedRobots
 
         private void UpdateTrackedPoint(Dictionary<string, ValueWithError> robotData)
         {
-            if (currentlyTrackedRobot == null) return; 
+            if (currentlyTrackedRobot == null) return;
+            SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connected;
             currentlyTrackedRobot.UpdateTrackedRobotVariables(robotData);
         }
 
-        private void OnJointsValueUpdated(object sender, KRLJoints e)
-        {
-            ActiveJointsUpdated?.Invoke(this, e);
-            DebugLogger.Instance.AddLog($"Updated joints for ip {selectedRobotIP}, j1: {e.J1.ToString()}; ");
-        }
-
-        private void OnRobotConnectionStatusConnected(bool e)
-        {
-            RobotConnectionStatusConnected?.Invoke(this, e);
-        }
-        
         public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
         {
             if (ipAddress == selectedRobotIP)
@@ -171,6 +155,22 @@ namespace Project.Scripts.TrackedRobots
         private void Update()
         {
             currentlyTrackedRobot?.UpdateGameObjects();
+        }
+        
+        private void OnJointsValueUpdated(object sender, KRLJoints e)
+        {
+            ActiveJointsUpdated?.Invoke(this, e);
+            DebugLogger.Instance.AddLog($"Updated joints for ip {selectedRobotIP}, j1: {e.J1.ToString()}; ");
+        }
+
+        private void OnRobotConnectionStatusConnected(bool e)
+        {
+            RobotConnectionStatusConnected?.Invoke(this, e);
+        }
+        
+        private void OnUnsubscribeObsoleteRobot(string e)
+        {
+            UnsubscribeObsoleteRobotIssued?.Invoke(this, e);
         }
     }
 }
