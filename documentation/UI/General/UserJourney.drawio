@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2023-09-23T15:27:06.918Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36" etag="TBdEVrLdKQ5E4hub9kFH" version="21.8.1" type="device">
+<mxfile host="app.diagrams.net" modified="2023-09-23T15:28:35.475Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36" etag="95AfXSiYo32S58R7KR0c" version="21.8.1" type="device">
   <diagram name="Page-1" id="5987fedf-629e-85c4-6858-42fee31821dd">
     <mxGraphModel dx="989" dy="545" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1.5" pageWidth="1169" pageHeight="826" background="none" math="0" shadow="0">
       <root>
@@ -28,7 +28,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="kTQ5064xi_iTw3EoHZO--9" value="Server Configuration Window" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+        <mxCell id="kTQ5064xi_iTw3EoHZO--9" value="Server Configuration&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="1070" y="470" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="kTQ5064xi_iTw3EoHZO--18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fillColor=#1ba1e2;strokeColor=#006EAF;" edge="1" parent="1" source="kTQ5064xi_iTw3EoHZO--13" target="kTQ5064xi_iTw3EoHZO--15">
