@@ -7,6 +7,7 @@ using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.TrackedRobots;
 using Project.Scripts.Utils;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 
@@ -17,7 +18,7 @@ namespace Project.Scripts.ImageSystem
         public static MutableImageRecognizer Instance;
         
         [SerializeField] private XRReferenceImageLibrary runtimeImageLibrary;
-        [SerializeField] private GameObject arPrefab;
+        [SerializeField] private GameObject imageRecognisedPrefab;
         [SerializeField] private TrackedRobotsHandler trackedRobotsHandler;
         
         private AnchorManager anchorManager;
@@ -30,7 +31,6 @@ namespace Project.Scripts.ImageSystem
         private void Awake()
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
 
             anchorManager = gameObject.GetComponent<AnchorManager>();
         }
@@ -61,7 +61,7 @@ namespace Project.Scripts.ImageSystem
             #if !UNITY_EDITOR || !UNITY_EDITOR_WIN
             imageManager.referenceLibrary = imageManager.CreateRuntimeLibrary(runtimeImageLibrary);
             imageManager.requestedMaxNumberOfMovingImages = 5; //TODO: change later
-            imageManager.trackedImagePrefab = arPrefab;
+            imageManager.trackedImagePrefab = imageRecognisedPrefab;
             imageManager.enabled = true;
             #endif
         }
@@ -72,7 +72,7 @@ namespace Project.Scripts.ImageSystem
             {
                 trackedImages.Add(newImage.referenceImage.name, newImage);
                 StartCoroutine(anchorManager.StartNewAnchorTracking(newImage));
-                // DebugLogger.Instance.AddLog($"Current tracked images count: {trackedImages.Count.ToString()}; ");
+                DebugLogger.Instance.AddLog($"Current tracked images count: {trackedImages.Count.ToString()}; ");
             }
         }
 

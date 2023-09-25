@@ -1022,11 +1022,6 @@ MonoBehaviour:
   moreOptions: {fileID: 557905424}
   serverConfig: {fileID: 1495557418}
   focusMode: {fileID: 816971246}
-  ServerConfigAnim: 0
-  MenuAnim: 0
-  MoreOptionsAnim: 0
-  FocusModeAnim: 0
-  NextAnim: 
   abortServerConfigArrow: {fileID: 1900347903}
   focusModeToggle: {fileID: 1127654671}
   noInternetText: {fileID: 91974413}
@@ -2025,7 +2020,7 @@ PrefabInstance:
         type: 3}
       propertyPath: robotsHandler
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1731189029}
     - target: {fileID: 5449899414755508784, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: gameObjectRobotsHandler
@@ -2910,8 +2905,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runtimeImageLibrary: {fileID: 11400000, guid: fd03ce1f52e13064e91e9137f48714ff,
     type: 2}
-  arPrefab: {fileID: 0}
-  trackedRobotsHandler: {fileID: 0}
+  imageRecognisedPrefab: {fileID: 0}
+  trackedRobotsHandler: {fileID: 1731189029}
 --- !u!114 &1687510136
 MonoBehaviour:
   m_ObjectHideFlags: 0

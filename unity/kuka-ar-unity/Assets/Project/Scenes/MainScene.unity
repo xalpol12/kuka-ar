@@ -440,8 +440,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runtimeImageLibrary: {fileID: 11400000, guid: fd03ce1f52e13064e91e9137f48714ff,
     type: 2}
-  arPrefab: {fileID: 9145115598657890696, guid: 3e253fa44769527418c6f3dd49aaef6d,
-    type: 3}
+  imageRecognisedPrefab: {fileID: 0}
   trackedRobotsHandler: {fileID: 1022678924}
 --- !u!114 &94363253
 MonoBehaviour:
@@ -455,7 +454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d18cbf4d53fe660498ebb23e572cd6b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackedRobotsHandler: {fileID: 0}
+  trackedRobotsHandler: {fileID: 1022678924}
 --- !u!1 &99730721 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1375861511463737996, guid: bb99c9b60ab49054cb0b683cec49861f,
@@ -797,11 +796,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd4d275446b20884395b99ae456b666e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Wifi: {fileID: 0}
-  NoWifi: {fileID: 0}
-  AddedSuccess: {fileID: 0}
-  EditSuccess: {fileID: 0}
-  AddedFailed: {fileID: 0}
 --- !u!114 &524307598 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1999379267639670349, guid: 31cdb5f2baf0fb544af05580a8382134,
@@ -1539,7 +1533,7 @@ PrefabInstance:
     - target: {fileID: 8110452565766130815, guid: 4e2223c16e3d26043b3c8b6009b6932b,
         type: 3}
       propertyPath: rotationThreshold
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2493,11 +2487,6 @@ MonoBehaviour:
   moreOptions: {fileID: 931878588}
   serverConfig: {fileID: 2130753306}
   focusMode: {fileID: 99730721}
-  ServerConfigAnim: 0
-  MenuAnim: 0
-  MoreOptionsAnim: 0
-  FocusModeAnim: 0
-  NextAnim: 
   abortServerConfigArrow: {fileID: 239668983}
   focusModeToggle: {fileID: 1768528310}
   noInternetText: {fileID: 524307598}
