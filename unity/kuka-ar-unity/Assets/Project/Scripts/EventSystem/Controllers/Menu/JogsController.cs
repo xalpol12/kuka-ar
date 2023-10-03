@@ -17,7 +17,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         [NonSerialized] public bool UpdateJogs;
         [NonSerialized] public JogsControlService Service;
         [NonSerialized] public LogicStates JogsTrigger;
-        [NonSerialized] public KrlJoints Joints;
+        [NonSerialized] public KRLJoints Joints;
 
         [SerializeField] private GameObject gameObjectRobotHandler;
         private TrackedRobotsHandler robotsHandler;
@@ -34,7 +34,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             ShowJogs = false;
             UpdateJogs = false;
             JogsTrigger = LogicStates.Waiting;
-            Joints = new KrlJoints();
+            Joints = new KRLJoints();
         
             MenuEvents.Event.OnClickJog += OnClickJog;
             robotsHandler.ActiveJointsUpdated += OnJointUpdate;
@@ -47,7 +47,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             JogsTrigger = ShowJogs ? LogicStates.Running : LogicStates.Hiding;
         }
 
-        private void OnJointUpdate(object sender, KrlJoints e)
+        private void OnJointUpdate(object sender, KRLJoints e)
         {
             Joints = e;
             UpdateJogs = true;

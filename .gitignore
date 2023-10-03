@@ -168,5 +168,6 @@ RobotStickers/
 java/kukaComm/pom.xml
 java/kukaComm/src/main/resources/application.properties
 
+_build/*
 # ignore DrawIO backup files in all directories
 **/*.bkp

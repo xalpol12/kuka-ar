@@ -14,7 +14,6 @@ namespace Project.Scripts.Connectivity.ExceptionHandling
         private void Awake()
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         
         private void Start()

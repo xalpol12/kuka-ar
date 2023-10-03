@@ -25,8 +25,9 @@ namespace Project.Scripts.TrackedRobots
         [Range(0f, 360f)]
         public float rotationThreshold = 1f;
 
-        public event EventHandler<KrlJoints> ActiveJointsUpdated;
-        public event EventHandler<bool> RobotConnectionStatusConnected; 
+        public event EventHandler<KRLJoints> ActiveJointsUpdated;
+        public event EventHandler<bool> RobotConnectionStatusConnected;
+        public event EventHandler<string> UnsubscribeObsoleteRobotIssued;
 
         private string selectedRobotIP;
         private TrackedRobotModel currentlyTrackedRobot;
@@ -42,17 +43,12 @@ namespace Project.Scripts.TrackedRobots
             if (robotIP == selectedRobotIP) return;
             if (selectedRobotIP != null)
             {
-                UnsubscribeFromWebsocket();
+                OnUnsubscribeObsoleteRobot(selectedRobotIP);
                 DestroyPrefab();
             }
             selectedRobotIP = robotIP;
             SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connecting;
             OnRobotConnectionStatusConnected(false);
-        }
-
-        private void UnsubscribeFromWebsocket()
-        {
-            //TODO: implement method
         }
 
         private void DestroyPrefab()
@@ -67,17 +63,13 @@ namespace Project.Scripts.TrackedRobots
 
         public void ReceivePackageFromWebsocket(OutputWithErrors newData)
         {
-            foreach (var foundIp in newData.Values.Keys)
+            if (newData.Values.TryGetValue(selectedRobotIP, out var value))
             {
-                if (foundIp == selectedRobotIP)
-                {
-                    SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connected;
-                    var robotData = newData.Values[foundIp];
-                    UpdateTrackedPoint(robotData);
-                } else
-                {
-                    SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Disconnected;
-                }
+                UpdateTrackedPoint(value);
+            }
+            else
+            {
+                SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Disconnected;
             }
 
             if (newData.Exception.HasValue)
@@ -88,22 +80,11 @@ namespace Project.Scripts.TrackedRobots
 
         private void UpdateTrackedPoint(Dictionary<string, ValueWithError> robotData)
         {
-            if (currentlyTrackedRobot == null) return; 
+            if (currentlyTrackedRobot == null) return;
+            SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connected;
             currentlyTrackedRobot.UpdateTrackedRobotVariables(robotData);
         }
 
-        private void OnJointsValueUpdated(object sender, KrlJoints e)
-        {
-            ActiveJointsUpdated?.Invoke(this, e);
-            DebugLogger.Instance.AddLog($"Updated joints for ip {selectedRobotIP}, j1: {e.J1.ToString()}; ");
-        }
-
-        private void OnRobotConnectionStatusConnected(bool e)
-        {
-            RobotConnectionStatusConnected?.Invoke(this, e);
-            DebugLogger.Instance.AddLog($"Updated connection status of ip {selectedRobotIP} to: {e.ToString()}; ");
-        }
-        
         public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
         {
             if (ipAddress == selectedRobotIP)
@@ -174,6 +155,22 @@ namespace Project.Scripts.TrackedRobots
         private void Update()
         {
             currentlyTrackedRobot?.UpdateGameObjects();
+        }
+        
+        private void OnJointsValueUpdated(object sender, KRLJoints e)
+        {
+            ActiveJointsUpdated?.Invoke(this, e);
+            DebugLogger.Instance.AddLog($"Updated joints for ip {selectedRobotIP}, j1: {e.J1.ToString()}; ");
+        }
+
+        private void OnRobotConnectionStatusConnected(bool e)
+        {
+            RobotConnectionStatusConnected?.Invoke(this, e);
+        }
+        
+        private void OnUnsubscribeObsoleteRobot(string e)
+        {
+            UnsubscribeObsoleteRobotIssued?.Invoke(this, e);
         }
     }
 }

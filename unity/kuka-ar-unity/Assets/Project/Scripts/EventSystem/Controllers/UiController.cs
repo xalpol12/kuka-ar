@@ -40,7 +40,7 @@ namespace Project.Scripts.EventSystem.Controllers
         private bool isAfterBugReport;
         private bool isQuitting;
         
-        private bool dataNeedsToBeLoaded;
+        private bool dataNeedsToBeFetched;
         
         private void Start()
         {
@@ -60,7 +60,7 @@ namespace Project.Scripts.EventSystem.Controllers
             {
                 SetPrefabsActiveState(false,false,true);
 
-                dataNeedsToBeLoaded = true;
+                dataNeedsToBeFetched = true;
             }
             else
             {
@@ -69,7 +69,7 @@ namespace Project.Scripts.EventSystem.Controllers
                 menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 1;
                 serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 0;
 
-                dataNeedsToBeLoaded = true;
+                dataNeedsToBeFetched = true;
             }
 
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
@@ -213,10 +213,15 @@ namespace Project.Scripts.EventSystem.Controllers
 
         private void Update()
         {
-            if (!dataNeedsToBeLoaded) return;
+            if (!dataNeedsToBeFetched) return;
+            InvokeFetchingRequiredData();
+            dataNeedsToBeFetched = false;
+        }
+
+        private void InvokeFetchingRequiredData()
+        {
             ServerInvoker.Invoker.GetFullData();
             MutableImageRecognizer.Instance.LoadNewTargets();
-            dataNeedsToBeLoaded = false;
         }
     }
 }

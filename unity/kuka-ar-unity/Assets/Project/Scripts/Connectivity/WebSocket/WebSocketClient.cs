@@ -37,6 +37,12 @@ namespace Project.Scripts.Connectivity.WebSocket
             };
 
             messagesToSend = new ConcurrentQueue<string>();
+
+            trackedRobotsHandlerScript.UnsubscribeObsoleteRobotIssued += (_, s) =>
+            {
+                string unsubscribeQuery = $"{{ \"unsubscribeIp\": \"{s}\" }}";
+                messagesToSend.Enqueue(unsubscribeQuery);
+            };
         }
 
         public async void ConnectToWebsocket(string serverAddress)

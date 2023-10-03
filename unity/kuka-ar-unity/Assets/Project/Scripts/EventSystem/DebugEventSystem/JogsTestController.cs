@@ -54,7 +54,7 @@ namespace Project.Scripts.EventSystem.DebugEventSystem
             currentlyTrackedRobot = currentlyTrackedRobot == FirstIp ? SecondIp : FirstIp;
         }
 
-        private void LogUpdate(object sender, KrlJoints joints)
+        private void LogUpdate(object sender, KRLJoints joints)
         {
             Debug.Log(currentlyTrackedRobot + " : " + joints.J1.ToString(CultureInfo.InvariantCulture));
         }

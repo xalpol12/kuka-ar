@@ -6,18 +6,18 @@ namespace Project.Scripts.Connectivity.Models.Wrappers
 {
     public class KrlIntWrapper : IKrlWrapper
     {
-        public event EventHandler<KrlInt> ValueUpdated;
+        public event EventHandler<KRLInt> ValueUpdated;
         
-        private KrlInt krlInt;
+        private KRLInt krlInt;
 
-        public void UpdateValue(IKrlValue update)
+        public void UpdateValue(IKRLValue update)
         {
-            if (((KrlInt)update).Value == krlInt.Value) return;
-            krlInt = (KrlInt)update;
+            if (((KRLInt)update).Value == krlInt.Value) return;
+            krlInt = (KRLInt)update;
             OnValueUpdated(krlInt);
         }
 
-        private void OnValueUpdated(KrlInt e)
+        private void OnValueUpdated(KRLInt e)
         {
             ValueUpdated?.Invoke(this, e);
         }

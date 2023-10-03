@@ -1,4 +1,4 @@
 namespace Project.Scripts.Connectivity.Models.KRLValues
 {
-    public interface IKrlValue { }
+    public interface IKRLValue { }
 }

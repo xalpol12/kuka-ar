@@ -18,8 +18,7 @@ namespace Project.Scripts.Utils
         private void Awake()
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
-            
+
             messages = new ConcurrentQueue<string>();
         }
 
