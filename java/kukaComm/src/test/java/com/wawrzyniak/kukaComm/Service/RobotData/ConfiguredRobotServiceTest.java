@@ -135,7 +135,7 @@ class ConfiguredRobotServiceTest {
         robotDTO_0.setId(1L);
         robotDTO_0.setName("kukaTest");
         robotDTO_0.setCategory("Tests");
-        robotDTO_0.setIpAddress("192.168.1.50");
+        robotDTO_0.setIpAddress("192.168.1.55");
         ConfiguredRobotDTO robotDTO_1 = new ConfiguredRobotDTO();
         robotDTO_1.setId(2L);
         robotDTO_1.setName("kukaTest");
@@ -146,7 +146,6 @@ class ConfiguredRobotServiceTest {
         robotDTO_2.setName("kukaTest");
         robotDTO_2.setCategory("Tests");
         robotDTO_2.setIpAddress("192.168.1.52");
-
         robotService.save(robotDTO_0);
         robotService.save(robotDTO_1);
         robotService.save(robotDTO_2);
