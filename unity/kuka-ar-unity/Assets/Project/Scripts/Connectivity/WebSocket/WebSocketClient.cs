@@ -1,5 +1,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Text;
 using NativeWebSocket;
 using Newtonsoft.Json;
 using Project.Scripts.Connectivity.Parsing;
