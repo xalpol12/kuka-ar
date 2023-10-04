@@ -814,13 +814,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7091350e79d07db429286a9f6a40045c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SelectedSprite: {fileID: 0}
-  DefaultSticker: {fileID: 0}
-  DefaultAddIcon: {fileID: 0}
-  PressedAddIcon: {fileID: 0}
-  InvalidSelectable: {fileID: 0}
-  DefaultInputField: {fileID: 0}
-  DefaultNoFrame: {fileID: 0}
 --- !u!114 &7920994802111269983
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -833,10 +826,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d433d45751711f74c8159a96617817e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SliderState: 0
-  SelectedIpAddress: 
-  SelectedName: 
-  IsAfterItemSelect: 0
 --- !u!114 &5401649059409786024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -861,8 +850,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 108fae6d518250f42bd230e8be53d551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsBottomNavDocked: 0
-  IsAddRobotDialogOpen: 0
 --- !u!114 &4121498038480310376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -876,8 +863,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parent: {fileID: 372582898346155980}
-  ResetSelectState: 0
-  IsSelectDialogOpen: 0
 --- !u!114 &8698185471187350771
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -890,7 +875,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c252a02c60c86d24bb44866f7a87af37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BestFitPosition: {x: 0, y: 0, z: 0}
+  bestFitPosition: {x: 0, y: 0, z: 0}
 --- !u!1 &862979226816965675
 GameObject:
   m_ObjectHideFlags: 0
@@ -1523,9 +1508,6 @@ MonoBehaviour:
   addDialog: {fileID: 372582898346155980}
   saveButton: {fileID: 2927669739693054776}
   transformFactor: 0
-  isSliderHold: 0
-  DialogState: 0
-  AddNewRobotService: {fileID: 0}
 --- !u!114 &139581659144925199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1677,11 +1659,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   parentGrid: {fileID: 1158987459227439401}
-  RobotsHandler: {fileID: 0}
-  StylingService: {fileID: 0}
-  LogicService: {fileID: 0}
-  WebDataStorage: {fileID: 0}
-  Spinner: {fileID: 0}
+  robotsHandler: {fileID: 0}
 --- !u!114 &815314161904333320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7016,10 +6994,6 @@ MonoBehaviour:
   id: 1
   transformFactor: 3
   jogs: {fileID: 5618062608399080033}
-  ShowJogs: 0
-  UpdateJogs: 0
-  Service: {fileID: 0}
-  JogsTrigger: 0
   gameObjectRobotHandler: {fileID: 0}
 --- !u!1 &5835751772852347574
 GameObject:
@@ -7756,10 +7730,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   bottomNavPanel: {fileID: 6261006791761500865}
-  StylingService: {fileID: 0}
-  LogicService: {fileID: 0}
-  IsCirclePressed: 0
-  TransformFactor: 0
 --- !u!114 &7254213111687339479
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9173,15 +9143,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 3
   ipSelector: {fileID: 7724729606699638640}
-  StylingService: {fileID: 0}
-  AddNewRobotService: {fileID: 0}
-  PositioningService: {fileID: 0}
-  DataStorage: {fileID: 0}
-  ElementClicked: 0
-  PrevElementClicked: 0
-  HexSpinner: {fileID: 0}
-  ShowOptionsController: 0
-  TransformFactor: 0
 --- !u!114 &1518899695483100861
 MonoBehaviour:
   m_ObjectHideFlags: 0
