@@ -1507,7 +1507,7 @@ MonoBehaviour:
   bottomNav: {fileID: 6261006791761500865}
   addDialog: {fileID: 372582898346155980}
   saveButton: {fileID: 2927669739693054776}
-  transformFactor: 0
+  transformFactor: 2000
 --- !u!114 &139581659144925199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10560,6 +10560,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Notifications
+      objectReference: {fileID: 0}
+    - target: {fileID: 5608635512401205186, guid: 15deaabe1d5fda24eab734b41ae1ce09,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6154135193507576923, guid: 15deaabe1d5fda24eab734b41ae1ce09,
         type: 3}
