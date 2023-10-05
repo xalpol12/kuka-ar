@@ -29,6 +29,7 @@ namespace Project.Scripts.Utils
 
         public void AddLog(String log)
         {
+            Debug.Log(log);
             messages.Enqueue(log);
         }
 
