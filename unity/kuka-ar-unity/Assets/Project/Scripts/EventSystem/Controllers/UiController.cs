@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
@@ -41,7 +42,7 @@ namespace Project.Scripts.EventSystem.Controllers
         private bool isQuitting;
         
         private bool dataNeedsToBeFetched;
-        
+
         private void Start()
         {
             validationService = IpValidationService.Instance;
@@ -72,6 +73,8 @@ namespace Project.Scripts.EventSystem.Controllers
                 dataNeedsToBeFetched = true;
             }
 
+            LoadAddressFromPlayerPrefsIfPresent();
+
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
             MenuEvents.Event.OnClickReloadServerData += RequestData;
             ServerConfigEvents.Events.OnClickSaveServerConfig += SaveServerConfiguration;
@@ -80,6 +83,14 @@ namespace Project.Scripts.EventSystem.Controllers
             MoreOptionsEvents.Events.OnClickDisplayServer += ReconfigureServer;
             MoreOptionsEvents.Events.OnClickDisplayBrowser += SubmitAnIssue;
             FocusModeEvents.Events.OnClickDisplayMoreOptions += FocusModeHandler;
+        }
+
+        private void LoadAddressFromPlayerPrefsIfPresent()
+        {
+            if (string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp"))) return;
+            var cachedAddress = PlayerPrefs.GetString("serverIp");
+            HttpClientWrapper.Instance.BaseAddress = cachedAddress;
+            WebSocketClient.Instance.ConnectToWebsocket($"ws://{cachedAddress}:8080/kuka-variables");
         }
 
         private void RequestData(int uid)

@@ -53,15 +53,8 @@ class ConfiguredRobotServiceTest {
         robotDTO.setCategory("Tests");
         robotDTO.setIpAddress("1921.168.1.520");
 
-        try {
-            // when
-            robotService.save(robotDTO);
-        } catch (WrongIpException e) {
-            // then
-            assertEquals("Wrong IP address format", e.getMessage());
-        } catch (RobotAlredyConfiguredException e) {
-            throw new RuntimeException(e);
-        }
+        // when && then
+        assertThrows(WrongIpException.class, () -> robotService.save(robotDTO));
     }
 
     @Test

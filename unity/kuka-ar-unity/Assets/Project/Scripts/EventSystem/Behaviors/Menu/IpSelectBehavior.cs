@@ -102,8 +102,13 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 gridItem.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
             });
             allIpAddresses.Add(gridItem);
+
+            var entries =
+                selectController.DataStorage.ConfiguredRobots.Count > selectController.DataStorage.Stickers.Count
+                    ? selectController.DataStorage.ConfiguredRobots.Count
+                    : selectController.DataStorage.Stickers.Count;
         
-            for (var i = 1; i < selectController.DataStorage.ConfiguredRobots.Count + 2; i++)
+            for (var i = 1; i < entries + 2; i++)
             {
                 var newIpAddress = Instantiate(gridItem, grid.transform, false);
                 if (i > selectController.DataStorage.ConfiguredRobots.Count - 1)

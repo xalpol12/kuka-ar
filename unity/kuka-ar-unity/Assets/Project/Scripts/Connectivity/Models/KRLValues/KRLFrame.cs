@@ -14,14 +14,21 @@ namespace Project.Scripts.Connectivity.Models.KRLValues
             set
             {
                 var kukaToUnityVector3 = new Vector3(
-                    value.x / 1000,
-                    value.y / 1000, 
+                    value.y / 1000,
+                    value.x / 1000, 
                     value.z / 1000);
                 position = kukaToUnityVector3;
             } 
         }
-    
+
+        private Vector3 rotation;
+        
         [JsonProperty("rotation")]
-        public Vector3 Rotation { get; set; }
+        public Vector3 Rotation
+        {
+            get => rotation;
+            
+            set => rotation = Quaternion.Euler(new Vector3(0, 0, 90)) * value;
+        }
     }
 }
