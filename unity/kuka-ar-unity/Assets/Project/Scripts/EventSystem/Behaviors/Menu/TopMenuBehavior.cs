@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
@@ -33,10 +34,12 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             {
                 StartCoroutine(DropTopMenu());
                 topMenu.State = LogicStates.Waiting;
-            } /*else if (topMenu.State == LogicStates.Hiding)
-            {
+            }
 
-            }*/
+            if (topMenu.IsSliderHold)
+            {
+                StartCoroutine(DragSlider());
+            }
         }
 
         private IEnumerator DropTopMenu()
@@ -46,7 +49,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             
             var translation = Vector3.down * (Time.deltaTime * topMenu.transformFactor);
             var menuPosition = topMenu.CoordSelectMenu.transform.position + translation;
-
+            
             while (menuPosition.y > Screen.height * topMenu.dropScreenHeight)
             {
                 topMenu.CoordSelectMenu.transform.Translate(translation);
@@ -55,6 +58,28 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             }
 
             topMenu.CoordSelectMenu.transform.position = menuPosition;
+        }
+
+        private IEnumerator DragSlider()
+        {
+            var menuPosition = new Vector3(dockPosition.x ,Input.mousePosition.y);
+            Debug.Log(menuPosition.y);
+            Debug.Log(Screen.height * topMenu.dropScreenHeight);
+            if (menuPosition.y > Screen.height * topMenu.dropScreenHeight)
+            {
+                menuPosition.y = Screen.height * topMenu.dropScreenHeight;
+                yield break;
+            }
+        
+            if (menuPosition.y < Screen.height * topMenu.dropScreenHeight / 2)
+            {
+                topMenu.State = LogicStates.Hiding;   
+                yield break;
+            }
+
+            topMenu.State = LogicStates.Running;
+            topMenu.CoordSelectMenu.transform.position = menuPosition;
+            yield return null;
         }
     }
 }
