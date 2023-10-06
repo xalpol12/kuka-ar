@@ -15,6 +15,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         [NonSerialized] public GameObject ConstantTopPanel;
         
         [NonSerialized] public LogicStates State;
+        [NonSerialized] public bool IsSliderHold;
         private void Start()
         {
             CoordSelectMenu = GetComponent<RectTransform>()
@@ -23,8 +24,11 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
                 .Find("ConstantInfoPanel").GetComponent<RectTransform>().gameObject;
 
             State = LogicStates.Waiting;
+            IsSliderHold = false;
             
-            TopMenuEvents.Events.OnBeanClick += OnToolOrBaseClick;    
+            TopMenuEvents.Events.OnBeanClick += OnToolOrBaseClick;
+            TopMenuEvents.Events.OnDragTopMenuSlider += OnMenuDrag;
+            TopMenuEvents.Events.OnDropTopMenuSlider += OnMenuDrop;
         }
 
         private void OnToolOrBaseClick(int uid)
@@ -32,6 +36,26 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             if (id == uid)
             {
                 State = LogicStates.Running;
+            }
+        }
+
+        private void OnMenuDrag(int uid)
+        {
+            Debug.Log("Drag init");
+            if (id == uid)
+            {
+                Debug.Log("Drag state");
+                IsSliderHold = true;
+            }
+        }
+
+        private void OnMenuDrop(int uid)
+        {
+            Debug.Log("Drop state");
+            if (id == uid)
+            {
+                Debug.Log("Drop state");
+                IsSliderHold = false;
             }
         }
     }

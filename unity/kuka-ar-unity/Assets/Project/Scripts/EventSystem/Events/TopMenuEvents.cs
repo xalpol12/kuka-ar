@@ -23,11 +23,13 @@ namespace Project.Scripts.EventSystem.Events
 
         public void DragTopMenu(int id)
         {
+            Debug.Log("DRAG IDL:" + id);
             OnDragTopMenuSlider?.Invoke(id);
         }
 
         public void DropTopMenu(int id)
         {
+            Debug.Log("DROP IDL:" + id);
             OnDropTopMenuSlider?.Invoke(id);
         }
     }
