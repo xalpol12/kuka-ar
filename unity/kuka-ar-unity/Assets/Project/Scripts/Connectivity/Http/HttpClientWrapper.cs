@@ -15,15 +15,9 @@ namespace Project.Scripts.Connectivity.Http
         public string BaseAddress
         {
             get => baseAddress;
-            set {
-                if (!string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")))
-                {
-                    baseAddress = PlayerPrefs.GetString("serverIp");
-                }
-                else
-                {
-                    baseAddress = value;
-                }
+            set
+            {
+                baseAddress = value;
                 httpClient.BaseAddress = new Uri($"http://{baseAddress}:8080/kuka-variables");
             }
         }

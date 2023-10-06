@@ -73,9 +73,7 @@ namespace Project.Scripts.EventSystem.Controllers
                 dataNeedsToBeFetched = true;
             }
 
-            HttpClientWrapper.Instance.BaseAddress = "255.255.255.255"; // TODO: fix this, it's just bad
-            String baseAddress = HttpClientWrapper.Instance.BaseAddress;
-            WebSocketClient.Instance.ConnectToWebsocket($"ws://{baseAddress}:8080/kuka-variables");
+            LoadAddressFromPlayerPrefsIfPresent();
 
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
             MenuEvents.Event.OnClickReloadServerData += RequestData;
@@ -85,6 +83,14 @@ namespace Project.Scripts.EventSystem.Controllers
             MoreOptionsEvents.Events.OnClickDisplayServer += ReconfigureServer;
             MoreOptionsEvents.Events.OnClickDisplayBrowser += SubmitAnIssue;
             FocusModeEvents.Events.OnClickDisplayMoreOptions += FocusModeHandler;
+        }
+
+        private void LoadAddressFromPlayerPrefsIfPresent()
+        {
+            if (string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp"))) return;
+            var cachedAddress = PlayerPrefs.GetString("serverIp");
+            HttpClientWrapper.Instance.BaseAddress = cachedAddress;
+            WebSocketClient.Instance.ConnectToWebsocket($"ws://{cachedAddress}:8080/kuka-variables");
         }
 
         private void RequestData(int uid)
