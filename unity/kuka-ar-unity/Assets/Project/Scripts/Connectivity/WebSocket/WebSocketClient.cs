@@ -63,6 +63,8 @@ namespace Project.Scripts.Connectivity.WebSocket
                 DebugLogger.Instance.AddLog($"Connected to ws: {serverAddress}; ");
             ws.OnError += (e) =>
                 DebugLogger.Instance.AddLog($"Ws error code {e}; ");
+            ws.OnClose += (_) =>
+                DebugLogger.Instance.AddLog($"Closed websocket with ip {serverAddress}; ");
 
             DebugLogger.Instance.AddLog("Await ws.Connect(); ");
             await ws.Connect();
@@ -76,7 +78,7 @@ namespace Project.Scripts.Connectivity.WebSocket
 
         private void OnWebsocketMessage(byte[] bytes)
         {
-            var message = System.Text.Encoding.UTF8.GetString(bytes);
+            var message = Encoding.UTF8.GetString(bytes);
             var outputFrame = JsonConvert.DeserializeObject<OutputWithErrors>(message, settings);
             trackedRobotsHandlerScript.ReceivePackageFromWebsocket(outputFrame);
         }

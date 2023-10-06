@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
@@ -41,7 +42,7 @@ namespace Project.Scripts.EventSystem.Controllers
         private bool isQuitting;
         
         private bool dataNeedsToBeFetched;
-        
+
         private void Start()
         {
             validationService = IpValidationService.Instance;
@@ -71,6 +72,10 @@ namespace Project.Scripts.EventSystem.Controllers
 
                 dataNeedsToBeFetched = true;
             }
+
+            HttpClientWrapper.Instance.BaseAddress = "255.255.255.255"; // TODO: fix this, it's just bad
+            String baseAddress = HttpClientWrapper.Instance.BaseAddress;
+            WebSocketClient.Instance.ConnectToWebsocket($"ws://{baseAddress}:8080/kuka-variables");
 
             MenuEvents.Event.OnClickMoreOptions += ShowMoreOptions;
             MenuEvents.Event.OnClickReloadServerData += RequestData;

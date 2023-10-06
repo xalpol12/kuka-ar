@@ -16,14 +16,13 @@ namespace Project.Scripts.Connectivity.Http
         {
             get => baseAddress;
             set {
-                if (string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")))
+                if (!string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")))
                 {
-                    baseAddress = value;
+                    baseAddress = PlayerPrefs.GetString("serverIp");
                 }
                 else
                 {
-                    baseAddress = PlayerPrefs.GetString("serverIp");
-                    WebSocketClient.Instance.ConnectToWebsocket($"ws://{baseAddress}:8080/kuka-variables");
+                    baseAddress = value;
                 }
                 httpClient.BaseAddress = new Uri($"http://{baseAddress}:8080/kuka-variables");
             }
@@ -32,12 +31,7 @@ namespace Project.Scripts.Connectivity.Http
         private void Awake()
         {
             Instance = this;
-        }
-
-        private void Start()
-        {
             httpClient = new HttpClient();
-            BaseAddress = "255.255.255.255";
         }
 
         public async Task<TResult> ExecuteRequest<TResult>(IHttpRequest<TResult> command)
