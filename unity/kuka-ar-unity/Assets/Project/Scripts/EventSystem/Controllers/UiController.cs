@@ -21,11 +21,10 @@ namespace Project.Scripts.EventSystem.Controllers
         public int id;
         public float animSpeed;
         public GameObject menuUi;
+        public GameObject topMenu;
         public GameObject moreOptions;
         public GameObject serverConfig;
         public GameObject focusMode;
-
-        [NonSerialized] public GameObject TopMenuUi;
         
         [NonSerialized] public AnimationStates ServerConfigAnim;
         [NonSerialized] public AnimationStates MenuAnim;
@@ -49,8 +48,6 @@ namespace Project.Scripts.EventSystem.Controllers
         {
             validationService = IpValidationService.Instance;
             stylingService = SelectableStylingService.Instance;
-            
-            TopMenuUi = menuUi.transform.Find("Canvas").transform.Find("TopMenu").GetComponent<Transform>().gameObject;
             
             NextAnim = new List<AnimationFilter>();
             selectedMode = focusModeToggle.GetComponent<Toggle>();
@@ -203,7 +200,7 @@ namespace Project.Scripts.EventSystem.Controllers
         private void SetPrefabsActiveState(bool menu, bool server, bool options)
         {
             menuUi.SetActive(menu);
-            TopMenuUi.SetActive(menu);
+            topMenu.SetActive(menu);
             serverConfig.SetActive(server);
             moreOptions.SetActive(options);
             focusMode.SetActive(false);

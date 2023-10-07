@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
@@ -15,6 +14,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private TMP_Text baseNo;
         private Vector3 dockPosition;
 
+        private const float Swap = 0.95f;
+
         private void Start()
         {
             topMenu = GetComponent<TopMenuController>();
@@ -30,15 +31,19 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private void Update()
         {
-            if (topMenu.State == LogicStates.Running)
+            if (topMenu.CoordListState == LogicStates.Running)
+            {
+                DragSlider();
+            } else if (topMenu.CoordListState == LogicStates.AutoPulling)
+            {
+                StartCoroutine(AutoPull());
+                topMenu.CoordListState = LogicStates.Waiting;
+            }
+            
+            if (topMenu.ConstantPanelState == LogicStates.Running)
             {
                 StartCoroutine(DropTopMenu());
-                topMenu.State = LogicStates.Waiting;
-            }
-
-            if (topMenu.IsSliderHold)
-            {
-                StartCoroutine(DragSlider());
+                topMenu.ConstantPanelState = LogicStates.Waiting;
             }
         }
 
@@ -49,7 +54,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             
             var translation = Vector3.down * (Time.deltaTime * topMenu.transformFactor);
             var menuPosition = topMenu.CoordSelectMenu.transform.position + translation;
-            
+
             while (menuPosition.y > Screen.height * topMenu.dropScreenHeight)
             {
                 topMenu.CoordSelectMenu.transform.Translate(translation);
@@ -60,26 +65,53 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             topMenu.CoordSelectMenu.transform.position = menuPosition;
         }
 
-        private IEnumerator DragSlider()
+        private void DragSlider()
         {
             var menuPosition = new Vector3(dockPosition.x ,Input.mousePosition.y);
-            Debug.Log(menuPosition.y);
-            Debug.Log(Screen.height * topMenu.dropScreenHeight);
-            if (menuPosition.y > Screen.height * topMenu.dropScreenHeight)
+            if (menuPosition.y < Screen.height * topMenu.dropScreenHeight)
             {
                 menuPosition.y = Screen.height * topMenu.dropScreenHeight;
-                yield break;
-            }
-        
-            if (menuPosition.y < Screen.height * topMenu.dropScreenHeight / 2)
-            {
-                topMenu.State = LogicStates.Hiding;   
-                yield break;
+                topMenu.CoordListState = LogicStates.Waiting;
+                return;
             }
 
-            topMenu.State = LogicStates.Running;
+            // if (menuPosition.y > Screen.height * Swap)
+            // {
+            //     topMenu.State = LogicStates.Hiding;
+            //     topMenu.ConstantTopPanel.SetActive(true);
+            //     return;
+            // }
+
             topMenu.CoordSelectMenu.transform.position = menuPosition;
-            yield return null;
+        }
+
+        private IEnumerator AutoPull()
+        {
+            var menuPosition = topMenu.CoordSelectMenu.transform.position;
+            var midHeight =  Screen.height * topMenu.dropScreenHeight + 
+                             (Screen.height - Screen.height * topMenu.dropScreenHeight) / 2;
+            while (menuPosition.y <= dockPosition.y || menuPosition.y >= Screen.height * topMenu.dropScreenHeight)
+            {
+                var translation = menuPosition.y > midHeight ? Vector3.up : Vector3.down;
+                
+                if (menuPosition.y >= Screen.height * Swap)
+                {
+                    topMenu.ConstantTopPanel.SetActive(true);
+                    yield break;
+                }
+
+                if (menuPosition.y <= Screen.height * topMenu.dropScreenHeight)
+                {
+                    topMenu.CoordSelectMenu.transform.position =
+                        new Vector2(menuPosition.x, Screen.height * topMenu.dropScreenHeight);
+                    yield break;
+                }
+                
+                topMenu.CoordSelectMenu.transform
+                    .Translate(translation * (Time.deltaTime * topMenu.transformFactor));
+                menuPosition = topMenu.CoordSelectMenu.transform.position;
+                yield return null;
+            }
         }
     }
 }
