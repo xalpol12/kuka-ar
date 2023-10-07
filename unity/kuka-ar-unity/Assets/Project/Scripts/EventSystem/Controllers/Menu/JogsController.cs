@@ -5,6 +5,7 @@ using Project.Scripts.EventSystem.Events;
 using Project.Scripts.EventSystem.Services.Menu;
 using Project.Scripts.TrackedRobots;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Project.Scripts.EventSystem.Controllers.Menu
 {
@@ -19,12 +20,12 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         [NonSerialized] public LogicStates JogsTrigger;
         [NonSerialized] public KRLJoints Joints;
 
-        [SerializeField] private GameObject gameObjectRobotHandler;
-        private TrackedRobotsHandler robotsHandler;
+        [SerializeField] private GameObject robotHandler;
+        private TrackedRobotsHandler trackedRobotsHandler;
 
         private void Awake()
         {
-            robotsHandler = gameObjectRobotHandler.GetComponent<TrackedRobotsHandler>();
+            trackedRobotsHandler = robotHandler.GetComponent<TrackedRobotsHandler>();
         }
 
         private void Start()
@@ -37,7 +38,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             Joints = new KRLJoints();
         
             MenuEvents.Event.OnClickJog += OnClickJog;
-            robotsHandler.ActiveJointsUpdated += OnJointUpdate;
+            trackedRobotsHandler.ActiveJointsUpdated += OnJointUpdate;
         }
 
         private void OnClickJog(int gui)
