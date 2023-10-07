@@ -7,93 +7,99 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 {
     public class TopMenuBehavior : MonoBehaviour
     {
-        private TopMenuController topMenu;
-        
+        private TopMenuController topMenuController;
+        private GameObject coordSelectMenu;
+        private GameObject constantTopPanel;
         private Vector3 dockPosition;
-
+        
         private const float Swap = 0.95f;
 
         private void Start()
         {
-            topMenu = GetComponent<TopMenuController>();
+            topMenuController = GetComponent<TopMenuController>();
+            coordSelectMenu = topMenuController.topMenu.GetComponent<RectTransform>()
+                .Find("Selectable").GetComponent<RectTransform>().gameObject;
+            constantTopPanel = topMenuController.topMenu.GetComponent<RectTransform>()
+                .Find("ConstantInfoPanel").GetComponent<RectTransform>().gameObject;
             
-            dockPosition = topMenu.CoordSelectMenu.transform.position;
+            dockPosition = coordSelectMenu.transform.position;
         }
 
         private void Update()
         {
-            if (topMenu.CoordListState == LogicStates.Running)
+            if (topMenuController.CoordListState == LogicStates.Running)
             {
                 DragSlider();
-            } else if (topMenu.CoordListState == LogicStates.AutoPulling)
+            } else if (topMenuController.CoordListState == LogicStates.AutoPulling)
             {
                 StartCoroutine(AutoPull());
-                topMenu.CoordListState = LogicStates.Waiting;
+                topMenuController.CoordListState = LogicStates.Waiting;
             }
             
-            if (topMenu.ConstantPanelState == LogicStates.Running)
+            if (topMenuController.ConstantPanelState == LogicStates.Running)
             {
                 StartCoroutine(DropTopMenu());
-                topMenu.ConstantPanelState = LogicStates.Waiting;
+                topMenuController.ConstantPanelState = LogicStates.Waiting;
             }
         }
 
         private IEnumerator DropTopMenu()
         {
-            topMenu.ConstantTopPanel.SetActive(false);
-            topMenu.jogs.SetActive(false);
+            constantTopPanel.SetActive(false);
+            topMenuController.jogs.SetActive(false);
             
-            var translation = Vector3.down * (Time.deltaTime * topMenu.transformFactor);
-            var menuPosition = topMenu.CoordSelectMenu.transform.position + translation;
+            var translation = Vector3.down * (Time.deltaTime * topMenuController.transformFactor);
+            var menuPosition = coordSelectMenu.transform.position + translation;
 
-            while (menuPosition.y > Screen.height * topMenu.dropScreenHeight)
+            while (menuPosition.y > Screen.height * topMenuController.dropScreenHeight)
             {
-                topMenu.CoordSelectMenu.transform.Translate(translation);
-                menuPosition = topMenu.CoordSelectMenu.transform.position + translation;
+                coordSelectMenu.transform.Translate(translation);
+                menuPosition = coordSelectMenu.transform.position + translation;
                 yield return null;
             }
 
-            topMenu.CoordSelectMenu.transform.position = menuPosition;
+            coordSelectMenu.transform.position = menuPosition;
         }
 
         private void DragSlider()
         {
             var menuPosition = new Vector3(dockPosition.x ,Input.mousePosition.y);
-            if (menuPosition.y < Screen.height * topMenu.dropScreenHeight)
+            if (menuPosition.y < Screen.height * topMenuController.dropScreenHeight)
             {
-                menuPosition.y = Screen.height * topMenu.dropScreenHeight;
-                topMenu.CoordListState = LogicStates.Waiting;
+                menuPosition.y = Screen.height * topMenuController.dropScreenHeight;
+                topMenuController.CoordListState = LogicStates.Waiting;
                 return;
             }
 
-            topMenu.CoordSelectMenu.transform.position = menuPosition;
+            coordSelectMenu.transform.position = menuPosition;
         }
 
         private IEnumerator AutoPull()
         {
-            var menuPosition = topMenu.CoordSelectMenu.transform.position;
-            var midPoint =  Screen.height * topMenu.dropScreenHeight + 
-                             (Screen.height - Screen.height * topMenu.dropScreenHeight) / 2;
-            while (menuPosition.y <= dockPosition.y || menuPosition.y >= Screen.height * topMenu.dropScreenHeight)
+            var menuPosition = coordSelectMenu.transform.position;
+            var midPoint =  Screen.height * topMenuController.dropScreenHeight + 
+                             (Screen.height - Screen.height * topMenuController.dropScreenHeight) / 2;
+            while (menuPosition.y <= dockPosition.y || 
+                   menuPosition.y >= Screen.height * topMenuController.dropScreenHeight)
             {
                 var translation = menuPosition.y > midPoint ? Vector3.up : Vector3.down;
                 
                 if (menuPosition.y >= Screen.height * Swap)
                 {
-                    topMenu.ConstantTopPanel.SetActive(true);
+                    constantTopPanel.SetActive(true);
                     yield break;
                 }
 
-                if (menuPosition.y <= Screen.height * topMenu.dropScreenHeight)
+                if (menuPosition.y <= Screen.height * topMenuController.dropScreenHeight)
                 {
-                    topMenu.CoordSelectMenu.transform.position =
-                        new Vector2(menuPosition.x, Screen.height * topMenu.dropScreenHeight);
+                    coordSelectMenu.transform.position = 
+                        new Vector2(menuPosition.x, Screen.height * topMenuController.dropScreenHeight);
                     yield break;
                 }
                 
-                topMenu.CoordSelectMenu.transform
-                    .Translate(translation * (Time.deltaTime * topMenu.transformFactor));
-                menuPosition = topMenu.CoordSelectMenu.transform.position;
+                coordSelectMenu.transform
+                    .Translate(translation * (Time.deltaTime * topMenuController.transformFactor));
+                menuPosition = coordSelectMenu.transform.position;
                 yield return null;
             }
         }

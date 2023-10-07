@@ -21,18 +21,19 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         
         [Tooltip("Jogs component reference object")]
         public GameObject jogs;
-        
-        [NonSerialized] public GameObject CoordSelectMenu;
-        [NonSerialized] public GameObject ConstantTopPanel;
-        
+
+        [Tooltip("Self reference to prevent null pointer exception on behavior")]
+        public GameObject topMenu;
+
         [NonSerialized] public LogicStates ConstantPanelState;
+
         [NonSerialized] public LogicStates CoordListState;
-        
+
         [SerializeField]
         [Tooltip("Tracked robots handler reference game object")]
         private GameObject robotModel;
+
         private TrackedRobotModel trackedRobot;
-        
         private TMP_Text toolNo;
         private TMP_Text baseNo;
 
@@ -43,14 +44,12 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 
         private void Start()
         {
-            CoordSelectMenu = GetComponent<RectTransform>()
-                .Find("Selectable").GetComponent<RectTransform>().gameObject;
-            ConstantTopPanel = GetComponent<RectTransform>()
+            var constantTopPanel = topMenu.GetComponent<RectTransform>()
                 .Find("ConstantInfoPanel").GetComponent<RectTransform>().gameObject;
             
-            toolNo = ConstantTopPanel.transform.Find("ToolBean").GetComponent<RectTransform>().gameObject
+            toolNo = constantTopPanel.transform.Find("ToolBean").GetComponent<RectTransform>().gameObject
                 .transform.Find("Tool").GetComponent<TMP_Text>();
-            baseNo = ConstantTopPanel.transform.Find("WorldBean").GetComponent<RectTransform>().gameObject
+            baseNo = constantTopPanel.transform.Find("WorldBean").GetComponent<RectTransform>().gameObject
                 .transform.Find("World").GetComponent<TMP_Text>();
 
             ConstantPanelState = LogicStates.Waiting;

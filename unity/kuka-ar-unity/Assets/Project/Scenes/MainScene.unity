@@ -1684,6 +1684,11 @@ PrefabInstance:
       objectReference: {fileID: 528076107}
     - target: {fileID: 3693533101214871844, guid: ca523bdd2fe8f034b95b944eaa194ffc,
         type: 3}
+      propertyPath: topMenu
+      value: 
+      objectReference: {fileID: 1979409210}
+    - target: {fileID: 3693533101214871844, guid: ca523bdd2fe8f034b95b944eaa194ffc,
+        type: 3}
       propertyPath: robotModel
       value: 
       objectReference: {fileID: 1855572461}
@@ -1755,7 +1760,7 @@ PrefabInstance:
     - target: {fileID: 4551689435452098315, guid: ca523bdd2fe8f034b95b944eaa194ffc,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2688,6 +2693,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ade7c4f68aab9fb4e871a95d591d1c27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1979409210 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9220597359645398706, guid: ca523bdd2fe8f034b95b944eaa194ffc,
+    type: 3}
+  m_PrefabInstance: {fileID: 1193469254}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2130753306 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6296100972460472928, guid: af40055b8bdfdf24091bbab03471ab98,
