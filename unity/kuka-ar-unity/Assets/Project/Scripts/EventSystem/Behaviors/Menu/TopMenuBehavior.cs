@@ -10,8 +10,6 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
     {
         private TopMenuController topMenu;
         
-        private TMP_Text toolNo;
-        private TMP_Text baseNo;
         private Vector3 dockPosition;
 
         private const float Swap = 0.95f;
@@ -19,14 +17,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private void Start()
         {
             topMenu = GetComponent<TopMenuController>();
-
-            var topPanel = topMenu.ConstantTopPanel.transform;
-            toolNo = topPanel.Find("ToolBean").GetComponent<RectTransform>().gameObject
-                .transform.Find("Tool").GetComponent<TMP_Text>();
-            baseNo = topPanel.Find("WorldBean").GetComponent<RectTransform>().gameObject
-                .transform.Find("World").GetComponent<TMP_Text>();
+            
             dockPosition = topMenu.CoordSelectMenu.transform.position;
-
         }
 
         private void Update()
@@ -75,24 +67,17 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 return;
             }
 
-            // if (menuPosition.y > Screen.height * Swap)
-            // {
-            //     topMenu.State = LogicStates.Hiding;
-            //     topMenu.ConstantTopPanel.SetActive(true);
-            //     return;
-            // }
-
             topMenu.CoordSelectMenu.transform.position = menuPosition;
         }
 
         private IEnumerator AutoPull()
         {
             var menuPosition = topMenu.CoordSelectMenu.transform.position;
-            var midHeight =  Screen.height * topMenu.dropScreenHeight + 
+            var midPoint =  Screen.height * topMenu.dropScreenHeight + 
                              (Screen.height - Screen.height * topMenu.dropScreenHeight) / 2;
             while (menuPosition.y <= dockPosition.y || menuPosition.y >= Screen.height * topMenu.dropScreenHeight)
             {
-                var translation = menuPosition.y > midHeight ? Vector3.up : Vector3.down;
+                var translation = menuPosition.y > midPoint ? Vector3.up : Vector3.down;
                 
                 if (menuPosition.y >= Screen.height * Swap)
                 {
