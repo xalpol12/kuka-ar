@@ -10,17 +10,27 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 {
     public class TopMenuController : MonoBehaviour
     {
+        [Tooltip("Id of event controller")]
         public int id;
+        
+        [Tooltip("Animation speed")]
         public int transformFactor;
+        
+        [Tooltip("Menu drop height, counted from screen height [%]")]
         public float dropScreenHeight;
+        
+        [Tooltip("Jogs component reference object")]
         public GameObject jogs;
+        
         [NonSerialized] public GameObject CoordSelectMenu;
         [NonSerialized] public GameObject ConstantTopPanel;
         
         [NonSerialized] public LogicStates ConstantPanelState;
         [NonSerialized] public LogicStates CoordListState;
-
-        [SerializeField] private GameObject robotModel;
+        
+        [SerializeField]
+        [Tooltip("Tracked robots handler reference game object")]
+        private GameObject robotModel;
         private TrackedRobotModel trackedRobot;
         
         private TMP_Text toolNo;
@@ -28,7 +38,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 
         private void Awake()
         {
-            trackedRobot = robotModel.GetComponent<TrackedRobotModel>();
+            trackedRobot = robotModel.GetComponent<TrackedRobotsHandler>().CurrentlyTrackedRobot;
         }
 
         private void Start()
@@ -49,6 +59,8 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             TopMenuEvents.Events.OnBeanClick += OnToolOrBaseClick;
             TopMenuEvents.Events.OnDragTopMenuSlider += OnMenuDrag;
             TopMenuEvents.Events.OnDropTopMenuSlider += OnMenuDrop;
+            
+            if (trackedRobot is null) return; // TODO REMOVE THIS PART AFTER CONSULTATION WITH @xampol12
             trackedRobot.BaseValueUpdated += OnBaseValueChange;
             trackedRobot.ToolValueUpdated += OnToolValueChange;
         }
@@ -79,12 +91,12 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 
         private void OnBaseValueChange(object _, KRLInt e)
         {
-            baseNo.text = e.Value.ToString();
+            baseNo.text = "Base\n" + e.Value;
         }
 
         private void OnToolValueChange(object _, KRLInt e)
         {
-            toolNo.text = e.Value.ToString();
+            toolNo.text = "Tool\n" + e.Value;
         }
     }
 }

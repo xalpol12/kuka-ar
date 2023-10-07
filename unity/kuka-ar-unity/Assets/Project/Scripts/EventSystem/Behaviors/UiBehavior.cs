@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Project.Scripts.EventSystem.Controllers;
 using Project.Scripts.EventSystem.Enums;
@@ -10,6 +11,7 @@ namespace Project.Scripts.EventSystem.Behaviors
         private UiController controller;
         private CanvasGroup serverCanvasGroup;
         private CanvasGroup menuCanvasGroup;
+        private CanvasGroup topMenuCanvasGroup;
         private CanvasGroup moreOptionsCanvasGroup;
         private CanvasGroup focusModeCanvasGroup;
         private GameObject serverBackArrow;
@@ -19,6 +21,7 @@ namespace Project.Scripts.EventSystem.Behaviors
 
             serverCanvasGroup = controller.serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>();
             menuCanvasGroup = controller.menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>();
+            topMenuCanvasGroup = controller.topMenu.transform.Find("Canvas").GetComponent<CanvasGroup>();
             moreOptionsCanvasGroup = controller.moreOptions.transform.Find("Canvas").GetComponent<CanvasGroup>();
             focusModeCanvasGroup = controller.focusMode.transform.Find("Canvas").GetComponent<CanvasGroup>();
         }
@@ -41,6 +44,15 @@ namespace Project.Scripts.EventSystem.Behaviors
             else if(controller.MenuAnim == AnimationStates.FadeOut)
             {
                 StartCoroutine(FadeOut(menuCanvasGroup));
+            }
+
+            if (controller.TopMenuAnim == AnimationStates.FadeIn)
+            {
+                StartCoroutine(FadeIn(topMenuCanvasGroup));
+            }
+            else if (controller.TopMenuAnim == AnimationStates.FadeOut)
+            {
+                StartCoroutine(FadeOut(topMenuCanvasGroup));
             }
         
             if (controller.MoreOptionsAnim == AnimationStates.FadeIn)
@@ -67,6 +79,7 @@ namespace Project.Scripts.EventSystem.Behaviors
                 {
                     controller.MoreOptionsAnim = AnimationStates.FadeOut;
                     controller.NextAnim.Add(AnimationFilter.MenuIn);
+                    controller.NextAnim.Add(AnimationFilter.TopMenuIn);
                     StartCoroutine(FadeOut(moreOptionsCanvasGroup));
                 } else if (controller.serverConfig.activeSelf &&
                            !string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp")))
@@ -78,6 +91,7 @@ namespace Project.Scripts.EventSystem.Behaviors
                 else if (controller.focusMode.activeSelf)
                 {
                     controller.MenuAnim = AnimationStates.FadeOut;
+                    controller.TopMenuAnim = AnimationStates.FadeOut;
                     controller.NextAnim.Add(AnimationFilter.MoreOptionsIn);
                     StartCoroutine(FadeOut(focusModeCanvasGroup));
                 }
@@ -86,7 +100,7 @@ namespace Project.Scripts.EventSystem.Behaviors
 
         private IEnumerator FadeIn(CanvasGroup group)
         {
-            var newAlpha = group.alpha + (Time.deltaTime * controller.animSpeed);
+            var newAlpha = group.alpha + Time.deltaTime * controller.animSpeed;
             if (newAlpha > 1)
             {
                 group.alpha = 1;
@@ -101,7 +115,7 @@ namespace Project.Scripts.EventSystem.Behaviors
 
         private IEnumerator FadeOut(CanvasGroup group)
         {
-            var newAlpha = group.alpha - (Time.deltaTime * controller.animSpeed);
+            var newAlpha = group.alpha - Time.deltaTime * controller.animSpeed;
             if (newAlpha < 0)
             {
                 group.alpha = 0;
@@ -121,6 +135,10 @@ namespace Project.Scripts.EventSystem.Behaviors
                 case "Menu":
                     controller.MenuAnim = AnimationStates.StandBy;
                     controller.menuUi.SetActive(active);
+                    break;
+                case "TopMenu":
+                    controller.TopMenuAnim = AnimationStates.StandBy;
+                    controller.topMenu.SetActive(active);
                     break;
                 case "ServerConfigScreen":
                     controller.ServerConfigAnim = AnimationStates.StandBy;
@@ -149,6 +167,10 @@ namespace Project.Scripts.EventSystem.Behaviors
                             controller.menuUi.SetActive(true);
                             controller.MenuAnim = AnimationStates.FadeIn;
                             break;
+                        case AnimationFilter.TopMenuIn:
+                            controller.topMenu.SetActive(true);
+                            controller.TopMenuAnim = AnimationStates.FadeIn;
+                            break;
                         case AnimationFilter.ServerConfigScreenIn:
                             controller.serverConfig.SetActive(true);
                             controller.ServerConfigAnim = AnimationStates.FadeIn;
@@ -164,6 +186,9 @@ namespace Project.Scripts.EventSystem.Behaviors
                         case AnimationFilter.Menu:
                             controller.MenuAnim = AnimationStates.FadeOut;
                             break;
+                        case AnimationFilter.TopMenu:
+                            controller.TopMenuAnim = AnimationStates.FadeOut;
+                            break;
                         case AnimationFilter.ServerConfigScreen:
                             controller.ServerConfigAnim = AnimationStates.FadeOut;
                             break;
@@ -173,6 +198,8 @@ namespace Project.Scripts.EventSystem.Behaviors
                         case AnimationFilter.FocusMode:
                             controller.FocusModeAnim = AnimationStates.FadeOut;
                             break;
+                        default:
+                            throw new InvalidCastException();
                     }
                 }
 

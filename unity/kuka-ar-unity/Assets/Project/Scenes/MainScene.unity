@@ -1672,11 +1672,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3454185314108110844, guid: ca523bdd2fe8f034b95b944eaa194ffc,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3693533101214871844, guid: ca523bdd2fe8f034b95b944eaa194ffc,
         type: 3}
       propertyPath: jogs
       value: 
       objectReference: {fileID: 528076107}
+    - target: {fileID: 3693533101214871844, guid: ca523bdd2fe8f034b95b944eaa194ffc,
+        type: 3}
+      propertyPath: robotModel
+      value: 
+      objectReference: {fileID: 1855572461}
     - target: {fileID: 3811917280247643894, guid: ca523bdd2fe8f034b95b944eaa194ffc,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2558,7 +2568,7 @@ PrefabInstance:
         type: 3}
       propertyPath: robotHandler
       value: 
-      objectReference: {fileID: 1022678924}
+      objectReference: {fileID: 1855572461}
     - target: {fileID: 8835759804573029597, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: gameObjectRobotHandler
