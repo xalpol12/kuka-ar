@@ -20,8 +20,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         {
             jogsController = GetComponent<JogsController>();
 
-            jogsValues = jogsController.jogs.GetComponent<RectTransform>().Find("JogsValues").gameObject;
-            jogsDisplay = jogsController.jogs.GetComponent<RectTransform>().Find("JogDisplay").gameObject;
+            jogsValues = jogsController.gameObject.GetComponent<RectTransform>().Find("JogsValues").gameObject;
+            jogsDisplay = jogsController.gameObject.GetComponent<RectTransform>().Find("JogDisplay").gameObject;
             
             jogsDisplay.SetActive(true);
             jogsValues.SetActive(false);

@@ -9,7 +9,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 {
     public class BottomNavBehavior : MonoBehaviour
     {
-        [SerializeField] private float pullMenuScreenMaxHeight = 0.34f;
+        [SerializeField]
+        [Tooltip("Bottom nav default windows pull height, calculated from screen height [%]")]
+        private float pullMenuScreenMaxHeight = 0.34f;
     
         private BottomNavController bottomNav;
         private JogsControlService service;

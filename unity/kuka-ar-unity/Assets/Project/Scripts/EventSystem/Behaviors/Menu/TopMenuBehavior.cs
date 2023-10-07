@@ -1,7 +1,6 @@
 using System.Collections;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
-using TMPro;
 using UnityEngine;
 
 namespace Project.Scripts.EventSystem.Behaviors.Menu
