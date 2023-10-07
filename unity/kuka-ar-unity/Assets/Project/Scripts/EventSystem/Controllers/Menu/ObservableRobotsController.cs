@@ -8,8 +8,12 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 {
     public class ObservableRobotsController : MonoBehaviour
     {
+        [Tooltip("Aggregation element for grid entries")]
         public GameObject parentGrid;
+        
+        [Tooltip("Tracked robots component reference")]
         public TrackedRobotsHandler robotsHandler;
+        
         [NonSerialized] public SelectableStylingService StylingService;
         [NonSerialized] public SelectableLogicService LogicService;
         [NonSerialized] public WebDataStorage WebDataStorage;

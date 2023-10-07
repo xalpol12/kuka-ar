@@ -7,11 +7,15 @@ namespace Project.Scripts.EventSystem.Controllers.LoadingScreen
 {
     public class ASyncLoader : MonoBehaviour
     {
+        [SerializeField]
         [Header("Menu Screens")]
-        [SerializeField] private GameObject loadingScreen;
+        [Tooltip("Loading screen - animation or image that should be displayed")]
+        private GameObject loadingScreen;
     
+        [SerializeField]
         [Header("Slider")]
-        [SerializeField] private Slider progressbar;
+        [Tooltip("Progress bar component, to display loading progress")]
+        private Slider progressbar;
 
         private void Start()
         {

@@ -10,7 +10,10 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
 {
     public class SaveController : MonoBehaviour
     {
-        [SerializeField] private GameObject ipInputField;
+        [SerializeField]
+        [Tooltip("IP input field reference")]
+        private GameObject ipInputField;
+        
         private IpValidationService validationService;
         private HttpClientWrapper httpClient;
         private Sprite cloudIcon;

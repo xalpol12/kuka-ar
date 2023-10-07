@@ -1,4 +1,5 @@
 using System;
+using System.Runtime;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.EventSystem.Enums;
@@ -11,7 +12,10 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 {
     public class IpSelectController : MonoBehaviour
     {
+        [Tooltip("Ip select controller ID")]
         public int id;
+        
+        [Tooltip("Self reference to prevent null pointer exception on behavior")]
         public GameObject ipSelector;
 
         [NonSerialized] public SelectableStylingService StylingService; 

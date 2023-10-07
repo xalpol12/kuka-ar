@@ -13,18 +13,29 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 {
     public class AddRobotController : MonoBehaviour
     {
+        [Tooltip("Add new robot controller ID")]
         public int id;
+        
+        [Tooltip("Bottom navigation component reference")]
         public GameObject bottomNav;
+        
+        [Tooltip("Self reference to prevent behavior execution before component init")]
         public GameObject addDialog;
-        [SerializeField] private GameObject saveButton;
-
+        
+        [SerializeField]
+        [Tooltip("Save button reference - error fix")]
+        private GameObject saveButton;
+        
+        [Tooltip("Animation speed")]
         public int transformFactor;
+        
         [NonSerialized] public bool IsSliderHold;
-        internal bool IsAddRobotPressed;
-        private WebDataStorage webDataStorage;
         [NonSerialized] public LogicStates DialogState;
         [NonSerialized] public AddNewRobotService AddNewRobotService;
 
+        internal bool IsAddRobotPressed;
+        
+        private WebDataStorage webDataStorage;
         private Robot data;
         private SelectableStylingService stylingService;
         private SelectableLogicService logicService;

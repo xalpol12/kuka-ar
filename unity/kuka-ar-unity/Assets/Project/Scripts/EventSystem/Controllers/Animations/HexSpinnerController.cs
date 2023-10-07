@@ -6,9 +6,17 @@ namespace Project.Scripts.EventSystem.Controllers.Animations
 {
     public class HexSpinnerController : MonoBehaviour
     {
-        [SerializeField] private GameObject blueHex; 
-        [SerializeField] private GameObject redHex; 
-        [SerializeField] private GameObject greenHex;
+        [SerializeField]
+        [Tooltip("Blue hex component")]
+        private GameObject blueHex;
+        
+        [SerializeField]
+        [Tooltip("Red hex component")]
+        private GameObject redHex;
+        
+        [SerializeField]
+        [Tooltip("Green hex component")]
+        private GameObject greenHex;
 
         [NonSerialized] public Image[] HexImages;
         [NonSerialized] public RectTransform[] HexRects;
@@ -19,7 +27,6 @@ namespace Project.Scripts.EventSystem.Controllers.Animations
             var fadedBlue = blueHex.transform.parent.Find("BlueHexPath").GetComponent<RectTransform>();
             var fadedRed = redHex.transform.parent.Find("RedHexPath").GetComponent<RectTransform>();
             var fadedGreen = greenHex.transform.parent.Find("GreenHexPath").GetComponent<RectTransform>();
-            
             
             HexImages = new[] {blueHex.GetComponent<Image>(),
                 redHex.GetComponent<Image>(), greenHex.GetComponent<Image>()};
