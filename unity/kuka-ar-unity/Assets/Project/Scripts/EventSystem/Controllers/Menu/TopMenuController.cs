@@ -33,13 +33,13 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         [Tooltip("Tracked robots handler reference game object")]
         private GameObject robotModel;
 
-        private TrackedRobotModel trackedRobot;
+        private TrackedRobotsHandler trackedRobot;
         private TMP_Text toolNo;
         private TMP_Text baseNo;
 
         private void Awake()
         {
-            trackedRobot = robotModel.GetComponent<TrackedRobotsHandler>().CurrentlyTrackedRobot;
+            trackedRobot = robotModel.GetComponent<TrackedRobotsHandler>();
         }
 
         private void Start()
@@ -59,9 +59,8 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             TopMenuEvents.Events.OnDragTopMenuSlider += OnMenuDrag;
             TopMenuEvents.Events.OnDropTopMenuSlider += OnMenuDrop;
             
-            if (trackedRobot is null) return; // TODO REMOVE THIS PART AFTER CONSULTATION WITH @xampol12
-            trackedRobot.BaseValueUpdated += OnBaseValueChange;
-            trackedRobot.ToolValueUpdated += OnToolValueChange;
+            trackedRobot.ActiveBaseUpdated += OnBaseValueChange;
+            trackedRobot.ActiveToolUpdated += OnToolValueChange;
         }
 
         private void OnToolOrBaseClick(int uid)
