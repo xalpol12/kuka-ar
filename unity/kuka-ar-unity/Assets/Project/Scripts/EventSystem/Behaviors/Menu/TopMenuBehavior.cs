@@ -87,6 +87,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 if (menuPosition.y >= Screen.height * Swap)
                 {
                     constantTopPanel.SetActive(true);
+                    topMenuController.jogs.SetActive(true);
                     yield break;
                 }
 
