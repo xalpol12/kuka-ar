@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
+using Project.Scripts.EventSystem.Enums;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,14 +10,29 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
 {
     public class PopupBehavior : MonoBehaviour
     {
-        [SerializeField] [Range(1, 10000)] private int transformFactor = 100;
+        [SerializeField]
+        [Range(1, 10000)]
+        [Tooltip("Animation speed")]
+        private int transformFactor = 100;
+
+        [Range(1,10)]
+        [SerializeField]
+        [Tooltip("Top menu fade animation speed")]
+        private int fadeSpeed;
+        
+        [SerializeField]
+        [Tooltip("Top menu canvas group component reference")]
+        private CanvasGroup topMenu;
         
         private const int TravelDistance = 220;
+        private AnimationStates fadeState;
         private Popup controller;
 
         private void Start()
         {
             controller = GetComponent<Popup>();
+
+            fadeState = AnimationStates.StandBy;
         }
 
         private void Update()
@@ -31,6 +47,16 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
                 case 0 when controller.PressedObject is not null:
                     StartCoroutine(AutoPull());
                     controller.GrabState = 2;
+                    break;
+            }
+
+            switch (controller.Notifications.Count)
+            {
+                case > 0 when topMenu.alpha >= 1 && fadeState == AnimationStates.StandBy:
+                    StartCoroutine(Fade(topMenu, AnimationStates.FadeOut));
+                    break;
+                case 0 when topMenu.alpha <= 0 && fadeState == AnimationStates.StandBy:
+                    StartCoroutine(Fade(topMenu, AnimationStates.FadeIn));
                     break;
             }
         }
@@ -66,7 +92,7 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
             }
             
             AssignContent(notification, content);
-            
+
             while (notification.transform.position.y > stop)
             {
                 notification.transform.Translate((Time.deltaTime * transformFactor) * Vector3.down);
@@ -148,11 +174,35 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
 
         private IEnumerator SlideDownAfterDelete()
         {
+            if (controller.Notifications.Count == 0)
+            {
+                yield break;
+            }
+            
             for (var i = 0; i < controller.Notifications.Count; i++)
             {
                 StartCoroutine(SlideIn(controller.Notifications[i], controller.NotificationsContent[i], i));
                 yield return null;
             }
+        }
+
+        private IEnumerator Fade(CanvasGroup group, AnimationStates state)
+        {
+            fadeState = state;
+            
+            while (group.alpha is >= 0 and <= 1)
+            {
+                var fade = state.ToString().Contains("FadeIn") ? 1 : -1;
+                group.alpha += Time.deltaTime * fade * fadeSpeed;
+
+                if (group.alpha is 0 or 1)
+                {
+                    break;
+                }
+                yield return null;
+            }
+            group.alpha = state.ToString().Contains("FadeIn") ? 1 : 0;
+            fadeState = AnimationStates.StandBy;
         }
     }
 }

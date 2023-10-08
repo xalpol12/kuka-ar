@@ -35,12 +35,11 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 StartCoroutine(AutoPull());
                 topMenuController.CoordListState = LogicStates.Waiting;
             }
+
+            if (topMenuController.ConstantPanelState != LogicStates.Running) return;
             
-            if (topMenuController.ConstantPanelState == LogicStates.Running)
-            {
-                StartCoroutine(DropTopMenu());
-                topMenuController.ConstantPanelState = LogicStates.Waiting;
-            }
+            StartCoroutine(DropTopMenu());
+            topMenuController.ConstantPanelState = LogicStates.Waiting;
         }
 
         private IEnumerator DropTopMenu()

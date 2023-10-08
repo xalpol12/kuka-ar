@@ -157,54 +157,53 @@ namespace Project.Scripts.EventSystem.Behaviors
 
         private void AnimQueryResolver()
         {
-            if (controller.NextAnim.Count > 0)
+            if (controller.NextAnim.Count <= 0) return;
+            
+            foreach (var s in controller.NextAnim)
             {
-                foreach (var s in controller.NextAnim)
+                switch (s)
                 {
-                    switch (s)
-                    {
-                        case AnimationFilter.MenuIn:
-                            controller.menuUi.SetActive(true);
-                            controller.MenuAnim = AnimationStates.FadeIn;
-                            break;
-                        case AnimationFilter.TopMenuIn:
-                            controller.topMenu.SetActive(true);
-                            controller.TopMenuAnim = AnimationStates.FadeIn;
-                            break;
-                        case AnimationFilter.ServerConfigScreenIn:
-                            controller.serverConfig.SetActive(true);
-                            controller.ServerConfigAnim = AnimationStates.FadeIn;
-                            break;
-                        case AnimationFilter.MoreOptionsIn:
-                            controller.moreOptions.SetActive(true);
-                            controller.MoreOptionsAnim = AnimationStates.FadeIn;                 
-                            break;
-                        case AnimationFilter.FocusModeIn:
-                            controller.focusMode.SetActive(true);
-                            controller.FocusModeAnim = AnimationStates.FadeIn;
-                            break;
-                        case AnimationFilter.Menu:
-                            controller.MenuAnim = AnimationStates.FadeOut;
-                            break;
-                        case AnimationFilter.TopMenu:
-                            controller.TopMenuAnim = AnimationStates.FadeOut;
-                            break;
-                        case AnimationFilter.ServerConfigScreen:
-                            controller.ServerConfigAnim = AnimationStates.FadeOut;
-                            break;
-                        case AnimationFilter.MoreOptions:
-                            controller.MoreOptionsAnim = AnimationStates.FadeOut;                 
-                            break;
-                        case AnimationFilter.FocusMode:
-                            controller.FocusModeAnim = AnimationStates.FadeOut;
-                            break;
-                        default:
-                            throw new InvalidCastException();
-                    }
+                    case AnimationFilter.MenuIn:
+                        controller.menuUi.SetActive(true);
+                        controller.MenuAnim = AnimationStates.FadeIn;
+                        break;
+                    case AnimationFilter.TopMenuIn:
+                        controller.topMenu.SetActive(true);
+                        controller.TopMenuAnim = AnimationStates.FadeIn;
+                        break;
+                    case AnimationFilter.ServerConfigScreenIn:
+                        controller.serverConfig.SetActive(true);
+                        controller.ServerConfigAnim = AnimationStates.FadeIn;
+                        break;
+                    case AnimationFilter.MoreOptionsIn:
+                        controller.moreOptions.SetActive(true);
+                        controller.MoreOptionsAnim = AnimationStates.FadeIn;                 
+                        break;
+                    case AnimationFilter.FocusModeIn:
+                        controller.focusMode.SetActive(true);
+                        controller.FocusModeAnim = AnimationStates.FadeIn;
+                        break;
+                    case AnimationFilter.Menu:
+                        controller.MenuAnim = AnimationStates.FadeOut;
+                        break;
+                    case AnimationFilter.TopMenu:
+                        controller.TopMenuAnim = AnimationStates.FadeOut;
+                        break;
+                    case AnimationFilter.ServerConfigScreen:
+                        controller.ServerConfigAnim = AnimationStates.FadeOut;
+                        break;
+                    case AnimationFilter.MoreOptions:
+                        controller.MoreOptionsAnim = AnimationStates.FadeOut;                 
+                        break;
+                    case AnimationFilter.FocusMode:
+                        controller.FocusModeAnim = AnimationStates.FadeOut;
+                        break;
+                    default:
+                        throw new InvalidCastException();
                 }
-
-                controller.NextAnim.Clear();
             }
+
+            controller.NextAnim.Clear();
         }
     }
 }
