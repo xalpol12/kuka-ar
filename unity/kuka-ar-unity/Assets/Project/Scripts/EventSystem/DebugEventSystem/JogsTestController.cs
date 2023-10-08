@@ -44,8 +44,8 @@ namespace Project.Scripts.EventSystem.DebugEventSystem
         {
             if (FirstRobotConnected) return;
             FirstRobotConnected = true;
-            WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.50\", \"var\": \"JOINTS\" }");
-            WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.51\", \"var\": \"JOINTS\" }");
+            WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.50\", \"var\": \"BASE_NUMBER\" }");
+            WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.51\", \"var\": \"BASE_NUMBER\" }");
         }
 
         private void SwitchCurrentlyTrackedVariable()

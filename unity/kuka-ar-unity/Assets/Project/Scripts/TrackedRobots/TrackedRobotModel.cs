@@ -109,11 +109,6 @@ namespace Project.Scripts.TrackedRobots
                                         $"rot: {update.Rotation.ToString()}; ");
         }
 
-        public void DestroyGameObjects()
-        {
-            
-        }
-
         private void OnActiveBaseUpdated(object sender, KRLInt e)
         {
             BaseValueUpdated?.Invoke(this, e);
@@ -127,11 +122,6 @@ namespace Project.Scripts.TrackedRobots
         private void OnActiveJointsUpdated(object sender, KRLJoints e)
         {
             JointsValueUpdated?.Invoke(this, e);
-        }
-
-        public KRLJoints GetJoints()
-        {
-            return ((KrlJointsWrapper)krlValues[ValueName.Joints]).KrlJoints;
         }
     }
 }
