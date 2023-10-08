@@ -26,6 +26,8 @@ namespace Project.Scripts.TrackedRobots
         public float rotationThreshold = 1f;
 
         public event EventHandler<KRLJoints> ActiveJointsUpdated;
+        public event EventHandler<KRLInt> ActiveBaseUpdated;
+        public event EventHandler<KRLInt> ActiveToolUpdated;
         public event EventHandler<bool> RobotConnectionStatusConnected;
         public event EventHandler<string> UnsubscribeObsoleteRobotIssued;
 
@@ -51,16 +53,6 @@ namespace Project.Scripts.TrackedRobots
             OnRobotConnectionStatusConnected(false);
         }
 
-        private void DestroyPrefab()
-        {
-            currentlyTrackedRobot = null;
-            foreach (var instantiatedObject in instantiatedObjects)
-            {
-                Destroy(instantiatedObject);
-            }
-            instantiatedObjects.Clear();
-        }
-
         public void ReceivePackageFromWebsocket(OutputWithErrors newData)
         {
             if (newData.Values.TryGetValue(selectedRobotIP, out var value))
@@ -78,13 +70,6 @@ namespace Project.Scripts.TrackedRobots
             }
         }
 
-        private void UpdateTrackedPoint(Dictionary<string, ValueWithError> robotData)
-        {
-            if (currentlyTrackedRobot == null) return;
-            SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connected;
-            currentlyTrackedRobot.UpdateTrackedRobotVariables(robotData);
-        }
-
         public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
         {
             if (ipAddress == selectedRobotIP)
@@ -96,6 +81,23 @@ namespace Project.Scripts.TrackedRobots
                     StartCoroutine(InstantiateNewRobot(ipAddress));
                 #endif
             }
+        }
+
+        private void DestroyPrefab()
+        {
+            currentlyTrackedRobot = null;
+            foreach (var instantiatedObject in instantiatedObjects)
+            {
+                Destroy(instantiatedObject);
+            }
+            instantiatedObjects.Clear();
+        }
+
+        private void UpdateTrackedPoint(Dictionary<string, ValueWithError> robotData)
+        {
+            if (currentlyTrackedRobot == null) return;
+            SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connected;
+            currentlyTrackedRobot.UpdateTrackedRobotVariables(robotData);
         }
 
         //For use in app
@@ -119,6 +121,8 @@ namespace Project.Scripts.TrackedRobots
                 DebugLogger.Instance.AddLog($"Object for ip {ipAddress} instantiated; ");
         
                 currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
+                currentlyTrackedRobot.BaseValueUpdated += OnBaseValueUpdated;
+                currentlyTrackedRobot.ToolValueUpdated += OnToolValueUpdated;
                 OnRobotConnectionStatusConnected(true);
         
                 isInstantiated = true;
@@ -146,6 +150,8 @@ namespace Project.Scripts.TrackedRobots
                 DebugLogger.Instance.AddLog($"Object for ip {ipAddress} instantiated; ");
              
                 currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
+                currentlyTrackedRobot.BaseValueUpdated += OnBaseValueUpdated;
+                currentlyTrackedRobot.ToolValueUpdated += OnToolValueUpdated;
                 OnRobotConnectionStatusConnected(true);
         
                 isInstantiated = true;
@@ -161,6 +167,18 @@ namespace Project.Scripts.TrackedRobots
         {
             ActiveJointsUpdated?.Invoke(this, e);
             DebugLogger.Instance.AddLog($"Updated joints for ip {selectedRobotIP}, j1: {e.J1.ToString()}; ");
+        }
+
+        private void OnBaseValueUpdated(object sender, KRLInt e)
+        {
+            ActiveBaseUpdated?.Invoke(this, e);
+            DebugLogger.Instance.AddLog($"Updated base value for ip {selectedRobotIP}, value: {e.Value}; ");
+        }
+
+        private void OnToolValueUpdated(object sender, KRLInt e)
+        {
+            ActiveToolUpdated?.Invoke(this, e);
+            DebugLogger.Instance.AddLog($"Updated base value for ip {selectedRobotIP}, value: {e.Value}; ");
         }
 
         private void OnRobotConnectionStatusConnected(bool e)

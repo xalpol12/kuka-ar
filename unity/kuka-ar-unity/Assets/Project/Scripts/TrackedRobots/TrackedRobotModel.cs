@@ -116,19 +116,16 @@ namespace Project.Scripts.TrackedRobots
 
         private void OnActiveBaseUpdated(object sender, KRLInt e)
         {
-            // DebugLogger.Instance.AddLog($"Base number updated: {e.Value.ToString()}; ");
             BaseValueUpdated?.Invoke(this, e);
         }
 
         private void OnActiveToolUpdated(object sender, KRLInt e)
         {
-            // DebugLogger.Instance.AddLog($"TCP number updated: {e.Value.ToString()}; ");
             ToolValueUpdated?.Invoke(this, e);
         }
 
         private void OnActiveJointsUpdated(object sender, KRLJoints e)
         {
-            // DebugLogger.Instance.AddLog($"Joints updated: {e.J1.ToString(CultureInfo.InvariantCulture)}; ");
             JointsValueUpdated?.Invoke(this, e);
         }
 
