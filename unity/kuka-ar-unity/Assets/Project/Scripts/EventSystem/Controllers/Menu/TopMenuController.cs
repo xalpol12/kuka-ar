@@ -22,8 +22,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         [Tooltip("Jogs component reference object")]
         public GameObject jogs;
 
-        [Tooltip("Self reference to prevent null pointer exception on behavior")]
-        public GameObject topMenu;
+        [NonSerialized] public GameObject TopMenu;
 
         [NonSerialized] public LogicStates ConstantPanelState;
 
@@ -44,7 +43,8 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 
         private void Start()
         {
-            var constantTopPanel = topMenu.GetComponent<RectTransform>()
+            TopMenu = GetComponent<Transform>().gameObject;
+            var constantTopPanel = TopMenu.GetComponent<RectTransform>()
                 .Find("ConstantInfoPanel").GetComponent<RectTransform>().gameObject;
             
             toolNo = constantTopPanel.transform.Find("ToolBean").GetComponent<RectTransform>().gameObject

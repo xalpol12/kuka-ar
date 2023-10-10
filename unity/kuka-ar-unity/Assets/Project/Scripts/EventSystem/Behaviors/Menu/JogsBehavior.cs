@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Services.Menu;
@@ -156,7 +155,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 jogsController.Joints.J5,
                 jogsController.Joints.J6 };
 
-            for (int i = 0; i < temp.Length; i++)
+            for (var i = 0; i < temp.Length; i++)
             {
                 jogValueLabels[i].text = temp[i].ToString("F1", CultureInfo.InvariantCulture);
             }

@@ -17,9 +17,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private void Start()
         {
             topMenuController = GetComponent<TopMenuController>();
-            coordSelectMenu = topMenuController.topMenu.GetComponent<RectTransform>()
+            coordSelectMenu = topMenuController.TopMenu.GetComponent<RectTransform>()
                 .Find("Selectable").GetComponent<RectTransform>().gameObject;
-            constantTopPanel = topMenuController.topMenu.GetComponent<RectTransform>()
+            constantTopPanel = topMenuController.TopMenu.GetComponent<RectTransform>()
                 .Find("ConstantInfoPanel").GetComponent<RectTransform>().gameObject;
             
             dockPosition = coordSelectMenu.transform.position;
