@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Globalization;
+using System.Linq;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Services.Menu;
@@ -139,7 +141,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 jogsController.Joints.J3,
                 jogsController.Joints.J4,
                 jogsController.Joints.J5,
-                jogsController.Joints.J6 };
+                jogsController.Joints.J6 }.Select(j => Math.Round(j)).ToList();
             foreach (Transform child in jogsValues.transform)
             {
                 if (child.name != "HideJogs" )
