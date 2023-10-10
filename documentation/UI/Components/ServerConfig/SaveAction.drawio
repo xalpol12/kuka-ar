@@ -1,0 +1,36 @@
+<mxfile host="app.diagrams.net" modified="2023-09-25T16:02:04.462Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36" etag="Q-VcD7Cx0EuEvHx3ZQh5" version="21.8.1" type="device">
+  <diagram name="Page-1" id="929967ad-93f9-6ef4-fab6-5d389245f69c">
+    <mxGraphModel dx="1434" dy="790" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1.5" pageWidth="1169" pageHeight="826" background="none" math="0" shadow="0">
+      <root>
+        <mxCell id="0" style=";html=1;" />
+        <mxCell id="1" style=";html=1;" parent="0" />
+        <mxCell id="1672d66443f91eb5-1" value="&lt;p style=&quot;margin: 0px ; margin-top: 4px ; margin-left: 10px ; text-align: left&quot;&gt;&lt;b&gt;Save action component&lt;/b&gt;&lt;/p&gt;" style="html=1;strokeWidth=1;shape=mxgraph.sysml.package;html=1;overflow=fill;whiteSpace=wrap;fillColor=none;gradientColor=none;fontSize=12;align=center;labelX=327.64;" parent="1" vertex="1">
+          <mxGeometry x="280" y="295" width="363" height="625" as="geometry" />
+        </mxCell>
+        <mxCell id="1672d66443f91eb5-23" value="Title" style="text;strokeColor=none;fillColor=none;html=1;fontSize=24;fontStyle=1;verticalAlign=middle;align=center;" parent="1" vertex="1">
+          <mxGeometry x="120" y="40" width="1510" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="6N4ZhzZuDUftPs5lugKG-1" value="" style="ellipse;html=1;shape=startState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="1">
+          <mxGeometry x="430" y="370" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="6N4ZhzZuDUftPs5lugKG-2" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" source="6N4ZhzZuDUftPs5lugKG-1" parent="1" target="6N4ZhzZuDUftPs5lugKG-3">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="445" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="6N4ZhzZuDUftPs5lugKG-3" value="Validate IP&lt;br&gt;address" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="390" y="470" width="110" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="6N4ZhzZuDUftPs5lugKG-4" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="1">
+          <mxGeometry x="430" y="870" width="30" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="6N4ZhzZuDUftPs5lugKG-5" value="" style="edgeStyle=orthogonalEdgeStyle;html=1;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="6N4ZhzZuDUftPs5lugKG-3" target="6N4ZhzZuDUftPs5lugKG-4">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="444.5" y="590" as="targetPoint" />
+            <mxPoint x="444.5" y="530" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
