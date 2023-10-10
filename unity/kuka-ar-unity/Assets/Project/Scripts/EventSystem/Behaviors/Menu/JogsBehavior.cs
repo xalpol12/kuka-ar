@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Project.Scripts.EventSystem.Controllers.Menu;
@@ -18,6 +19,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private Vector3 jogsHomePosition;
         
         private int distance;
+
+        private readonly List<TMP_Text> jogValueLabels = new();
+
         private void Start()
         {
             jogsController = GetComponent<JogsController>();
@@ -30,6 +34,14 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             jogsHomePosition = jogsDisplay.transform.position;
         
             distance = (int)((Screen.height * 0.115f) + PositioningService.PositioningError);
+
+             foreach (Transform child in jogsValues.transform)
+            {
+                if (child.name != "HideJogs")
+                {
+                    jogValueLabels.Add(child.transform.Find("JogValue").GetComponent<TMP_Text>());
+                }
+            }
         }
 
         private void Update()
@@ -136,40 +148,18 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private void UpdateJogsDisplayedValues()
         {
-            var temp = new[] { jogsController.Joints.J1,
+            Span<double> temp = stackalloc double[] {
+                jogsController.Joints.J1,
                 jogsController.Joints.J2,
                 jogsController.Joints.J3,
                 jogsController.Joints.J4,
                 jogsController.Joints.J5,
-                jogsController.Joints.J6 }.Select(j => Math.Round(j)).ToList();
-            foreach (Transform child in jogsValues.transform)
+                jogsController.Joints.J6 };
+
+            for (int i = 0; i < temp.Length; i++)
             {
-                if (child.name != "HideJogs" )
-                {
-                    child.transform.Find("JogValue").GetComponent<TMP_Text>().text =
-                        temp[child.GetSiblingIndex() - 1].ToString(CultureInfo.InvariantCulture);
-                }
+                jogValueLabels[i].text = temp[i].ToString("F1", CultureInfo.InvariantCulture);
             }
         }
-
-//        private void ConfigureTrackedRobotJogsData()
-//        {
-//             if (!string.IsNullOrWhiteSpace(logicService.SelectedIpAddress) &&
-//                 robotHandler.TryGetValue(logicService.SelectedIpAddress, out var robot))
-//             {
-//                 robot.JointsValueUpdated += (sender,e) => UpdateJogsDisplayedValues(e);
-//                 return;
-//             }
-//
-//             UpdateJogsDisplayedValues(new KRLJoints
-//             {
-//                 J1 = 0,
-//                 J2 = 0,
-//                 J3 = 0,
-//                 J4 = 0,
-//                 J5 = 0,
-//                 J6 = 0
-//             });
-//        }
     }
 }
