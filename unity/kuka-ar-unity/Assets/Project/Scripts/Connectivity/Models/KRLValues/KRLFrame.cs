@@ -10,7 +10,7 @@ namespace Project.Scripts.Connectivity.Models.KRLValues
         [JsonProperty("position")]
         public Vector3 Position
         {
-            get => new Vector3(-unityPosition.x, -unityPosition.z, unityPosition.y) * 1000f; // UNITY -> KUKA
+            get => unityPosition; // UNITY -> KUKA
             set
             {
                 var kukaToUnityVector3 = new Vector3(-value.x, value.z, -value.y) / 1000f; // KUKA -> UNITY

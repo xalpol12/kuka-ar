@@ -111,6 +111,7 @@ namespace Project.Scripts.TrackedRobots
                 var rotation = basePoint.rotation;
                 var baseObject = Instantiate(prefab, position, rotation);
                 var tcpObject = Instantiate(prefab, position, rotation);
+                tcpObject.transform.SetParent(baseObject.transform);
                 currentlyTrackedRobot = new TrackedRobotModel(baseObject, tcpObject,
                     positionThreshold,
                     rotationThreshold);
