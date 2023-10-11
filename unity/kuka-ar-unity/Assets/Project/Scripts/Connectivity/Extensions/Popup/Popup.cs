@@ -19,10 +19,13 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
     /// </summary>
     public class Popup : MonoBehaviour
     {
-        public int id;
         public static Popup Window;
-        
-        [SerializeField] 
+
+        [Tooltip("Popup controller ID")]
+        public int id;
+
+        [SerializeField]
+        [Tooltip("Notification bar component reference")]
         private GameObject notification;
 
         internal int GrabState;
@@ -71,11 +74,10 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
             try
             {
                 action();
-                if (!Equals(result, default(Robot)))
-                {
-                    DetectOperationType(result, type);
-                    StartCoroutine(ShowNotification());
-                }
+                if (Equals(result, default(Robot))) return;
+                
+                DetectOperationType(result, type);
+                StartCoroutine(ShowNotification());
                 return;
             }
             catch (Exception e)
@@ -141,8 +143,8 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
         {
             var newPopup = Instantiate(notification, notification.transform.parent, true);
             Notifications.Add(newPopup);
-            
             NotificationsContent.Add(content);
+            
             StartCoroutine(popupBehavior.SlideIn(newPopup, content));
             yield return null;
         }

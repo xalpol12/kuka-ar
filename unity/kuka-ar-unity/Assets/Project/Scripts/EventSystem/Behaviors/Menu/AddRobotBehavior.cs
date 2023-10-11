@@ -9,6 +9,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
     public class AddRobotBehavior : MonoBehaviour
     {
         [SerializeField]
+        [Tooltip("Add new robot interaction box pull height, counted from screen height [%]")]
         private float pullAddMenuMaxHeight = 0.018f;
     
         private AddRobotController robotController;

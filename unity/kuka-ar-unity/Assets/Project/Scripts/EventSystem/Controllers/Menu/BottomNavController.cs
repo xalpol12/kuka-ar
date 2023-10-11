@@ -9,7 +9,10 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 {
     public class BottomNavController : MonoBehaviour
     {
+        [Tooltip("Bottom navigation controller ID")]
         public int id;
+        
+        [Tooltip("Bottom navigation fill height panel component reference")]
         public GameObject bottomNavPanel;
 
         [NonSerialized] public SelectableStylingService StylingService;

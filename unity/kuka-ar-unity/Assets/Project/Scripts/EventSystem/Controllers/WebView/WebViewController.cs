@@ -6,7 +6,10 @@ namespace Project.Scripts.EventSystem.Controllers.WebView
 {
     public class WebViewController : MonoBehaviour
     {
-        [SerializeField] private int id;
+        [SerializeField]
+        [Tooltip("Web view controller ID")]
+        private int id;
+        
         private void Start()
         {
             WebViewEvents.Events.OnClickOpenMoreOptions += SwapScene;

@@ -30,6 +30,7 @@ namespace Project.Scripts.EventSystem.Behaviors.WebView
 {
     public class SampleWebView : MonoBehaviour
     {
+        [Tooltip("Link to web page, that will be displayed")]
         public string Url;
         public Text status;
         WebViewObject webViewObject;

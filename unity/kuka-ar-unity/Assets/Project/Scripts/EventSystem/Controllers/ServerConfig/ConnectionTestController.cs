@@ -7,7 +7,9 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
 {
     public class ConnectionTestController : MonoBehaviour
     {
+        [Tooltip("Server test connection component reference")]
         public GameObject connectionTestComponent;
+        
         private IpValidationService validationService;
         private ServerHttpService httpService;
    

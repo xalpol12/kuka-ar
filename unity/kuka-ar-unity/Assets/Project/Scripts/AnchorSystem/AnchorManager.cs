@@ -125,6 +125,8 @@ namespace Project.Scripts.AnchorSystem
                 var anchor = PlaceNewAnchor(imageTransform, configData);
                 trackedAnchors.Add(robotIp, anchor);
 
+                WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "BASE_NUMBER"));
+                WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "TOOL_NUMBER"));
                 WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "BASE"));
                 WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "POSITION"));
                 WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "JOINTS"));
@@ -159,7 +161,6 @@ namespace Project.Scripts.AnchorSystem
         private static string ComposeWebSocketServerRequest(string robotIp, string variable)
         {
             var request = $"{{ \"host\": \"{robotIp}\", \"var\": \"{variable}\" }}";
-            DebugLogger.Instance.AddLog($"{request}; ");
             return request;
         }
     }

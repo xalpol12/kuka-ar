@@ -4,6 +4,7 @@ namespace Project.Scripts.EventSystem.Enums
     {
         Running,
         Hiding,
+        AutoPulling,
         Waiting,
     }
 }

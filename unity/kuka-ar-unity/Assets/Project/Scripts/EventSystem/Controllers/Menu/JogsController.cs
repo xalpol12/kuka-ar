@@ -10,21 +10,28 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 {
     public class JogsController : MonoBehaviour
     {
+        [Tooltip("Controller ID")]
         public int id;
-        [Range(0f,200f)] public float transformFactor;
-        public GameObject jogs;
+        
+        [Range(0f,200f)]
+        [Tooltip("Animation speed")]
+        public float transformFactor;
+        
         [NonSerialized] public bool ShowJogs;
         [NonSerialized] public bool UpdateJogs;
         [NonSerialized] public JogsControlService Service;
         [NonSerialized] public LogicStates JogsTrigger;
         [NonSerialized] public KRLJoints Joints;
 
-        [SerializeField] private GameObject gameObjectRobotHandler;
-        private TrackedRobotsHandler robotsHandler;
+        [SerializeField]
+        [Tooltip("Robot handler component")]
+        private GameObject robotHandler;
+        
+        private TrackedRobotsHandler trackedRobotsHandler;
 
         private void Awake()
         {
-            robotsHandler = gameObjectRobotHandler.GetComponent<TrackedRobotsHandler>();
+            trackedRobotsHandler = robotHandler.GetComponent<TrackedRobotsHandler>();
         }
 
         private void Start()
@@ -37,7 +44,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             Joints = new KRLJoints();
         
             MenuEvents.Event.OnClickJog += OnClickJog;
-            robotsHandler.ActiveJointsUpdated += OnJointUpdate;
+            trackedRobotsHandler.ActiveJointsUpdated += OnJointUpdate;
         }
 
         private void OnClickJog(int gui)

@@ -36,7 +36,7 @@ namespace Project.Scripts.EventSystem.DebugEventSystem
         {
             if (ClientConnected) return;
             ClientConnected = true;
-            WebSocketClient.Instance.ConnectToWebsocket("ws://192.168.18.20:8080/kuka-variables");
+            WebSocketClient.Instance.ConnectToWebsocket("ws://localhost:8080/kuka-variables");
         }
         
         private void InitializeConnectionFirstRobot()
@@ -45,6 +45,7 @@ namespace Project.Scripts.EventSystem.DebugEventSystem
             FirstRobotConnected = true;
             WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.50\", \"var\": \"POSITION\" }");
             WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.50\", \"var\": \"JOINTS\" }");
+            WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.50\", \"var\": \"BASE_NUMBER\" }");
             trackedRobotsHandler.ChangeSelectedRobotIP("192.168.1.50");
             trackedRobotsHandler.InstantiateTrackedRobot("192.168.1.50", new RectTransform());
         }
@@ -55,6 +56,7 @@ namespace Project.Scripts.EventSystem.DebugEventSystem
             SecondRobotConnected = true;
             WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.51\", \"var\": \"POSITION\" }");
             WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.51\", \"var\": \"JOINTS\" }");
+            WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.51\", \"var\": \"BASE_NUMBER\" }");
             trackedRobotsHandler.ChangeSelectedRobotIP("192.168.1.51");
             trackedRobotsHandler.InstantiateTrackedRobot("192.168.1.51", new RectTransform());
         }
@@ -65,6 +67,7 @@ namespace Project.Scripts.EventSystem.DebugEventSystem
             ThirdRobotConnected = true;
             WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.52\", \"var\": \"POSITION\" }");
             WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.52\", \"var\": \"JOINTS\" }");
+            WebSocketClient.Instance.SendToWebSocketServer("{ \"host\": \"192.168.1.52\", \"var\": \"BASE_NUMBER\" }");
             trackedRobotsHandler.ChangeSelectedRobotIP("192.168.1.52");
             trackedRobotsHandler.InstantiateTrackedRobot("192.168.1.52", new RectTransform());
         }

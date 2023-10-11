@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.Connectivity.Http.Requests;
@@ -18,22 +17,47 @@ namespace Project.Scripts.EventSystem.Controllers
 {
     public class UiController : MonoBehaviour
     {
+        [Tooltip("Controller ID")]
         public int id;
+        
+        [Tooltip("Animation speed")]
         public float animSpeed;
+        
+        [Tooltip("Menu component - game object reference")]
         public GameObject menuUi;
+        
+        [Tooltip("Top menu component - game object reference")]
+        public GameObject topMenu;
+        
+        [Tooltip("More options view - game object reference")]
         public GameObject moreOptions;
+        
+        [Tooltip("Server config screen - game object reference")]
         public GameObject serverConfig;
+        
+        [Tooltip("Menu game object reference")]
         public GameObject focusMode;
-
+        
         [NonSerialized] public AnimationStates ServerConfigAnim;
         [NonSerialized] public AnimationStates MenuAnim;
+        [NonSerialized] public AnimationStates TopMenuAnim;
         [NonSerialized] public AnimationStates MoreOptionsAnim;
         [NonSerialized] public AnimationStates FocusModeAnim;
         [NonSerialized] public List<AnimationFilter> NextAnim;
     
-        [SerializeField] private GameObject abortServerConfigArrow;
-        [SerializeField] private GameObject focusModeToggle;
-        [SerializeField] private TMP_Text noInternetText;
+        
+        [SerializeField]
+        [Tooltip("Server configuration back arrow - game object reference")]
+        private GameObject abortServerConfigArrow;
+        
+        [SerializeField]
+        [Tooltip("Focus mode toggle - game object reference")]
+        private GameObject focusModeToggle;
+        
+        [SerializeField]
+        [Tooltip("No internet warning - text")]
+        private TMP_Text noInternetText;
+        
         private IpValidationService validationService;
         private SelectableStylingService stylingService;
         private Toggle selectedMode;
@@ -68,6 +92,7 @@ namespace Project.Scripts.EventSystem.Controllers
                 SetPrefabsActiveState(true, false, false);
 
                 menuUi.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 1;
+                topMenu.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 1;
                 serverConfig.transform.Find("Canvas").GetComponent<CanvasGroup>().alpha = 0;
 
                 dataNeedsToBeFetched = true;
@@ -136,6 +161,7 @@ namespace Project.Scripts.EventSystem.Controllers
         {
             if (id != uid) return;
             MenuAnim = AnimationStates.FadeOut;
+            TopMenuAnim = AnimationStates.FadeOut;
             NextAnim.Add(AnimationFilter.MoreOptionsIn);
         }
 
@@ -144,6 +170,7 @@ namespace Project.Scripts.EventSystem.Controllers
             if (id != uid || !validationService.ValidationResult) return;
             ServerConfigAnim = AnimationStates.FadeOut;
             NextAnim.Add(AnimationFilter.MenuIn);
+            NextAnim.Add(AnimationFilter.TopMenuIn);
 
             if (PlayerPrefs.GetInt("firstRun") == PlayersPrefsStates.FirstRun)
             {
@@ -159,6 +186,7 @@ namespace Project.Scripts.EventSystem.Controllers
             if (id != uid) return;
             MoreOptionsAnim = AnimationStates.FadeOut;
             NextAnim.Add(selectedMode.isOn ? AnimationFilter.FocusModeIn : AnimationFilter.MenuIn);
+            NextAnim.Add(selectedMode.isOn ? AnimationFilter.FocusModeIn : AnimationFilter.TopMenuIn);
         }
 
         private void ReconfigureServer(int uid)
@@ -199,6 +227,7 @@ namespace Project.Scripts.EventSystem.Controllers
         private void SetPrefabsActiveState(bool menu, bool server, bool options)
         {
             menuUi.SetActive(menu);
+            topMenu.SetActive(menu);
             serverConfig.SetActive(server);
             moreOptions.SetActive(options);
             focusMode.SetActive(false);
@@ -210,6 +239,7 @@ namespace Project.Scripts.EventSystem.Controllers
             {
                 ServerConfigAnim = AnimationStates.StandBy;
                 MenuAnim = AnimationStates.StandBy;
+                TopMenuAnim = AnimationStates.StandBy;
                 MoreOptionsAnim = AnimationStates.FadeIn;
                 FocusModeAnim = AnimationStates.StandBy;
                 return;
@@ -218,6 +248,7 @@ namespace Project.Scripts.EventSystem.Controllers
                 AnimationStates.FadeIn : AnimationStates.StandBy;
             MenuAnim = PlayerPrefs.GetInt("firstRun") == PlayersPrefsStates.FirstRun ?
                 AnimationStates.StandBy : AnimationStates.FadeIn;
+            TopMenuAnim = MenuAnim; 
             MoreOptionsAnim = AnimationStates.StandBy;
             FocusModeAnim = AnimationStates.StandBy;
         }

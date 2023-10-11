@@ -7,11 +7,25 @@ namespace Project.Scripts.EventSystem.Behaviors.Animations
 {
     public class HexSpinnerBehavior : MonoBehaviour
     {
-        [SerializeField] private float animSpeed;
-        [SerializeField] private float rotationAnimSpeed;
-        [SerializeField] private float duration;
-        [SerializeField] private int numberOfRotations;
-        [SerializeField] private bool withRotation;
+        [SerializeField]
+        [Tooltip("General animation speed")]
+        private float animSpeed;
+        
+        [SerializeField]
+        [Tooltip("Hex rotation animation speed")]
+        private float rotationAnimSpeed;
+        
+        [SerializeField]
+        [Tooltip("Animation time - in case of error [s]")]
+        private float duration;
+        
+        [SerializeField]
+        [Tooltip("Number of rotation pauses - [360def / n]")]
+        private int numberOfRotations;
+        
+        [SerializeField]
+        [Tooltip("Enables hexes rotation animation")]
+        private bool withRotation;
         
         private HexSpinnerController controller;
         private float rad;

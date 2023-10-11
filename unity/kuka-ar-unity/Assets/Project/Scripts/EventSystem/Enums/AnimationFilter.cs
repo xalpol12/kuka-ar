@@ -4,6 +4,8 @@ namespace Project.Scripts.EventSystem.Enums
     {
         MenuIn,
         Menu,
+        TopMenuIn,
+        TopMenu,
         ServerConfigScreenIn,
         ServerConfigScreen,
         MoreOptionsIn,

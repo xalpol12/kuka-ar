@@ -1,5 +1,16 @@
+# JAVA SETUP
 FROM openjdk:17
-ARG JAR_FILE=target/*.jar
-COPY ./target/kukaComm-0.0.1-SNAPSHOT.jar app.jar
+LABEL maintainer="Coyot Willy"
 
-ENTRYPOINT ["java","-jar","/app.jar"]
+# FOLDER STRUCTURE CREATION
+VOLUME /kukaComm
+WORKDIR /kukaComm/build/java
+COPY RobotData /kukaComm/build/RobotData
+COPY RobotStickers /kukaComm/build/RobotStickers
+
+# JAR FILE MOVE
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
+
+# RUN SERVER
+ENTRYPOINT ["java","-jar","app.jar"]
