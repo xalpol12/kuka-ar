@@ -27,8 +27,10 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
                 .Find("ConstantInfoPanel").GetComponent<RectTransform>().gameObject;
             
             tool = constantTopPanel.transform.Find("ToolBean").GetComponent<RectTransform>().gameObject
+                .transform.Find("ToolBackground").GetComponent<RectTransform>().gameObject
                 .transform.Find("Tool").GetComponent<TMP_Text>();
             world = constantTopPanel.transform.Find("WorldBean").GetComponent<RectTransform>().gameObject
+                .transform.Find("WorldBackground").GetComponent<RectTransform>().gameObject
                 .transform.Find("World").GetComponent<TMP_Text>();
             
             trackedRobot.ActiveBaseUpdated += OnBaseValueChange;

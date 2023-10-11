@@ -10769,6 +10769,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 92903715442172466}
     m_Modifications:
+    - target: {fileID: 864937100711290043, guid: ca523bdd2fe8f034b95b944eaa194ffc,
+        type: 3}
+      propertyPath: m_Name
+      value: ToolBackground
+      objectReference: {fileID: 0}
     - target: {fileID: 923336082641850039, guid: ca523bdd2fe8f034b95b944eaa194ffc,
         type: 3}
       propertyPath: m_RootOrder
@@ -10792,7 +10797,7 @@ PrefabInstance:
     - target: {fileID: 923336082641850039, guid: ca523bdd2fe8f034b95b944eaa194ffc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -553.8461
+      value: -555
       objectReference: {fileID: 0}
     - target: {fileID: 923336082641850039, guid: ca523bdd2fe8f034b95b944eaa194ffc,
         type: 3}
@@ -10843,6 +10848,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1564878347343349256, guid: ca523bdd2fe8f034b95b944eaa194ffc,
+        type: 3}
+      propertyPath: m_Name
+      value: ToolIcon
       objectReference: {fileID: 0}
     - target: {fileID: 3693533101214871844, guid: ca523bdd2fe8f034b95b944eaa194ffc,
         type: 3}
@@ -10944,11 +10954,19 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8698563848994637418, guid: ca523bdd2fe8f034b95b944eaa194ffc,
+        type: 3}
+      propertyPath: m_Name
+      value: ToolBean
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1278430710309921721, guid: ca523bdd2fe8f034b95b944eaa194ffc, type: 3}
     - {fileID: 293414076975662870, guid: ca523bdd2fe8f034b95b944eaa194ffc, type: 3}
     - {fileID: 3454185314108110844, guid: ca523bdd2fe8f034b95b944eaa194ffc, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 236772878064049885, guid: ca523bdd2fe8f034b95b944eaa194ffc, type: 3}
+    - {fileID: 4370211070754819138, guid: ca523bdd2fe8f034b95b944eaa194ffc, type: 3}
+    - {fileID: 5032432446697794423, guid: ca523bdd2fe8f034b95b944eaa194ffc, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca523bdd2fe8f034b95b944eaa194ffc, type: 3}
