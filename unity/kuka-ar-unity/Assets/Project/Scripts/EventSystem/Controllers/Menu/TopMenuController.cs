@@ -12,8 +12,8 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
         private GameObject robotModel;
 
         private TrackedRobotsHandler trackedRobot;
-        private TMP_Text tool;
-        private TMP_Text world;
+        private TMP_Text toolText;
+        private TMP_Text baseText;
 
         private void Awake()
         {
@@ -26,12 +26,12 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             var constantTopPanel = topMenu.GetComponent<RectTransform>()
                 .Find("ConstantInfoPanel").GetComponent<RectTransform>().gameObject;
             
-            tool = constantTopPanel.transform.Find("ToolBean").GetComponent<RectTransform>().gameObject
+            toolText = constantTopPanel.transform.Find("ToolBean").GetComponent<RectTransform>().gameObject
                 .transform.Find("ToolBackground").GetComponent<RectTransform>().gameObject
                 .transform.Find("Tool").GetComponent<TMP_Text>();
-            world = constantTopPanel.transform.Find("WorldBean").GetComponent<RectTransform>().gameObject
-                .transform.Find("WorldBackground").GetComponent<RectTransform>().gameObject
-                .transform.Find("World").GetComponent<TMP_Text>();
+            baseText = constantTopPanel.transform.Find("BaseBean").GetComponent<RectTransform>().gameObject
+                .transform.Find("BaseBackground").GetComponent<RectTransform>().gameObject
+                .transform.Find("Base").GetComponent<TMP_Text>();
             
             trackedRobot.ActiveBaseUpdated += OnBaseValueChange;
             trackedRobot.ActiveToolUpdated += OnToolValueChange;
@@ -39,12 +39,12 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
 
         private void OnBaseValueChange(object _, KRLInt e)
         {
-            world.text = "World\n" + e.Value;
+            baseText.text = "Base\n" + e.Value;
         }
 
         private void OnToolValueChange(object _, KRLInt e)
         {
-            tool.text = "Tool\n" + e.Value;
+            toolText.text = "Tool\n" + e.Value;
         }
     }
 }

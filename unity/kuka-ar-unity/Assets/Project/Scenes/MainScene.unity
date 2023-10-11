@@ -2280,6 +2280,11 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2534718986216299491, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_Name
+      value: BaseIcon
+      objectReference: {fileID: 0}
     - target: {fileID: 2673431675295108852, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_IsActive
@@ -2640,6 +2645,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5209572586428682511, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_Name
+      value: BaseSelected
+      objectReference: {fileID: 0}
     - target: {fileID: 5260443463116666871, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_Layer
@@ -2870,6 +2880,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6849350280735786043, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_Name
+      value: Base
+      objectReference: {fileID: 0}
     - target: {fileID: 7100495805471895554, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2955,6 +2970,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8376296742511594674, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_Name
+      value: BaseBackground
+      objectReference: {fileID: 0}
     - target: {fileID: 8424328301510295060, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_Layer
@@ -2984,6 +3004,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9145249895845065911, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_Name
+      value: BaseBean
       objectReference: {fileID: 0}
     - target: {fileID: 9162224149845289397, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
