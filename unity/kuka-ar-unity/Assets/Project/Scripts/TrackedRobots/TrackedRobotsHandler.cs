@@ -33,11 +33,11 @@ namespace Project.Scripts.TrackedRobots
 
         private string selectedRobotIP;
         private TrackedRobotModel currentlyTrackedRobot;
-        private List<GameObject> instantiatedObjects;
+        private Dictionary<string, GameObject> instantiatedObjects;
 
         private void Start()
         {
-            instantiatedObjects = new List<GameObject>();
+            instantiatedObjects = new Dictionary<string, GameObject>();
         }
 
         public void ChangeSelectedRobotIP(string robotIP)
@@ -51,6 +51,22 @@ namespace Project.Scripts.TrackedRobots
             selectedRobotIP = robotIP;
             SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connecting;
             OnRobotConnectionStatusConnected(false);
+        }
+
+        public void SwitchBaseGameObject(bool value)
+        {
+            if (instantiatedObjects.TryGetValue("base", out var baseGameObject))
+            {
+                baseGameObject.SetActive(value);
+            }
+        }
+
+        public void SwitchToolGameObject(bool value)
+        {
+            if (instantiatedObjects.TryGetValue("tool", out var toolGameObject))
+            {
+                toolGameObject.SetActive(value);
+            }
         }
 
         public void ReceivePackageFromWebsocket(OutputWithErrors newData)
@@ -86,7 +102,7 @@ namespace Project.Scripts.TrackedRobots
         private void DestroyPrefab()
         {
             currentlyTrackedRobot = null;
-            foreach (var instantiatedObject in instantiatedObjects)
+            foreach (var instantiatedObject in instantiatedObjects.Values)
             {
                 Destroy(instantiatedObject);
             }
@@ -110,14 +126,14 @@ namespace Project.Scripts.TrackedRobots
                 var position = basePoint.position;
                 var rotation = basePoint.rotation;
                 var baseObject = Instantiate(prefab, position, rotation);
-                var tcpObject = Instantiate(prefab, position, rotation);
-                tcpObject.transform.SetParent(baseObject.transform);
-                currentlyTrackedRobot = new TrackedRobotModel(baseObject, tcpObject,
+                var toolObject = Instantiate(prefab, position, rotation);
+                toolObject.transform.SetParent(baseObject.transform);
+                currentlyTrackedRobot = new TrackedRobotModel(baseObject, toolObject,
                     positionThreshold,
                     rotationThreshold);
-                
-                instantiatedObjects.Add(baseObject);
-                instantiatedObjects.Add(tcpObject);
+
+                instantiatedObjects.Add("base", baseObject);
+                instantiatedObjects.Add("tool", toolObject);
                 
                 DebugLogger.Instance.AddLog($"Object for ip {ipAddress} instantiated; ");
         
@@ -140,13 +156,13 @@ namespace Project.Scripts.TrackedRobots
                 var position = Vector3.zero;
                 var rotation = Quaternion.identity;
                 var baseObject = Instantiate(prefab, position, rotation);
-                var tcpObject = Instantiate(prefab, position, rotation);
-                currentlyTrackedRobot = new TrackedRobotModel(baseObject, tcpObject, 
-                    positionThreshold, 
+                var toolObject = Instantiate(prefab, position, rotation);
+                currentlyTrackedRobot = new TrackedRobotModel(baseObject, toolObject,
+                    positionThreshold,
                     rotationThreshold);
-                
-                instantiatedObjects.Add(baseObject);
-                instantiatedObjects.Add(tcpObject);
+
+                instantiatedObjects.Add("base", baseObject);
+                instantiatedObjects.Add("tool", toolObject);
                 
                 DebugLogger.Instance.AddLog($"Object for ip {ipAddress} instantiated; ");
              
@@ -167,19 +183,16 @@ namespace Project.Scripts.TrackedRobots
         private void OnJointsValueUpdated(object sender, KRLJoints e)
         {
             ActiveJointsUpdated?.Invoke(this, e);
-            DebugLogger.Instance.AddLog($"Updated joints for ip {selectedRobotIP}, j1: {e.J1.ToString()}; ");
         }
 
         private void OnBaseValueUpdated(object sender, KRLInt e)
         {
             ActiveBaseUpdated?.Invoke(this, e);
-            DebugLogger.Instance.AddLog($"Updated base value for ip {selectedRobotIP}, value: {e.Value}; ");
         }
 
         private void OnToolValueUpdated(object sender, KRLInt e)
         {
             ActiveToolUpdated?.Invoke(this, e);
-            DebugLogger.Instance.AddLog($"Updated base value for ip {selectedRobotIP}, value: {e.Value}; ");
         }
 
         private void OnRobotConnectionStatusConnected(bool e)
