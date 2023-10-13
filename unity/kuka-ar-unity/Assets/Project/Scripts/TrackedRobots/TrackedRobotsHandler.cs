@@ -55,6 +55,7 @@ namespace Project.Scripts.TrackedRobots
 
         public void SwitchBaseGameObject(bool value)
         {
+            DebugLogger.Instance.AddLog($"Called SwitchBaseGameObject with value {value}; ");
             if (instantiatedObjects.TryGetValue("base", out var baseGameObject))
             {
                 baseGameObject.SetActive(value);
@@ -63,6 +64,7 @@ namespace Project.Scripts.TrackedRobots
 
         public void SwitchToolGameObject(bool value)
         {
+            DebugLogger.Instance.AddLog($"Called SwitchToolGameObject with value {value}; ");
             if (instantiatedObjects.TryGetValue("tool", out var toolGameObject))
             {
                 toolGameObject.SetActive(value);
