@@ -1981,13 +1981,18 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 89473727423605734, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
+      propertyPath: m_IsOn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 89473727423605734, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.size
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 89473727423605734, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 89473727423605734, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
@@ -2959,7 +2964,7 @@ PrefabInstance:
     - target: {fileID: 7173334667713308415, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: onValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7173334667713308415, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
