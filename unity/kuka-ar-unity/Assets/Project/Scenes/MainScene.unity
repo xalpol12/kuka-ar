@@ -2074,6 +2074,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -1500
       objectReference: {fileID: 0}
+    - target: {fileID: 327871911252579075, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: '-'
+      objectReference: {fileID: 0}
     - target: {fileID: 371869700510861599, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_SizeDelta.y
@@ -2284,6 +2289,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1759538949649475380, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: '-'
+      objectReference: {fileID: 0}
     - target: {fileID: 1945974350075304569, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_Layer
@@ -2470,6 +2480,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3324703076932924592, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: '-'
+      objectReference: {fileID: 0}
     - target: {fileID: 3335526553089609281, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -2519,6 +2534,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3978062219020682564, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: '-'
       objectReference: {fileID: 0}
     - target: {fileID: 3989201683727425945, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
@@ -2900,6 +2920,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6192042210657036069, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: '-'
+      objectReference: {fileID: 0}
     - target: {fileID: 6250304976855645373, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: robotModel
@@ -3059,6 +3084,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7960118070240942160, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: '-'
       objectReference: {fileID: 0}
     - target: {fileID: 8134431539662222816, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
