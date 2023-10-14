@@ -102,8 +102,6 @@ namespace Project.Scripts.AnchorSystem
 
         public IEnumerator StartNewAnchorTracking(ARTrackedImage foundImage)
         {
-            DebugLogger.Instance.AddLog("Searching for reference points...; ");
-
             #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
             var imageTransform = foundImage.transform;
             var robotIp = foundImage.referenceImage.name;
@@ -115,6 +113,9 @@ namespace Project.Scripts.AnchorSystem
                     PositionShift = Vector3.zero,
                     RotationShift = Vector3.zero
                 };
+
+            DebugLogger.Instance.AddLog($"Found config for {robotIp} with values " +
+                                        $"pos:${configData.PositionShift} and rot: ${configData.RotationShift}");
 
             bool isCreated = false;
             while (!isCreated)
@@ -148,12 +149,16 @@ namespace Project.Scripts.AnchorSystem
         {
             Vector3 position = imageTransform.position + configData.PositionShift;
             Quaternion rotation = imageTransform.rotation * Quaternion.Euler(configData.RotationShift);
-                
+
             return arAnchorManager.AddAnchor(new Pose(position, rotation)); //TODO: replace obsolete method
         }
 
         private void DeleteAllTrackedAnchors()
         {
+            foreach (var anchor in trackedAnchors.Values)
+            {
+                arAnchorManager.RemoveAnchor(anchor);
+            }
             trackedAnchors.Clear();
             DebugLogger.Instance.AddLog("Connection status: false, deleted all anchors; ");
         }

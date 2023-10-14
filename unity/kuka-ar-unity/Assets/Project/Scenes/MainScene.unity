@@ -425,7 +425,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AnchorPrefab: {fileID: 0}
+  m_AnchorPrefab: {fileID: 3689844263836564309, guid: b176652f8b4bc2545a29e785e32e51a5,
+    type: 3}
 --- !u!114 &94363252
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1243,7 +1244,7 @@ PrefabInstance:
     - target: {fileID: 2671737355167603908, guid: 21c0b1f531a67c6478f902672a115329,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3255653308479845959, guid: 21c0b1f531a67c6478f902672a115329,
         type: 3}
