@@ -1,13 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.ExceptionHandling;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Parsing.OutputJson;
 using Project.Scripts.EventSystem.Services.Menu;
-using Project.Scripts.Utils;
 using UnityEngine;
 
 namespace Project.Scripts.TrackedRobots
@@ -33,11 +33,17 @@ namespace Project.Scripts.TrackedRobots
 
         private string selectedRobotIP;
         private TrackedRobotModel currentlyTrackedRobot;
-        private List<GameObject> instantiatedObjects;
+        private Dictionary<string, GameObject> instantiatedObjects;
+        private Dictionary<string, List<Renderer>> instantiatedObjectRenderers;
 
         private void Start()
         {
-            instantiatedObjects = new List<GameObject>();
+            instantiatedObjects = new();
+            instantiatedObjectRenderers = new()
+            {
+                { "base", new List<Renderer>() },
+                { "tool", new List<Renderer>() }
+            };
         }
 
         public void ChangeSelectedRobotIP(string robotIP)
@@ -51,6 +57,28 @@ namespace Project.Scripts.TrackedRobots
             selectedRobotIP = robotIP;
             SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connecting;
             OnRobotConnectionStatusConnected(false);
+        }
+
+        public void SwitchBaseGameObject(bool value)
+        {
+            if (instantiatedObjectRenderers.TryGetValue("base", out var baseRenderers))
+            {
+                foreach (var partialBaseRenderer in baseRenderers)
+                {
+                    partialBaseRenderer.enabled = value;
+                }
+            }
+        }
+
+        public void SwitchToolGameObject(bool value)
+        {
+            if (instantiatedObjectRenderers.TryGetValue("tool", out var toolRenderers))
+            {
+                foreach (var partialToolRenderer in toolRenderers)
+                {
+                    partialToolRenderer.enabled = value;
+                }
+            }
         }
 
         public void ReceivePackageFromWebsocket(OutputWithErrors newData)
@@ -85,8 +113,15 @@ namespace Project.Scripts.TrackedRobots
 
         private void DestroyPrefab()
         {
+            currentlyTrackedRobot.JointsValueUpdated -= OnJointsValueUpdated;
+            currentlyTrackedRobot.BaseValueUpdated -= OnBaseValueUpdated;
+            currentlyTrackedRobot.ToolValueUpdated -= OnToolValueUpdated;
             currentlyTrackedRobot = null;
-            foreach (var instantiatedObject in instantiatedObjects)
+            foreach (var objectsRenderers in instantiatedObjectRenderers.Values)
+            {
+                objectsRenderers.Clear();
+            }
+            foreach (var instantiatedObject in instantiatedObjects.Values)
             {
                 Destroy(instantiatedObject);
             }
@@ -110,17 +145,21 @@ namespace Project.Scripts.TrackedRobots
                 var position = basePoint.position;
                 var rotation = basePoint.rotation;
                 var baseObject = Instantiate(prefab, position, rotation);
-                var tcpObject = Instantiate(prefab, position, rotation);
-                tcpObject.transform.SetParent(baseObject.transform);
-                currentlyTrackedRobot = new TrackedRobotModel(baseObject, tcpObject,
+                var toolObject = Instantiate(prefab, position, rotation);
+
+                instantiatedObjectRenderers["base"].AddRange(baseObject.GetComponentsInChildren<Renderer>());
+                instantiatedObjectRenderers["tool"].AddRange(toolObject.GetComponentsInChildren<Renderer>());
+
+                toolObject.transform.SetParent(baseObject.transform);
+
+                currentlyTrackedRobot = new TrackedRobotModel(baseObject, toolObject,
                     positionThreshold,
                     rotationThreshold);
-                
-                instantiatedObjects.Add(baseObject);
-                instantiatedObjects.Add(tcpObject);
-                
-                DebugLogger.Instance.AddLog($"Object for ip {ipAddress} instantiated; ");
-        
+
+                instantiatedObjects.Add("base", baseObject);
+                instantiatedObjects.Add("tool", toolObject);
+
+
                 currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
                 currentlyTrackedRobot.BaseValueUpdated += OnBaseValueUpdated;
                 currentlyTrackedRobot.ToolValueUpdated += OnToolValueUpdated;
@@ -139,16 +178,21 @@ namespace Project.Scripts.TrackedRobots
                 yield return null;
                 var position = Vector3.zero;
                 var rotation = Quaternion.identity;
+
                 var baseObject = Instantiate(prefab, position, rotation);
-                var tcpObject = Instantiate(prefab, position, rotation);
-                currentlyTrackedRobot = new TrackedRobotModel(baseObject, tcpObject, 
-                    positionThreshold, 
+                var toolObject = Instantiate(prefab, position, rotation);
+
+                instantiatedObjectRenderers["base"].AddRange(baseObject.GetComponentsInChildren<Renderer>());
+                instantiatedObjectRenderers["tool"].AddRange(toolObject.GetComponentsInChildren<Renderer>());
+
+                toolObject.transform.SetParent(baseObject.transform);
+
+                currentlyTrackedRobot = new TrackedRobotModel(baseObject, toolObject,
+                    positionThreshold,
                     rotationThreshold);
-                
-                instantiatedObjects.Add(baseObject);
-                instantiatedObjects.Add(tcpObject);
-                
-                DebugLogger.Instance.AddLog($"Object for ip {ipAddress} instantiated; ");
+
+                instantiatedObjects.Add("base", baseObject);
+                instantiatedObjects.Add("tool", toolObject);
              
                 currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
                 currentlyTrackedRobot.BaseValueUpdated += OnBaseValueUpdated;
@@ -167,19 +211,16 @@ namespace Project.Scripts.TrackedRobots
         private void OnJointsValueUpdated(object sender, KRLJoints e)
         {
             ActiveJointsUpdated?.Invoke(this, e);
-            DebugLogger.Instance.AddLog($"Updated joints for ip {selectedRobotIP}, j1: {e.J1.ToString()}; ");
         }
 
         private void OnBaseValueUpdated(object sender, KRLInt e)
         {
             ActiveBaseUpdated?.Invoke(this, e);
-            DebugLogger.Instance.AddLog($"Updated base value for ip {selectedRobotIP}, value: {e.Value}; ");
         }
 
         private void OnToolValueUpdated(object sender, KRLInt e)
         {
             ActiveToolUpdated?.Invoke(this, e);
-            DebugLogger.Instance.AddLog($"Updated base value for ip {selectedRobotIP}, value: {e.Value}; ");
         }
 
         private void OnRobotConnectionStatusConnected(bool e)

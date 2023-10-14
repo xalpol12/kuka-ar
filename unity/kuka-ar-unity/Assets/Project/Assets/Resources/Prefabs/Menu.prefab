@@ -10769,6 +10769,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 92903715442172466}
     m_Modifications:
+    - target: {fileID: 464810106657368934, guid: ca523bdd2fe8f034b95b944eaa194ffc,
+        type: 3}
+      propertyPath: m_SpriteState.m_PressedSprite
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 864937100711290043, guid: ca523bdd2fe8f034b95b944eaa194ffc,
         type: 3}
       propertyPath: m_Name
@@ -10953,6 +10958,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7260440771609323135, guid: ca523bdd2fe8f034b95b944eaa194ffc,
+        type: 3}
+      propertyPath: m_SpriteState.m_PressedSprite
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 8698563848994637418, guid: ca523bdd2fe8f034b95b944eaa194ffc,
         type: 3}
