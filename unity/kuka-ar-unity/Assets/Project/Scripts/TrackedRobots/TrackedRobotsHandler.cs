@@ -7,7 +7,6 @@ using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Parsing.OutputJson;
 using Project.Scripts.EventSystem.Services.Menu;
-using Project.Scripts.Utils;
 using UnityEngine;
 
 namespace Project.Scripts.TrackedRobots
@@ -34,10 +33,12 @@ namespace Project.Scripts.TrackedRobots
         private string selectedRobotIP;
         private TrackedRobotModel currentlyTrackedRobot;
         private Dictionary<string, GameObject> instantiatedObjects;
+        private Dictionary<string, Renderer> instantiatedObjectRenderers;
 
         private void Start()
         {
-            instantiatedObjects = new Dictionary<string, GameObject>();
+            instantiatedObjects = new();
+            instantiatedObjectRenderers = new();
         }
 
         public void ChangeSelectedRobotIP(string robotIP)
@@ -55,17 +56,17 @@ namespace Project.Scripts.TrackedRobots
 
         public void SwitchBaseGameObject(bool value)
         {
-            if (instantiatedObjects.TryGetValue("base", out var baseGameObject))
+            if (instantiatedObjectRenderers.TryGetValue("base", out var baseRenderer))
             {
-                baseGameObject.SetActive(value);
+                baseRenderer.enabled = value;
             }
         }
 
         public void SwitchToolGameObject(bool value)
         {
-            if (instantiatedObjects.TryGetValue("tool", out var toolGameObject))
+            if (instantiatedObjectRenderers.TryGetValue("tool", out var toolRenderer))
             {
-                toolGameObject.SetActive(value);
+                toolRenderer.enabled = value;
             }
         }
 
@@ -101,12 +102,20 @@ namespace Project.Scripts.TrackedRobots
 
         private void DestroyPrefab()
         {
+            currentlyTrackedRobot.JointsValueUpdated -= OnJointsValueUpdated;
+            currentlyTrackedRobot.BaseValueUpdated -= OnBaseValueUpdated;
+            currentlyTrackedRobot.ToolValueUpdated -= OnToolValueUpdated;
             currentlyTrackedRobot = null;
+            foreach (var objectsRenderer in instantiatedObjectRenderers.Values)
+            {
+                Destroy(objectsRenderer);
+            }
             foreach (var instantiatedObject in instantiatedObjects.Values)
             {
                 Destroy(instantiatedObject);
             }
             instantiatedObjects.Clear();
+            instantiatedObjectRenderers.Clear();
         }
 
         private void UpdateTrackedPoint(Dictionary<string, ValueWithError> robotData)
@@ -134,7 +143,9 @@ namespace Project.Scripts.TrackedRobots
 
                 instantiatedObjects.Add("base", baseObject);
                 instantiatedObjects.Add("tool", toolObject);
-        
+                instantiatedObjectRenderers.Add("base", baseObject.GetComponent<Renderer>());
+                instantiatedObjectRenderers.Add("tool", toolObject.GetComponent<Renderer>());
+
                 currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
                 currentlyTrackedRobot.BaseValueUpdated += OnBaseValueUpdated;
                 currentlyTrackedRobot.ToolValueUpdated += OnToolValueUpdated;
@@ -161,6 +172,8 @@ namespace Project.Scripts.TrackedRobots
 
                 instantiatedObjects.Add("base", baseObject);
                 instantiatedObjects.Add("tool", toolObject);
+                instantiatedObjectRenderers.Add("base", baseObject.GetComponent<Renderer>());
+                instantiatedObjectRenderers.Add("tool", toolObject.GetComponent<Renderer>());
              
                 currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
                 currentlyTrackedRobot.BaseValueUpdated += OnBaseValueUpdated;
