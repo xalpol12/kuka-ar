@@ -55,21 +55,17 @@ namespace Project.Scripts.TrackedRobots
 
         public void SwitchBaseGameObject(bool value)
         {
-            DebugLogger.Instance.AddLog($"Called SwitchBaseGameObject with value {value}; ");
             if (instantiatedObjects.TryGetValue("base", out var baseGameObject))
             {
                 baseGameObject.SetActive(value);
-                DebugLogger.Instance.AddLog($"Switched baseGameObject to value {value}; ");
             }
         }
 
         public void SwitchToolGameObject(bool value)
         {
-            DebugLogger.Instance.AddLog($"Called SwitchToolGameObject with value {value}; ");
             if (instantiatedObjects.TryGetValue("tool", out var toolGameObject))
             {
                 toolGameObject.SetActive(value);
-                DebugLogger.Instance.AddLog($"Switched toolGameObject to value {value}; ");
             }
         }
 
@@ -137,9 +133,7 @@ namespace Project.Scripts.TrackedRobots
                     rotationThreshold);
 
                 instantiatedObjects.Add("base", baseObject);
-                DebugLogger.Instance.AddLog($"Added base for ip {ipAddress} to instantiated objects; ");
                 instantiatedObjects.Add("tool", toolObject);
-                DebugLogger.Instance.AddLog($"Added tool for ip {ipAddress} to instantiated objects; ");
         
                 currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
                 currentlyTrackedRobot.BaseValueUpdated += OnBaseValueUpdated;
@@ -167,8 +161,6 @@ namespace Project.Scripts.TrackedRobots
 
                 instantiatedObjects.Add("base", baseObject);
                 instantiatedObjects.Add("tool", toolObject);
-                
-                DebugLogger.Instance.AddLog($"Object for ip {ipAddress} instantiated; ");
              
                 currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
                 currentlyTrackedRobot.BaseValueUpdated += OnBaseValueUpdated;
