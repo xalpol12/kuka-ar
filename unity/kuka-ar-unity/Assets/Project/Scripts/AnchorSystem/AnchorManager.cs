@@ -132,7 +132,7 @@ namespace Project.Scripts.AnchorSystem
                 WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "POSITION"));
                 WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "JOINTS"));
 
-                trackedRobotsHandler.InstantiateTrackedRobot(robotIp, anchor.transform);
+                trackedRobotsHandler.InstantiateTrackedRobot(robotIp, anchor);
 
                 isCreated = true;
             }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.ExceptionHandling;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
@@ -9,6 +8,7 @@ using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Parsing.OutputJson;
 using Project.Scripts.EventSystem.Services.Menu;
 using UnityEngine;
+using UnityEngine.XR.ARFoundation;
 
 namespace Project.Scripts.TrackedRobots
 {
@@ -33,13 +33,11 @@ namespace Project.Scripts.TrackedRobots
 
         private string selectedRobotIP;
         private TrackedRobotModel currentlyTrackedRobot;
-        private Dictionary<string, GameObject> instantiatedObjects;
-        private Dictionary<string, List<Renderer>> instantiatedObjectRenderers;
+        private Dictionary<string, List<Renderer>> objectRenderers;
 
         private void Start()
         {
-            instantiatedObjects = new();
-            instantiatedObjectRenderers = new()
+            objectRenderers = new()
             {
                 { "base", new List<Renderer>() },
                 { "tool", new List<Renderer>() }
@@ -61,7 +59,7 @@ namespace Project.Scripts.TrackedRobots
 
         public void SwitchBaseGameObject(bool value)
         {
-            if (instantiatedObjectRenderers.TryGetValue("base", out var baseRenderers))
+            if (objectRenderers.TryGetValue("base", out var baseRenderers))
             {
                 foreach (var partialBaseRenderer in baseRenderers)
                 {
@@ -72,7 +70,7 @@ namespace Project.Scripts.TrackedRobots
 
         public void SwitchToolGameObject(bool value)
         {
-            if (instantiatedObjectRenderers.TryGetValue("tool", out var toolRenderers))
+            if (objectRenderers.TryGetValue("tool", out var toolRenderers))
             {
                 foreach (var partialToolRenderer in toolRenderers)
                 {
@@ -98,15 +96,12 @@ namespace Project.Scripts.TrackedRobots
             }
         }
 
-        public void InstantiateTrackedRobot(string ipAddress, Transform basePoint)
+        public void InstantiateTrackedRobot(string ipAddress, ARAnchor anchor)
         {
             if (ipAddress == selectedRobotIP)
             {
                 #if !UNITY_EDITOR || !UNITY_EDITOR_WIN
-                    StartCoroutine(InstantiateNewRobot(ipAddress, basePoint));
-                #endif
-                #if UNITY_EDITOR || UNITY_EDITOR_WIN
-                    StartCoroutine(InstantiateNewRobot(ipAddress));
+                    StartCoroutine(InstantiateNewRobot(anchor));
                 #endif
             }
         }
@@ -117,15 +112,10 @@ namespace Project.Scripts.TrackedRobots
             currentlyTrackedRobot.BaseValueUpdated -= OnBaseValueUpdated;
             currentlyTrackedRobot.ToolValueUpdated -= OnToolValueUpdated;
             currentlyTrackedRobot = null;
-            foreach (var objectsRenderers in instantiatedObjectRenderers.Values)
+            foreach (var objectsRenderers in objectRenderers.Values)
             {
                 objectsRenderers.Clear();
             }
-            foreach (var instantiatedObject in instantiatedObjects.Values)
-            {
-                Destroy(instantiatedObject);
-            }
-            instantiatedObjects.Clear();
         }
 
         private void UpdateTrackedPoint(Dictionary<string, ValueWithError> robotData)
@@ -136,8 +126,9 @@ namespace Project.Scripts.TrackedRobots
         }
 
         //For use in app
-        private IEnumerator InstantiateNewRobot(string ipAddress, Transform basePoint)
+        private IEnumerator InstantiateNewRobot(ARAnchor anchor)
         {
+            var basePoint = anchor.transform;
             bool isInstantiated = false;
             while (!isInstantiated)
             {
@@ -147,53 +138,16 @@ namespace Project.Scripts.TrackedRobots
                 var baseObject = Instantiate(prefab, position, rotation);
                 var toolObject = Instantiate(prefab, position, rotation);
 
-                instantiatedObjectRenderers["base"].AddRange(baseObject.GetComponentsInChildren<Renderer>());
-                instantiatedObjectRenderers["tool"].AddRange(toolObject.GetComponentsInChildren<Renderer>());
+                objectRenderers["base"].AddRange(baseObject.GetComponentsInChildren<Renderer>());
+                objectRenderers["tool"].AddRange(toolObject.GetComponentsInChildren<Renderer>());
 
+                baseObject.transform.SetParent(anchor.transform);
                 toolObject.transform.SetParent(baseObject.transform);
 
                 currentlyTrackedRobot = new TrackedRobotModel(baseObject, toolObject,
                     positionThreshold,
                     rotationThreshold);
 
-                instantiatedObjects.Add("base", baseObject);
-                instantiatedObjects.Add("tool", toolObject);
-
-
-                currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
-                currentlyTrackedRobot.BaseValueUpdated += OnBaseValueUpdated;
-                currentlyTrackedRobot.ToolValueUpdated += OnToolValueUpdated;
-                OnRobotConnectionStatusConnected(true);
-        
-                isInstantiated = true;
-            }
-        }
-        
-        //For debug in editor only
-        private IEnumerator InstantiateNewRobot(string ipAddress)
-        {
-            bool isInstantiated = false;
-            while (!isInstantiated)
-            {
-                yield return null;
-                var position = Vector3.zero;
-                var rotation = Quaternion.identity;
-
-                var baseObject = Instantiate(prefab, position, rotation);
-                var toolObject = Instantiate(prefab, position, rotation);
-
-                instantiatedObjectRenderers["base"].AddRange(baseObject.GetComponentsInChildren<Renderer>());
-                instantiatedObjectRenderers["tool"].AddRange(toolObject.GetComponentsInChildren<Renderer>());
-
-                toolObject.transform.SetParent(baseObject.transform);
-
-                currentlyTrackedRobot = new TrackedRobotModel(baseObject, toolObject,
-                    positionThreshold,
-                    rotationThreshold);
-
-                instantiatedObjects.Add("base", baseObject);
-                instantiatedObjects.Add("tool", toolObject);
-             
                 currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
                 currentlyTrackedRobot.BaseValueUpdated += OnBaseValueUpdated;
                 currentlyTrackedRobot.ToolValueUpdated += OnToolValueUpdated;
