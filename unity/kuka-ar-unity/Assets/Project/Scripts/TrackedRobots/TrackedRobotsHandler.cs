@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.ExceptionHandling;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
@@ -14,7 +13,7 @@ namespace Project.Scripts.TrackedRobots
 {
     public class TrackedRobotsHandler : MonoBehaviour
     {
-        [Tooltip("Prefab to be displayed as a robot's base and tcp representation")]
+        [Tooltip("Prefab to be displayed as a robot's base and tool representation")]
         public GameObject prefab;
         
         [Tooltip("Minimal difference between two position update values to be registered [in meters]")]
@@ -38,8 +37,8 @@ namespace Project.Scripts.TrackedRobots
 
         private void Start()
         {
-            instantiatedObjects = new();
-            instantiatedObjectRenderers = new()
+            instantiatedObjects = new Dictionary<string, GameObject>();
+            instantiatedObjectRenderers = new Dictionary<string, List<Renderer>>
             {
                 { "base", new List<Renderer>() },
                 { "tool", new List<Renderer>() }
@@ -61,23 +60,21 @@ namespace Project.Scripts.TrackedRobots
 
         public void SwitchBaseGameObject(bool value)
         {
-            if (instantiatedObjectRenderers.TryGetValue("base", out var baseRenderers))
+            if (!instantiatedObjectRenderers.TryGetValue("base", out var baseRenderers)) return;
+            
+            foreach (var partialBaseRenderer in baseRenderers)
             {
-                foreach (var partialBaseRenderer in baseRenderers)
-                {
-                    partialBaseRenderer.enabled = value;
-                }
+                partialBaseRenderer.enabled = value;
             }
         }
 
         public void SwitchToolGameObject(bool value)
         {
-            if (instantiatedObjectRenderers.TryGetValue("tool", out var toolRenderers))
+            if (!instantiatedObjectRenderers.TryGetValue("tool", out var toolRenderers)) return;
+            
+            foreach (var partialToolRenderer in toolRenderers)
             {
-                foreach (var partialToolRenderer in toolRenderers)
-                {
-                    partialToolRenderer.enabled = value;
-                }
+                partialToolRenderer.enabled = value;
             }
         }
 
@@ -128,7 +125,7 @@ namespace Project.Scripts.TrackedRobots
             instantiatedObjects.Clear();
         }
 
-        private void UpdateTrackedPoint(Dictionary<string, ValueWithError> robotData)
+        private void UpdateTrackedPoint(IReadOnlyDictionary<string, ValueWithError> robotData)
         {
             if (currentlyTrackedRobot == null) return;
             SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connected;
@@ -138,7 +135,7 @@ namespace Project.Scripts.TrackedRobots
         //For use in app
         private IEnumerator InstantiateNewRobot(string ipAddress, Transform basePoint)
         {
-            bool isInstantiated = false;
+            var isInstantiated = false;
             while (!isInstantiated)
             {
                 yield return null;
@@ -172,7 +169,7 @@ namespace Project.Scripts.TrackedRobots
         //For debug in editor only
         private IEnumerator InstantiateNewRobot(string ipAddress)
         {
-            bool isInstantiated = false;
+            var isInstantiated = false;
             while (!isInstantiated)
             {
                 yield return null;
