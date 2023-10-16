@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.ExceptionHandling;
+using Project.Scripts.Connectivity.Extensions.Overriders;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Parsing.OutputJson;
@@ -53,7 +54,7 @@ namespace Project.Scripts.TrackedRobots
                 DestroyPrefab();
             }
             selectedRobotIP = robotIP;
-            SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connecting;
+            LabelOverride.Label.OverrideStatusLabel(ConnectionStatus.Connecting.ToString());
             OnRobotConnectionStatusConnected(false);
         }
 
@@ -87,7 +88,7 @@ namespace Project.Scripts.TrackedRobots
             }
             else
             {
-                SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Disconnected;
+                LabelOverride.Label.OverrideStatusLabel(ConnectionStatus.Disconnected.ToString());
             }
 
             if (newData.Exception.HasValue)
@@ -121,7 +122,7 @@ namespace Project.Scripts.TrackedRobots
         private void UpdateTrackedPoint(Dictionary<string, ValueWithError> robotData)
         {
             if (currentlyTrackedRobot == null) return;
-            SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connected;
+            LabelOverride.Label.OverrideStatusLabel(ConnectionStatus.Connected.ToString());
             currentlyTrackedRobot.UpdateTrackedRobotVariables(robotData);
         }
 

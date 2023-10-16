@@ -19,6 +19,11 @@ namespace Project.Scripts.Connectivity.Models
             }
         }
 
-        public Vector3 RotationShift { get; set; }
+        private Vector3 rotationShift;
+        public Vector3 RotationShift
+        {
+            get => rotationShift;
+            set => rotationShift = new Vector3(value.x, -value.y, -value.z);
+        }
     }
 }
