@@ -5,28 +5,25 @@ namespace Project.Scripts.Connectivity.Models.KRLValues
 {
     public struct KRLFrame : IKRLValue
     {
-        private Vector3 unityPosition;
+        private Vector3 position;
     
         [JsonProperty("position")]
         public Vector3 Position
         {
-            get => unityPosition; // UNITY -> KUKA
+            get => position;
             set
             {
-                var kukaToUnityVector3 = new Vector3(-value.x, value.z, -value.y) / 1000f; // KUKA -> UNITY
-                unityPosition = kukaToUnityVector3;
+                var kukaToUnityVector3 = new Vector3(-value.x, value.y, value.z) / 1000f; // KUKA -> UNITY
+                position = kukaToUnityVector3;
             } 
         }
 
-        [JsonIgnore]
-        public Vector3 UnityPosition
-        {
-            get => unityPosition;
-            set => unityPosition = value;
-        }
+        private Vector3 rotation;
 
         [JsonProperty("rotation")]
-        public Vector3 Rotation { get; set; }
-
+        public Vector3 Rotation {
+            get => rotation;
+            set => rotation = new Vector3(value.x, -value.y, -value.z);
+        }
     }
 }

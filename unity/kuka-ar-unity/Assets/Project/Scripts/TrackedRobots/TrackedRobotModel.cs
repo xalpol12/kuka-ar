@@ -19,23 +19,23 @@ namespace Project.Scripts.TrackedRobots
         private static class ValueName
         {
             public const string ActiveBase = "$ACT_BASE";
-            public const string ActiveTcp = "$ACT_TOOL";
+            public const string ActiveTool = "$ACT_TOOL";
             public const string Base = "$BASE";
-            public const string Tcp = "$POS_ACT";
+            public const string Tool = "$POS_ACT";
             public const string Joints = "$AXIS_ACT";
         }
 
         private readonly GameObject baseObject;
-        private readonly GameObject tcpObject;
+        private readonly GameObject toolObject;
         private readonly float posThresh;
         private readonly float rotThresh;
 
         private readonly Dictionary<string, IKrlWrapper> krlValues;
 
-        public TrackedRobotModel(GameObject baseObject, GameObject tcpObject, float posThresh, float rotThresh)
+        public TrackedRobotModel(GameObject baseObject, GameObject toolObject, float posThresh, float rotThresh)
         {
             this.baseObject = baseObject;
-            this.tcpObject = tcpObject;
+            this.toolObject = toolObject;
             this.posThresh = posThresh;
             this.rotThresh = rotThresh;
 
@@ -48,16 +48,16 @@ namespace Project.Scripts.TrackedRobots
         private void SetupRobotVariables()
         {
             krlValues.Add(ValueName.ActiveBase, new KrlIntWrapper());
-            krlValues.Add(ValueName.ActiveTcp, new KrlIntWrapper());
+            krlValues.Add(ValueName.ActiveTool, new KrlIntWrapper());
             krlValues.Add(ValueName.Base, new KrlFrameWrapper(posThresh, rotThresh));
-            krlValues.Add(ValueName.Tcp, new KrlFrameWrapper(posThresh, rotThresh));
+            krlValues.Add(ValueName.Tool, new KrlFrameWrapper(posThresh, rotThresh));
             krlValues.Add(ValueName.Joints, new KrlJointsWrapper(rotThresh));
         }
 
         private void SubscribeToValueUpdatedEvents()
         {
             ((KrlIntWrapper) krlValues[ValueName.ActiveBase]).ValueUpdated += OnActiveBaseUpdated;
-            ((KrlIntWrapper) krlValues[ValueName.ActiveTcp]).ValueUpdated += OnActiveToolUpdated;
+            ((KrlIntWrapper) krlValues[ValueName.ActiveTool]).ValueUpdated += OnActiveToolUpdated;
             ((KrlJointsWrapper) krlValues[ValueName.Joints]).ValueUpdated += OnActiveJointsUpdated;
         }
 
@@ -95,16 +95,16 @@ namespace Project.Scripts.TrackedRobots
                 UpdateGivenGameObject(baseObject, baseUpdate);
             }
 
-            if (((KrlFrameWrapper) krlValues[ValueName.Tcp]).TryDequeue(out var tcpUpdate))
+            if (((KrlFrameWrapper) krlValues[ValueName.Tool]).TryDequeue(out var toolUpdate))
             {
-                UpdateGivenGameObject(tcpObject, tcpUpdate);
+                UpdateGivenGameObject(toolObject, toolUpdate);
             }
         }
 
         private void UpdateGivenGameObject(GameObject gameObject, KRLFrame update)
         {
-            gameObject.transform.position = update.Position;
-            gameObject.transform.rotation = Quaternion.Euler(update.Rotation);
+            gameObject.transform.localPosition = update.Position;
+            gameObject.transform.localRotation = Quaternion.Euler(update.Rotation);
             DebugLogger.Instance.AddLog($"Pos: {update.Position.ToString()}, " +
                                         $"rot: {update.Rotation.ToString()}; ");
         }
