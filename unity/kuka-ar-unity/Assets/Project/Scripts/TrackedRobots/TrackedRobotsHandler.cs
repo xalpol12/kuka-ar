@@ -14,7 +14,7 @@ namespace Project.Scripts.TrackedRobots
 {
     public class TrackedRobotsHandler : MonoBehaviour
     {
-        [Tooltip("Prefab to be displayed as a robot's base and tcp representation")]
+        [Tooltip("Prefab to be displayed as a robot's base and tool representation")]
         public GameObject prefab;
         
         [Tooltip("Minimal difference between two position update values to be registered [in meters]")]
@@ -61,10 +61,7 @@ namespace Project.Scripts.TrackedRobots
         {
             if (objectRenderers.TryGetValue("base", out var baseRenderers))
             {
-                foreach (var partialBaseRenderer in baseRenderers)
-                {
-                    partialBaseRenderer.enabled = value;
-                }
+                partialBaseRenderer.enabled = value;
             }
         }
 
@@ -72,10 +69,7 @@ namespace Project.Scripts.TrackedRobots
         {
             if (objectRenderers.TryGetValue("tool", out var toolRenderers))
             {
-                foreach (var partialToolRenderer in toolRenderers)
-                {
-                    partialToolRenderer.enabled = value;
-                }
+                partialToolRenderer.enabled = value;
             }
         }
 
@@ -118,7 +112,7 @@ namespace Project.Scripts.TrackedRobots
             }
         }
 
-        private void UpdateTrackedPoint(Dictionary<string, ValueWithError> robotData)
+        private void UpdateTrackedPoint(IReadOnlyDictionary<string, ValueWithError> robotData)
         {
             if (currentlyTrackedRobot == null) return;
             SelectableLogicService.Instance.RobotConnectionStatus = ConnectionStatus.Connected;
