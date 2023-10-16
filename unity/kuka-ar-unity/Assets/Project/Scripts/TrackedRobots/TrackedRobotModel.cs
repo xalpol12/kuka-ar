@@ -103,8 +103,8 @@ namespace Project.Scripts.TrackedRobots
 
         private void UpdateGivenGameObject(GameObject gameObject, KRLFrame update)
         {
-            gameObject.transform.position = update.Position;
-            gameObject.transform.rotation = Quaternion.Euler(update.Rotation);
+            gameObject.transform.localPosition = update.Position;
+            gameObject.transform.localRotation = Quaternion.Euler(update.Rotation);
             DebugLogger.Instance.AddLog($"Pos: {update.Position.ToString()}, " +
                                         $"rot: {update.Rotation.ToString()}; ");
         }

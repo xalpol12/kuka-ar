@@ -13,7 +13,7 @@ namespace Project.Scripts.Connectivity.Models.KRLValues
             get => position;
             set
             {
-                var kukaToUnityVector3 = new Vector3(-value.x, value.z, -value.y) / 1000f; // KUKA -> UNITY
+                var kukaToUnityVector3 = new Vector3(-value.x, value.y, value.z) / 1000f; // KUKA -> UNITY
                 position = kukaToUnityVector3;
             } 
         }
