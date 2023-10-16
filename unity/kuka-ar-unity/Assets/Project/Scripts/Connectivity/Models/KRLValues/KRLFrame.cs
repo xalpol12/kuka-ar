@@ -18,7 +18,12 @@ namespace Project.Scripts.Connectivity.Models.KRLValues
             } 
         }
 
+        private Vector3 rotation;
+
         [JsonProperty("rotation")]
-        public Vector3 Rotation { get; set; }
+        public Vector3 Rotation {
+            get => rotation;
+            set => rotation = new Vector3(value.x, -value.y, -value.z);
+        }
     }
 }
