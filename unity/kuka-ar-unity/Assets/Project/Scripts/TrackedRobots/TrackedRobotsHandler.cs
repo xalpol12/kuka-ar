@@ -62,7 +62,10 @@ namespace Project.Scripts.TrackedRobots
         {
             if (objectRenderers.TryGetValue("base", out var baseRenderers))
             {
-                partialBaseRenderer.enabled = value;
+                foreach (var partialBaseRenderer in baseRenderers)
+                {
+                    partialBaseRenderer.enabled = value;
+                }
             }
         }
 
@@ -70,7 +73,10 @@ namespace Project.Scripts.TrackedRobots
         {
             if (objectRenderers.TryGetValue("tool", out var toolRenderers))
             {
-                partialToolRenderer.enabled = value;
+                foreach (var partialToolRenderer in toolRenderers)
+                {
+                    partialToolRenderer.enabled = value;
+                }
             }
         }
 
@@ -120,7 +126,6 @@ namespace Project.Scripts.TrackedRobots
             currentlyTrackedRobot.UpdateTrackedRobotVariables(robotData);
         }
 
-        //For use in app
         private IEnumerator InstantiateNewRobot(ARAnchor anchor)
         {
             var basePoint = anchor.transform;
