@@ -12,7 +12,7 @@ Project consists of:
 
 ### Server-side app
 
-It's main purpose is to acquire data from target KUKA robot using LAN, process the data and transmit it to the client app. 
+Its main purpose is to acquire data from target KUKA robot using LAN, process the data and transmit it to the client app. 
 <!-- @Przemko that's the place where you can provide more info about the Java side of the project -->
 
 ### Client-side app
