@@ -1,7 +1,33 @@
+
 # KUKA AR app 🦾
 ![example workflow](https://github.com/xalpol12/kuka-ar-all/actions/workflows/main.yml/badge.svg)
 
-Project created to visualize coordinate systems on KUKA robots in realtime.
+Project for real-time coordinate system visualization for KUKA robots.
+
+## Overview
+
+Project consists of:
+- server-side Java Spring app that manages incoming and outgoing data
+- client-side Android Unity app that provides visualization of coordinate system for a user
+
+### Server-side app
+
+It's main purpose is to acquire data from target KUKA robot using LAN, process the data and transmit it to the client app. 
+<!-- @Przemko that's the place where you can provide more info about the Java side of the project -->
+
+### Client-side app
+
+Requests data from the [server](#server-side-app). Uses received data and capabilities of Android device with [AR Foundation](https://developers.google.com/ar/develop/unity-arf/getting-started-ar-foundation) package to visualize coordinate system of connected robot in real-time.
+
+#### Features
+
+- Image recognition - in order to quickly distinguish between many configured robots, target image system is used as a way to uniquely identify a specific robot.
+
+- AR Anchor Placement system - to keep track of coordinate systems in space, anchor is placed on the detected image, this allows user to move around and maintain a constant position of displayed coordinate systems.
+
+- Communication with server database over HTTP - to store and manage configured robots that user wants to track, CRUD methods with local database are used.
+
+- Instant data acquisition using WebSocket - for more frequent updates and faster reactions to changes in the position of the coordinate system, WebSocket protocol is used.
 
 ## Install
 
@@ -16,7 +42,7 @@ Download current version from `Releases` tab OR clone project repository to your
     - **kukaComm:** `java/kukaComm`
     - **testSocket:** `java/testSocket`
 
-    *More information about which one to choose can be found in [_Available configurations_](/README.md#avaliable-configurations-📚) section.*
+    *More information about which one to choose can be found in [_Available configurations_](#avaliable-configurations-📚) section.*
 
 2. Enter command:
 
@@ -34,16 +60,34 @@ Download current version from `Releases` tab OR clone project repository to your
 
 6. Wait until the build is finished and enjoy.
 
-## Avaliable configurations 📚 
+## Configuration
+
+<!-- @Przemko that's the place where you can describe steps required to set-up connection between Kuka robot and Java server-->
+
+### Android app
+1. Connect to the same local network as your server
+2. Check for IPv4 address of the machine that your server is deployed on  
+   
+   You can use `ipconfig` in command line, here's the sample excerpt:
+
+        Wireless LAN adapter WiFi:
+        Connection-specific DNS Suffix  . :
+        Link-local IPv6 Address . . . . . : <hidden>
+        IPv4 Address. . . . . . . . . . . : 192.168.1.25
+
+
+3. Start the app and provide the address of your server from previous step
+4. Check `test connection` button 
+
+   If everything is set-up correctly, app should display green checkmark. Proceed to [Troubleshooting](#troubleshooting-🐛-💡) if you encountered any problems.
+
+## Available configurations 📚 
 
 ### `KukaComm` 
 Dedicated server side application that serves as a middle-man between KUKA robot and Android application. We recommend using it whenever you have an access to physical robot.
 
 ### `TestSocket`
 Side project that was created for an easier Android app development. It sends data similar in values and identical in form as `KukaComm`, but those values are mocked on the server side. It is used when implementing new features or debugging an Android app. Eliminates the need for a robot or a robot connection access.
-
-### `Android app`
-In order to receive data and work properly, both applications have to be connected to the same local network.
 
 ## Troubleshooting 🐛 💡 
 
@@ -54,19 +98,19 @@ Check if:
         More options icon > Reconfigure server > *here enter correct IP address*
 
     *More options icon can be found in left upper corner of your phone.*
-- Chosen Spring server (either [KukaCommm](/README.md#kukacomm) or [TestSocket](/README.md#testsocket) is running 
+- Chosen Spring server (either [KukaCommm](#kukacomm) or [TestSocket](#testsocket) is running 
 - Android device is connected to the the same network as a server
 
 ### Unity editor is not showing your device 📴 
 #### `Developer options disabled`
-Check if you have `Developer options` enabled on your device.
+Check if you have `Developer options` enabled on your device:
 
         Settings > System > About phone - click on it several times
 
 Usual amout of click is between 7 and 10. Remember that location of `About phone` tab can differ between manufacturers.
 
 #### `ADB is not detecting device`
-Go to
+Go to:
 
      Settings > Developer Options > Revoke USB debugging authorization
 
@@ -80,7 +124,7 @@ If your device shows a window with option to send the app for Google Play store 
 #### `App install problem`
 Check if you have "install from unknown sources" enabled in your device settings. If so, then try to install it several time and if popup with warning occurs - ignore it. If this won't help try to install a previous version.
 
-### `Problem not found in this list?`
+### `Problem not found on this list?`
 If you encounter any bugs, issues or if you are missing any feature - feel free to submit an [issue](https://github.com/xalpol12/kuka-ar-all/issues). Describe a problem or feature as precisly as you can and mark it with proper label.
 
 ## Contributions :accessibility: 
