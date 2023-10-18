@@ -89,7 +89,7 @@ Dedicated server side application that serves as a middle-man between KUKA robot
 ### `TestSocket`
 Side project that was created for an easier Android app development. It sends data similar in values and identical in form as `KukaComm`, but those values are mocked on the server side. It is used when implementing new features or debugging an Android app. Eliminates the need for a robot or a robot connection access.
 
-### `Andorid app`
+### `Android app`
 In order to receive data and work properly, both applications have to be connected to the same network.
 
 ## Usage 🎯
