@@ -4,18 +4,18 @@
 
 Project for real-time coordinate system visualization for KUKA robots. Developed as the engineering project that verifies acquired competencies at the end of bachelor's degree.
 
-## Overview
+## Overview 🔎
 
 Project consists of:
 - server-side Java Spring app that manages incoming and outgoing data
 - client-side Android Unity app that provides visualization of coordinate system for a user
 
-### Server-side app
+### Server-side app 🖥️
 
 Its main purpose is to acquire data from target KUKA robot using LAN, process the data and transmit it to the client app. 
 <!-- @Przemko that's the place where you can provide more info about the Java side of the project -->
 
-### Client-side app
+### Client-side app 📱
 
 Requests data from the [server](#server-side-app). Uses received data and capabilities of Android device with [AR Foundation](https://developers.google.com/ar/develop/unity-arf/getting-started-ar-foundation) package to visualize coordinate system of connected robot in real-time.
 
@@ -29,7 +29,7 @@ Requests data from the [server](#server-side-app). Uses received data and capabi
 
 - Instant data acquisition using WebSocket - for more frequent updates and faster reactions to changes in the position of the coordinate system, WebSocket protocol is used.
 
-## Install
+## Install 🔄
 
 ### Download 🚚 📦 
 Download current version from `Releases` tab OR clone project repository to your local drive.
@@ -60,11 +60,11 @@ Download current version from `Releases` tab OR clone project repository to your
 
 6. Wait until the build is finished and enjoy.
 
-## Configuration
+## Configuration 🛠️
 
 <!-- @Przemko that's the place where you can describe steps required to set-up connection between Kuka robot and Java server-->
 
-### Android app
+### Android app 📱
 1. Connect to the same local network as your server
 2. Check for IPv4 address of the machine that your server is deployed on  
    
@@ -92,7 +92,7 @@ Side project that was created for an easier Android app development. It sends da
 ### `Andorid app`
 In order to receive data and work properly, both applications have to be connected to the same network.
 
-## Usage
+## Usage 🎯
 After [installation](#install):
 1. Open an app
 2. Enter valid server IP address
