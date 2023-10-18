@@ -39,8 +39,8 @@ Download current version from `Releases` tab OR clone project repository to your
 > Skip this section if you downloaded .jar and .apk files from `Releases` tab
 
 1. Go to project directory:
-    - **kukaComm:** `java/kukaComm`
-    - **testSocket:** `java/testSocket`
+    - **kukaComm:** `./java/kukaComm`
+    - **testSocket:** `./java/testSocket`
 
     *More information about which one to choose can be found in [_Available configurations_](#avaliable-configurations-📚) section.*
 
@@ -89,6 +89,27 @@ Dedicated server side application that serves as a middle-man between KUKA robot
 ### `TestSocket`
 Side project that was created for an easier Android app development. It sends data similar in values and identical in form as `KukaComm`, but those values are mocked on the server side. It is used when implementing new features or debugging an Android app. Eliminates the need for a robot or a robot connection access.
 
+### `Andorid app`
+In order to recevie data and work properly, both applications have to be connected to the same network.
+
+## Usage
+After [installation](#install):
+1. Open an appp
+2. Enter valid server IP address
+3. Open bottom navigation menu
+4. Robot actions:
+        4.1 Observe coords systems:
+                a. Open bottom navigation menu
+                b. Select robot that you would like to observe
+        4.2 Add new robot:
+                a. Click `+` sign in left bottom corner
+                b. fill the nessesary fields
+                c. Hit save
+                d. Go to  point **4.1**
+5. Enjoy
+
+For more info refer to [instruction](https://github.com/xalpol12/kuka-ar-all/documenatation/XYZ.pdf).
+
 ## Troubleshooting 🐛 💡 
 
 ### Connection refused 📶 
@@ -127,5 +148,8 @@ Check if you have "install from unknown sources" enabled in your device settings
 ### `Problem not found on this list?`
 If you encounter any bugs, issues or if you are missing any feature - feel free to submit an [issue](https://github.com/xalpol12/kuka-ar-all/issues). Describe a problem or feature as precisly as you can and mark it with proper label.
 
-## Contributions :accessibility: 
-Any contribution is welcome. If there are no issues currently requested by users, feel free to submit new one and get started working on it.
+### `Java jar command missing`
+To run `.jar` file, java JDK is required. Recommended version for this project is [Java JDK 17 Termurin](https://www.oracle.com/pl/java/technologies/downloads/#java17).
+
+## Contribution :accessibility: 
+Any contribution is welcome. If there are not any issues currently requested by users feel free to submit new one, and get started working over it.
