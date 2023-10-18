@@ -2,7 +2,7 @@
 # KUKA AR app 🦾
 ![example workflow](https://github.com/xalpol12/kuka-ar-all/actions/workflows/main.yml/badge.svg)
 
-Project for real-time coordinate system visualization for KUKA robots.
+Project for real-time coordinate system visualization for KUKA robots. Developed as the engineering project that verifies acquired competencies at the end of bachelor's degree.
 
 ## Overview
 
@@ -90,11 +90,11 @@ Dedicated server side application that serves as a middle-man between KUKA robot
 Side project that was created for an easier Android app development. It sends data similar in values and identical in form as `KukaComm`, but those values are mocked on the server side. It is used when implementing new features or debugging an Android app. Eliminates the need for a robot or a robot connection access.
 
 ### `Andorid app`
-In order to recevie data and work properly, both applications have to be connected to the same network.
+In order to receive data and work properly, both applications have to be connected to the same network.
 
 ## Usage
 After [installation](#install):
-1. Open an appp
+1. Open an app
 2. Enter valid server IP address
 3. Open bottom navigation menu
 4. Robot actions:
@@ -102,10 +102,10 @@ After [installation](#install):
                 a. Open bottom navigation menu
                 b. Select robot that you would like to observe
         4.2 Add new robot:
-                a. Click `+` sign in left bottom corner
-                b. fill the nessesary fields
-                c. Hit save
-                d. Go to  point **4.1**
+                a. Click `+` sign in the left bottom corner
+                b. fill the necessary fields
+                c. Hit the 'save' button
+                d. Go to point **4.1**
 5. Enjoy
 
 For more info refer to [instruction](https://github.com/xalpol12/kuka-ar-all/documenatation/XYZ.pdf).
