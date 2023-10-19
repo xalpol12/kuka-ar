@@ -98,15 +98,15 @@ After [installation](#install):
 2. Enter valid server IP address
 3. Open bottom navigation menu
 4. Robot actions:
-        4.1 Observe coords systems:
-                a. Open bottom navigation menu
-                b. Select robot that you would like to observe
-        4.2 Add new robot:
-                a. Click `+` sign in the left bottom corner
-                b. fill the necessary fields
-                c. Hit the 'save' button
-                d. Go to point **4.1**
-5. Enjoy
+    1. Observe coords systems:
+        1. Open bottom navigation menu
+        2. Select robot that you would like to observe
+    2. Add new robot:
+        1. Click `+` sign in the left bottom corner
+        2. Fill the necessary fields
+        3. Hit the 'save' button
+        4. Go to point **4.1**
+6. Enjoy
 
 For more info refer to [instruction](https://github.com/xalpol12/kuka-ar-all/documenatation/XYZ.pdf).
 
