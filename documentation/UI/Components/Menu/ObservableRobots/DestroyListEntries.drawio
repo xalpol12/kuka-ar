@@ -1,6 +1,6 @@
-<mxfile host="Electron" modified="2023-10-12T12:19:01.299Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.2 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="KVkEGcj-lSEl5UdP3J2S" version="22.0.2" type="device">
+<mxfile host="Electron" modified="2023-10-19T12:01:18.301Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.3 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="mMIihHrcI6alOZn8FxpD" version="22.0.3" type="device">
   <diagram name="Strona-1" id="_AlNPenZIOLDMZVP-umV">
-    <mxGraphModel dx="1909" dy="1144" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1050" dy="629" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -67,10 +67,10 @@
             <mxPoint x="-27" y="7" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="SS_uhr1cD55yVBT8mmSL-1" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" vertex="1" parent="1">
+        <mxCell id="SS_uhr1cD55yVBT8mmSL-1" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#ff0000;" parent="1" vertex="1">
           <mxGeometry x="399" y="980" width="30" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="SS_uhr1cD55yVBT8mmSL-2" value="" style="html=1;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;" edge="1" parent="1">
+        <mxCell id="SS_uhr1cD55yVBT8mmSL-2" value="" style="html=1;verticalAlign=bottom;endArrow=open;endSize=8;strokeColor=#ff0000;rounded=0;dashed=1;" parent="1" edge="1">
           <mxGeometry relative="1" as="geometry">
             <mxPoint x="414" y="975" as="targetPoint" />
             <mxPoint x="414" y="935" as="sourcePoint" />
