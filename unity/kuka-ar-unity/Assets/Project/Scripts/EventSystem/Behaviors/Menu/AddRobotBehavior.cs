@@ -52,8 +52,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 service.IsAddRobotDialogOpen = false;
             }
         
-            if (Input.GetKey(KeyCode.Escape) &&
-                service.IsAddRobotDialogOpen &&
+            if (Input.GetKey(KeyCode.Escape) && service.IsAddRobotDialogOpen &&
                 !robotController.AddNewRobotService.IsSelectDialogOpen)
             {
                 robotController.DialogState = LogicStates.Hiding;
