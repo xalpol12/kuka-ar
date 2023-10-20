@@ -4,6 +4,36 @@
 
 Project for real-time coordinate system visualization for KUKA robots. Developed as the engineering project that verifies acquired competencies at the end of bachelor's degree.
 
+## Table of Contents
+
+- [KUKA AR app 🦾](#kuka-ar-app-)
+  - [Table of Contents](#table-of-contents)
+  - [Overview 🔎](#overview-)
+    - [Server-side app 🖥️](#server-side-app-️)
+    - [Client-side app 📱](#client-side-app-)
+      - [Features](#features)
+  - [Install 🔄](#install-)
+    - [Download 🚚 📦](#download--)
+    - [Manual build process 🏗️](#manual-build-process-️)
+  - [Configuration 🛠️](#configuration-️)
+    - [Android app 📱](#android-app-)
+  - [Available configurations 📚](#available-configurations-)
+    - [`KukaComm`](#kukacomm)
+    - [`TestSocket`](#testsocket)
+    - [`Android app`](#android-app)
+  - [Usage 🎯](#usage-)
+  - [Troubleshooting 🐛 💡](#troubleshooting--)
+    - [Connection refused 📶](#connection-refused-)
+    - [Unity editor is not showing your device 📴](#unity-editor-is-not-showing-your-device-)
+      - [`Developer options disabled`](#developer-options-disabled)
+      - [`ADB is not detecting device`](#adb-is-not-detecting-device)
+    - [Other problems ⚠️](#other-problems-️)
+      - [`Play store check`](#play-store-check)
+      - [`App install problem`](#app-install-problem)
+      - [`Java jar command missing`](#java-jar-command-missing)
+    - [Problem not found on this list?](#problem-not-found-on-this-list)
+  - [Contribution :accessibility:](#contribution-accessibility)
+
 ## Overview 🔎
 
 Project consists of:
@@ -145,11 +175,11 @@ If your device shows a window with option to send the app for Google Play store 
 #### `App install problem`
 Check if you have "install from unknown sources" enabled in your device settings. If so, then try to install it several time and if popup with warning occurs - ignore it. If this won't help try to install a previous version.
 
-### `Problem not found on this list?`
-If you encounter any bugs, issues or if you are missing any feature - feel free to submit an [issue](https://github.com/xalpol12/kuka-ar-all/issues). Describe a problem or feature as precisly as you can and mark it with proper label.
-
-### `Java jar command missing`
+#### `Java jar command missing`
 To run `.jar` file, java JDK is required. Recommended version for this project is [Java JDK 17 Termurin](https://www.oracle.com/pl/java/technologies/downloads/#java17).
+
+### Problem not found on this list?
+If you encounter any bugs, issues or if you are missing any feature - feel free to submit an [issue](https://github.com/xalpol12/kuka-ar-all/issues). Describe a problem or feature as precisly as you can and mark it with proper label.
 
 ## Contribution :accessibility: 
 Any contribution is welcome. If there are not any issues currently requested by users feel free to submit new one, and get started working over it.
