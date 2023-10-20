@@ -42,10 +42,10 @@ namespace Project.Scripts.ImageSystem
             downloadedImages = new HashSet<string>();
             trackedImages = new Dictionary<string, ARTrackedImage>();
 
-            trackedRobotsHandler.RobotConnectionStatusConnected += ((_, b) =>
+            trackedRobotsHandler.RobotConnectionReset += (_, _) =>
             {
-                if (!b) DeleteAllTrackedImages();
-            }) ;
+                DeleteAllTrackedImages();
+            } ;
 
             imageManager = gameObject.AddComponent<ARTrackedImageManager>();
             ConfigureMutableLibrary();
@@ -138,7 +138,7 @@ namespace Project.Scripts.ImageSystem
         private void DeleteAllTrackedImages()
         {
             trackedImages.Clear();
-            DebugLogger.Instance.AddLog("Connection status: false, deleted all tracked images; ");
+            DebugLogger.Instance.AddLog("Deleted all tracked images; ");
         }
     }
 }

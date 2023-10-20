@@ -209,7 +209,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             
             GetSticker(ipAddress, sticker);
             AdjustImageMargin(false);
-            observableRobotsController.robotsHandler.ChangeSelectedRobotIP(ipAddress);
+            observableRobotsController.robotsHandler.ChangeSelectedRobot(ipAddress);
 
             observableRobotsController.LogicService.IsAfterItemSelect = true;
             observableRobotsController.LogicService.SelectedIpAddress = ipAddress;

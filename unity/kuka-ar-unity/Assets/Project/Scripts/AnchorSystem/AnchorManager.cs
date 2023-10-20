@@ -38,10 +38,10 @@ namespace Project.Scripts.AnchorSystem
             
             httpClientWrapper = HttpClientWrapper.Instance;
 
-            trackedRobotsHandler.RobotConnectionStatusConnected += ((_, b) =>
+            trackedRobotsHandler.RobotConnectionReset += (_, _) =>
             {
-                if (!b) DeleteAllTrackedAnchors();
-            });
+                DeleteAllTrackedAnchors();
+            };
         }
 
         public IEnumerator LoadRequiredData()
@@ -160,7 +160,7 @@ namespace Project.Scripts.AnchorSystem
                 arAnchorManager.RemoveAnchor(anchor);
             }
             trackedAnchors.Clear();
-            DebugLogger.Instance.AddLog("Connection status: false, deleted all anchors; ");
+            DebugLogger.Instance.AddLog("Deleted all anchors; ");
         }
 
         private static string ComposeWebSocketServerRequest(string robotIp, string variable)
