@@ -441,8 +441,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   runtimeImageLibrary: {fileID: 11400000, guid: fd03ce1f52e13064e91e9137f48714ff,
     type: 2}
-  imageRecognisedPrefab: {fileID: 1132985352657650476, guid: 3d301942cd989bd44848e1dc9c30d183,
-    type: 3}
+  imageRecognisedPrefab: {fileID: 0}
   trackedRobotsHandler: {fileID: 1022678924}
 --- !u!114 &94363253
 MonoBehaviour:
