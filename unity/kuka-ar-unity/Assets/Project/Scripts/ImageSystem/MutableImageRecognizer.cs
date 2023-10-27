@@ -70,6 +70,7 @@ namespace Project.Scripts.ImageSystem
         {
             foreach (var newImage in eventArgs.added)
             {
+                if (trackedRobotsHandler.selectedRobotIP != newImage.referenceImage.name) return;
                 trackedImages.Add(newImage.referenceImage.name, newImage);
                 StartCoroutine(anchorManager.StartNewAnchorTracking(newImage));
                 DebugLogger.Instance.AddLog($"Current tracked images count: {trackedImages.Count.ToString()}; ");

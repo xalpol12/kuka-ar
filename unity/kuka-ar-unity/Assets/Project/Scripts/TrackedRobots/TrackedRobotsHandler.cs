@@ -8,6 +8,7 @@ using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Parsing.OutputJson;
 using Project.Scripts.EventSystem.Services.Menu;
+using Project.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
@@ -32,7 +33,7 @@ namespace Project.Scripts.TrackedRobots
         public event EventHandler RobotConnectionReset;
         public event EventHandler<string> UnsubscribeObsoleteRobotIssued;
 
-        private string selectedRobotIP;
+        public string selectedRobotIP { get; private set; }
         private TrackedRobotModel currentlyTrackedRobot;
         private Dictionary<string, List<Renderer>> objectRenderers;
 
@@ -52,9 +53,10 @@ namespace Project.Scripts.TrackedRobots
             {
                 OnUnsubscribeObsoleteRobot(selectedRobotIP);
                 DestroyPrefab();
+                OnRobotConnectionReset();
             }
-            OnRobotConnectionReset();
             selectedRobotIP = robotIP;
+            DebugLogger.Instance.AddLog($"SelectedRobotIP: {selectedRobotIP}; ");
             LabelOverride.Label.OverrideStatusLabel(ConnectionStatus.Connecting.ToString());
         }
 
@@ -64,9 +66,9 @@ namespace Project.Scripts.TrackedRobots
             {
                 OnUnsubscribeObsoleteRobot(selectedRobotIP);
                 DestroyPrefab();
+                OnRobotConnectionReset();
                 selectedRobotIP = null;
             }
-            OnRobotConnectionReset();
         }
 
         public void SwitchBaseGameObject(bool value)

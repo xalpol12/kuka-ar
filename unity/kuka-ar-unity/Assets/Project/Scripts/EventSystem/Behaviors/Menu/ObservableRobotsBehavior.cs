@@ -6,6 +6,7 @@ using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
+using Project.Scripts.TrackedRobots;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
