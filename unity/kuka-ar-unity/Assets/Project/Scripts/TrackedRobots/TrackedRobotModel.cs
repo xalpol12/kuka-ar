@@ -92,21 +92,32 @@ namespace Project.Scripts.TrackedRobots
         {
             if (((KrlFrameWrapper) krlValues[ValueName.Base]).TryDequeue(out var baseUpdate))
             {
-                UpdateGivenGameObject(baseObject, baseUpdate);
+                UpdateBaseGameObject(baseObject, baseUpdate);
             }
 
             if (((KrlFrameWrapper) krlValues[ValueName.Tool]).TryDequeue(out var toolUpdate))
             {
-                UpdateGivenGameObject(toolObject, toolUpdate);
+                UpdateToolGameObject(toolObject, toolUpdate);
             }
         }
 
-        private void UpdateGivenGameObject(GameObject gameObject, KRLFrame update)
+        private void UpdateBaseGameObject(GameObject gameObject, KRLFrame update)
         {
             gameObject.transform.localPosition = update.Position;
-            gameObject.transform.localRotation = Quaternion.Euler(update.Rotation);
-            DebugLogger.Instance.AddLog($"Pos: {update.Position.ToString()}, " +
-                                        $"rot: {update.Rotation.ToString()}; ");
+
+            // Kuka -> Unity rotation order:
+            Vector3 kukaToUnityRotation = new Vector3(update.Rotation.z, update.Rotation.y, update.Rotation.x);
+            gameObject.transform.localRotation = Quaternion.Euler(kukaToUnityRotation);
+
+        }
+
+        private void UpdateToolGameObject(GameObject gameObject, KRLFrame update)
+        {
+            gameObject.transform.localPosition = update.Position;
+
+            // Kuka -> Unity rotation order:
+            Vector3 kukaToUnityRotation = new Vector3(update.Rotation.z, update.Rotation.y, update.Rotation.x);
+            gameObject.transform.rotation = Quaternion.Euler(kukaToUnityRotation);
         }
 
         private void OnActiveBaseUpdated(object sender, KRLInt e)
