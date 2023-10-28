@@ -104,20 +104,16 @@ namespace Project.Scripts.TrackedRobots
         private void UpdateBaseGameObject(GameObject gameObject, KRLFrame update)
         {
             gameObject.transform.localPosition = update.Position;
-
-            // Kuka -> Unity rotation order:
-            Vector3 kukaToUnityRotation = new Vector3(update.Rotation.z, update.Rotation.y, update.Rotation.x);
-            gameObject.transform.localRotation = Quaternion.Euler(kukaToUnityRotation);
+            gameObject.transform.localRotation = Quaternion.Euler(update.Rotation);
 
         }
 
         private void UpdateToolGameObject(GameObject gameObject, KRLFrame update)
         {
             gameObject.transform.localPosition = update.Position;
-
-            // Kuka -> Unity rotation order:
-            Vector3 kukaToUnityRotation = new Vector3(update.Rotation.z, update.Rotation.y, update.Rotation.x);
-            gameObject.transform.rotation = Quaternion.Euler(kukaToUnityRotation);
+            gameObject.transform.rotation = Quaternion.AngleAxis(update.Rotation.z, Vector3.up) *
+                                            Quaternion.AngleAxis(update.Rotation.y, Vector3.forward) *
+                                            Quaternion.AngleAxis(update.Rotation.x, Vector3.left);
         }
 
         private void OnActiveBaseUpdated(object sender, KRLInt e)
