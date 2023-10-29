@@ -92,34 +92,18 @@ namespace Project.Scripts.TrackedRobots
         {
             if (((KrlFrameWrapper) krlValues[ValueName.Base]).TryDequeue(out var baseUpdate))
             {
-                UpdateBaseGameObject(baseObject, baseUpdate);
+                UpdateGameObject(baseObject, baseUpdate);
             }
 
             if (((KrlFrameWrapper) krlValues[ValueName.Tool]).TryDequeue(out var toolUpdate))
             {
-                UpdateToolGameObject(toolObject, toolUpdate);
+                UpdateGameObject(toolObject, toolUpdate);
             }
         }
 
-        private void UpdateBaseGameObject(GameObject gameObject, KRLFrame update)
+        private void UpdateGameObject(GameObject gameObject, KRLFrame update)
         {
             gameObject.transform.localPosition = update.Position;
-
-            DebugLogger.Instance.AddLog($"Rotation values for BASE: {update.Rotation}; ");
-
-            Quaternion zRot = Quaternion.Euler(0, 0, -update.Rotation.z);
-            Quaternion yRot = Quaternion.Euler(0, -update.Rotation.y, 0);
-            Quaternion xRot = Quaternion.Euler(update.Rotation.x, 0, 0);
-
-            Quaternion finalRot = zRot * yRot * xRot;
-            gameObject.transform.localRotation = finalRot;
-        }
-
-        private void UpdateToolGameObject(GameObject gameObject, KRLFrame update)
-        {
-            gameObject.transform.localPosition = update.Position;
-
-            DebugLogger.Instance.AddLog($"Rotation values for TOOL: {update.Rotation}; ");
 
             Quaternion zRot = Quaternion.Euler(0, 0, -update.Rotation.z);
             Quaternion yRot = Quaternion.Euler(0, -update.Rotation.y, 0);
