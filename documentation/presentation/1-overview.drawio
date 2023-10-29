@@ -1,0 +1,66 @@
+<mxfile host="app.diagrams.net" modified="2023-10-19T10:08:06.797Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36" etag="aYAmxpN-dnLlL7lbqRPI" version="22.0.5" type="device">
+  <diagram name="Page-1" id="qEQiwaMNz5LuQ2QM4gjG">
+    <mxGraphModel dx="2072" dy="1683" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="uhdUq4KC3PCRWU0W2yXM-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="uhdUq4KC3PCRWU0W2yXM-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="307.05499999999984" y="110" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uhdUq4KC3PCRWU0W2yXM-1" value="" style="image;points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;image=img/lib/allied_telesis/computer_and_terminals/Server_Desktop.svg;" vertex="1" parent="1">
+          <mxGeometry x="240" y="220" width="134.11" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="uhdUq4KC3PCRWU0W2yXM-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-20" y="305" as="sourcePoint" />
+            <mxPoint x="220" y="305" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="80" y="305" />
+              <mxPoint x="80" y="305" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uhdUq4KC3PCRWU0W2yXM-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="uhdUq4KC3PCRWU0W2yXM-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="390" y="305" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uhdUq4KC3PCRWU0W2yXM-12" value="" style="image;points=[];aspect=fixed;html=1;align=center;shadow=0;dashed=0;image=img/lib/allied_telesis/computer_and_terminals/Smartphone.svg;" vertex="1" parent="1">
+          <mxGeometry x="671.64" y="222.5" width="75.62" height="165" as="geometry" />
+        </mxCell>
+        <mxCell id="uhdUq4KC3PCRWU0W2yXM-13" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/KUKA-logo.svg/2560px-KUKA-logo.svg.png;" vertex="1" parent="1">
+          <mxGeometry x="-190" y="440" width="175.61" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="uhdUq4KC3PCRWU0W2yXM-14" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://essentialistengineer.com/wp-content/uploads/2022/09/Java-Spring.png;clipPath=inset(13% 1.33% 21% 8.67%);" vertex="1" parent="1">
+          <mxGeometry x="224.11" y="410" width="150" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="uhdUq4KC3PCRWU0W2yXM-15" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://previews.123rf.com/images/viktorijareut/viktorijareut1907/viktorijareut190700153/127804870-robotic-arm-isolated-on-white-background-isometric-view.jpg;clipPath=inset(3.67% 11% 7% 15.33%);" vertex="1" parent="1">
+          <mxGeometry x="-170.23" y="222.5" width="136.06" height="165" as="geometry" />
+        </mxCell>
+        <mxCell id="uhdUq4KC3PCRWU0W2yXM-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="660" y="330" as="targetPoint" />
+            <mxPoint x="390" y="330" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uhdUq4KC3PCRWU0W2yXM-20" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Unity_Technologies_logo.svg/2560px-Unity_Technologies_logo.svg.png;" vertex="1" parent="1">
+          <mxGeometry x="620" y="422.5" width="178.89" height="65" as="geometry" />
+        </mxCell>
+        <mxCell id="uhdUq4KC3PCRWU0W2yXM-27" value="" style="image;html=1;image=img/lib/clip_art/computers/Database_128x128.png" vertex="1" parent="1">
+          <mxGeometry x="262.74" y="-50" width="88.64" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uhdUq4KC3PCRWU0W2yXM-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="220" as="targetPoint" />
+            <mxPoint x="320.05499999999984" y="110" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uhdUq4KC3PCRWU0W2yXM-30" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://www.h2database.com/html/images/h2-logo-2.png;" vertex="1" parent="1">
+          <mxGeometry x="270.52" y="50" width="73.07" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
