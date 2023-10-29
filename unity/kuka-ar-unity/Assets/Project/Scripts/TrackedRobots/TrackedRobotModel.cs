@@ -104,6 +104,9 @@ namespace Project.Scripts.TrackedRobots
         private void UpdateBaseGameObject(GameObject gameObject, KRLFrame update)
         {
             gameObject.transform.localPosition = update.Position;
+
+            DebugLogger.Instance.AddLog($"Rotation values for BASE: {update.Rotation}");
+
             gameObject.transform.localRotation = Quaternion.Euler(update.Rotation);
 
         }
@@ -111,9 +114,16 @@ namespace Project.Scripts.TrackedRobots
         private void UpdateToolGameObject(GameObject gameObject, KRLFrame update)
         {
             gameObject.transform.localPosition = update.Position;
-            gameObject.transform.rotation = Quaternion.AngleAxis(update.Rotation.z, Vector3.up) *
-                                            Quaternion.AngleAxis(update.Rotation.y, Vector3.forward) *
-                                            Quaternion.AngleAxis(update.Rotation.x, Vector3.left);
+
+            DebugLogger.Instance.AddLog($"Rotation values for TOOL: {update.Rotation}");
+
+            Quaternion zRot = Quaternion.Euler(0, 0, update.Rotation.z);
+            Quaternion yRot = Quaternion.Euler(0, update.Rotation.y, 0);
+            Quaternion xRot = Quaternion.Euler(update.Rotation.x, 0, 0);
+
+            // (Z, Y', X'')
+            Quaternion finalRot = zRot * yRot * xRot;
+            gameObject.transform.localRotation = finalRot;
         }
 
         private void OnActiveBaseUpdated(object sender, KRLInt e)
