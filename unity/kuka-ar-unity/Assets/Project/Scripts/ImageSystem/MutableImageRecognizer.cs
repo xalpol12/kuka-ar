@@ -72,7 +72,6 @@ namespace Project.Scripts.ImageSystem
             {
                 trackedImages.Add(newImage.referenceImage.name, newImage);
                 StartCoroutine(anchorManager.StartNewAnchorTracking(newImage));
-                DebugLogger.Instance.AddLog($"Current tracked images count: {trackedImages.Count.ToString()}; ");
             }
         }
 
@@ -129,8 +128,6 @@ namespace Project.Scripts.ImageSystem
             }
 
             downloadedImages.Add(image.Key);
-            DebugLogger.Instance.AddLog($"New image {image.Key} added; " +
-                                        $"Currently in library: {downloadedImages.Count.ToString()} images; ");
             
             yield return null;
         }
@@ -138,7 +135,6 @@ namespace Project.Scripts.ImageSystem
         private void DeleteAllTrackedImages()
         {
             trackedImages.Clear();
-            DebugLogger.Instance.AddLog("Connection status: false, deleted all tracked images; ");
         }
     }
 }
