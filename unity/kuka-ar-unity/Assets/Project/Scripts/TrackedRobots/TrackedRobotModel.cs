@@ -105,20 +105,24 @@ namespace Project.Scripts.TrackedRobots
         {
             gameObject.transform.localPosition = update.Position;
 
-            DebugLogger.Instance.AddLog($"Rotation values for BASE: {update.Rotation}");
+            DebugLogger.Instance.AddLog($"Rotation values for BASE: {update.Rotation}; ");
 
-            gameObject.transform.localRotation = Quaternion.Euler(update.Rotation);
+            Quaternion zRot = Quaternion.Euler(0, 0, -update.Rotation.z);
+            Quaternion yRot = Quaternion.Euler(0, -update.Rotation.y, 0);
+            Quaternion xRot = Quaternion.Euler(update.Rotation.x, 0, 0);
 
+            Quaternion finalRot = zRot * yRot * xRot;
+            gameObject.transform.localRotation = finalRot;
         }
 
         private void UpdateToolGameObject(GameObject gameObject, KRLFrame update)
         {
             gameObject.transform.localPosition = update.Position;
 
-            DebugLogger.Instance.AddLog($"Rotation values for TOOL: {update.Rotation}");
+            DebugLogger.Instance.AddLog($"Rotation values for TOOL: {update.Rotation}; ");
 
-            Quaternion zRot = Quaternion.Euler(0, 0, update.Rotation.z);
-            Quaternion yRot = Quaternion.Euler(0, update.Rotation.y, 0);
+            Quaternion zRot = Quaternion.Euler(0, 0, -update.Rotation.z);
+            Quaternion yRot = Quaternion.Euler(0, -update.Rotation.y, 0);
             Quaternion xRot = Quaternion.Euler(update.Rotation.x, 0, 0);
 
             // (Z, Y', X'')
