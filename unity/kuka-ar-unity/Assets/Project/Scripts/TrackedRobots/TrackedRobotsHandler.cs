@@ -30,6 +30,7 @@ namespace Project.Scripts.TrackedRobots
         public event EventHandler<KRLJoints> ActiveJointsUpdated;
         public event EventHandler<KRLInt> ActiveBaseUpdated;
         public event EventHandler<KRLInt> ActiveToolUpdated;
+        public event EventHandler FirstSelectionOfRobot;
         public event EventHandler RobotConnectionReset;
         public event EventHandler<string> UnsubscribeObsoleteRobotIssued;
 
@@ -49,11 +50,13 @@ namespace Project.Scripts.TrackedRobots
         public void ChangeSelectedRobot(string robotIP)
         {
             if (robotIP == selectedRobotIP) return;
-            if (selectedRobotIP != null)
+            if (selectedRobotIP == null)
             {
-                OnUnsubscribeObsoleteRobot(selectedRobotIP);
-                DestroyPrefab();
-                OnRobotConnectionReset();
+                OnFirstSelectionOfRobot();
+            }
+            else
+            {
+                CleanObsoleteRobot(selectedRobotIP);
             }
             selectedRobotIP = robotIP;
             DebugLogger.Instance.AddLog($"SelectedRobotIP: {selectedRobotIP}; ");
@@ -64,11 +67,16 @@ namespace Project.Scripts.TrackedRobots
         {
             if (selectedRobotIP != null)
             {
-                OnUnsubscribeObsoleteRobot(selectedRobotIP);
-                DestroyPrefab();
-                OnRobotConnectionReset();
+                CleanObsoleteRobot(selectedRobotIP);
                 selectedRobotIP = null;
             }
+        }
+
+        private void CleanObsoleteRobot(string ip)
+        {
+            OnUnsubscribeObsoleteRobot(ip);
+            DestroyPrefab();
+            OnRobotConnectionReset();
         }
 
         public void SwitchBaseGameObject(bool value)
@@ -188,6 +196,11 @@ namespace Project.Scripts.TrackedRobots
         private void OnToolValueUpdated(object sender, KRLInt e)
         {
             ActiveToolUpdated?.Invoke(this, e);
+        }
+
+        private void OnFirstSelectionOfRobot()
+        {
+            FirstSelectionOfRobot?.Invoke(this, EventArgs.Empty);
         }
 
         private void OnRobotConnectionReset()

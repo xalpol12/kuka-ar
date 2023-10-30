@@ -42,6 +42,11 @@ namespace Project.Scripts.ImageSystem
             downloadedImages = new HashSet<string>();
             trackedImages = new Dictionary<string, ARTrackedImage>();
 
+            trackedRobotsHandler.FirstSelectionOfRobot += (_, _) =>
+            {
+                TurnOnImageDetection();
+            };
+
             trackedRobotsHandler.RobotConnectionReset += (_, _) =>
             {
                 DeleteAllTrackedImages();
@@ -62,7 +67,8 @@ namespace Project.Scripts.ImageSystem
             imageManager.referenceLibrary = imageManager.CreateRuntimeLibrary(runtimeImageLibrary);
             imageManager.requestedMaxNumberOfMovingImages = 5; //TODO: change later
             imageManager.trackedImagePrefab = imageRecognisedPrefab;
-            imageManager.enabled = true;
+            imageManager.enabled = false;
+            DebugLogger.Instance.AddLog("Image recognition is disabled; ");
             #endif
         }
 
@@ -131,6 +137,15 @@ namespace Project.Scripts.ImageSystem
             downloadedImages.Add(image.Key);
             
             yield return null;
+        }
+
+        private void TurnOnImageDetection()
+        {
+            if (!imageManager.isActiveAndEnabled)
+            {
+                imageManager.enabled = true;
+                DebugLogger.Instance.AddLog("Image recognition has been enabled; ");
+            }
         }
 
         private void DeleteAllTrackedImages()
