@@ -7,6 +7,7 @@ using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.TrackedRobots;
 using Project.Scripts.Utils;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
@@ -49,7 +50,8 @@ namespace Project.Scripts.ImageSystem
 
             trackedRobotsHandler.RobotConnectionReset += (_, _) =>
             {
-                DeleteAllTrackedImages();
+                DebugLogger.Instance.AddLog("Received invoke from RobotConnectionReset event; ");
+                ResetARSession();
             } ;
 
             imageManager = gameObject.AddComponent<ARTrackedImageManager>();
@@ -148,9 +150,12 @@ namespace Project.Scripts.ImageSystem
             }
         }
 
-        private void DeleteAllTrackedImages()
+        private void ResetARSession()
         {
-            trackedImages.Clear();
+            // LoaderUtility.Deinitialize();
+            // SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex); // reload current scene
+            // LoaderUtility.Initialize();
+            // DebugLogger.Instance.AddLog("AR Session has been reset; ");
         }
     }
 }

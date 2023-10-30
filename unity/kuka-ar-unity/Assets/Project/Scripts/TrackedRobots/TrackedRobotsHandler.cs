@@ -206,6 +206,7 @@ namespace Project.Scripts.TrackedRobots
         private void OnRobotConnectionReset()
         {
             RobotConnectionReset?.Invoke(this, EventArgs.Empty);
+            DebugLogger.Instance.AddLog("Invoked RobotConnectionReset; ");
         }
 
         private void OnUnsubscribeObsoleteRobot(string e)
