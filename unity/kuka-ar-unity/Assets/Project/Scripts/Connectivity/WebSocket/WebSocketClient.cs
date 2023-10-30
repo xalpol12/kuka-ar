@@ -66,13 +66,11 @@ namespace Project.Scripts.Connectivity.WebSocket
             ws.OnClose += (_) =>
                 DebugLogger.Instance.AddLog($"Closed websocket with ip {serverAddress}; ");
 
-            DebugLogger.Instance.AddLog("Await ws.Connect(); ");
             await ws.Connect();
         }
 
         public void SendToWebSocketServer(string message)
         {
-            DebugLogger.Instance.AddLog($"Sent message with body: {message}; ");
             messagesToSend.Enqueue(message);
         }
 

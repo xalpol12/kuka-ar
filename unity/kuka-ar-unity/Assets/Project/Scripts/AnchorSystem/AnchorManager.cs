@@ -114,8 +114,8 @@ namespace Project.Scripts.AnchorSystem
                     RotationShift = Vector3.zero
                 };
 
-            DebugLogger.Instance.AddLog($"Found config for {robotIp} with values " +
-                                        $"pos:${configData.PositionShift} and rot: ${configData.RotationShift}");
+        // DebugLogger.Instance.AddLog($"Found config for {robotIp} with values " +
+        //                             $"pos:${configData.PositionShift} and rot: ${configData.RotationShift}");
 
             bool isCreated = false;
             while (!isCreated)
@@ -142,7 +142,6 @@ namespace Project.Scripts.AnchorSystem
             yield return null;
             #endif
 
-            DebugLogger.Instance.AddLog("Object placed; ");
         }
 
         private ARAnchor PlaceNewAnchor(Transform imageTransform, RobotData configData)
@@ -160,7 +159,6 @@ namespace Project.Scripts.AnchorSystem
                 arAnchorManager.RemoveAnchor(anchor);
             }
             trackedAnchors.Clear();
-            DebugLogger.Instance.AddLog("Deleted all anchors; ");
         }
 
         private static string ComposeWebSocketServerRequest(string robotIp, string variable)
