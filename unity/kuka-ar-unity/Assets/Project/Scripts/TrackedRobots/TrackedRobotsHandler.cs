@@ -34,7 +34,7 @@ namespace Project.Scripts.TrackedRobots
         public event EventHandler RobotConnectionReset;
         public event EventHandler<string> UnsubscribeObsoleteRobotIssued;
 
-        public string selectedRobotIP { get; private set; }
+        public string SelectedRobotIP { get; private set; }
         private TrackedRobotModel currentlyTrackedRobot;
         private Dictionary<string, List<Renderer>> objectRenderers;
 
@@ -49,26 +49,26 @@ namespace Project.Scripts.TrackedRobots
 
         public void ChangeSelectedRobot(string robotIP)
         {
-            if (robotIP == selectedRobotIP) return;
-            if (selectedRobotIP == null)
+            if (robotIP == SelectedRobotIP) return;
+            if (SelectedRobotIP == null)
             {
                 OnFirstSelectionOfRobot();
             }
             else
             {
-                CleanObsoleteRobot(selectedRobotIP);
+                CleanObsoleteRobot(SelectedRobotIP);
             }
-            selectedRobotIP = robotIP;
-            DebugLogger.Instance.AddLog($"SelectedRobotIP: {selectedRobotIP}; ");
+            SelectedRobotIP = robotIP;
+            DebugLogger.Instance.AddLog($"SelectedRobotIP: {SelectedRobotIP}; ");
             LabelOverride.Label.OverrideStatusLabel(ConnectionStatus.Connecting.ToString());
         }
 
         public void ResetConnectedRobot()
         {
-            if (selectedRobotIP != null)
+            if (SelectedRobotIP != null)
             {
-                CleanObsoleteRobot(selectedRobotIP);
-                selectedRobotIP = null;
+                CleanObsoleteRobot(SelectedRobotIP);
+                SelectedRobotIP = null;
             }
         }
 
@@ -103,7 +103,7 @@ namespace Project.Scripts.TrackedRobots
 
         public void ReceivePackageFromWebsocket(OutputWithErrors newData)
         {
-            if (newData.Values.TryGetValue(selectedRobotIP, out var value))
+            if (newData.Values.TryGetValue(SelectedRobotIP, out var value))
             {
                 UpdateTrackedPoint(value);
             }
@@ -120,7 +120,7 @@ namespace Project.Scripts.TrackedRobots
 
         public void InstantiateTrackedRobot(string ipAddress, ARAnchor anchor)
         {
-            if (ipAddress == selectedRobotIP)
+            if (ipAddress == SelectedRobotIP)
             {
                 #if !UNITY_EDITOR || !UNITY_EDITOR_WIN
                     StartCoroutine(InstantiateNewRobot(anchor));
