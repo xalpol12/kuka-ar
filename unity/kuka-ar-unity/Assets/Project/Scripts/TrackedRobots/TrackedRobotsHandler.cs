@@ -65,17 +65,17 @@ namespace Project.Scripts.TrackedRobots
 
         public void ResetConnectedRobot()
         {
-            if (SelectedRobotIP != null)
-            {
-                CleanObsoleteRobot(SelectedRobotIP);
-                SelectedRobotIP = null;
-            }
+            CleanObsoleteRobot(SelectedRobotIP);
+            OnRobotConnectionReset();
         }
 
         private void CleanObsoleteRobot(string ip)
         {
             OnUnsubscribeObsoleteRobot(ip);
             DestroyPrefab();
+            OnBaseValueUpdated(this, new KRLInt());
+            OnToolValueUpdated(this, new KRLInt());
+            OnJointsValueUpdated(this, new KRLJoints());
             OnRobotConnectionReset();
         }
 

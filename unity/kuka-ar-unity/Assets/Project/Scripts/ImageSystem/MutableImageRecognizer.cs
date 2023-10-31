@@ -64,7 +64,7 @@ namespace Project.Scripts.ImageSystem
         {
             #if !UNITY_EDITOR || !UNITY_EDITOR_WIN
             imageManager.referenceLibrary = imageManager.CreateRuntimeLibrary(runtimeImageLibrary);
-            imageManager.requestedMaxNumberOfMovingImages = MAX_NUMBER_OF_MOVING_IMAGES;
+            imageManager.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
             imageManager.trackedImagePrefab = imageRecognisedPrefab;
             imageManager.enabled = false;
             #endif
