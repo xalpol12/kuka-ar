@@ -8,6 +8,7 @@ using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Parsing.OutputJson;
 using Project.Scripts.EventSystem.Services.Menu;
+using Project.Scripts.Utils;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 
@@ -29,10 +30,11 @@ namespace Project.Scripts.TrackedRobots
         public event EventHandler<KRLJoints> ActiveJointsUpdated;
         public event EventHandler<KRLInt> ActiveBaseUpdated;
         public event EventHandler<KRLInt> ActiveToolUpdated;
-        public event EventHandler<bool> RobotConnectionStatusConnected;
+        public event EventHandler FirstSelectionOfRobot;
+        public event EventHandler RobotConnectionReset;
         public event EventHandler<string> UnsubscribeObsoleteRobotIssued;
 
-        private string selectedRobotIP;
+        public string SelectedRobotIP { get; private set; }
         private TrackedRobotModel currentlyTrackedRobot;
         private Dictionary<string, List<Renderer>> objectRenderers;
 
@@ -45,17 +47,36 @@ namespace Project.Scripts.TrackedRobots
             };
         }
 
-        public void ChangeSelectedRobotIP(string robotIP)
+        public void ChangeSelectedRobot(string robotIP)
         {
-            if (robotIP == selectedRobotIP) return;
-            if (selectedRobotIP != null)
+            if (robotIP == SelectedRobotIP) return;
+            if (SelectedRobotIP == null)
             {
-                OnUnsubscribeObsoleteRobot(selectedRobotIP);
-                DestroyPrefab();
+                OnFirstSelectionOfRobot();
             }
-            selectedRobotIP = robotIP;
+            else
+            {
+                CleanObsoleteRobot(SelectedRobotIP);
+            }
+            SelectedRobotIP = robotIP;
+            DebugLogger.Instance.AddLog($"SelectedRobotIP: {SelectedRobotIP}; ");
             LabelOverride.Label.OverrideStatusLabel(ConnectionStatus.Connecting.ToString());
-            OnRobotConnectionStatusConnected(false);
+        }
+
+        public void ResetConnectedRobot()
+        {
+            CleanObsoleteRobot(SelectedRobotIP);
+            OnRobotConnectionReset();
+        }
+
+        private void CleanObsoleteRobot(string ip)
+        {
+            OnUnsubscribeObsoleteRobot(ip);
+            DestroyPrefab();
+            OnBaseValueUpdated(this, new KRLInt());
+            OnToolValueUpdated(this, new KRLInt());
+            OnJointsValueUpdated(this, new KRLJoints());
+            OnRobotConnectionReset();
         }
 
         public void SwitchBaseGameObject(bool value)
@@ -82,7 +103,7 @@ namespace Project.Scripts.TrackedRobots
 
         public void ReceivePackageFromWebsocket(OutputWithErrors newData)
         {
-            if (newData.Values.TryGetValue(selectedRobotIP, out var value))
+            if (newData.Values.TryGetValue(SelectedRobotIP, out var value))
             {
                 UpdateTrackedPoint(value);
             }
@@ -99,7 +120,7 @@ namespace Project.Scripts.TrackedRobots
 
         public void InstantiateTrackedRobot(string ipAddress, ARAnchor anchor)
         {
-            if (ipAddress == selectedRobotIP)
+            if (ipAddress == SelectedRobotIP)
             {
                 #if !UNITY_EDITOR || !UNITY_EDITOR_WIN
                     StartCoroutine(InstantiateNewRobot(anchor));
@@ -109,6 +130,7 @@ namespace Project.Scripts.TrackedRobots
 
         private void DestroyPrefab()
         {
+            if (currentlyTrackedRobot == null) return;
             currentlyTrackedRobot.JointsValueUpdated -= OnJointsValueUpdated;
             currentlyTrackedRobot.BaseValueUpdated -= OnBaseValueUpdated;
             currentlyTrackedRobot.ToolValueUpdated -= OnToolValueUpdated;
@@ -151,7 +173,6 @@ namespace Project.Scripts.TrackedRobots
                 currentlyTrackedRobot.JointsValueUpdated += OnJointsValueUpdated;
                 currentlyTrackedRobot.BaseValueUpdated += OnBaseValueUpdated;
                 currentlyTrackedRobot.ToolValueUpdated += OnToolValueUpdated;
-                OnRobotConnectionStatusConnected(true);
         
                 isInstantiated = true;
             }
@@ -161,7 +182,7 @@ namespace Project.Scripts.TrackedRobots
         {
             currentlyTrackedRobot?.UpdateGameObjects();
         }
-        
+
         private void OnJointsValueUpdated(object sender, KRLJoints e)
         {
             ActiveJointsUpdated?.Invoke(this, e);
@@ -177,11 +198,17 @@ namespace Project.Scripts.TrackedRobots
             ActiveToolUpdated?.Invoke(this, e);
         }
 
-        private void OnRobotConnectionStatusConnected(bool e)
+        private void OnFirstSelectionOfRobot()
         {
-            RobotConnectionStatusConnected?.Invoke(this, e);
+            FirstSelectionOfRobot?.Invoke(this, EventArgs.Empty);
         }
-        
+
+        private void OnRobotConnectionReset()
+        {
+            RobotConnectionReset?.Invoke(this, EventArgs.Empty);
+            DebugLogger.Instance.AddLog("Invoked RobotConnectionReset; ");
+        }
+
         private void OnUnsubscribeObsoleteRobot(string e)
         {
             UnsubscribeObsoleteRobotIssued?.Invoke(this, e);

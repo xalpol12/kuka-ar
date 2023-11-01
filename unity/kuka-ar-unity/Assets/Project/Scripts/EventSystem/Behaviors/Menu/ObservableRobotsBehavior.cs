@@ -6,6 +6,7 @@ using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
+using Project.Scripts.TrackedRobots;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -209,7 +210,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             
             GetSticker(ipAddress, sticker);
             AdjustImageMargin(false);
-            observableRobotsController.robotsHandler.ChangeSelectedRobotIP(ipAddress);
+            observableRobotsController.robotsHandler.ChangeSelectedRobot(ipAddress);
 
             observableRobotsController.LogicService.IsAfterItemSelect = true;
             observableRobotsController.LogicService.SelectedIpAddress = ipAddress;
