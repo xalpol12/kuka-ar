@@ -119,7 +119,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
             DialogState = LogicStates.Hiding;
             AddNewRobotService.ResetSelectState = true;
             StartCoroutine(ServerInvoker.Invoker.PostRobot(content));
-            webDataStorage.IsAfterRobotSave = true;
+            webDataStorage.isAfterRobotSave = true;
         }
 
         private void ReleaseSlider(int uid)

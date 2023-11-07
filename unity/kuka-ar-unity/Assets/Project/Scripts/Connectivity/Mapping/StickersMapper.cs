@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Mapping
@@ -24,6 +26,15 @@ namespace Project.Scripts.Connectivity.Mapping
             }
 
             return dict;
+        }
+        
+        public static List<string> MapStickerToIpAddress(Dictionary<string, byte[]> stickers)
+        {
+            return stickers.Select(image => image.Key).ToList()
+                .Select(Version.Parse)
+                .OrderBy(arg => arg)
+                .Select(arg => arg.ToString())
+                .ToList();
         }
     }
 }

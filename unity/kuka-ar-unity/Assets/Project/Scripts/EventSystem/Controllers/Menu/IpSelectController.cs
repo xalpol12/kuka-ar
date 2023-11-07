@@ -1,5 +1,4 @@
 using System;
-using System.Runtime;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Http;
 using Project.Scripts.EventSystem.Enums;
@@ -75,7 +74,7 @@ namespace Project.Scripts.EventSystem.Controllers.Menu
                         break;
                 }
             }
-
+            
             uid /= GroupOffset;
             if (id != uid) return;
             showOptions = !showOptions;

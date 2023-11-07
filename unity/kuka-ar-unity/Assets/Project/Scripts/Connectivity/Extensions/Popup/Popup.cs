@@ -166,13 +166,13 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
             switch (s)
             {
                 case not null when s.Contains("GetRobots"): 
-                    WebDataStorage.Instance.Robots = new List<Robot>();
+                    WebDataStorage.Instance.robots = new List<Robot>();
                     break;
                 case not null when s.Contains("GetRobots"):
-                    WebDataStorage.Instance.ConfiguredRobots = new List<Robot>();
+                    WebDataStorage.Instance.availableRobotsNames = new List<string>();
                     break;
                 case not null when s.Contains("GetRobots"):
-                    WebDataStorage.Instance.Stickers = new Dictionary<string, Sprite>();
+                    WebDataStorage.Instance.stickers = new Dictionary<string, Sprite>();
                     break;
             }
         }

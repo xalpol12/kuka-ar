@@ -16,15 +16,59 @@ namespace Project.Scripts.Connectivity.Http
         }
 
         public const int ConnectionTimeOut = 1000;
-        public List<Robot> ConfiguredRobots { get; set; } = new();
-        public List<Robot> Robots { get; set; } = new();
-        public List<string> AvailableIps { get; set; } = new();
-        public Dictionary<string, Sprite> Stickers { get; set; } = new();
-        public List<string> CategoryNames { get; set; } = new();
-        public ConnectionStatus RobotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
-        public bool IsAfterRobotSave { get; set; } = false;
+        private const int FakeItemsNumber = 3;
+        
+        private List<string> availableIpsList;
+        private List<string> availableCategoryNamesList;
+        private List<string> availableRobotsNamesList;
+        public List<Robot> robots { get; set; } = new();
 
-        public Dictionary<string, bool> LoadingSpinner { get; set; } = new()
+        public List<string> availableRobotsNames
+        {
+            get => availableRobotsNamesList;
+            set
+            {
+                for (var i = 0; i < FakeItemsNumber; i++)
+                {
+                    value.Add("");
+                }
+
+                availableRobotsNamesList = value;
+            }
+        }
+
+        public List<string> availableIps
+        {
+            get => availableIpsList;
+            set
+            {
+                for (var i = 0; i < FakeItemsNumber; i++)
+                {
+                    value.Add("");
+                }
+
+                availableIpsList = value;
+            }
+        }
+        public Dictionary<string, Sprite> stickers { get; set; } = new();
+
+        public List<string> availableCategoryNames
+        {
+            get => availableCategoryNamesList;
+            set
+            {
+                for (var i = 0; i < FakeItemsNumber; i++)
+                {
+                    value.Add("");
+                }
+
+                availableCategoryNamesList = value;
+            }
+        }
+        public ConnectionStatus robotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
+        public bool isAfterRobotSave { get; set; } = false;
+
+        public Dictionary<string, bool> loadingSpinner { get; set; } = new()
         {
             { "GetRobots", false },
             { "GetConfigured", false },
