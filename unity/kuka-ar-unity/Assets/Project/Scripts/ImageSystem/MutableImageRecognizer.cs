@@ -7,6 +7,7 @@ using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.TrackedRobots;
 using Project.Scripts.Utils;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
@@ -16,53 +17,56 @@ namespace Project.Scripts.ImageSystem
     public class MutableImageRecognizer : MonoBehaviour
     {
         public static MutableImageRecognizer Instance;
-        
+
+        private const int MaxNumberOfMovingImages = 5;
+
         [SerializeField] private XRReferenceImageLibrary runtimeImageLibrary;
         [SerializeField] private GameObject imageRecognisedPrefab;
         [SerializeField] private TrackedRobotsHandler trackedRobotsHandler;
-        
+
         private AnchorManager anchorManager;
         private ARTrackedImageManager imageManager;
-        private HashSet<string> downloadedImages;
-        private Dictionary<string, ARTrackedImage> trackedImages;
+        private Dictionary<string, Texture2D> downloadedTextures;
 
         private HttpClientWrapper httpClientWrapper;
 
         private void Awake()
         {
             Instance = this;
-
             anchorManager = gameObject.GetComponent<AnchorManager>();
         }
 
         private void Start()
         {
             httpClientWrapper = HttpClientWrapper.Instance;
-            
-            downloadedImages = new HashSet<string>();
-            trackedImages = new Dictionary<string, ARTrackedImage>();
 
-            trackedRobotsHandler.RobotConnectionStatusConnected += ((_, b) =>
+            downloadedTextures = new();
+
+            trackedRobotsHandler.FirstSelectionOfRobot += (_, _) => { TurnOnImageDetection(); };
+
+            trackedRobotsHandler.RobotConnectionReset += (_, _) =>
             {
-                if (!b) DeleteAllTrackedImages();
-            }) ;
+                DebugLogger.Instance.AddLog(
+                    "Received invoke from RobotConnectionReset event; "); // TODO: Reset on 'Reload' btn click
+                ResetImageLibraryToCleanState();
+            };
 
             imageManager = gameObject.AddComponent<ARTrackedImageManager>();
             ConfigureMutableLibrary();
             imageManager.trackedImagesChanged += OnChange;
-            
-            DebugLogger.Instance.AddLog(imageManager.subsystem.subsystemDescriptor.supportsMutableLibrary ? 
-                "Device supports mutable tracked image library; " : 
-                "Device does not support mutable tracked image library; ");
+
+            DebugLogger.Instance.AddLog(imageManager.subsystem.subsystemDescriptor.supportsMutableLibrary
+                ? "Device supports mutable tracked image library; "
+                : "Device does not support mutable tracked image library; ");
         }
 
         private void ConfigureMutableLibrary()
         {
             #if !UNITY_EDITOR || !UNITY_EDITOR_WIN
             imageManager.referenceLibrary = imageManager.CreateRuntimeLibrary(runtimeImageLibrary);
-            imageManager.requestedMaxNumberOfMovingImages = 5; //TODO: change later
+            imageManager.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
             imageManager.trackedImagePrefab = imageRecognisedPrefab;
-            imageManager.enabled = true;
+            imageManager.enabled = false;
             #endif
         }
 
@@ -70,7 +74,7 @@ namespace Project.Scripts.ImageSystem
         {
             foreach (var newImage in eventArgs.added)
             {
-                trackedImages.Add(newImage.referenceImage.name, newImage);
+                if (trackedRobotsHandler.SelectedRobotIP != newImage.referenceImage.name) return;
                 StartCoroutine(anchorManager.StartNewAnchorTracking(newImage));
             }
         }
@@ -84,35 +88,35 @@ namespace Project.Scripts.ImageSystem
         private IEnumerator LoadTargetsFromServer()
         {
             var newTargetsTask = httpClientWrapper.ExecuteRequest(new GetTargetImagesRequest());
-        
-            while (!newTargetsTask.IsCompleted)
-            {
-                yield return null;
-            }
-            
+
+            yield return new WaitUntil(() => newTargetsTask.IsCompleted);
+
             SetNewTargets(newTargetsTask.Result);
         }
-        
+
         private void SetNewTargets(Dictionary<string, byte[]> targets)
         {
-            var textureDict = new Dictionary<string, Texture2D>();
-        
             foreach (var entry in targets)
             {
-                if (downloadedImages.Contains(entry.Key))
+                if (downloadedTextures.ContainsKey(entry.Key))
                 {
-                    textureDict.Remove(entry.Key);
+                    targets.Remove(entry.Key);
                 }
                 else
                 {
                     var texture = new Texture2D(512, 512);
                     texture.LoadImage(entry.Value);
                     texture.Apply();
-                    textureDict.Add(entry.Key, texture);
+                    downloadedTextures.Add(entry.Key, texture);
                 }
             }
-        
-            foreach (var entry in textureDict)
+
+            InitializeAddingImagesToTrackingLibrary();
+        }
+
+        private void InitializeAddingImagesToTrackingLibrary()
+        {
+            foreach (var entry in downloadedTextures)
             {
                 StartCoroutine(AddImageToTrackingLibrary(entry));
             }
@@ -122,19 +126,26 @@ namespace Project.Scripts.ImageSystem
         {
             var mutableLib = imageManager.referenceLibrary as MutableRuntimeReferenceImageLibrary;
             var jobHandler = mutableLib.ScheduleAddImageWithValidationJob(image.Value, image.Key, 0.1f);
-            while (jobHandler.status == AddReferenceImageJobStatus.Pending)
-            {
-                yield return null;
-            }
 
-            downloadedImages.Add(image.Key);
-            
-            yield return null;
+            yield return new WaitWhile(() =>
+                jobHandler.status == AddReferenceImageJobStatus.Pending);
         }
 
-        private void DeleteAllTrackedImages()
+        private void TurnOnImageDetection()
         {
-            trackedImages.Clear();
+            if (!imageManager.isActiveAndEnabled)
+            {
+                imageManager.enabled = true;
+                DebugLogger.Instance.AddLog("Image recognition has been enabled; ");
+            }
         }
+
+        private void ResetImageLibraryToCleanState()
+        {
+            imageManager.referenceLibrary = runtimeImageLibrary;
+            imageManager.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
+            InitializeAddingImagesToTrackingLibrary();
+        }
+
     }
 }

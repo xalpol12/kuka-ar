@@ -20,7 +20,7 @@ namespace Project.Scripts.AnchorSystem
         [SerializeField] private TrackedRobotsHandler trackedRobotsHandler;
     
         private Dictionary<string, ARAnchor> trackedAnchors;
-        private Dictionary<string, RobotData> robotConfigData; // contains IP : config pairs
+        private Dictionary<string, RobotData> robotConfigDataByIp; // contains IP : config pairs
 
         private HttpClientWrapper httpClientWrapper;
         private Dictionary<string, RobotData> cachedRobotConfig;
@@ -33,28 +33,22 @@ namespace Project.Scripts.AnchorSystem
         private void Start()
         {
             trackedAnchors = new Dictionary<string, ARAnchor>();
-            robotConfigData = new Dictionary<string, RobotData>();
+            robotConfigDataByIp = new Dictionary<string, RobotData>();
             cachedRobotConfig = new Dictionary<string, RobotData>();
             
             httpClientWrapper = HttpClientWrapper.Instance;
 
-            trackedRobotsHandler.RobotConnectionStatusConnected += ((_, b) =>
+            trackedRobotsHandler.RobotConnectionReset += (_, _) =>
             {
-                if (!b) DeleteAllTrackedAnchors();
-            });
+                DeleteAllTrackedAnchors();
+            };
         }
 
         public IEnumerator LoadRequiredData()
         {
             if (cachedRobotConfig.Count == 0)
             {
-                StartCoroutine(ExecuteLoadingConfigData());
-
-                while (cachedRobotConfig.Count == 0)
-                {
-                    yield return null;
-                }
-
+                yield return StartCoroutine(ExecuteLoadingConfigData());
                 StartCoroutine(ExecuteLoadingSavedRobots());
             }
             else
@@ -67,10 +61,7 @@ namespace Project.Scripts.AnchorSystem
         {
             var newConfigDataTask = httpClientWrapper.ExecuteRequest(new GetRobotConfigDataRequest());
 
-            while (!newConfigDataTask.IsCompleted)
-            {
-                yield return null;
-            }
+            yield return new WaitUntil(() => newConfigDataTask.IsCompleted);
 
             foreach (var category in newConfigDataTask.Result)
             {
@@ -85,17 +76,14 @@ namespace Project.Scripts.AnchorSystem
         {
             var newSavedRobotsTask = httpClientWrapper.ExecuteRequest(new GetSavedRobotsRequest());
 
-            while (!newSavedRobotsTask.IsCompleted)
-            {
-                yield return null;
-            }
+            yield return new WaitUntil(() => newSavedRobotsTask.IsCompleted);
 
             foreach (var robot in newSavedRobotsTask.Result)
             {
-                if (!robotConfigData.ContainsKey(robot.IpAddress))
+                if (!robotConfigDataByIp.ContainsKey(robot.IpAddress))
                 {
                     cachedRobotConfig.TryGetValue(robot.Name, out var robotData);
-                    robotConfigData.Add(robot.IpAddress, robotData);
+                    robotConfigDataByIp.Add(robot.IpAddress, robotData);
                 }
             }
         }
@@ -105,7 +93,7 @@ namespace Project.Scripts.AnchorSystem
             #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
             var imageTransform = foundImage.transform;
             var robotIp = foundImage.referenceImage.name;
-            var configData = robotConfigData.TryGetValue(robotIp, out var value)
+            var configData = robotConfigDataByIp.TryGetValue(robotIp, out var value)
                 ? value
                 : new RobotData()
                 {
@@ -113,9 +101,6 @@ namespace Project.Scripts.AnchorSystem
                     PositionShift = Vector3.zero,
                     RotationShift = Vector3.zero
                 };
-
-        // DebugLogger.Instance.AddLog($"Found config for {robotIp} with values " +
-        //                             $"pos:${configData.PositionShift} and rot: ${configData.RotationShift}");
 
             bool isCreated = false;
             while (!isCreated)
