@@ -58,6 +58,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             serverError.transform.Find("TryAgain").GetComponent<Button>().onClick.AddListener(() =>
                 {
                     StartCoroutine(ServerInvoker.Invoker.GetConfiguredRobots());
+                    StartCoroutine(ServerInvoker.Invoker.GetStickers());
                     StartCoroutine(HandleDataRefresh());
                 });
         }
@@ -89,7 +90,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private void InitListLogic()
         {
-            if (selectController.DataStorage.availableRobotsNames.Count == 0)
+            if (selectController.DataStorage.availableIps.Count == 0)
             {
                 ServerFailure(true);
                 return;
@@ -166,6 +167,11 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             gridItem.SetActive(!state);
             buttonText.text = state ? "Close" : "Save";
             serverError.SetActive(state);
+
+            foreach (var ip in allIpAddresses)
+            {
+                Destroy(ip);
+            }
         }
 
         private IEnumerator HandleDataRefresh()
@@ -184,7 +190,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             selectController.HexSpinner.SetActive(false);
             serverError.SetActive(true);
             
-            if (selectController.DataStorage.availableRobotsNames.Count == 0) yield break;
+            if (selectController.DataStorage.availableIps.Count == 0) yield break;
             ServerFailure(false);
             InitListLogic();
         }
