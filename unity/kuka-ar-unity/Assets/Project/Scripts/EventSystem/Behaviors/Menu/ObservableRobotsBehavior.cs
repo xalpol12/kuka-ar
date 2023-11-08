@@ -295,7 +295,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             observableRobotsController.Spinner.SetActive(true);
             action();
             
-            while (webStore.loadingSpinner.Any(spinner => spinner.Value))
+            while (webStore.loadingSpinner.Count > 0)
             {
                 if (time > webStore.animationTimeout || !performExecution) break;
                 time += Time.deltaTime;

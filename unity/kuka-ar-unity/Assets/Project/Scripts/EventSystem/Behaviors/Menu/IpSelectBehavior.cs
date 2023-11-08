@@ -174,7 +174,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             
             serverError.SetActive(false);
             selectController.HexSpinner.SetActive(true);
-            while (selectController.DataStorage.loadingSpinner.Any(spinner => spinner.Value))
+            while (selectController.DataStorage.loadingSpinner.Count > 0)
             {
                 if (time > selectController.DataStorage.animationTimeout) break;
                 time += Time.deltaTime;

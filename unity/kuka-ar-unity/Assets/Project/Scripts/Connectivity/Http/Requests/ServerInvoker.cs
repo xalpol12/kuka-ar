@@ -40,7 +40,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
         
         public IEnumerator GetRobots(Action action = null)
         {
-            storage.loadingSpinner["GetRobots"] = true;
+            storage.loadingSpinner.Add("rob");
             var newRobotsTask = http.ExecuteRequest(new GetSavedRobotsRequest());
             while (!newRobotsTask.IsCompleted)
             {
@@ -49,13 +49,13 @@ namespace Project.Scripts.Connectivity.Http.Requests
             
             popup.Try(() => storage.robots = newRobotsTask.Result);
             action?.Invoke();
-            storage.loadingSpinner["GetRobots"] = false;
+            storage.loadingSpinner.Remove("rob");
             yield return null;
         }
 
         public IEnumerator GetConfiguredRobots()
         {
-            storage.loadingSpinner["GetConfigured"] = true;
+            storage.loadingSpinner.Add("cat");
             var newConfiguredRobotsTask = http.ExecuteRequest(new GetRobotConfigDataRequest());
 
             while (!newConfiguredRobotsTask.IsCompleted)
@@ -69,13 +69,13 @@ namespace Project.Scripts.Connectivity.Http.Requests
                 storage.availableRobotsNames = config.Select(r => r.Name).ToList();
                 storage.availableCategoryNames = ConfiguredRobotsMapper.MapStringsToUniqueNames(config);
             });
-            storage.loadingSpinner["GetConfigured"] = false;
+            storage.loadingSpinner.Remove("cat");
             yield return null;
         }
 
         public IEnumerator GetStickers(Action action = null)
         {
-            storage.loadingSpinner["GetStickers"] = true;
+            storage.loadingSpinner.Add("img");
             var newStickersTask = http.ExecuteRequest(new GetTargetImagesRequest());
 
             while (!newStickersTask.IsCompleted)
@@ -90,7 +90,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
                 storage.availableIps = StickersMapper.MapStickerToIpAddress(stickers);
             });
             action?.Invoke();
-            storage.loadingSpinner["GetStickers"] = false;
+            storage.loadingSpinner.Remove("img");
             yield return null;
         }
 
@@ -109,7 +109,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
 
         public IEnumerator PostRobot(Robot? robot)
         {
-            storage.loadingSpinner["PostNewRobot"] = true;
+            storage.loadingSpinner.Add("post");
             StartCoroutine(GetRobots());
             if (robot is not null)
             {
@@ -137,13 +137,13 @@ namespace Project.Scripts.Connectivity.Http.Requests
                 }, robot.Value, RequestType.Post);
             }
             
-            storage.loadingSpinner["PostNewRobot"] = false;
+            storage.loadingSpinner.Remove("post");
             yield return null;
         }
 
         private IEnumerator UpdateRobot(Robot? robot)
         {
-            storage.loadingSpinner["UpdateRobot"] = true;
+            storage.loadingSpinner.Add("put");
             if (robot is not null)
             {
                 var status = http.ExecuteRequest(new UpdateRobotRequest(robot.Value));
@@ -162,7 +162,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
                     }
                 }, robot.Value, RequestType.Put);
             }
-            storage.loadingSpinner["UpdateRobot"] = false;
+            storage.loadingSpinner.Remove("put");
         }
     }
 }

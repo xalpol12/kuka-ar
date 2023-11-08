@@ -18,9 +18,9 @@ namespace Project.Scripts.Connectivity.Http
         public const int ConnectionTimeOut = 1000;
         private const int FakeItemsNumber = 3;
         
-        private List<string> availableIpsList;
-        private List<string> availableCategoryNamesList;
-        private List<string> availableRobotsNamesList;
+        private List<string> availableIpsList = new();
+        private List<string> availableCategoryNamesList = new();
+        private List<string> availableRobotsNamesList = new();
         public List<Robot> robots { get; set; } = new();
 
         public List<string> availableRobotsNames
@@ -68,13 +68,6 @@ namespace Project.Scripts.Connectivity.Http
         public ConnectionStatus robotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
         public bool isAfterRobotSave { get; set; }
 
-        public Dictionary<string, bool> loadingSpinner { get; } = new()
-        {
-            { "GetRobots", false },
-            { "GetConfigured", false },
-            { "GetStickers", false },
-            { "PostNewRobot", false },
-            { "UpdateRobot", false },
-        };
+        public HashSet<string> loadingSpinner { get; } = new();
     }
 }
