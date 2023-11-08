@@ -66,9 +66,9 @@ namespace Project.Scripts.Connectivity.Http
             }
         }
         public ConnectionStatus robotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
-        public bool isAfterRobotSave { get; set; } = false;
+        public bool isAfterRobotSave { get; set; }
 
-        public Dictionary<string, bool> loadingSpinner { get; set; } = new()
+        public Dictionary<string, bool> loadingSpinner { get; } = new()
         {
             { "GetRobots", false },
             { "GetConfigured", false },

@@ -66,7 +66,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         {
             if (selectController.ShowOptionsController == LogicStates.Running)
             {
-                StartCoroutine(UpdateListData());
+                UpdateListData();
                 StartCoroutine(ShowIpSelectDialog());
                 if (selectController.AddNewRobotService.ResetSelectState)
                 {
@@ -153,12 +153,11 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             selectController.AddNewRobotService.IsSelectDialogOpen = isDialogOpen;
         }
 
-        private IEnumerator UpdateListData()
+        private void UpdateListData()
         {
             foreach (var item in allIpAddresses)
             {
                 item.SetActive(item.name.Contains(selectController.ElementClicked.ToString()));
-                yield return null;
             }
         }
 

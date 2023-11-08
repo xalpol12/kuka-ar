@@ -95,6 +95,16 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
                         if (HasDuplicates()) return;
                         break;
                     }
+                    case FormatException:
+
+                        content = new PopupContent
+                        {
+                            Header = "Invalid sticker name",
+                            Message = "One of the stickers names on the server side is invalid",
+                            Icon = watcher.AddedFailed,
+                        };
+                        if (HasDuplicates()) return;
+                        break;
                     case HttpRequestException:
                         try
                         {

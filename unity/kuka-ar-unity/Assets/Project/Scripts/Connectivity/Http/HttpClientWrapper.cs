@@ -1,7 +1,6 @@
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Project.Scripts.Connectivity.WebSocket;
 using UnityEngine;
 
 namespace Project.Scripts.Connectivity.Http
@@ -11,14 +10,14 @@ namespace Project.Scripts.Connectivity.Http
         private HttpClient httpClient;
         public static HttpClientWrapper Instance;
 
-        private string baseAddress;
-        public string BaseAddress
+        private string baseLocalAddress;
+        public string baseAddress
         {
-            get => baseAddress;
+            get => baseLocalAddress;
             set
             {
-                baseAddress = value;
-                httpClient.BaseAddress = new Uri($"http://{baseAddress}:8080/kuka-variables");
+                baseLocalAddress = value;
+                httpClient.BaseAddress = new Uri($"http://{baseLocalAddress}:8080/kuka-variables");
             }
         }
 

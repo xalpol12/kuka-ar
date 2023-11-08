@@ -17,8 +17,6 @@ namespace Project.Scripts.Connectivity.Http.Requests
         
         private HttpClientWrapper http;
         private WebDataStorage storage;
-        private ConfiguredRobotsMapper configuredRobotsMapper;
-        private StickersMapper stickersMapper;
         private Popup popup;
         
         private void Awake()
@@ -30,8 +28,6 @@ namespace Project.Scripts.Connectivity.Http.Requests
         {
             http = HttpClientWrapper.Instance;
             storage = WebDataStorage.Instance;
-            configuredRobotsMapper = ConfiguredRobotsMapper.Instance;
-            stickersMapper = StickersMapper.Instance;
             popup = Popup.Window;
         }
 
@@ -145,7 +141,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
             yield return null;
         }
 
-        public IEnumerator UpdateRobot(Robot? robot)
+        private IEnumerator UpdateRobot(Robot? robot)
         {
             storage.loadingSpinner["UpdateRobot"] = true;
             if (robot is not null)

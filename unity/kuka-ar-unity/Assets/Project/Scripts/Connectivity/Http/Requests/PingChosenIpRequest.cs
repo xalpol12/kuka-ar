@@ -9,7 +9,6 @@ namespace Project.Scripts.Connectivity.Http.Requests
 {
     public class PingChosenIpRequest : IHttpRequest<bool>
     {
-        private readonly WebDataStorage storage = WebDataStorage.Instance;
         private readonly string ip;
 
         public PingChosenIpRequest(string ip)

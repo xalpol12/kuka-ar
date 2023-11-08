@@ -114,7 +114,7 @@ namespace Project.Scripts.EventSystem.Controllers
         {
             if (string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp"))) return;
             var cachedAddress = PlayerPrefs.GetString("serverIp");
-            HttpClientWrapper.Instance.BaseAddress = cachedAddress;
+            HttpClientWrapper.Instance.baseAddress = cachedAddress;
             WebSocketClient.Instance.ConnectToWebsocket($"ws://{cachedAddress}:8080/kuka-variables");
         }
 
@@ -178,7 +178,7 @@ namespace Project.Scripts.EventSystem.Controllers
             }
             
             WebSocketClient.Instance.ConnectToWebsocket(
-                $"ws://{HttpClientWrapper.Instance.BaseAddress}:8080/kuka-variables");
+                $"ws://{HttpClientWrapper.Instance.baseAddress}:8080/kuka-variables");
         }
 
         private void GoToMainScreen(int uid)
