@@ -430,7 +430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AnchorPrefab: {fileID: 3078670861717199406, guid: b176652f8b4bc2545a29e785e32e51a5,
+  m_AnchorPrefab: {fileID: 679529832086352152, guid: 5560b3e0b354835419c8a2f9897ac256,
     type: 3}
 --- !u!114 &94363252
 MonoBehaviour:
@@ -1616,7 +1616,7 @@ PrefabInstance:
         type: 3}
       propertyPath: prefab
       value: 
-      objectReference: {fileID: 5190814496012641106, guid: 48d17e8e514f82148944172f687eeb50,
+      objectReference: {fileID: 679529832086352152, guid: 48d17e8e514f82148944172f687eeb50,
         type: 3}
     - target: {fileID: 8110452565766130815, guid: 4e2223c16e3d26043b3c8b6009b6932b,
         type: 3}

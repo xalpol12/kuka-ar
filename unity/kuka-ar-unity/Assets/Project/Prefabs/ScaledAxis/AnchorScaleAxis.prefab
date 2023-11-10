@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1430491272858938190}
   m_Layer: 0
-  m_Name: ScaleAxis
+  m_Name: AnchorScaleAxis
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,7 +94,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b3782a26c93a13c4e9cb6456266c715c, type: 2}
+  - {fileID: 2100000, guid: 32421e2a1cb0a5e4fbfc36d06d26e190, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -309,7 +309,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a845b84015de2c541a55ee16c8634ddd, type: 2}
+  - {fileID: 2100000, guid: 5850284cee8e97d4f86dd27f41cd538c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -416,7 +416,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5a75ec06235e3e54293315913bcd80de, type: 2}
+  - {fileID: 2100000, guid: dc5903f303ffc9d4683194b10117b181, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
