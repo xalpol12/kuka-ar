@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Http.Requests;
-using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
 using Project.Scripts.EventSystem.Extensions;
@@ -21,7 +20,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private GameObject grid;
         private GameObject gridItem;
         private GameObject serverError;
-
+        
         private TMP_Text buttonText;
         private TMP_Text chosenIpText;
         private TMP_Text chosenNameText;
@@ -45,9 +44,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                 .transform.Find("SaveCloseButton").GetComponent<TMP_Text>();
             chosenIpText = parent.Find("IpAddress").GetComponent<RectTransform>().gameObject.transform
                 .Find("Label").GetComponent<TMP_Text>();
-            chosenNameText = parent.Find("ChosenCategory").GetComponent<RectTransform>().gameObject.transform
+            chosenCategoryText = parent.Find("ChosenCategory").GetComponent<RectTransform>().gameObject.transform
                 .Find("CategoryLabel").GetComponent<TMP_Text>();
-            chosenCategoryText = parent.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
+            chosenNameText = parent.Find("RobotName").GetComponent<RectTransform>().gameObject.transform
                 .Find("NameLabel").GetComponent<TMP_Text>();
 
             allIpAddresses = new List<GameObject>();
@@ -59,6 +58,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             serverError.transform.Find("TryAgain").GetComponent<Button>().onClick.AddListener(() =>
                 {
                     StartCoroutine(ServerInvoker.Invoker.GetConfiguredRobots());
+                    StartCoroutine(ServerInvoker.Invoker.GetStickers());
                     StartCoroutine(HandleDataRefresh());
                 });
         }
@@ -67,16 +67,19 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         {
             if (selectController.ShowOptionsController == LogicStates.Running)
             {
-                StartCoroutine(UpdateListData());
+                UpdateListData();
                 StartCoroutine(ShowIpSelectDialog());
                 if (selectController.AddNewRobotService.ResetSelectState)
                 {
                     StartCoroutine(ResetStates());
                 }
+
+                selectController.ShowOptionsController = LogicStates.Waiting;
             }
             else if (selectController.ShowOptionsController == LogicStates.Hiding)
             {
                 StartCoroutine(HideIpSelectDialog());
+                selectController.ShowOptionsController = LogicStates.Waiting;
             }
 
             if (!Input.GetKey(KeyCode.Escape) || !isDialogOpen) return;
@@ -87,52 +90,31 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private void InitListLogic()
         {
-            if (selectController.DataStorage.ConfiguredRobots.Count == 0)
+            if (selectController.DataStorage.availableIps.Count == 0)
             {
                 ServerFailure(true);
                 return;
             }
-        
-            gridItem.transform.Find("RobotIp").GetComponent<TMP_Text>().text =
-                selectController.DataStorage.ConfiguredRobots[0].IpAddress;
-            gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
+            
+            foreach (var (ip, i) in selectController.DataStorage.availableIps.WithIndex())
             {
-                selectController.StylingService.MarkAsUnselected(allIpAddresses);
-                OnIpSelect(gridItem.transform.GetSiblingIndex());
-                gridItem.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
-            });
-            allIpAddresses.Add(gridItem);
+                if (ip == selectController.DataStorage.availableIps.First())
+                {
+                    MakeListEntry(ip, $"{ButtonType.IpAddress}-{i}", gridItem);
+                    continue;
+                }
 
-            var entries =
-                selectController.DataStorage.ConfiguredRobots.Count > selectController.DataStorage.Stickers.Count
-                    ? selectController.DataStorage.ConfiguredRobots.Count
-                    : selectController.DataStorage.Stickers.Count;
-        
-            for (var i = 1; i < entries + 2; i++)
+                MakeListEntry(ip, $"{ButtonType.IpAddress}-{i}");
+            }
+
+            foreach (var (category, i) in selectController.DataStorage.availableCategoryNames.WithIndex())
             {
-                var newIpAddress = Instantiate(gridItem, grid.transform, false);
-                if (i > selectController.DataStorage.ConfiguredRobots.Count - 1)
-                {
-                    newIpAddress.transform.GetComponent<Image>().color = Color.clear;
-                }
-                else
-                {
-                    newIpAddress.transform.Find("RobotIp").GetComponent<TMP_Text>().text =
-                        selectController.DataStorage.ConfiguredRobots[i].IpAddress;
-                }
-            
-                newIpAddress.transform.GetComponent<Button>().onClick.AddListener(() =>
-                {
-                    selectController.StylingService.MarkAsUnselected(allIpAddresses);
-                    if (gridItem.transform.GetSiblingIndex() > selectController.DataStorage.ConfiguredRobots.Count + 1)
-                    {
-                        return;
-                    }
-                    OnIpSelect(newIpAddress.transform.GetSiblingIndex() - 1);
-                    newIpAddress.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
-                });
-            
-                allIpAddresses.Add(newIpAddress);
+                MakeListEntry(category, $"{ButtonType.Category}-{i}");
+            }
+
+            foreach (var (robot, i) in selectController.DataStorage.availableRobotsNames.WithIndex())
+            {
+                MakeListEntry(robot, $"{ButtonType.RobotName}-{i}");
             }
         }
 
@@ -140,121 +122,43 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         {
             var translation = Vector3.right * (Time.deltaTime * selectController.TransformFactor);
             var newPose = selectController.ipSelector.transform.position + translation;
-        
-            if (newPose.x > selectController.PositioningService.bestFitPosition.x)
+            while (newPose.x < selectController.PositioningService.bestFitPosition.x)
             {
-                var finalPose = new Vector3(selectController.PositioningService.bestFitPosition.x, newPose.y);
-
-                isDialogOpen = true;
-                selectController.AddNewRobotService.IsSelectDialogOpen = isDialogOpen;
-                selectController.ipSelector.transform.position = finalPose;
-                selectController.ShowOptionsController = LogicStates.Waiting;
-                yield break;
+                selectController.ipSelector.transform.Translate(translation);
+                translation = Vector3.right * (Time.deltaTime * selectController.TransformFactor);
+                newPose = selectController.ipSelector.transform.position + translation;
+                
+                yield return null;
             }
-        
-            selectController.ipSelector.transform.Translate(translation);
-            yield return null;
+            isDialogOpen = true;
+            selectController.AddNewRobotService.IsSelectDialogOpen = isDialogOpen;
+            selectController.ipSelector.transform.position = 
+                new Vector3(selectController.PositioningService.bestFitPosition.x, newPose.y);
+            selectController.ShowOptionsController = LogicStates.Waiting;
         }
 
         private IEnumerator HideIpSelectDialog()
         {
             var translation = Vector3.left * (Time.deltaTime * selectController.TransformFactor);
             var newPose = selectController.ipSelector.transform.position + translation;
-        
-            if (newPose.x < selectIpHomePosition.x)
+            
+            while (newPose.x > selectIpHomePosition.x)
             {
-                isDialogOpen = false;
-                selectController.AddNewRobotService.IsSelectDialogOpen = isDialogOpen;
-                selectController.ShowOptionsController = LogicStates.Waiting;
-                yield break;
-            }
-        
-            selectController.ipSelector.transform.Translate(translation);
-            yield return null;
-        }
-
-        private void OnIpSelect(int index)
-        {
-            var http = new Robot();
-            if (index < selectController.DataStorage.ConfiguredRobots.Count)
-            {
-                http = selectController.DataStorage.ConfiguredRobots[index];
-            }
-
-            var mod = index;
-            switch (selectController.ElementClicked)
-            {
-                case ButtonType.IpAddress:
-                    mod  %= selectController.DataStorage.AvailableIps.Count;
-                    chosenIpText.text = selectController.DataStorage.AvailableIps[mod];
-                    break;
-                case ButtonType.Category:
-                {
-                    mod %= selectController.DataStorage.CategoryNames.Count;
-                    chosenNameText.text = selectController.DataStorage.CategoryNames[mod];
-                    break;
-                }
-                case ButtonType.RobotName:
-                    chosenCategoryText.text = http.Name;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        private IEnumerator UpdateListData()
-        {
-            if (selectController.PrevElementClicked != selectController.ElementClicked)
-            {
-                selectController.StylingService.MarkAsUnselected(allIpAddresses);
+                selectController.ipSelector.transform.Translate(translation);
+                translation = Vector3.left * (Time.deltaTime * selectController.TransformFactor);
+                newPose = selectController.ipSelector.transform.position + translation;
+                
                 yield return null;
             }
+            isDialogOpen = false;
+            selectController.AddNewRobotService.IsSelectDialogOpen = isDialogOpen;
+        }
 
-            foreach (var (item, index) in allIpAddresses.WithIndex())
+        private void UpdateListData()
+        {
+            foreach (var item in allIpAddresses)
             {
-                string temp;
-                var currentText = item.transform.Find("RobotIp").GetComponent<TMP_Text>().text;
-                if (currentText == chosenIpText.text || currentText == chosenNameText.text ||
-                    currentText == chosenCategoryText.text)
-                {
-                    item.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
-                }
-                if ((selectController.ElementClicked == ButtonType.Category &&
-                    index > selectController.DataStorage.CategoryNames.Count - 1) || 
-                    (selectController.ElementClicked == ButtonType.IpAddress &&
-                     index > selectController.DataStorage.AvailableIps.Count - 1))
-                {
-                    temp = null;
-                    yield return null;
-                }
-                else
-                {
-                    if (index > selectController.DataStorage.ConfiguredRobots.Count - 1)
-                    {
-                        temp = "";
-                    }
-                    else
-                    {
-                        temp = selectController.ElementClicked switch
-                        {
-                            ButtonType.IpAddress => selectController.DataStorage.AvailableIps[index],
-                            ButtonType.Category => selectController.DataStorage.CategoryNames[index],
-                            ButtonType.RobotName => selectController.DataStorage.ConfiguredRobots[index].Name,
-                            _ => throw new ArgumentOutOfRangeException()
-                        };
-                    }
-                }
-
-                if (temp == null)
-                {
-                    item.gameObject.SetActive(false);
-                }
-                else
-                {
-                    item.gameObject.SetActive(true);
-                    item.transform.Find("RobotIp").GetComponent<TMP_Text>().text = temp;
-                }
-                yield return null;
+                item.SetActive(item.name.Contains(selectController.ElementClicked.ToString()));
             }
         }
 
@@ -263,6 +167,11 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             gridItem.SetActive(!state);
             buttonText.text = state ? "Close" : "Save";
             serverError.SetActive(state);
+
+            foreach (var ip in allIpAddresses)
+            {
+                Destroy(ip);
+            }
         }
 
         private IEnumerator HandleDataRefresh()
@@ -271,7 +180,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             
             serverError.SetActive(false);
             selectController.HexSpinner.SetActive(true);
-            while (selectController.DataStorage.LoadingSpinner.Any(spinner => spinner.Value))
+            while (selectController.DataStorage.loadingSpinner.Count > 0)
             {
                 if (time > selectController.DataStorage.animationTimeout) break;
                 time += Time.deltaTime;
@@ -281,7 +190,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             selectController.HexSpinner.SetActive(false);
             serverError.SetActive(true);
             
-            if (selectController.DataStorage.ConfiguredRobots.Count == 0) yield break;
+            if (selectController.DataStorage.availableIps.Count == 0) yield break;
             ServerFailure(false);
             InitListLogic();
         }
@@ -291,6 +200,46 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             selectController.StylingService.MarkAsUnselected(allIpAddresses);
             selectController.AddNewRobotService.ResetSelectState = false;
             yield return null;
+        }
+
+        private void MakeListEntry(string content, string alias, GameObject obj = null)
+        {
+            var newItem = obj ? obj : Instantiate(gridItem, grid.transform, false);
+            newItem.transform.Find("RobotIp").GetComponent<TMP_Text>().text = content;
+            newItem.name = alias;
+
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                newItem.transform.GetComponent<Image>().color = Color.clear;
+            }
+            else
+            {
+                newItem.transform.GetComponent<Button>().onClick.AddListener(() =>
+                {
+                    selectController.StylingService.MarkAsUnselectedWithCondition(allIpAddresses, 
+                        selectController.ElementClicked);
+                    switch (selectController.ElementClicked)
+                    {
+                        case ButtonType.IpAddress:
+                            chosenIpText.text = content;
+                            break;
+                        case ButtonType.Category:
+                        {
+                            chosenCategoryText.text = content;
+                            break;
+                        }
+                        case ButtonType.RobotName:
+                            chosenNameText.text = content;
+                            break;
+                        default:
+                            throw new NotSupportedException();
+                    }
+
+                    newItem.transform.GetComponent<Image>().sprite = selectController.StylingService.SelectedSprite;
+                });
+            }
+            
+            allIpAddresses.Add(newItem);
         }
     }
 }

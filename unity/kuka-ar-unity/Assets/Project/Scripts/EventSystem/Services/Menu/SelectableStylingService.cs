@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Project.Scripts.Connectivity.Enums;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,6 +49,22 @@ namespace Project.Scripts.EventSystem.Services.Menu
             {
                 item.transform.GetComponent<Image>().sprite = noFrame ? DefaultNoFrame : defaultSelectableSprite;
             }
+        }
+
+        public void MarkAsUnselectedWithCondition(IEnumerable<GameObject> items, object condition)
+        {
+            if (condition is ButtonType)
+            {
+                foreach (var item in items.Where(item => item.name.Contains(condition.ToString())))
+                {
+                    item.transform.GetComponent<Image>().sprite = defaultSelectableSprite;
+                }
+            }
+            else
+            {
+                throw new NotSupportedException();
+            }
+            
         }
 
         public IEnumerator FadeOutText(TMP_Text text)

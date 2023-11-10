@@ -9,7 +9,7 @@ namespace Project.Scripts.EventSystem.Services.Menu
     {
         public static SelectableLogicService Instance;
         
-        public ConnectionStatus RobotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
+        public ConnectionStatus robotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
 
         [NonSerialized] public LogicStates SliderState;
         [NonSerialized] public string SelectedIpAddress;

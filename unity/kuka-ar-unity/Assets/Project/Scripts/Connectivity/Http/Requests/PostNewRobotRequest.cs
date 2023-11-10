@@ -8,7 +8,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
 {
     public class PostNewRobotRequest : IHttpRequest<object>
     {
-        private static string URL => "/add";
+        private static string url => "/add";
         private readonly Robot robot;
         
         public PostNewRobotRequest(Robot robot)
@@ -19,7 +19,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
         public async Task<object> Execute(HttpClient httpClient)
         {
             var stringContent = new StringContent(robot.ToCamelCase(), Encoding.UTF8, "application/json"); 
-            return await httpClient.PostAsync(httpClient.BaseAddress + URL, stringContent);
+            return await httpClient.PostAsync(httpClient.BaseAddress + url, stringContent);
         }
     }
 }

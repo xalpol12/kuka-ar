@@ -16,21 +16,58 @@ namespace Project.Scripts.Connectivity.Http
         }
 
         public const int ConnectionTimeOut = 1000;
-        public List<Robot> ConfiguredRobots { get; set; } = new();
-        public List<Robot> Robots { get; set; } = new();
-        public List<string> AvailableIps { get; set; } = new();
-        public Dictionary<string, Sprite> Stickers { get; set; } = new();
-        public List<string> CategoryNames { get; set; } = new();
-        public ConnectionStatus RobotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
-        public bool IsAfterRobotSave { get; set; } = false;
+        private const int FakeItemsNumber = 3;
+        
+        private List<string> availableIpsList = new();
+        private List<string> availableCategoryNamesList = new();
+        private List<string> availableRobotsNamesList = new();
+        public List<Robot> robots { get; set; } = new();
 
-        public Dictionary<string, bool> LoadingSpinner { get; set; } = new()
+        public List<string> availableRobotsNames
         {
-            { "GetRobots", false },
-            { "GetConfigured", false },
-            { "GetStickers", false },
-            { "PostNewRobot", false },
-            { "UpdateRobot", false },
-        };
+            get => availableRobotsNamesList;
+            set
+            {
+                for (var i = 0; i < FakeItemsNumber; i++)
+                {
+                    value.Add("");
+                }
+
+                availableRobotsNamesList = value;
+            }
+        }
+
+        public List<string> availableIps
+        {
+            get => availableIpsList;
+            set
+            {
+                for (var i = 0; i < FakeItemsNumber; i++)
+                {
+                    value.Add("");
+                }
+
+                availableIpsList = value;
+            }
+        }
+        public Dictionary<string, Sprite> stickers { get; set; } = new();
+
+        public List<string> availableCategoryNames
+        {
+            get => availableCategoryNamesList;
+            set
+            {
+                for (var i = 0; i < FakeItemsNumber; i++)
+                {
+                    value.Add("");
+                }
+
+                availableCategoryNamesList = value;
+            }
+        }
+        public ConnectionStatus robotConnectionStatus { get; set; } = ConnectionStatus.Disconnected;
+        public bool isAfterRobotSave { get; set; }
+
+        public HashSet<string> loadingSpinner { get; } = new();
     }
 }

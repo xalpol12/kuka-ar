@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using Project.Scripts.Connectivity.Enums;
@@ -16,9 +17,6 @@ namespace Project.Scripts.Connectivity.Http.Requests
         
         private HttpClientWrapper http;
         private WebDataStorage storage;
-        private RobotsMapper robotsMapper;
-        private ConfiguredRobotsMapper configuredRobotsMapper;
-        private StickersMapper stickersMapper;
         private Popup popup;
         
         private void Awake()
@@ -30,9 +28,6 @@ namespace Project.Scripts.Connectivity.Http.Requests
         {
             http = HttpClientWrapper.Instance;
             storage = WebDataStorage.Instance;
-            robotsMapper = RobotsMapper.Instance;
-            configuredRobotsMapper = ConfiguredRobotsMapper.Instance;
-            stickersMapper = StickersMapper.Instance;
             popup = Popup.Window;
         }
 
@@ -45,22 +40,22 @@ namespace Project.Scripts.Connectivity.Http.Requests
         
         public IEnumerator GetRobots(Action action = null)
         {
-            storage.LoadingSpinner["GetRobots"] = true;
+            storage.loadingSpinner.Add("rob");
             var newRobotsTask = http.ExecuteRequest(new GetSavedRobotsRequest());
             while (!newRobotsTask.IsCompleted)
             {
                 yield return null;
             }
             
-            popup.Try(() => storage.Robots = newRobotsTask.Result);
+            popup.Try(() => storage.robots = newRobotsTask.Result);
             action?.Invoke();
-            storage.LoadingSpinner["GetRobots"] = false;
+            storage.loadingSpinner.Remove("rob");
             yield return null;
         }
 
         public IEnumerator GetConfiguredRobots()
         {
-            storage.LoadingSpinner["GetConfigured"] = true;
+            storage.loadingSpinner.Add("cat");
             var newConfiguredRobotsTask = http.ExecuteRequest(new GetRobotConfigDataRequest());
 
             while (!newConfiguredRobotsTask.IsCompleted)
@@ -70,17 +65,17 @@ namespace Project.Scripts.Connectivity.Http.Requests
             
             popup.Try(() =>
             {
-                var configured = newConfiguredRobotsTask.Result;
-                storage.ConfiguredRobots = ConfiguredRobotsMapper.MapToConfiguredRobots(configured);
-                storage.CategoryNames = ConfiguredRobotsMapper.MapStringsToUniqueNames(storage.ConfiguredRobots);
+                var config = ConfiguredRobotsMapper.MapToConfiguredRobots(newConfiguredRobotsTask.Result);
+                storage.availableRobotsNames = config.Select(r => r.Name).ToList();
+                storage.availableCategoryNames = ConfiguredRobotsMapper.MapStringsToUniqueNames(config);
             });
-            storage.LoadingSpinner["GetConfigured"] = false;
+            storage.loadingSpinner.Remove("cat");
             yield return null;
         }
 
         public IEnumerator GetStickers(Action action = null)
         {
-            storage.LoadingSpinner["GetStickers"] = true;
+            storage.loadingSpinner.Add("img");
             var newStickersTask = http.ExecuteRequest(new GetTargetImagesRequest());
 
             while (!newStickersTask.IsCompleted)
@@ -91,11 +86,11 @@ namespace Project.Scripts.Connectivity.Http.Requests
             popup.Try(() =>
             {
                 var stickers = newStickersTask.Result;
-                storage.Stickers = StickersMapper.MapBytesToSprite(stickers);
-                storage.AvailableIps = RobotsMapper.MapStringToIpAddress(stickers);
+                storage.stickers = StickersMapper.MapBytesToSprite(stickers);
+                storage.availableIps = StickersMapper.MapStickerToIpAddress(stickers);
             });
             action?.Invoke();
-            storage.LoadingSpinner["GetStickers"] = false;
+            storage.loadingSpinner.Remove("img");
             yield return null;
         }
 
@@ -104,17 +99,17 @@ namespace Project.Scripts.Connectivity.Http.Requests
             var status = http.ExecuteRequest(new PingChosenIpRequest(ip));
             while (!status.IsCompleted)
             {
-                storage.RobotConnectionStatus = ConnectionStatus.Connecting;
+                storage.robotConnectionStatus = ConnectionStatus.Connecting;
                 yield return null;
             }
 
-            storage.RobotConnectionStatus = status.Result ? ConnectionStatus.Connected : ConnectionStatus.Disconnected;
+            storage.robotConnectionStatus = status.Result ? ConnectionStatus.Connected : ConnectionStatus.Disconnected;
             yield return null;
         }
 
         public IEnumerator PostRobot(Robot? robot)
         {
-            storage.LoadingSpinner["PostNewRobot"] = true;
+            storage.loadingSpinner.Add("post");
             StartCoroutine(GetRobots());
             if (robot is not null)
             {
@@ -131,7 +126,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
                     switch (response.StatusCode)
                     {
                         case HttpStatusCode.OK:
-                            storage.Robots.Add(robot.Value);
+                            storage.robots.Add(robot.Value);
                             return;
                         case HttpStatusCode.BadRequest:
                             StartCoroutine(UpdateRobot(robot.Value));
@@ -142,13 +137,13 @@ namespace Project.Scripts.Connectivity.Http.Requests
                 }, robot.Value, RequestType.Post);
             }
             
-            storage.LoadingSpinner["PostNewRobot"] = false;
+            storage.loadingSpinner.Remove("post");
             yield return null;
         }
 
-        public IEnumerator UpdateRobot(Robot? robot)
+        private IEnumerator UpdateRobot(Robot? robot)
         {
-            storage.LoadingSpinner["UpdateRobot"] = true;
+            storage.loadingSpinner.Add("put");
             if (robot is not null)
             {
                 var status = http.ExecuteRequest(new UpdateRobotRequest(robot.Value));
@@ -167,7 +162,7 @@ namespace Project.Scripts.Connectivity.Http.Requests
                     }
                 }, robot.Value, RequestType.Put);
             }
-            storage.LoadingSpinner["UpdateRobot"] = false;
+            storage.loadingSpinner.Remove("put");
         }
     }
 }

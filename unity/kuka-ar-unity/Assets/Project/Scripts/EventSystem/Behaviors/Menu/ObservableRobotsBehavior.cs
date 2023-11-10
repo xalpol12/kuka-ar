@@ -6,7 +6,6 @@ using Project.Scripts.Connectivity.Enums;
 using Project.Scripts.Connectivity.Http.Requests;
 using Project.Scripts.EventSystem.Controllers.Menu;
 using Project.Scripts.EventSystem.Enums;
-using Project.Scripts.TrackedRobots;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -86,7 +85,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                     performExecution = true;
                     StartCoroutine(ServerInvoker.Invoker.GetRobots(() =>
                     {
-                        if (!observableRobotsController.WebDataStorage.Robots
+                        if (!observableRobotsController.WebDataStorage.robots
                                 .Any(robot =>
                                     robot.IpAddress == observableRobotsController.LogicService.SelectedIpAddress
                                     && robot.Name == observableRobotsController.LogicService.SelectedName))
@@ -106,9 +105,9 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         private void Update()
         {
             ConnectionStatusCheckHandler();
-            if (!observableRobotsController.WebDataStorage.IsAfterRobotSave) return;
+            if (!observableRobotsController.WebDataStorage.isAfterRobotSave) return;
             StartCoroutine(DestroyListEntries());
-            observableRobotsController.WebDataStorage.IsAfterRobotSave = false;
+            observableRobotsController.WebDataStorage.isAfterRobotSave = false;
         }
 
         private IEnumerator InitObservableRobots()
@@ -116,26 +115,26 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             if (scrollList is null) yield break;
             var storage = observableRobotsController.WebDataStorage;
             
-            if (storage.Stickers.Count <= 0)
+            if (storage.stickers.Count <= 0)
             {
                 refresh.gameObject.SetActive(false);
                 ConnectionFailed(true);
                 yield break;
             }
             
-            if (storage.Robots.Count < 1)
+            if (storage.robots.Count < 1)
             {
                 gridItem.SetActive(false);
                 yield break;
             }
             
             gridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
-                storage.Robots[0].Name;
+                storage.robots[0].Name;
             gridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
-                storage.Robots[0].IpAddress;
+                storage.robots[0].IpAddress;
             var img = gridItem.transform.Find("TemplateImgBounds").GetComponent<Image>().gameObject.transform
                 .Find("TemplateImg").GetComponent<Image>();
-            GetSticker(storage.Robots[0].IpAddress, img);
+            GetSticker(storage.robots[0].IpAddress, img);
 
             gridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
             {
@@ -147,15 +146,15 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             gridItem.SetActive(true);
             allGridItems.Add(gridItem);
 
-            for (var i = 1; i < storage.Robots.Count + 2; i++)
+            for (var i = 1; i < storage.robots.Count + 2; i++)
             {
-                if (allGridItems.Count > storage.Robots.Count + 2)
+                if (allGridItems.Count > storage.robots.Count + 2)
                 {
                     yield break;
                 }
                 var newGridItem = Instantiate(gridItem, grid.transform, false);
                 
-                if (i >storage.Robots.Count - 1)
+                if (i >storage.robots.Count - 1)
                 {
                     newGridItem.transform.GetComponent<Image>().color = Color.clear;
                     newGridItem.transform.Find("TemplateImgBounds").GetComponent<Image>().gameObject.transform
@@ -169,19 +168,19 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
                             ? observableRobotsController.StylingService.SelectedSprite
                             : observableRobotsController.StylingService.DefaultNoFrame;
                     newGridItem.transform.Find("TemplateRobotName").GetComponent<TMP_Text>().text =
-                        storage.Robots[i].Name;
+                        storage.robots[i].Name;
                     newGridItem.transform.Find("TemplateRobotIp").GetComponent<TMP_Text>().text =
-                        storage.Robots[i].IpAddress;
+                        storage.robots[i].IpAddress;
                     img = newGridItem.transform.Find("TemplateImgBounds").GetComponent<Image>().gameObject.transform
                         .Find("TemplateImg").GetComponent<Image>();
-                        GetSticker(storage.Robots[i].IpAddress, img);
+                        GetSticker(storage.robots[i].IpAddress, img);
                 }
 
                 newGridItem.transform.GetComponent<Button>().onClick.AddListener(() =>
                 {
                     observableRobotsController.StylingService.MarkAsUnselected(allGridItems, true);
                     if (newGridItem.transform.GetSiblingIndex() >
-                        observableRobotsController.WebDataStorage.Robots.Count - 1)
+                        observableRobotsController.WebDataStorage.robots.Count - 1)
                     {
                         return;
                     }
@@ -197,16 +196,16 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
 
         private IEnumerator OnSelectActions(int index)
         {
-            var ipAddress = observableRobotsController.WebDataStorage.Robots[index].IpAddress;
+            var ipAddress = observableRobotsController.WebDataStorage.robots[index].IpAddress;
             ConstantPanelInfoText(true);
 
-            if (index > observableRobotsController.WebDataStorage.Robots.Count - 1)
+            if (index > observableRobotsController.WebDataStorage.robots.Count - 1)
             {
-                index = observableRobotsController.WebDataStorage.Robots.Count;
+                index = observableRobotsController.WebDataStorage.robots.Count;
             }
 
             ipText.text = ipAddress;
-            nameText.text = observableRobotsController.WebDataStorage.Robots[index].Name;
+            nameText.text = observableRobotsController.WebDataStorage.robots[index].Name;
             
             GetSticker(ipAddress, sticker);
             AdjustImageMargin(false);
@@ -250,8 +249,8 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         
         private void ConnectionStatusCheckHandler()
         {
-            statusText.text = observableRobotsController.LogicService.RobotConnectionStatus.ToString();
-            statusText.color = observableRobotsController.LogicService.RobotConnectionStatus switch
+            statusText.text = observableRobotsController.LogicService.robotConnectionStatus.ToString();
+            statusText.color = observableRobotsController.LogicService.robotConnectionStatus switch
             {
                 ConnectionStatus.Connected => new Color(0.176f, 0.78f, 0.439f),
                 ConnectionStatus.Connecting => new Color(0.94f, 0.694f, 0.188f),
@@ -272,7 +271,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
         {
             try
             {
-                 image.sprite = observableRobotsController.WebDataStorage.Stickers[ip];
+                 image.sprite = observableRobotsController.WebDataStorage.stickers[ip];
             }
             catch (KeyNotFoundException e)
             {
@@ -296,7 +295,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             observableRobotsController.Spinner.SetActive(true);
             action();
             
-            while (webStore.LoadingSpinner.Any(spinner => spinner.Value))
+            while (webStore.loadingSpinner.Count > 0)
             {
                 if (time > webStore.animationTimeout || !performExecution) break;
                 time += Time.deltaTime;
@@ -307,7 +306,7 @@ namespace Project.Scripts.EventSystem.Behaviors.Menu
             grid.SetActive(true);
             serverError.gameObject.SetActive(true);
             
-            if (webStore.Stickers.Count == 0) yield break;
+            if (webStore.stickers.Count == 0) yield break;
             ConnectionFailed(false);
             StartCoroutine(InitObservableRobots());
         }

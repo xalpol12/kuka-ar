@@ -29,7 +29,7 @@ namespace Project.Scripts.Connectivity.Mapping
         public static List<Robot> MapToConfiguredRobots(Dictionary<string, Dictionary<string, RobotData>> response)
         {
             return (from @group in response from entry 
-                in @group.Value select new Robot() { Name = entry.Value.Name, Category = @group.Key, }).ToList();
+                in @group.Value select new Robot { Name = entry.Value.Name, Category = @group.Key, }).ToList();
         }
     }
 }

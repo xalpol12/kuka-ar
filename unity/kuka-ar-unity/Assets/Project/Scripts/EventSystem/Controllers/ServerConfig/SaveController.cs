@@ -64,7 +64,7 @@ namespace Project.Scripts.EventSystem.Controllers.ServerConfig
             {
                 var ipAddress = ipInputField.GetComponent<TMP_InputField>().text;
                 PlayerPrefs.SetString("serverIp", ipAddress);
-                httpClient.BaseAddress = ipAddress;
+                httpClient.baseAddress = ipAddress;
             }
             ServerInvoker.Invoker.GetFullData();
         }

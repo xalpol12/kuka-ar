@@ -95,6 +95,19 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
                         if (HasDuplicates()) return;
                         break;
                     }
+                    case FormatException:
+
+                        content = new PopupContent
+                        {
+                            Header = "Invalid sticker name",
+                            Message = "One of the stickers names on the server side is invalid",
+                            Icon = watcher.AddedFailed,
+                        };
+                        
+                        ClearWebStorageData("all");
+                        
+                        if (HasDuplicates()) return;
+                        break;
                     case HttpRequestException:
                         try
                         {
@@ -166,13 +179,19 @@ namespace Project.Scripts.Connectivity.Extensions.Popup
             switch (s)
             {
                 case not null when s.Contains("GetRobots"): 
-                    WebDataStorage.Instance.Robots = new List<Robot>();
+                    WebDataStorage.Instance.robots = new List<Robot>();
                     break;
-                case not null when s.Contains("GetRobots"):
-                    WebDataStorage.Instance.ConfiguredRobots = new List<Robot>();
+                case not null when s.Contains("GetConfiguredRobots"):
+                    WebDataStorage.Instance.availableRobotsNames = new List<string>();
                     break;
-                case not null when s.Contains("GetRobots"):
-                    WebDataStorage.Instance.Stickers = new Dictionary<string, Sprite>();
+                case not null when s.Contains("GetStickers"):
+                    WebDataStorage.Instance.stickers = new Dictionary<string, Sprite>();
+                    break;
+                case not null when s.Contains("all"):
+                    var data = WebDataStorage.Instance;
+                    data.availableIps.Clear();
+                    data.availableRobotsNames.Clear();
+                    data.availableCategoryNames.Clear();
                     break;
             }
         }

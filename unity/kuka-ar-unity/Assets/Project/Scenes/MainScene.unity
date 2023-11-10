@@ -136,6 +136,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: WebsocketClient
       objectReference: {fileID: 0}
+    - target: {fileID: 2811680939433574528, guid: d437ba78de7139d47ae710cfbf00e5d0,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4229767217463469559, guid: d437ba78de7139d47ae710cfbf00e5d0,
         type: 3}
       propertyPath: m_RootOrder
@@ -425,7 +430,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_AnchorPrefab: {fileID: 3078670861717199406, guid: b176652f8b4bc2545a29e785e32e51a5,
+  m_AnchorPrefab: {fileID: 679529832086352152, guid: 5560b3e0b354835419c8a2f9897ac256,
     type: 3}
 --- !u!114 &94363252
 MonoBehaviour:
@@ -1611,7 +1616,7 @@ PrefabInstance:
         type: 3}
       propertyPath: prefab
       value: 
-      objectReference: {fileID: 1549861501900215718, guid: 3e253fa44769527418c6f3dd49aaef6d,
+      objectReference: {fileID: 679529832086352152, guid: 48d17e8e514f82148944172f687eeb50,
         type: 3}
     - target: {fileID: 8110452565766130815, guid: 4e2223c16e3d26043b3c8b6009b6932b,
         type: 3}
@@ -3211,6 +3216,7 @@ PrefabInstance:
     - {fileID: 0}
     m_RemovedGameObjects:
     - {fileID: 7306887079694132140, guid: 2dec6bad165255e45942ae03de04b2b0, type: 3}
+    - {fileID: 7446688805337954481, guid: 2dec6bad165255e45942ae03de04b2b0, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 943895766394838835, guid: 2dec6bad165255e45942ae03de04b2b0,
