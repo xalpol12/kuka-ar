@@ -907,6 +907,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!1 &643981963 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6273858337059531865, guid: 2dec6bad165255e45942ae03de04b2b0,
+    type: 3}
+  m_PrefabInstance: {fileID: 1859340661}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &660208657 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7640711703526626166, guid: 2dec6bad165255e45942ae03de04b2b0,
@@ -2571,6 +2577,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4121498038480310376, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: items
+      value: 
+      objectReference: {fileID: 643981963}
     - target: {fileID: 4172699723196276705, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_Layer

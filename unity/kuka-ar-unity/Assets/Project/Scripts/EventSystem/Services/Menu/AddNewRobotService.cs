@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Project.Scripts.Connectivity.Models.AggregationClasses;
 using TMPro;
 using UnityEngine;
@@ -8,12 +9,17 @@ namespace Project.Scripts.EventSystem.Services.Menu
     public class AddNewRobotService : MonoBehaviour
     {
         public static AddNewRobotService Instance;
+        
         public GameObject parent;
+        public GameObject items;
+        
         [NonSerialized] public bool ResetSelectState;
         [NonSerialized] public bool IsSelectDialogOpen;
+        
         private TMP_Text ip;
         private TMP_Text category;
         private TMP_Text robotName;
+        
         private Robot defaultValues;
         private void Awake()
         {
@@ -46,6 +52,9 @@ namespace Project.Scripts.EventSystem.Services.Menu
             ip.text = defaultValues.IpAddress;
             category.text = defaultValues.Category;
             robotName.text = defaultValues.Name;
+
+            SelectableStylingService.Instance.MarkAsUnselected(items.GetComponentsInChildren<RectTransform>()
+                .Select(rect => rect.gameObject).ToList());
             ResetSelectState = false;
         }
     }
