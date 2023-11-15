@@ -115,7 +115,7 @@ namespace Project.Scripts.EventSystem.Controllers
             if (string.IsNullOrWhiteSpace(PlayerPrefs.GetString("serverIp"))) return;
             var cachedAddress = PlayerPrefs.GetString("serverIp");
             HttpClientWrapper.Instance.baseAddress = cachedAddress;
-            WebSocketClient.Instance.ConnectToWebsocket($"ws://{cachedAddress}:8080/kuka-variables");
+            WebSocketClient.Instance.ConnectToWebSocket($"ws://{cachedAddress}:8080/kuka-variables");
         }
 
         private void RequestData(int uid)
@@ -177,7 +177,7 @@ namespace Project.Scripts.EventSystem.Controllers
                 PlayerPrefs.SetInt("firstRun", PlayersPrefsStates.NthRun);
             }
             
-            WebSocketClient.Instance.ConnectToWebsocket(
+            WebSocketClient.Instance.ConnectToWebSocket(
                 $"ws://{HttpClientWrapper.Instance.baseAddress}:8080/kuka-variables");
         }
 

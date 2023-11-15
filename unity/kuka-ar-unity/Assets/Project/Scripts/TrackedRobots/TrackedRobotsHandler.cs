@@ -101,7 +101,7 @@ namespace Project.Scripts.TrackedRobots
             }
         }
 
-        public void ReceivePackageFromWebsocket(OutputWithErrors newData)
+        public void ReceivePackageFromWebSocket(OutputWithErrors newData)
         {
             if (newData.Values.TryGetValue(SelectedRobotIP, out var value))
             {
