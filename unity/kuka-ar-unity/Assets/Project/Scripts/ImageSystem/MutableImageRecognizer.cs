@@ -62,12 +62,10 @@ namespace Project.Scripts.ImageSystem
 
         private void ConfigureMutableLibrary()
         {
-            #if !UNITY_EDITOR || !UNITY_EDITOR_WIN
             imageManager.referenceLibrary = imageManager.CreateRuntimeLibrary(runtimeImageLibrary);
             imageManager.requestedMaxNumberOfMovingImages = MaxNumberOfMovingImages;
             imageManager.trackedImagePrefab = imageRecognisedPrefab;
             imageManager.enabled = false;
-            #endif
         }
 
         private void OnChange(ARTrackedImagesChangedEventArgs eventArgs)
