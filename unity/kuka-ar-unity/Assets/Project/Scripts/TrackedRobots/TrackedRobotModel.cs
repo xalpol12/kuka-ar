@@ -5,7 +5,6 @@ using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 using Project.Scripts.Connectivity.Models.Wrappers;
-using Project.Scripts.Utils;
 using UnityEngine;
 
 namespace Project.Scripts.TrackedRobots
