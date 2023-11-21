@@ -4,7 +4,7 @@ using Project.Scripts.Connectivity.Models.KRLValues;
 
 namespace Project.Scripts.Connectivity.Models.Wrappers
 {
-    public class KrlFrameWrapper : IKrlWrapper
+    public class KRLFrameWrapper : IKRLWrapper
     {
         private KRLFrame krlFrame;
 
@@ -13,7 +13,7 @@ namespace Project.Scripts.Connectivity.Models.Wrappers
         private readonly float positionThreshold;
         private readonly float rotationThreshold;
 
-        public KrlFrameWrapper(float positionThreshold, float rotationThreshold)
+        public KRLFrameWrapper(float positionThreshold, float rotationThreshold)
         {
             this.positionThreshold = positionThreshold;
             this.rotationThreshold = rotationThreshold;
