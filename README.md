@@ -20,7 +20,7 @@ Project for real-time coordinate system visualization for KUKA robots. Developed
     - [Image recognition](#image-recognition)
     - [Selecting displayed axis](#selecting-displayed-axis)
     - [Hiding UI elements](#hiding-ui-elements)
-    - [Image recognition](#image-recognition-1)
+    - [Server configuration screen](#server-configuration-screen)
   - [Install 🔄](#install-)
     - [Download 🚚 📦](#download--)
     - [Manual build process 🏗️](#manual-build-process-️)
@@ -42,6 +42,7 @@ Project for real-time coordinate system visualization for KUKA robots. Developed
       - [`Java jar command missing`](#java-jar-command-missing)
     - [Problem not found on this list?](#problem-not-found-on-this-list)
   - [Contribution :accessibility:](#contribution-accessibility)
+
 
 ## Overview 🔎
 
@@ -85,7 +86,7 @@ Requests data from the [server](#server-side-app). Uses received data and capabi
   <img src="./documentation/gifs/focus-mode.gif"/>
 </p>
 
-### Image recognition
+### Server configuration screen
 <p align="center"> 
   <img src="./documentation/gifs/screen-config.gif"/>
 </p>
