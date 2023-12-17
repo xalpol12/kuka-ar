@@ -59,14 +59,7 @@ namespace Project.Scripts.TrackedRobots
                 CleanObsoleteRobot(SelectedRobotIP);
             }
             SelectedRobotIP = robotIP;
-            DebugLogger.Instance.AddLog($"SelectedRobotIP: {SelectedRobotIP}; ");
             LabelOverride.Label.OverrideStatusLabel(ConnectionStatus.Connecting.ToString());
-        }
-
-        public void ResetConnectedRobot()
-        {
-            CleanObsoleteRobot(SelectedRobotIP);
-            OnRobotConnectionReset();
         }
 
         private void CleanObsoleteRobot(string ip)
@@ -76,6 +69,12 @@ namespace Project.Scripts.TrackedRobots
             OnBaseValueUpdated(this, new KRLInt());
             OnToolValueUpdated(this, new KRLInt());
             OnJointsValueUpdated(this, new KRLJoints());
+            OnRobotConnectionReset();
+        }
+
+        public void ResetConnectedRobot()
+        {
+            CleanObsoleteRobot(SelectedRobotIP);
             OnRobotConnectionReset();
         }
 
@@ -101,7 +100,7 @@ namespace Project.Scripts.TrackedRobots
             }
         }
 
-        public void ReceivePackageFromWebsocket(OutputWithErrors newData)
+        public void ReceivePackageFromWebSocket(OutputWithErrors newData)
         {
             if (newData.Values.TryGetValue(SelectedRobotIP, out var value))
             {
@@ -122,9 +121,7 @@ namespace Project.Scripts.TrackedRobots
         {
             if (ipAddress == SelectedRobotIP)
             {
-                #if !UNITY_EDITOR || !UNITY_EDITOR_WIN
                     StartCoroutine(InstantiateNewRobot(anchor));
-                #endif
             }
         }
 

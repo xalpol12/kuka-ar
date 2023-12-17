@@ -2106,6 +2106,16 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 411172742712194496, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: A4
+      objectReference: {fileID: 0}
+    - target: {fileID: 416463916541619257, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: A1
+      objectReference: {fileID: 0}
     - target: {fileID: 420466075131278049, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_Layer
@@ -2226,6 +2236,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1147669997403627423, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: A5
+      objectReference: {fileID: 0}
     - target: {fileID: 1158987459227439401, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_Layer
@@ -2240,6 +2255,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1286242908392152367, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: A6
       objectReference: {fileID: 0}
     - target: {fileID: 1373013709250616756, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
@@ -2361,6 +2381,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2508820658627750286, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: A3
       objectReference: {fileID: 0}
     - target: {fileID: 2534718986216299491, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
@@ -2521,6 +2546,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3500285797192672127, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: AXES
       objectReference: {fileID: 0}
     - target: {fileID: 3506435938213818104, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
@@ -3092,6 +3122,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7401871173304440838, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: AXES
+      objectReference: {fileID: 0}
     - target: {fileID: 7483696941768442521, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_Layer
@@ -3197,6 +3232,11 @@ PrefabInstance:
       propertyPath: gameObjectRobotHandler
       value: 
       objectReference: {fileID: 1855572461}
+    - target: {fileID: 8963280820528292754, guid: 2dec6bad165255e45942ae03de04b2b0,
+        type: 3}
+      propertyPath: m_text
+      value: A2
+      objectReference: {fileID: 0}
     - target: {fileID: 9140547002706703167, guid: 2dec6bad165255e45942ae03de04b2b0,
         type: 3}
       propertyPath: m_Layer

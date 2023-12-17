@@ -2,7 +2,7 @@ using Project.Scripts.Connectivity.Models.KRLValues;
 
 namespace Project.Scripts.Connectivity.Models.Wrappers
 {
-    public interface IKrlWrapper
+    public interface IKRLWrapper
     {
         public void UpdateValue(IKRLValue update);
     }

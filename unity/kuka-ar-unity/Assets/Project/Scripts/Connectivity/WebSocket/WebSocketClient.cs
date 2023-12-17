@@ -45,7 +45,7 @@ namespace Project.Scripts.Connectivity.WebSocket
             };
         }
 
-        public async void ConnectToWebsocket(string serverAddress)
+        public async void ConnectToWebSocket(string serverAddress)
         {
             if (ws == null)
             {
@@ -57,7 +57,7 @@ namespace Project.Scripts.Connectivity.WebSocket
                 ws = new NativeWebSocket.WebSocket(serverAddress);
             }
 
-            ws.OnMessage += OnWebsocketMessage;
+            ws.OnMessage += OnWebSocketMessage;
 
             ws.OnOpen += () => 
                 DebugLogger.Instance.AddLog($"Connected to ws: {serverAddress}; ");
@@ -74,11 +74,11 @@ namespace Project.Scripts.Connectivity.WebSocket
             messagesToSend.Enqueue(message);
         }
 
-        private void OnWebsocketMessage(byte[] bytes)
+        private void OnWebSocketMessage(byte[] bytes)
         {
             var message = Encoding.UTF8.GetString(bytes);
             var outputFrame = JsonConvert.DeserializeObject<OutputWithErrors>(message, settings);
-            trackedRobotsHandlerScript.ReceivePackageFromWebsocket(outputFrame);
+            trackedRobotsHandlerScript.ReceivePackageFromWebSocket(outputFrame);
         }
 
         private void Update()

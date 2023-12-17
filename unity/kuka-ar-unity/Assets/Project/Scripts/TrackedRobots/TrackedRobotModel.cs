@@ -5,7 +5,6 @@ using Project.Scripts.Connectivity.Models.AggregationClasses;
 using Project.Scripts.Connectivity.Models.KRLValues;
 using Project.Scripts.Connectivity.Models.SimpleValues.Pairs;
 using Project.Scripts.Connectivity.Models.Wrappers;
-using Project.Scripts.Utils;
 using UnityEngine;
 
 namespace Project.Scripts.TrackedRobots
@@ -30,7 +29,7 @@ namespace Project.Scripts.TrackedRobots
         private readonly float posThresh;
         private readonly float rotThresh;
 
-        private readonly Dictionary<string, IKrlWrapper> krlValues;
+        private readonly Dictionary<string, IKRLWrapper> krlValues;
 
         public TrackedRobotModel(GameObject baseObject, GameObject toolObject, float posThresh, float rotThresh)
         {
@@ -39,7 +38,7 @@ namespace Project.Scripts.TrackedRobots
             this.posThresh = posThresh;
             this.rotThresh = rotThresh;
 
-            krlValues = new Dictionary<string, IKrlWrapper>(5);
+            krlValues = new Dictionary<string, IKRLWrapper>(5);
 
             SetupRobotVariables();
             SubscribeToValueUpdatedEvents();
@@ -47,18 +46,18 @@ namespace Project.Scripts.TrackedRobots
 
         private void SetupRobotVariables()
         {
-            krlValues.Add(ValueName.ActiveBase, new KrlIntWrapper());
-            krlValues.Add(ValueName.ActiveTool, new KrlIntWrapper());
-            krlValues.Add(ValueName.Base, new KrlFrameWrapper(posThresh, rotThresh));
-            krlValues.Add(ValueName.Tool, new KrlFrameWrapper(posThresh, rotThresh));
-            krlValues.Add(ValueName.Joints, new KrlJointsWrapper(rotThresh));
+            krlValues.Add(ValueName.ActiveBase, new KRLIntWrapper());
+            krlValues.Add(ValueName.ActiveTool, new KRLIntWrapper());
+            krlValues.Add(ValueName.Base, new KRLFrameWrapper(posThresh, rotThresh));
+            krlValues.Add(ValueName.Tool, new KRLFrameWrapper(posThresh, rotThresh));
+            krlValues.Add(ValueName.Joints, new KRLJointsWrapper(rotThresh));
         }
 
         private void SubscribeToValueUpdatedEvents()
         {
-            ((KrlIntWrapper) krlValues[ValueName.ActiveBase]).ValueUpdated += OnActiveBaseUpdated;
-            ((KrlIntWrapper) krlValues[ValueName.ActiveTool]).ValueUpdated += OnActiveToolUpdated;
-            ((KrlJointsWrapper) krlValues[ValueName.Joints]).ValueUpdated += OnActiveJointsUpdated;
+            ((KRLIntWrapper) krlValues[ValueName.ActiveBase]).ValueUpdated += OnActiveBaseUpdated;
+            ((KRLIntWrapper) krlValues[ValueName.ActiveTool]).ValueUpdated += OnActiveToolUpdated;
+            ((KRLJointsWrapper) krlValues[ValueName.Joints]).ValueUpdated += OnActiveJointsUpdated;
         }
 
         public void UpdateTrackedRobotVariables(IReadOnlyDictionary<string, ValueWithError> data)
@@ -90,12 +89,12 @@ namespace Project.Scripts.TrackedRobots
         
         public void UpdateGameObjects()
         {
-            if (((KrlFrameWrapper) krlValues[ValueName.Base]).TryDequeue(out var baseUpdate))
+            if (((KRLFrameWrapper) krlValues[ValueName.Base]).TryDequeue(out var baseUpdate))
             {
                 UpdateGameObject(baseObject, baseUpdate);
             }
 
-            if (((KrlFrameWrapper) krlValues[ValueName.Tool]).TryDequeue(out var toolUpdate))
+            if (((KRLFrameWrapper) krlValues[ValueName.Tool]).TryDequeue(out var toolUpdate))
             {
                 UpdateGameObject(toolObject, toolUpdate);
             }

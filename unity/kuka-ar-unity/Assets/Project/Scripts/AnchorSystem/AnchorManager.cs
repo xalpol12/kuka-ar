@@ -24,6 +24,15 @@ namespace Project.Scripts.AnchorSystem
 
         private HttpClientWrapper httpClientWrapper;
         private Dictionary<string, RobotData> cachedRobotConfig;
+
+        private readonly HashSet<string> requestVariableNames = new()
+        {
+            "BASE_NUMBER",
+            "TOOL_NUMBER",
+            "BASE",
+            "POSITION",
+            "JOINTS"
+        };
     
         private void Awake()
         {
@@ -90,7 +99,6 @@ namespace Project.Scripts.AnchorSystem
 
         public IEnumerator StartNewAnchorTracking(ARTrackedImage foundImage)
         {
-            #if !UNITY_EDITOR && !UNITY_STANDALONE_WIN
             var imageTransform = foundImage.transform;
             var robotIp = foundImage.referenceImage.name;
             var configData = robotConfigDataByIp.TryGetValue(robotIp, out var value)
@@ -111,22 +119,16 @@ namespace Project.Scripts.AnchorSystem
                 var anchor = PlaceNewAnchor(imageTransform, configData);
                 trackedAnchors.Add(robotIp, anchor);
 
-                WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "BASE_NUMBER"));
-                WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "TOOL_NUMBER"));
-                WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "BASE"));
-                WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "POSITION"));
-                WebSocketClient.Instance.SendToWebSocketServer(ComposeWebSocketServerRequest(robotIp, "JOINTS"));
+                foreach (var requestName in requestVariableNames)
+                {
+                    string webSocketRequest = ComposeWebSocketServerRequest(robotIp, requestName);
+                    WebSocketClient.Instance.SendToWebSocketServer(webSocketRequest);
+                }
 
                 trackedRobotsHandler.InstantiateTrackedRobot(robotIp, anchor);
 
                 isCreated = true;
             }
-            #endif
-
-            #if UNITY_EDITOR || UNITY_STANDALONE_WIN
-            yield return null;
-            #endif
-
         }
 
         private ARAnchor PlaceNewAnchor(Transform imageTransform, RobotData configData)
@@ -134,7 +136,7 @@ namespace Project.Scripts.AnchorSystem
             Vector3 position = imageTransform.position + configData.PositionShift;
             Quaternion rotation = imageTransform.rotation * Quaternion.Euler(configData.RotationShift);
 
-            return arAnchorManager.AddAnchor(new Pose(position, rotation)); //TODO: replace obsolete method
+            return arAnchorManager.AddAnchor(new Pose(position, rotation));
         }
 
         private void DeleteAllTrackedAnchors()

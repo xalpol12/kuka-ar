@@ -3,7 +3,7 @@ using Project.Scripts.Connectivity.Models.KRLValues;
 
 namespace Project.Scripts.Connectivity.Models.Wrappers
 {
-    public class KrlJointsWrapper : IKrlWrapper
+    public class KRLJointsWrapper : IKRLWrapper
     {
         public event EventHandler<KRLJoints> ValueUpdated;
         
@@ -13,7 +13,7 @@ namespace Project.Scripts.Connectivity.Models.Wrappers
 
         private readonly float rotationThreshold;
 
-        public KrlJointsWrapper(float rotationThreshold)
+        public KRLJointsWrapper(float rotationThreshold)
         {
             this.rotationThreshold = rotationThreshold;
             krlLocalJoints = new KRLJoints();

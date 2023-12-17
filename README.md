@@ -4,6 +4,10 @@
 
 Project for real-time coordinate system visualization for KUKA robots. Developed as the engineering project that verifies acquired competencies at the end of bachelor's degree.
 
+<p align="center"> 
+  <img src="./documentation/gifs/main-overview.gif"/>
+</p>
+
 ## Table of Contents
 
 - [KUKA AR app 🦾](#kuka-ar-app-)
@@ -12,6 +16,11 @@ Project for real-time coordinate system visualization for KUKA robots. Developed
     - [Server-side app 🖥️](#server-side-app-️)
     - [Client-side app 📱](#client-side-app-)
       - [Features](#features)
+  - [Preview](#preview)
+    - [Image recognition](#image-recognition)
+    - [Selecting displayed axis](#selecting-displayed-axis)
+    - [Hiding UI elements](#hiding-ui-elements)
+    - [Server configuration screen](#server-configuration-screen)
   - [Install 🔄](#install-)
     - [Download 🚚 📦](#download--)
     - [Manual build process 🏗️](#manual-build-process-️)
@@ -33,6 +42,7 @@ Project for real-time coordinate system visualization for KUKA robots. Developed
       - [`Java jar command missing`](#java-jar-command-missing)
     - [Problem not found on this list?](#problem-not-found-on-this-list)
   - [Contribution :accessibility:](#contribution-accessibility)
+
 
 ## Overview 🔎
 
@@ -58,6 +68,28 @@ Requests data from the [server](#server-side-app). Uses received data and capabi
 - Communication with server database over HTTP - to store and manage configured robots that user wants to track, CRUD methods with local database are used.
 
 - Instant data acquisition using WebSocket - for more frequent updates and faster reactions to changes in the position of the coordinate system, WebSocket protocol is used.
+
+## Preview
+
+### Image recognition
+<p align="center"> 
+  <img src="./documentation/gifs/image-recognition.gif"/>
+</p>
+
+### Selecting displayed axis
+<p align="center"> 
+  <img src="./documentation/gifs/hiding-axis.gif"/>
+</p>
+
+### Hiding UI elements
+<p align="center"> 
+  <img src="./documentation/gifs/focus-mode.gif"/>
+</p>
+
+### Server configuration screen
+<p align="center"> 
+  <img src="./documentation/gifs/screen-config.gif"/>
+</p>
 
 ## Install 🔄
 

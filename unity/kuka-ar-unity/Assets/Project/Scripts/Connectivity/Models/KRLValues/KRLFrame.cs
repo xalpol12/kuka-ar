@@ -13,7 +13,10 @@ namespace Project.Scripts.Connectivity.Models.KRLValues
             get => position;
             set
             {
-                var kukaToUnityVector3 = new Vector3(-value.x, value.y, value.z) / 1000f; // KUKA -> UNITY
+                // conversion: KUKA - right-hand z up (in milimeters) -> UNITY left-hand y up (in meters)
+                var kukaToUnityVector3 = new Vector3(-value.x, value.y, value.z) / 1000f;  // it just works,
+                                                                                           // in theory should have also swapped y with z,
+                                                                                           // but for some reason here we don't have to
                 position = kukaToUnityVector3;
             } 
         }
