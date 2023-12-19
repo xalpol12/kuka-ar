@@ -159,17 +159,17 @@ jobs:
           fetch-depth: 0
 
       - name: Get kuka server artifact 🔩
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v2.1.1
         with:
           name: kuka-server
 
       - name: Get test socket the artifact 🔌
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v2.1.1
         with:
           name: test-server
 
       - name: Get kuka Unity app artifact 🔓
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v2.1.1
         with:
           name: kuka-app
           
